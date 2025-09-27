@@ -1,0 +1,65 @@
+﻿using DataAccess.EntityFramework;
+using DataAccess.Interfaces;
+using DataAccess.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DataAccess.Implementations.SqlServer
+{
+    public class ClienteRepository : IClienteRepository
+    {
+        private readonly PetShopDBContext _context;
+
+        public ClienteRepository()
+        {
+            _context = new PetShopDBContext(); // Debe coincidir con la cadena en App.config
+        }
+
+        public Guid Create(Cliente cliente)
+        {
+            if (cliente == null)
+            {
+                throw new ArgumentNullException(nameof(cliente), "El cliente no puede ser nulo.");
+            }
+
+            cliente.IdCliente = Guid.NewGuid(); // Asigna un nuevo ID al cliente
+            _context.Clientes.Add(cliente);
+            _context.SaveChanges(); // Guarda el cliente en la base de datos
+
+            return cliente.IdCliente; // Retorna el ID generado
+        }
+
+        public List<Cliente> GetAll()
+        {
+            // Usa ToList() para ejecutar la consulta de Entity Framework
+            return _context.Clientes.ToList();
+        }
+
+        public List<Cliente> GetByTipoCliente(int IdTipoCliente)
+        {
+            return _context.Clientes
+                           .Where(c => c.IdTipoCliente == IdTipoCliente)
+                           .ToList();
+        }
+
+        public void Delete(Guid id)
+        {
+            var cliente = _context.Clientes.Find(id);
+            if (cliente != null)
+            {
+                // Borrado físico (NO RECOMENDADO para producción)
+                _context.Clientes.Remove(cliente);
+
+                // LÓGICA DE BORRADO LÓGICO (Ideal):
+                // cliente.Activo = false; // Se necesita agregar 'public bool Activo { get; set; }' al modelo Cliente
+                // _context.Entry(cliente).State = EntityState.Modified; 
+
+                _context.SaveChanges();
+            }
+        }
+
+    }
+}
