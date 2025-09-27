@@ -1,4 +1,5 @@
 ﻿using DataAccess.Implementations.SqlServer;
+using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using System;
@@ -11,21 +12,18 @@ namespace Logic
 {
     public class ProductoLogic
     {
-        private readonly IProductoRepository _productoRepository;
-        // Asumimos que también tenemos un IProveedorRepository para la validación
-        private readonly IProveedorRepository _proveedorRepository;
+        //UnitOfWork
+        private readonly IUnitOfWork _unitOfWork;
 
         public ProductoLogic()
         {
-            _productoRepository = new ProductoRepository();
-            // Esto debería ser inyectado, pero lo instanciamos directo por simplicidad:
-            _proveedorRepository = new ProveedorRepository(); 
+            _unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork();
         }
 
         public Guid CrearProductoConProveedor(Producto producto, Guid idProveedor)
         {
             // 1. Validación de Proveedor Existente
-            if (_proveedorRepository.GetById(idProveedor) == null)
+            if (_unitOfWork.Proveedores.GetById(idProveedor) == null)
             {
                 throw new InvalidOperationException($"No se puede crear el producto: El proveedor con ID {idProveedor} no existe en la base de datos.");
             }
@@ -34,10 +32,14 @@ namespace Logic
             {
                 throw new ArgumentException("El nombre del producto es obligatorio.");
             }
-            // ... otras validaciones
 
             // 2. Persistencia
-            return _productoRepository.Create(producto, idProveedor);
+            Guid idProducto = _unitOfWork.Productos.Create(producto, idProveedor);
+
+            // 3. Confirmar la Transacción (Commit)
+            _unitOfWork.Complete();
+
+            return idProducto;
         }
 
         public List<Producto> ObtenerProductosPorProveedor(Guid idProveedor)
@@ -46,10 +48,16 @@ namespace Logic
             {
                 throw new ArgumentException("El ID de Proveedor no puede ser vacío para la búsqueda.");
             }
-            return _productoRepository.GetByProveedor(idProveedor);
+            // Consulta: Accedemos al repositorio a través del UoW
+            return _unitOfWork.Productos.GetByProveedor(idProveedor);
         }
 
-        public List<Producto> ObtenerTodos() => _productoRepository.GetAll();
-        public void DeshabilitarProducto(Guid id) => _productoRepository.Delete(id);
+        public List<Producto> ObtenerTodos() => _unitOfWork.Productos.GetAll();
+
+        public void DeshabilitarProducto(Guid id)
+        {
+            _unitOfWork.Productos.Delete(id);
+            _unitOfWork.Complete(); // Confirma la eliminación
+        }
     }
 }

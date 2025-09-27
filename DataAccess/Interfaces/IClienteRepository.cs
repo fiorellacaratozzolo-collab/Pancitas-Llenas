@@ -14,6 +14,9 @@ namespace DataAccess.Interfaces
     public interface IClienteRepository
     {
         Guid Create(Cliente cliente);
+        void Delete(Guid id);
+        List<Cliente> GetAll();
         List<Cliente> GetByTipoCliente(int IdTipoCliente);
+        Cliente? GetByDni(int? dni);
     }
 }

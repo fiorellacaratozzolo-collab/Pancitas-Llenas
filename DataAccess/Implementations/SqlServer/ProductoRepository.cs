@@ -13,44 +13,38 @@ namespace DataAccess.Implementations.SqlServer
     {
         private readonly PetShopDBContext _context;
 
-        public ProductoRepository()
+        public ProductoRepository(PetShopDBContext context)
         {
-            _context = new PetShopDBContext();
+            _context = context;
         }
 
         public Guid Create(Producto producto, Guid idProveedor)
         {
             if (producto == null) throw new ArgumentNullException(nameof(producto));
-            if (idProveedor == Guid.Empty) throw new ArgumentException("El ID de Proveedor no puede ser vacío.", nameof(idProveedor));
+            if (idProveedor == Guid.Empty) throw new ArgumentException("El ID de Proveedor no puede ser vacío.", nameof(idProveedor));           
 
-            // Usamos una transacción para asegurar que si el producto se crea, también se crea la relación.
-            using (var transaction = _context.Database.BeginTransaction())
+            // 1. Crear el Producto
+            producto.IdProducto = Guid.NewGuid();
+            _context.Productos.Add(producto);
+
+            // 2. Crear la relación ProveedorProducto
+            var proveedorProducto = new ProveedorProducto
             {
-                try
-                {
-                    // 1. Crear el Producto
-                    producto.IdProducto = Guid.NewGuid();
-                    _context.Productos.Add(producto);
+                IdProveedorProducto = Guid.NewGuid(),
+                IdProducto = producto.IdProducto,
+                IdProveedor = idProveedor
+            };
+            _context.ProveedorProductos.Add(proveedorProducto);
 
-                    // 2. Crear la relación ProveedorProducto
-                    var proveedorProducto = new ProveedorProducto
-                    {
-                        IdProveedorProducto = Guid.NewGuid(),
-                        IdProducto = producto.IdProducto,
-                        IdProveedor = idProveedor
-                    };
-                    _context.ProveedorProductos.Add(proveedorProducto);
-
-                    _context.SaveChanges();
-                    transaction.Commit();
-
-                    return producto.IdProducto;
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
+            return producto.IdProducto;
+        }
+        
+        public void Delete(Guid id)
+        {
+            var producto = _context.Productos.Find(id);
+            if (producto != null)
+            {
+                _context.Productos.Remove(producto);
             }
         }
 
@@ -74,17 +68,6 @@ namespace DataAccess.Implementations.SqlServer
         public List<Producto> GetAll()
         {
             return _context.Productos.ToList();
-        }
-
-        public void Delete(Guid id)
-        {
-            var producto = _context.Productos.Find(id);
-            if (producto != null)
-            {
-                // Para borrado físico:
-                _context.Productos.Remove(producto);
-                _context.SaveChanges();
-            }
         }
     }
 }

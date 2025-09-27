@@ -15,6 +15,8 @@ namespace DataAccess.Interfaces
         /// Define los métodos CRUD básicos para trabajar con la entidad Proveedor.
         /// </summary>
         Guid Create(Proveedor proveedor);
+        void Delete(Guid id);
+        List<Proveedor> GetAll();
         public Proveedor? GetByCuit(int cuit);
         Proveedor? GetById(Guid id);
     }

@@ -56,7 +56,7 @@ namespace FormUI.FormCompra
             if (dgvProducto.Columns.Contains("SolicitudDePedidoDetalles"))
                 dgvProducto.Columns["SolicitudDePedidoDetalles"].Visible = false;
             if (dgvProducto.Columns.Contains("SolicitudDeTraspasoDeProductosDetalles"))
-                dgvProducto.Columns["SolicitudDeTraspasoDeProductosDetalles"].Visible = false;   
+                dgvProducto.Columns["SolicitudDeTraspasoDeProductosDetalles"].Visible = false;
 
             // Renombrar columnas
             if (dgvProducto.Columns.Contains("NombreProducto"))
@@ -240,6 +240,11 @@ namespace FormUI.FormCompra
             txtbDescripcion.Text = string.Empty;
             txtbProveedor.Text = string.Empty;
             txtbNombreProd.Focus();
+        }
+
+        private void dgvProducto_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

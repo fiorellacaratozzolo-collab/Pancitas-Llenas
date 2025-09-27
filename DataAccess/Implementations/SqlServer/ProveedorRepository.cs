@@ -15,9 +15,9 @@ namespace DataAccess.Implementations.SqlServer
 
         private readonly PetShopDBContext _context;
 
-        public ProveedorRepository()
+        public ProveedorRepository(PetShopDBContext context)
         {
-            _context = new PetShopDBContext(); // Debe coincidir con la cadena en App.config
+            _context = context;
         }
 
         public Guid Create(Proveedor proveedor)
@@ -27,11 +27,11 @@ namespace DataAccess.Implementations.SqlServer
                 throw new ArgumentNullException(nameof(proveedor), "El proveedor no puede ser nulo.");
             }
 
-            proveedor.IdProveedor = Guid.NewGuid(); // Asigna un nuevo ID al proveedor
+            proveedor.IdProveedor = Guid.NewGuid();
             _context.Proveedors.Add(proveedor);
-            _context.SaveChanges(); // Guarda el proveedor en la base de datos
-
-            return proveedor.IdProveedor; // Retorna el ID generado
+            
+            // La persistencia se hará a través del UoW.Complete()
+            return proveedor.IdProveedor;
         }
 
         public List<Proveedor> GetAll()
@@ -45,7 +45,6 @@ namespace DataAccess.Implementations.SqlServer
             var proveedor = _context.Proveedors.Find(id);
             if (proveedor != null)
             {
-                // Borrado físico (NO RECOMENDADO para producción)
                 _context.Proveedors.Remove(proveedor);
 
                 // LÓGICA DE BORRADO LÓGICO (Ideal):
@@ -58,7 +57,6 @@ namespace DataAccess.Implementations.SqlServer
 
         public Proveedor? GetByCuit(int cuit)
         {
-            // 'Cuit' en la clase Proveedor es de tipo int (según tu código de alta anterior)
             // Usamos FirstOrDefault() que devolverá la primera coincidencia o null.
             return _context.Proveedors.FirstOrDefault(p => p.Cuit == cuit);
         }

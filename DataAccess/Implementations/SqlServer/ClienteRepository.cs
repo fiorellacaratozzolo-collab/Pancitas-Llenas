@@ -13,9 +13,9 @@ namespace DataAccess.Implementations.SqlServer
     {
         private readonly PetShopDBContext _context;
 
-        public ClienteRepository()
+        public ClienteRepository(PetShopDBContext context)
         {
-            _context = new PetShopDBContext(); // Debe coincidir con la cadena en App.config
+            _context = context;
         }
 
         public Guid Create(Cliente cliente)
@@ -25,11 +25,11 @@ namespace DataAccess.Implementations.SqlServer
                 throw new ArgumentNullException(nameof(cliente), "El cliente no puede ser nulo.");
             }
 
-            cliente.IdCliente = Guid.NewGuid(); // Asigna un nuevo ID al cliente
+            cliente.IdCliente = Guid.NewGuid();
             _context.Clientes.Add(cliente);
-            _context.SaveChanges(); // Guarda el cliente en la base de datos
+            // La persistencia se hará a través del UoW.Complete()
 
-            return cliente.IdCliente; // Retorna el ID generado
+            return cliente.IdCliente;
         }
 
         public List<Cliente> GetAll()
@@ -56,10 +56,13 @@ namespace DataAccess.Implementations.SqlServer
                 // LÓGICA DE BORRADO LÓGICO (Ideal):
                 // cliente.Activo = false; // Se necesita agregar 'public bool Activo { get; set; }' al modelo Cliente
                 // _context.Entry(cliente).State = EntityState.Modified; 
-
-                _context.SaveChanges();
             }
         }
 
+        public Cliente? GetByDni(int? dni)
+        {
+            // Busca el primer cliente con el DNI proporcionado o devuelve null si no existe
+            return _context.Clientes.FirstOrDefault(c => c.Dni == dni);
+        }
     }
 }

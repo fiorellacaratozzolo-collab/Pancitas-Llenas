@@ -13,16 +13,16 @@ namespace DataAccess.Implementations.SqlServer
     {
         private readonly PetShopDBContext _context;
 
-        public SucursalRepository()
+        public SucursalRepository(PetShopDBContext context)
         {
-            _context = new PetShopDBContext();
+            _context = context;
         }
+
 
         public Guid Create(Sucursal sucursal)
         {
             sucursal.IdSucursal = Guid.NewGuid();
             _context.Sucursals.Add(sucursal);
-            _context.SaveChanges();
             return sucursal.IdSucursal;
         }
 
@@ -47,7 +47,6 @@ namespace DataAccess.Implementations.SqlServer
         public void Update(Sucursal sucursal)
         {
             _context.Sucursals.Update(sucursal);
-            _context.SaveChanges();
         }
 
         public void Delete(Guid id)
@@ -57,7 +56,6 @@ namespace DataAccess.Implementations.SqlServer
             {
                 _context.Sucursals.Remove(sucursal); // Borrado físico
                 // Lógica de Soft Delete si el modelo Sucursal tiene una propiedad 'Activo'
-                _context.SaveChanges();
             }
         }
 
