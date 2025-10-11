@@ -11,56 +11,64 @@ namespace Logic
 {
     public class ClienteLogic
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public ClienteLogic()
-        {
-            _unitOfWork = new UnitOfWork();
-        }
 
         public Guid CreateCliente(Cliente cliente)
         {
-            //Validaciones
-            if (string.IsNullOrWhiteSpace(cliente.NombreCliente))
+            using (var unitOfWork = new UnitOfWork())
             {
-                throw new ArgumentException("El nombre del cliente es obligatorio.");
+                //Validaciones
+                if (string.IsNullOrWhiteSpace(cliente.NombreCliente))
+                {
+                    throw new ArgumentException("El nombre del cliente es obligatorio.");
+                }
+                if (cliente.Dni == 0)
+                {
+                    throw new ArgumentException("El DNI/Identificador del cliente es obligatorio.");
+                }
+
+                // Verificamos si ya existe un cliente con ese DNI
+                Cliente? clienteExistente = unitOfWork.Clientes.GetByDni(cliente.Dni);
+
+                if (clienteExistente != null)
+                {
+                    //(ClienteDniDuplicadoException)
+                    throw new InvalidOperationException($"No se puede crear el cliente: Ya existe un cliente con el DNI/Identificador {cliente.Dni}.");
+                }
+
+                // Persistencia
+                Guid idCliente = unitOfWork.Clientes.Create(cliente);
+
+                // Commit
+                unitOfWork.Complete();
+
+                return idCliente;
             }
-            if (cliente.Dni == 0) // O cualquier validación para el campo DNI
-            {
-                throw new ArgumentException("El DNI/Identificador del cliente es obligatorio.");
-            }
-            // Verificamos si ya existe un cliente con ese DNI
-            Cliente? clienteExistente = _unitOfWork.Clientes.GetByDni(cliente.Dni);
-
-            if (clienteExistente != null)
-            {
-                throw new InvalidOperationException($"No se puede crear el cliente: Ya existe un cliente con el DNI/Identificador {cliente.Dni}.");
-            }
-
-            // Persistencia
-            Guid idCliente = _unitOfWork.Clientes.Create(cliente);
-
-            // Commit
-            _unitOfWork.Complete();
-
-            return idCliente;
         }
 
         public List<Cliente> ObtenerTodosLosClientes()
         {
-            return _unitOfWork.Clientes.GetAll();
+
+            using (var unitOfWork = new UnitOfWork())
+            {
+                return unitOfWork.Clientes.GetAll();
+            }
         }
 
         public List<Cliente> BuscarClientesPorTipo(int idTipoCliente)
         {
-            return _unitOfWork.Clientes.GetByTipoCliente(idTipoCliente);
+            using (var unitOfWork = new UnitOfWork())
+            {
+                return unitOfWork.Clientes.GetByTipoCliente(idTipoCliente);
+            }
         }
 
         public void DeshabilitarCliente(Guid id)
         {
-            _unitOfWork.Clientes.Delete(id);
-            _unitOfWork.Complete(); // Confirma la eliminación
+            using (var unitOfWork = new UnitOfWork())
+            {
+                unitOfWork.Clientes.Delete(id);
+                unitOfWork.Complete();
+            }
         }
-
     }
 }

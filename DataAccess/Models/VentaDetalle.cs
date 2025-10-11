@@ -9,7 +9,7 @@ public partial class VentaDetalle
 
     public Guid IdVenta { get; set; }
 
-    public Guid IdCliente { get; set; }
+    public Guid IdProducto { get; set; }
 
     public int Cantidad { get; set; }
 
@@ -21,7 +21,7 @@ public partial class VentaDetalle
 
     public decimal Subtotal { get; set; }
 
-    public virtual Cliente IdClienteNavigation { get; set; } = null!;
+    public virtual Producto IdProductoNavigation { get; set; } = null!;
 
     public virtual Ventum IdVentaNavigation { get; set; } = null!;
 }

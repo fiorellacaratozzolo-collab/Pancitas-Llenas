@@ -28,64 +28,71 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnVolver = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnVer = new System.Windows.Forms.Button();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.SuspendLayout();
+            btnVolver = new Button();
+            groupBox1 = new GroupBox();
+            btnVer = new Button();
+            dgvStock = new DataGridView();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvStock).BeginInit();
+            SuspendLayout();
             // 
             // btnVolver
             // 
-            this.btnVolver.Location = new System.Drawing.Point(496, 758);
-            this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(75, 23);
-            this.btnVolver.TabIndex = 5;
-            this.btnVolver.Text = "Volver";
-            this.btnVolver.UseVisualStyleBackColor = true;
+            btnVolver.Location = new Point(583, 642);
+            btnVolver.Margin = new Padding(4, 3, 4, 3);
+            btnVolver.Name = "btnVolver";
+            btnVolver.Size = new Size(88, 27);
+            btnVolver.TabIndex = 5;
+            btnVolver.Text = "Volver";
+            btnVolver.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.btnVer);
-            this.groupBox1.Controls.Add(this.dataGridView1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(565, 740);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Stock disponible";
+            groupBox1.Controls.Add(btnVer);
+            groupBox1.Controls.Add(dgvStock);
+            groupBox1.Location = new Point(14, 14);
+            groupBox1.Margin = new Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(4, 3, 4, 3);
+            groupBox1.Size = new Size(659, 622);
+            groupBox1.TabIndex = 4;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Stock disponible";
             // 
             // btnVer
             // 
-            this.btnVer.Location = new System.Drawing.Point(116, 19);
-            this.btnVer.Name = "btnVer";
-            this.btnVer.Size = new System.Drawing.Size(336, 32);
-            this.btnVer.TabIndex = 2;
-            this.btnVer.Text = "Ver";
-            this.btnVer.UseVisualStyleBackColor = true;
+            btnVer.Location = new Point(135, 22);
+            btnVer.Margin = new Padding(4, 3, 4, 3);
+            btnVer.Name = "btnVer";
+            btnVer.Size = new Size(392, 37);
+            btnVer.TabIndex = 2;
+            btnVer.Text = "Ver";
+            btnVer.UseVisualStyleBackColor = true;
+            btnVer.Click += btnVer_Click;
             // 
-            // dataGridView1
+            // dgvStock
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(6, 57);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(553, 677);
-            this.dataGridView1.TabIndex = 0;
+            dgvStock.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvStock.Location = new Point(7, 66);
+            dgvStock.Margin = new Padding(4, 3, 4, 3);
+            dgvStock.Name = "dgvStock";
+            dgvStock.Size = new Size(645, 542);
+            dgvStock.TabIndex = 0;
             // 
             // FormVerStockDisponible
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(586, 791);
-            this.Controls.Add(this.btnVolver);
-            this.Controls.Add(this.groupBox1);
-            this.Name = "FormVerStockDisponible";
-            this.Text = "Ver Stock Disponible";
-            this.Load += new System.EventHandler(this.FormVerStockDisponible_Load);
-            this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(684, 680);
+            Controls.Add(btnVolver);
+            Controls.Add(groupBox1);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "FormVerStockDisponible";
+            Text = "Ver Stock Disponible";
+            Load += FormVerStockDisponible_Load;
+            groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvStock).EndInit();
+            ResumeLayout(false);
 
         }
 
@@ -94,6 +101,6 @@
         private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnVer;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dgvStock;
     }
 }

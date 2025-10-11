@@ -11,43 +11,42 @@ namespace Logic
 {
     public class ProveedorLogic
     {
-        //IUnitOfWork
-        private readonly IUnitOfWork _unitOfWork;
-
-        public ProveedorLogic()
-        {
-            // Se instancia el UoW (que a su vez instancia y pasa el contexto al repositorio)
-            _unitOfWork = new UnitOfWork();
-        }
-
         public Guid CreateProveedor(Proveedor proveedor)
         {
-            // La validación se mantiene aquí si es necesaria
+            using (var unitOfWork = new UnitOfWork())
+            {
+                // Persistencia
+                Guid idProveedor = unitOfWork.Proveedores.Create(proveedor);
+                unitOfWork.Complete();
 
-            // Persistencia (UoW.Proveedores es el ProveedorRepository modificado)
-            Guid idProveedor = _unitOfWork.Proveedores.Create(proveedor);
-
-            // Confirmación de la transacción (Commit)
-            _unitOfWork.Complete();
-
-            return idProveedor;
+                return idProveedor;
+            }
         }
 
         public List<Proveedor> ObtenerTodosLosProveedores()
         {
-            // Accedemos al Repositorio a través del UoW
-            return _unitOfWork.Proveedores.GetAll();
+            using (var unitOfWork = new UnitOfWork())
+            {
+                // Accedemos al Repositorio a través del UoW
+                return unitOfWork.Proveedores.GetAll();
+            }
         }
 
         public void DeshabilitarProveedor(Guid id)
         {
-            _unitOfWork.Proveedores.Delete(id);
-            _unitOfWork.Complete(); // Confirma la eliminación
+            using (var unitOfWork = new UnitOfWork())
+            {
+                unitOfWork.Proveedores.Delete(id);
+                unitOfWork.Complete();
+            }
         }
 
         public Proveedor? GetByCuit(int cuit)
         {
-            return _unitOfWork.Proveedores.GetByCuit(cuit);
+            using (var unitOfWork = new UnitOfWork())
+            {
+                return unitOfWork.Proveedores.GetByCuit(cuit);
+            }
         }
     }
 }

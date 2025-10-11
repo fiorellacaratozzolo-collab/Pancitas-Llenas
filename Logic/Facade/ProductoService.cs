@@ -30,5 +30,13 @@ namespace Logic.Facade
         {
             _productoLogic.DeshabilitarProducto(id);
         }
+        public List<Producto> GetProductosByProveedor(Guid idProveedor)
+        {
+            return _productoLogic.GetProductosByProveedor(idProveedor);
+        }
+        public List<ProveedorProducto> GetTodosLosVinculosProveedorProducto()
+        {
+            return _productoLogic.GetTodosLosVinculosProveedorProducto();
+        }
     }
 }

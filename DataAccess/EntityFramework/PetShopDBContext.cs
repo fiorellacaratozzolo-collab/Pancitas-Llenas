@@ -34,12 +34,6 @@ public partial class PetShopDBContext : DbContext
 
     public virtual DbSet<EstadoStpenum> EstadoStpenums { get; set; }
 
-    public virtual DbSet<Inventario> Inventarios { get; set; }
-
-    public virtual DbSet<InventarioProducto> InventarioProductos { get; set; }
-
-    public virtual DbSet<InventarioSurcusal> InventarioSurcusals { get; set; }
-
     public virtual DbSet<OrdenDeCompra> OrdenDeCompras { get; set; }
 
     public virtual DbSet<OrdenDeCompraDetalle> OrdenDeCompraDetalles { get; set; }
@@ -73,6 +67,8 @@ public partial class PetShopDBContext : DbContext
     public virtual DbSet<VentaDetalle> VentaDetalles { get; set; }
 
     public virtual DbSet<Ventum> Venta { get; set; }
+
+    public virtual DbSet<StockPorSucursal> StockPorSucursals { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     => optionsBuilder.UseSqlServer("Data Source=FIORE;Initial Catalog=PetShopDB;Integrated Security=True;TrustServerCertificate=True");
@@ -211,63 +207,6 @@ public partial class PetShopDBContext : DbContext
             entity.Property(e => e.Descripcion)
                 .HasMaxLength(20)
                 .IsUnicode(false);
-        });
-
-        modelBuilder.Entity<Inventario>(entity =>
-        {
-            entity.HasKey(e => e.IdInventario);
-
-            entity.ToTable("Inventario");
-
-            entity.Property(e => e.IdInventario).ValueGeneratedNever();
-
-            entity.HasOne(d => d.IdEstadoStockNavigation).WithMany(p => p.Inventarios)
-                .HasForeignKey(d => d.IdEstadoStock)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Inventario_EstadoStockEnum");
-        });
-
-        modelBuilder.Entity<InventarioProducto>(entity =>
-        {
-            entity.HasKey(e => e.IdInventarioProducto);
-
-            entity.ToTable("InventarioProducto");
-
-            entity.Property(e => e.IdInventarioProducto).ValueGeneratedNever();
-
-            entity.HasOne(d => d.IdInventarioNavigation).WithMany(p => p.InventarioProductos)
-                .HasForeignKey(d => d.IdInventario)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InventarioProducto_Inventario");
-
-            entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.InventarioProductos)
-                .HasForeignKey(d => d.IdProducto)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InventarioProducto_Producto");
-        });
-
-        modelBuilder.Entity<InventarioSurcusal>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToTable("InventarioSurcusal");
-
-            entity.Property(e => e.IdEstadoIs).HasColumnName("IdEstadoIS");
-
-            entity.HasOne(d => d.IdEstadoIsNavigation).WithMany()
-                .HasForeignKey(d => d.IdEstadoIs)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InventarioSurcusal_EstadoISEnum");
-
-            entity.HasOne(d => d.IdInventarioNavigation).WithMany()
-                .HasForeignKey(d => d.IdInventario)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InventarioSurcusal_Inventario");
-
-            entity.HasOne(d => d.IdSucursalNavigation).WithMany()
-                .HasForeignKey(d => d.IdSucursal)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_InventarioSurcusal_Sucursal");
         });
 
         modelBuilder.Entity<OrdenDeCompra>(entity =>
@@ -559,10 +498,10 @@ public partial class PetShopDBContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.VentaDetalles)
-                .HasForeignKey(d => d.IdCliente)
+            entity.HasOne(d => d.IdProductoNavigation).WithMany()
+                .HasForeignKey(d => d.IdProducto)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_VentaDetalle_Cliente");
+                .HasConstraintName("FK_VentaDetalle_Producto");
 
             entity.HasOne(d => d.IdVentaNavigation).WithMany(p => p.VentaDetalles)
                 .HasForeignKey(d => d.IdVenta)
@@ -582,6 +521,48 @@ public partial class PetShopDBContext : DbContext
                 .HasForeignKey(d => d.IdTipoVenta)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Venta_TipoVentaEnum");
+        });
+
+        modelBuilder.Entity<StockPorSucursal>(entity =>
+        {
+            entity.HasKey(e => e.IdStockSucursal);
+            entity.ToTable("StockPorSucursal");
+            entity.Property(e => e.IdStockSucursal)
+                .ValueGeneratedNever();
+
+            entity.Property(e => e.StockActual)
+                .HasColumnType("int")
+                .HasDefaultValue(0);
+
+            entity.Property(e => e.StockDeseado)
+                .HasColumnType("int")
+                .HasDefaultValue(0);            
+
+            // Relación a PRODUCTO: Se usa la FK correcta (IdProducto), evitando el error 'ProductoIdProducto'.
+            entity.HasOne(d => d.IdProductoNavigation)
+                .WithMany()
+                .HasForeignKey(d => d.IdProducto) // <-- ¡Correcto!
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StockSucursal_Producto");
+
+            // Relación a SUCURSAL: Se usa la FK correcta (IdSucursal), evitando el error 'SucursalIdSucursal'.
+            entity.HasOne(d => d.IdSucursalNavigation)
+                .WithMany()
+                .HasForeignKey(d => d.IdSucursal) // <-- ¡Correcto!
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StockSucursal_Sucursal");
+
+            // Relación a ESTADO STOCK: Se usa la FK correcta (IdEstadoStock), evitando el error 'EstadoStockEnumIdEstadoStock'.
+            entity.HasOne(d => d.IdEstadoStockNavigation)
+                .WithMany()
+                .HasForeignKey(d => d.IdEstadoStock) // <-- ¡Correcto!
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StockSucursal_EstadoStock");
+
+            // --- Índice Único (Muy importante para el stock) ---
+            // Esto garantiza que solo haya una fila de Stock por Producto y por Sucursal.
+            entity.HasIndex(e => new { e.IdProducto, e.IdSucursal })
+                .IsUnique();
         });
 
         OnModelCreatingPartial(modelBuilder);

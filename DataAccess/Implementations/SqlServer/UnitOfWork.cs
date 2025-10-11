@@ -2,6 +2,7 @@
 using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Interfaces;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,10 @@ namespace DataAccess.Implementations.SqlServer
         public IProveedorRepository Proveedores { get; private set; }
         public ISucursalRepository Sucursales { get; private set; }
         public IClienteRepository Clientes { get; private set; }
-
+        public IStockPorSucursalRepository Stocks { get; private set; }
+        public IVentaRepository Ventas { get; }
+        public IVentaDetalleRepository VentaDetalles { get; }
+        public IProveedorProductoRepository ProveedorProductos { get; private set; }
         public UnitOfWork()
         {
             // La magia del UoW: SOLO UNA INSTANCIA del Contexto
@@ -30,6 +34,10 @@ namespace DataAccess.Implementations.SqlServer
             Proveedores = new ProveedorRepository(_context);
             Sucursales = new SucursalRepository(_context);
             Clientes = new ClienteRepository(_context);
+            Stocks = new StockPorSucursalRepository(_context);
+            Ventas = new VentaRepository(_context);
+            VentaDetalles = new VentaDetalleRepository(_context);
+            ProveedorProductos = new ProveedorProductoRepository(_context);
         }
 
         public int Complete()
@@ -41,6 +49,7 @@ namespace DataAccess.Implementations.SqlServer
         public void Dispose()
         {
             _context.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

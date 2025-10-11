@@ -38,7 +38,7 @@ namespace Logic.Facade
 
         public Sucursal? GetById(Guid id)
         {
-            return _sucursalLogic.ObtenerSucursalPorId(id);
+            return _sucursalLogic.GetById(id);
         }
 
         public List<Sucursal> SearchByDireccion(string direccionFragment)
@@ -46,6 +46,7 @@ namespace Logic.Facade
             // Llama al método del Logic/Repository
             return _sucursalLogic.SearchByDireccion(direccionFragment);
         }
+
     }
 
 }

@@ -23,11 +23,6 @@ namespace FormUI.FormCompra
         // Instantiate the service (can also be done in the constructor)
         private readonly ProveedorService _proveedorService = new ProveedorService();
 
-
-        // =================================================================
-        // MÉTODO DE CARGA DE DATOS PARA EL DATAGRIDVIEW
-        // =================================================================
-
         /// <summary>
         /// Obtiene la lista de clientes y la asigna al DataGridView (dgvClientes).
         /// </summary>

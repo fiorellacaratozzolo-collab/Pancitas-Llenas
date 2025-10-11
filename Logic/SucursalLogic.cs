@@ -12,61 +12,80 @@ namespace Logic
 {
     public class SucursalLogic
     {
-        private readonly IUnitOfWork _unitOfWork;
-
-        public SucursalLogic()
-        {
-            _unitOfWork = new UnitOfWork();
-        }
 
         public Guid CrearSucursal(Sucursal sucursal)
-        {
-            if (string.IsNullOrWhiteSpace(sucursal.NombreSucursal) || string.IsNullOrWhiteSpace(sucursal.Direccion))
+        {        
+            using (var unitOfWork = new UnitOfWork())
             {
-                throw new ArgumentException("Nombre y Dirección de la sucursal son obligatorios.");
+                if (string.IsNullOrWhiteSpace(sucursal.NombreSucursal) || string.IsNullOrWhiteSpace(sucursal.Direccion))
+                {
+                    throw new ArgumentException("Nombre y Dirección de la sucursal son obligatorios.");
+                }
+                Guid idSucursal = unitOfWork.Sucursales.Create(sucursal);
+
+                unitOfWork.Complete();
+
+                return idSucursal;
             }
-
-            // Persistencia
-            Guid idSucursal = _unitOfWork.Sucursales.Create(sucursal);
-
-            // Confirmación de la transacción
-            _unitOfWork.Complete();
-
-            return idSucursal;
         }
 
         public List<Sucursal> ObtenerTodasLasSucursales()
         {
-            return _unitOfWork.Sucursales.GetAll();
+            using (var unitOfWork = new UnitOfWork())
+            {
+                return unitOfWork.Sucursales.GetAll();
+            }
         }
 
         public List<Sucursal> BuscarPorTipoSucursal(int idTipoSucursal)
         {
-            return _unitOfWork.Sucursales.GetByTipoSucursal(idTipoSucursal);
+            using (var unitOfWork = new UnitOfWork())
+            {
+                return unitOfWork.Sucursales.GetByTipoSucursal(idTipoSucursal);
+            }
         }
 
+        public Sucursal? GetById(Guid id)
+        {
+            using (var unitOfWork = new UnitOfWork())
+            {
+                return unitOfWork.Sucursales.GetById(id);
+            }
+        }
 
         public void DeshabilitarSucursal(Guid id)
         {
-            _unitOfWork.Sucursales.Delete(id);
-            _unitOfWork.Complete(); // Confirma la eliminación
+            using (var unitOfWork = new UnitOfWork())
+            {
+                unitOfWork.Sucursales.Delete(id);
+                unitOfWork.Complete(); // Confirma la eliminación
+            }
         }
 
         public void ActualizarSucursal(Sucursal sucursal)
         {
-            _unitOfWork.Sucursales.Update(sucursal);
-            _unitOfWork.Complete(); // Confirma la actualización
+            using (var unitOfWork = new UnitOfWork())
+            {
+                unitOfWork.Sucursales.Update(sucursal);
+                unitOfWork.Complete(); // Confirma la actualización
+            }
         }
 
         public Sucursal? ObtenerSucursalPorId(Guid id)
         {
-            if (id == Guid.Empty) return null;
-            return _unitOfWork.Sucursales.GetById(id);
+            using (var unitOfWork = new UnitOfWork())
+            {
+                if (id == Guid.Empty) return null;
+                return unitOfWork.Sucursales.GetById(id);
+            }
         }
 
         public List<Sucursal> SearchByDireccion(string direccionFragment)
         {
-            return _unitOfWork.Sucursales.SearchByDireccion(direccionFragment);
+            using (var unitOfWork = new UnitOfWork())
+            {
+                return unitOfWork.Sucursales.SearchByDireccion(direccionFragment);
+            }
         }
     }
 }

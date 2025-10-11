@@ -12,52 +12,82 @@ namespace Logic
 {
     public class ProductoLogic
     {
-        //UnitOfWork
-        private readonly IUnitOfWork _unitOfWork;
-
-        public ProductoLogic()
-        {
-            _unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork();
-        }
 
         public Guid CrearProductoConProveedor(Producto producto, Guid idProveedor)
         {
-            // 1. Validación de Proveedor Existente
-            if (_unitOfWork.Proveedores.GetById(idProveedor) == null)
+            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
             {
-                throw new InvalidOperationException($"No se puede crear el producto: El proveedor con ID {idProveedor} no existe en la base de datos.");
+                // 1. Validación de Proveedor Existente
+                if (unitOfWork.Proveedores.GetById(idProveedor) == null)
+                {
+                    // (ProveedorNoExisteException)
+                    throw new InvalidOperationException($"No se puede crear el producto: El proveedor con ID {idProveedor} no existe en la base de datos.");
+                }
+
+                if (string.IsNullOrWhiteSpace(producto.NombreProducto))
+                {
+                    throw new ArgumentException("El nombre del producto es obligatorio.");
+                }
+
+                // 2. Persistencia
+                Guid idProducto = unitOfWork.Productos.Create(producto, idProveedor);
+
+                // 3. Confirmar la Transacción (Commit)
+                unitOfWork.Complete();
+
+                return idProducto;
             }
-
-            if (string.IsNullOrWhiteSpace(producto.NombreProducto))
-            {
-                throw new ArgumentException("El nombre del producto es obligatorio.");
-            }
-
-            // 2. Persistencia
-            Guid idProducto = _unitOfWork.Productos.Create(producto, idProveedor);
-
-            // 3. Confirmar la Transacción (Commit)
-            _unitOfWork.Complete();
-
-            return idProducto;
         }
 
         public List<Producto> ObtenerProductosPorProveedor(Guid idProveedor)
         {
-            if (idProveedor == Guid.Empty)
+            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
             {
-                throw new ArgumentException("El ID de Proveedor no puede ser vacío para la búsqueda.");
+                if (idProveedor == Guid.Empty)
+                {
+                    throw new ArgumentException("El ID de Proveedor no puede ser vacío para la búsqueda.");
+                }
+                return unitOfWork.Productos.GetByProveedor(idProveedor);
             }
-            // Consulta: Accedemos al repositorio a través del UoW
-            return _unitOfWork.Productos.GetByProveedor(idProveedor);
         }
 
-        public List<Producto> ObtenerTodos() => _unitOfWork.Productos.GetAll();
+        public List<Producto> ObtenerTodos()
+        {         
+            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
+            {
+                return unitOfWork.Productos.GetAll();
+            }
+        }
 
         public void DeshabilitarProducto(Guid id)
         {
-            _unitOfWork.Productos.Delete(id);
-            _unitOfWork.Complete(); // Confirma la eliminación
+            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
+            {
+                unitOfWork.Productos.Delete(id);
+                unitOfWork.Complete();
+            }
+        }
+
+        public List<Producto> GetProductosByProveedor(Guid idProveedor)
+        {
+            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
+            {
+                // Carga la relación intermedia y selecciona solo los productos.
+                return unitOfWork.ProveedorProductos
+                                    .GetAll()
+                                    .Where(pp => pp.IdProveedor == idProveedor)
+                                    .Select(pp => pp.IdProductoNavigation)
+                                    .ToList();
+            }
+        }
+
+        public List<ProveedorProducto> GetTodosLosVinculosProveedorProducto()
+        {
+            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
+            {
+                // Llama al repositorio para obtener todos los vínculos
+                return unitOfWork.ProveedorProductos.GetAll();
+            }
         }
     }
 }

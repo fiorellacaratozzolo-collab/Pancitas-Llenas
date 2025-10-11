@@ -15,6 +15,7 @@ public partial class Sucursal
 
     public int IdTipoSucursal { get; set; }
 
+    public virtual ICollection<StockPorSucursal> StockPorSucursals { get; set; } = new List<StockPorSucursal>();
     public virtual ICollection<EncargadoSucursal> EncargadoSucursals { get; set; } = new List<EncargadoSucursal>();
 
     public virtual TipoSucursalEnum IdTipoSucursalNavigation { get; set; } = null!;

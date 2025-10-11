@@ -9,5 +9,5 @@ public partial class EstadoStockEnum
 
     public string Descripcion { get; set; } = null!;
 
-    public virtual ICollection<Inventario> Inventarios { get; set; } = new List<Inventario>();
+    public virtual ICollection<StockPorSucursal> StockPorSucursals { get; set; } = new List<StockPorSucursal>();
 }
