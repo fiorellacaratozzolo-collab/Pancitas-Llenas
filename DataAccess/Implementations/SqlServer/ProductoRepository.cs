@@ -1,4 +1,4 @@
-﻿using DataAccess.EntityFramework;
+﻿using DataAccess.Contexts;
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using System;
@@ -11,9 +11,9 @@ namespace DataAccess.Implementations.SqlServer
 {
     public class ProductoRepository : IProductoRepository
     {
-        private readonly PetShopDBContext _context;
+        private readonly PetShopDbContext _context;
 
-        public ProductoRepository(PetShopDBContext context)
+        public ProductoRepository(PetShopDbContext context)
         {
             _context = context;
         }

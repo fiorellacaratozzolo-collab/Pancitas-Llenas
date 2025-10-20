@@ -11,9 +11,13 @@ public partial class Ventum
 
     public DateTime FechaVenta { get; set; }
 
+    public Guid IdCliente { get; set; }
+
     public int IdTipoVenta { get; set; }
 
     public decimal Total { get; set; }
+
+    public virtual Cliente IdClienteNavigation { get; set; } = null!;
 
     public virtual TipoVentaEnum IdTipoVentaNavigation { get; set; } = null!;
 

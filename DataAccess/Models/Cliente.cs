@@ -15,5 +15,5 @@ public partial class Cliente
 
     public virtual TipoClienteEnum IdTipoClienteNavigation { get; set; } = null!;
 
-    public virtual ICollection<VentaDetalle> VentaDetalles { get; set; } = new List<VentaDetalle>();
+    public virtual ICollection<Ventum> Venta { get; set; } = new List<Ventum>();
 }

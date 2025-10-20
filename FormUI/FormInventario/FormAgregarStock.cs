@@ -47,14 +47,30 @@ namespace FormUI.FormInventario
             }
 
             // 2. Ocultar IDs y configurar encabezados
-            dgvAgregarStock.Columns["IdProducto"].Visible = false;
-            dgvAgregarStock.Columns["IdProveedor"].Visible = false;
-            dgvAgregarStock.Columns["NombreProducto"].HeaderText = "Producto";
-            dgvAgregarStock.Columns["NombreProveedor"].HeaderText = "Proveedor";
-            dgvAgregarStock.Columns["StockActual"].HeaderText = "Stock Actual";
+            // NOTA: Estas columnas DEBEN existir en el objeto anónimo (ViewModel) del dataSource.
+            if (dgvAgregarStock.Columns.Contains("IdProducto"))
+                dgvAgregarStock.Columns["IdProducto"].Visible = false;
+
+            // La columna IdProveedor ya no es necesaria en el DGV si usas el ViewModel proyectado.
+            // Si existiera la columna IdProveedor:
+            // if (dgvAgregarStock.Columns.Contains("IdProveedor"))
+            //     dgvAgregarStock.Columns["IdProveedor"].Visible = false;
+
+            if (dgvAgregarStock.Columns.Contains("NombreProducto"))
+                dgvAgregarStock.Columns["NombreProducto"].HeaderText = "Producto";
+
+            if (dgvAgregarStock.Columns.Contains("NombreProveedor"))
+                dgvAgregarStock.Columns["NombreProveedor"].HeaderText = "Proveedor";
+
+            if (dgvAgregarStock.Columns.Contains("StockActual"))
+                dgvAgregarStock.Columns["StockActual"].HeaderText = "Stock Actual";
+
+            if (dgvAgregarStock.Columns.Contains("StockDeseado"))
+                dgvAgregarStock.Columns["StockDeseado"].HeaderText = "Stock Deseado";
 
             // 3. Permitir edición solo en la columna de entrada
-            dgvAgregarStock.ReadOnly = false;
+            dgvAgregarStock.ReadOnly = true;
+            dgvAgregarStock.EditMode = DataGridViewEditMode.EditOnEnter;
             foreach (DataGridViewColumn col in dgvAgregarStock.Columns)
             {
                 col.ReadOnly = (col.Name != "StockAAgregar");
@@ -71,7 +87,7 @@ namespace FormUI.FormInventario
                 proveedores.Insert(0, new Proveedor { IdProveedor = Guid.Empty, NombreProveedor = "--- Mostrar Todos ---" });
 
                 cmbProveedor.DataSource = proveedores;
-                cmbProveedor.DisplayMember = "Nombre";
+                cmbProveedor.DisplayMember = "NombreProveedor";
                 cmbProveedor.ValueMember = "IdProveedor";
             }
             catch (Exception ex)
@@ -121,10 +137,21 @@ namespace FormUI.FormInventario
 
                 dgvAgregarStock.DataSource = dataSource;
                 ConfigurarDGV();
+
+                // Añadir columna StockAAgregar como editable
+                if (!dgvAgregarStock.Columns.Contains("StockAAgregar"))
+                {
+                    DataGridViewTextBoxColumn txtStock = new DataGridViewTextBoxColumn();
+                    txtStock.HeaderText = "Stock a Añadir";
+                    txtStock.Name = "StockAAgregar";
+                    txtStock.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    dgvAgregarStock.Columns.Add(txtStock);
+
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar productos: " + ex.Message);
+                MessageBox.Show("Error al cargar productos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

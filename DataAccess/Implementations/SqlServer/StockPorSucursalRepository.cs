@@ -1,4 +1,4 @@
-﻿using DataAccess.EntityFramework;
+﻿using DataAccess.Contexts;
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +12,10 @@ namespace DataAccess.Implementations.SqlServer
 {
     public class StockPorSucursalRepository : IStockPorSucursalRepository
     {
-        private readonly PetShopDBContext _context;
+        private readonly PetShopDbContext _context;
 
         // El constructor recibe el DbContext, no lo crea.
-        public StockPorSucursalRepository(PetShopDBContext context)
+        public StockPorSucursalRepository(PetShopDbContext context)
         {
             _context = context;
         }

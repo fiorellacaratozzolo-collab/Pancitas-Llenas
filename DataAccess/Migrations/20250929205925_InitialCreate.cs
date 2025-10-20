@@ -447,53 +447,36 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "StockPorSucursal",
-                columns: table => new
-                {
-                    IdStockSucursal = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IdProducto = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IdSucursal = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    StockActual = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    StockDeseado = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    IdEstadoStock = table.Column<int>(type: "int", nullable: false),
-                    EstadoStockEnumIdEstadoStock = table.Column<int>(type: "int", nullable: true),
-                    ProductoIdProducto = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SucursalIdSucursal = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StockPorSucursal", x => x.IdStockSucursal);
-                    table.ForeignKey(
-                        name: "FK_StockPorSucursal_EstadoStockEnum_EstadoStockEnumIdEstadoStock",
-                        column: x => x.EstadoStockEnumIdEstadoStock,
-                        principalTable: "EstadoStockEnum",
-                        principalColumn: "IdEstadoStock");
-                    table.ForeignKey(
-                        name: "FK_StockPorSucursal_Producto_ProductoIdProducto",
-                        column: x => x.ProductoIdProducto,
-                        principalTable: "Producto",
-                        principalColumn: "IdProducto");
-                    table.ForeignKey(
-                        name: "FK_StockPorSucursal_Sucursal_SucursalIdSucursal",
-                        column: x => x.SucursalIdSucursal,
-                        principalTable: "Sucursal",
-                        principalColumn: "IdSucursal");
-                    table.ForeignKey(
-                        name: "FK_StockSucursal_EstadoStock",
-                        column: x => x.IdEstadoStock,
-                        principalTable: "EstadoStockEnum",
-                        principalColumn: "IdEstadoStock");
-                    table.ForeignKey(
-                        name: "FK_StockSucursal_Producto",
-                        column: x => x.IdProducto,
-                        principalTable: "Producto",
-                        principalColumn: "IdProducto");
-                    table.ForeignKey(
-                        name: "FK_StockSucursal_Sucursal",
-                        column: x => x.IdSucursal,
-                        principalTable: "Sucursal",
-                        principalColumn: "IdSucursal");
-                });
+    name: "StockPorSucursal",
+    columns: table => new
+    {
+        IdStockSucursal = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+        IdProducto = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+        IdSucursal = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+        IdEstadoStock = table.Column<int>(type: "int", nullable: false),
+        StockActual = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+        StockDeseado = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+    },
+    constraints: table =>
+    {
+        table.PrimaryKey("PK_StockPorSucursal", x => x.IdStockSucursal);
+        table.ForeignKey(
+            name: "FK_StockPorSucursal_EstadoStockEnum_IdEstadoStock",
+            column: x => x.IdEstadoStock,
+            principalTable: "EstadoStockEnum",
+            principalColumn: "IdEstadoStock");
+        table.ForeignKey(
+            name: "FK_StockPorSucursal_Producto_IdProducto",
+            column: x => x.IdProducto,
+            principalTable: "Producto",
+            principalColumn: "IdProducto");
+        table.ForeignKey(
+            name: "FK_StockPorSucursal_Sucursal_IdSucursal",
+            column: x => x.IdSucursal,
+            principalTable: "Sucursal",
+            principalColumn: "IdSucursal");
+            
+    });
 
             migrationBuilder.CreateTable(
                 name: "VentaDetalle",

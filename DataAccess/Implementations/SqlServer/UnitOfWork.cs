@@ -1,4 +1,4 @@
-﻿using DataAccess.EntityFramework;
+﻿using DataAccess.Contexts;
 using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Interfaces;
 using System;
@@ -12,7 +12,7 @@ namespace DataAccess.Implementations.SqlServer
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly PetShopDBContext _context;
+        private readonly PetShopDbContext _context;
 
         // Propiedades de Repositorios
         public IProductoRepository Productos { get; private set; }
@@ -26,7 +26,7 @@ namespace DataAccess.Implementations.SqlServer
         public UnitOfWork()
         {
             // La magia del UoW: SOLO UNA INSTANCIA del Contexto
-            _context = new PetShopDBContext();
+            _context = new PetShopDbContext();
 
             // Inicializar Repositorios y pasarles la instancia del Contexto
             // NOTA: Debes modificar los Repositorios para que acepten el DbContext en su constructor.

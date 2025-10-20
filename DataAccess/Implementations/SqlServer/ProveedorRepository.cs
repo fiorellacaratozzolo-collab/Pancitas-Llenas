@@ -1,4 +1,4 @@
-﻿using DataAccess.EntityFramework;
+﻿using DataAccess.Contexts;
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +13,9 @@ namespace DataAccess.Implementations.SqlServer
     public class ProveedorRepository: IProveedorRepository
     {
 
-        private readonly PetShopDBContext _context;
+        private readonly PetShopDbContext _context;
 
-        public ProveedorRepository(PetShopDBContext context)
+        public ProveedorRepository(PetShopDbContext context)
         {
             _context = context;
         }
