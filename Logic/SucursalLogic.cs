@@ -1,7 +1,10 @@
-﻿using DataAccess.Implementations.SqlServer;
+﻿using AutoMapper;
+using DataAccess.Implementations.SqlServer;
 using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using Logic.MappingProfiles;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,80 +15,76 @@ namespace Logic
 {
     public class SucursalLogic
     {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper = MapperConfigInitializer.Mapper;
 
-        public Guid CrearSucursal(Sucursal sucursal)
-        {        
-            using (var unitOfWork = new UnitOfWork())
-            {
-                if (string.IsNullOrWhiteSpace(sucursal.NombreSucursal) || string.IsNullOrWhiteSpace(sucursal.Direccion))
-                {
-                    throw new ArgumentException("Nombre y Dirección de la sucursal son obligatorios.");
-                }
-                Guid idSucursal = unitOfWork.Sucursales.Create(sucursal);
-
-                unitOfWork.Complete();
-
-                return idSucursal;
-            }
+        public SucursalLogic()
+        {
+            _unitOfWork = new UnitOfWork();
         }
 
-        public List<Sucursal> ObtenerTodasLasSucursales()
+        public Guid CrearSucursal(SucursalDTO sucursalDTO)
         {
-            using (var unitOfWork = new UnitOfWork())
+            // 1. Mapear DTO de entrada a Entidad DAO
+            Sucursal sucursalEntity = _mapper.Map<Sucursal>(sucursalDTO);
+
+            if (string.IsNullOrWhiteSpace(sucursalEntity.NombreSucursal) || string.IsNullOrWhiteSpace(sucursalEntity.Direccion))
             {
-                return unitOfWork.Sucursales.GetAll();
+                throw new ArgumentException("Nombre y Dirección de la sucursal son obligatorios.");
             }
+            // 2. Persistencia
+            Guid idSucursal = _unitOfWork.Sucursales.Create(sucursalEntity);
+            // 3. Commit
+            _unitOfWork.Complete();
+
+            return idSucursal;
         }
 
-        public List<Sucursal> BuscarPorTipoSucursal(int idTipoSucursal)
+        public void ActualizarSucursal(SucursalDTO sucursalDTO)
         {
-            using (var unitOfWork = new UnitOfWork())
-            {
-                return unitOfWork.Sucursales.GetByTipoSucursal(idTipoSucursal);
-            }
-        }
-
-        public Sucursal? GetById(Guid id)
-        {
-            using (var unitOfWork = new UnitOfWork())
-            {
-                return unitOfWork.Sucursales.GetById(id);
-            }
+            // 1.Mapear DTO de entrada a Entidad DAO para la actualización
+            Sucursal sucursalEntity = _mapper.Map<Sucursal>(sucursalDTO);
+            _unitOfWork.Sucursales.Update(sucursalEntity);
+            _unitOfWork.Complete(); // Confirma la actualización
         }
 
         public void DeshabilitarSucursal(Guid id)
         {
-            using (var unitOfWork = new UnitOfWork())
-            {
-                unitOfWork.Sucursales.Delete(id);
-                unitOfWork.Complete(); // Confirma la eliminación
-            }
+            _unitOfWork.Sucursales.Delete(id);
+            _unitOfWork.Complete();
         }
 
-        public void ActualizarSucursal(Sucursal sucursal)
+        public List<SucursalDTO> ObtenerTodasLasSucursales()
         {
-            using (var unitOfWork = new UnitOfWork())
-            {
-                unitOfWork.Sucursales.Update(sucursal);
-                unitOfWork.Complete(); // Confirma la actualización
-            }
+            List<Sucursal> sucursales = _unitOfWork.Sucursales.GetAll();
+            return _mapper.Map<List<SucursalDTO>>(sucursales);
         }
 
-        public Sucursal? ObtenerSucursalPorId(Guid id)
+        public List<SucursalDTO> BuscarPorTipoSucursal(int idTipoSucursal)
         {
-            using (var unitOfWork = new UnitOfWork())
-            {
-                if (id == Guid.Empty) return null;
-                return unitOfWork.Sucursales.GetById(id);
-            }
+            List<Sucursal> sucursales = _unitOfWork.Sucursales.GetByTipoSucursal(idTipoSucursal);
+            return _mapper.Map<List<SucursalDTO>>(sucursales);
         }
 
-        public List<Sucursal> SearchByDireccion(string direccionFragment)
+        public SucursalDTO? GetById(Guid id)
         {
-            using (var unitOfWork = new UnitOfWork())
-            {
-                return unitOfWork.Sucursales.SearchByDireccion(direccionFragment);
-            }
+            return ObtenerSucursalPorId(id);
+        }
+
+        public SucursalDTO? ObtenerSucursalPorId(Guid id)
+        {
+            if (id == Guid.Empty) return null;
+
+            Sucursal? sucursal = _unitOfWork.Sucursales.GetById(id);
+
+            if (sucursal == null) return null;
+            return _mapper.Map<SucursalDTO>(sucursal);
+        }
+
+        public List<SucursalDTO> SearchByDireccion(string direccionFragment)
+        {
+            List<Sucursal> sucursales = _unitOfWork.Sucursales.SearchByDireccion(direccionFragment);
+            return _mapper.Map<List<SucursalDTO>>(sucursales);
         }
     }
 }

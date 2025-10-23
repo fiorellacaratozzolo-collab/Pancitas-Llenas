@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Logic.Facade;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -51,11 +52,6 @@ namespace FormUI.FormInventario
             if (dgvAgregarStock.Columns.Contains("IdProducto"))
                 dgvAgregarStock.Columns["IdProducto"].Visible = false;
 
-            // La columna IdProveedor ya no es necesaria en el DGV si usas el ViewModel proyectado.
-            // Si existiera la columna IdProveedor:
-            // if (dgvAgregarStock.Columns.Contains("IdProveedor"))
-            //     dgvAgregarStock.Columns["IdProveedor"].Visible = false;
-
             if (dgvAgregarStock.Columns.Contains("NombreProducto"))
                 dgvAgregarStock.Columns["NombreProducto"].HeaderText = "Producto";
 
@@ -81,10 +77,10 @@ namespace FormUI.FormInventario
         {
             try
             {
-                List<Proveedor> proveedores = _proveedorService.GetAllProveedores();
+                List<ProveedorDTO> proveedores = _proveedorService.GetAllProveedores();
 
                 // Opción para ver todos los productos
-                proveedores.Insert(0, new Proveedor { IdProveedor = Guid.Empty, NombreProveedor = "--- Mostrar Todos ---" });
+                proveedores.Insert(0, new ProveedorDTO { IdProveedor = Guid.Empty, NombreProveedor = "--- Mostrar Todos ---" });
 
                 cmbProveedor.DataSource = proveedores;
                 cmbProveedor.DisplayMember = "NombreProveedor";
@@ -101,7 +97,7 @@ namespace FormUI.FormInventario
             try
             {
                 // 1. OBTENER PRODUCTOS (USANDO LA LÓGICA CORREGIDA PARA N:M)
-                List<Producto> productos;
+                List<ProductoDTO> productos;
                 if (idProveedor.HasValue && idProveedor.Value != Guid.Empty)
                 {
                     // Usa el método que resuelve la relación N:M (GetProductosByProveedor)
@@ -114,7 +110,7 @@ namespace FormUI.FormInventario
                 }
 
                 // 2. Obtener el stock actual de la sucursal
-                List<StockPorSucursal> stocks = _inventarioService.ObtenerStockPorSucursal(ID_SUCURSAL_ACTUAL);
+                List<StockPorSucursalDTO> stocks = _inventarioService.ObtenerStockPorSucursal(ID_SUCURSAL_ACTUAL);
 
                 var todosLosVinculos = _productoService.GetTodosLosVinculosProveedorProducto();
                 var dataSource = productos.Select(p =>

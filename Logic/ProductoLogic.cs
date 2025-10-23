@@ -1,7 +1,10 @@
-﻿using DataAccess.Implementations.SqlServer;
+﻿using AutoMapper;
+using DataAccess.Implementations.SqlServer;
 using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using Logic.MappingProfiles;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,82 +15,73 @@ namespace Logic
 {
     public class ProductoLogic
     {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper = MapperConfigInitializer.Mapper;
 
-        public Guid CrearProductoConProveedor(Producto producto, Guid idProveedor)
+        public ProductoLogic()
         {
-            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
-            {
-                // 1. Validación de Proveedor Existente
-                if (unitOfWork.Proveedores.GetById(idProveedor) == null)
-                {
-                    // (ProveedorNoExisteException)
-                    throw new InvalidOperationException($"No se puede crear el producto: El proveedor con ID {idProveedor} no existe en la base de datos.");
-                }
-
-                if (string.IsNullOrWhiteSpace(producto.NombreProducto))
-                {
-                    throw new ArgumentException("El nombre del producto es obligatorio.");
-                }
-
-                // 2. Persistencia
-                Guid idProducto = unitOfWork.Productos.Create(producto, idProveedor);
-
-                // 3. Confirmar la Transacción (Commit)
-                unitOfWork.Complete();
-
-                return idProducto;
-            }
+            _unitOfWork = new UnitOfWork();
         }
 
-        public List<Producto> ObtenerProductosPorProveedor(Guid idProveedor)
+        public Guid CrearProductoConProveedor(ProductoDTO productoDTO, Guid idProveedor)
         {
-            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
-            {
-                if (idProveedor == Guid.Empty)
-                {
-                    throw new ArgumentException("El ID de Proveedor no puede ser vacío para la búsqueda.");
-                }
-                return unitOfWork.Productos.GetByProveedor(idProveedor);
-            }
-        }
+            // 1. Mappeo de DTO a Entidad
+            Producto producto = _mapper.Map<Producto>(productoDTO);
 
-        public List<Producto> ObtenerTodos()
-        {         
-            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
+            // 2. Validación de Proveedor Existente (usa la UoW inyectada)
+            if (_unitOfWork.Proveedores.GetById(idProveedor) == null)
             {
-                return unitOfWork.Productos.GetAll();
+                throw new InvalidOperationException($"No se puede crear el producto: El proveedor con ID {idProveedor} no existe en la base de datos.");
             }
+
+            if (string.IsNullOrWhiteSpace(producto.NombreProducto))
+            {
+                throw new ArgumentException("El nombre del producto es obligatorio.");
+            }
+
+            Guid idProducto = _unitOfWork.Productos.Create(producto, idProveedor);
+            _unitOfWork.Complete();
+
+            return idProducto;
         }
 
         public void DeshabilitarProducto(Guid id)
         {
-            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
-            {
-                unitOfWork.Productos.Delete(id);
-                unitOfWork.Complete();
-            }
+            _unitOfWork.Productos.Delete(id);
+            _unitOfWork.Complete();
         }
 
-        public List<Producto> GetProductosByProveedor(Guid idProveedor)
+        public List<ProductoDTO> ObtenerProductosPorProveedor(Guid idProveedor)
         {
-            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
+            if (idProveedor == Guid.Empty)
             {
-                // Carga la relación intermedia y selecciona solo los productos.
-                return unitOfWork.ProveedorProductos
-                                    .GetAll()
-                                    .Where(pp => pp.IdProveedor == idProveedor)
-                                    .Select(pp => pp.IdProductoNavigation)
-                                    .ToList();
+                throw new ArgumentException("El ID de Proveedor no puede ser vacío para la búsqueda.");
             }
+
+            List<Producto> productos = _unitOfWork.Productos.GetByProveedor(idProveedor);
+            return _mapper.Map<List<ProductoDTO>>(productos);
         }
 
-        public List<ProveedorProducto> GetTodosLosVinculosProveedorProducto()
+        public List<ProductoDTO> ObtenerTodos()
         {
-            using (var unitOfWork = new DataAccess.Implementations.SqlServer.UnitOfWork())
-            {
-                // Llama al repositorio para obtener todos los vínculos
-                return unitOfWork.ProveedorProductos.GetAll();
-            }
+            List<Producto> productos = _unitOfWork.Productos.GetAll();
+            return _mapper.Map<List<ProductoDTO>>(productos);
+        }
+
+        public List<ProductoDTO> GetProductosByProveedor(Guid idProveedor)
+        {
+            List<Producto> productos = _unitOfWork.ProveedorProductos
+                                                    .GetAll()
+                                                    .Where(pp => pp.IdProveedor == idProveedor)
+                                                    .Select(pp => pp.IdProductoNavigation)
+                                                    .ToList();
+            return _mapper.Map<List<ProductoDTO>>(productos);
+        }
+
+        public List<ProveedorProductoDTO> GetTodosLosVinculosProveedorProducto()
+        {
+            List<ProveedorProducto> vinculos = _unitOfWork.ProveedorProductos.GetAll();
+            return _mapper.Map<List<ProveedorProductoDTO>>(vinculos);
         }
     }
 }

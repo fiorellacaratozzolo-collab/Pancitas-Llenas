@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Logic.Facade;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,7 +33,7 @@ namespace FormUI.FormCompra
             {
                 // 1. Obtener la lista de clientes de la capa de servicio/lógica.
                 // Asumiendo que has agregado este método en la capa Logic/Service:
-                List<Proveedor> listaProveedor = _proveedorService.GetAllProveedores();
+                List<ProveedorDTO> listaProveedor = _proveedorService.GetAllProveedores();
 
                 // 2. Asignar la lista como fuente de datos del DataGridView.
                 dgvProveedor.DataSource = listaProveedor;
@@ -107,7 +108,7 @@ namespace FormUI.FormCompra
             }
 
             // 2. Creación del Objeto Modelo
-            var nuevoProveedor = new Proveedor
+            var nuevoProveedorDTO = new ProveedorDTO
             {
                 // IdProveedor is generated in the Repository layer (ProveedorRepository.Create)
                 NombreProveedor = txtbNombreProv.Text.Trim(),
@@ -120,7 +121,7 @@ namespace FormUI.FormCompra
             try
             {
                 // Call the service layer method to persist the client
-                Guid newProveedorId = _proveedorService.CreateProveedor(nuevoProveedor);
+                Guid newProveedorId = _proveedorService.CreateProveedor(nuevoProveedorDTO);
 
                 MessageBox.Show($"Proveedor agregado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimpiarControles();

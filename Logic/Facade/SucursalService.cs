@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +12,17 @@ namespace Logic.Facade
     {
         private readonly SucursalLogic _sucursalLogic = new SucursalLogic();
 
-        public Guid CreateSucursal(Sucursal sucursal)
+        public Guid CreateSucursal(SucursalDTO sucursalDTO)
         {
-            return _sucursalLogic.CrearSucursal(sucursal);
+            return _sucursalLogic.CrearSucursal(sucursalDTO);
         }
 
-        public List<Sucursal> GetAllSucursales()
+        public List<SucursalDTO> GetAllSucursales()
         {
             return _sucursalLogic.ObtenerTodasLasSucursales();
         }
 
-        public List<Sucursal> GetByTipoSucursal(int idTipoSucursal)
+        public List<SucursalDTO> GetByTipoSucursal(int idTipoSucursal)
         {
             return _sucursalLogic.BuscarPorTipoSucursal(idTipoSucursal);
         }
@@ -31,22 +32,19 @@ namespace Logic.Facade
             _sucursalLogic.DeshabilitarSucursal(id);
         }
 
-        public void UpdateSucursal(Sucursal sucursal)
+        public void UpdateSucursal(SucursalDTO sucursalDTO)
         {
-            _sucursalLogic.ActualizarSucursal(sucursal);
+            _sucursalLogic.ActualizarSucursal(sucursalDTO);
         }
 
-        public Sucursal? GetById(Guid id)
+        public SucursalDTO? GetById(Guid id)
         {
             return _sucursalLogic.GetById(id);
         }
 
-        public List<Sucursal> SearchByDireccion(string direccionFragment)
+        public List<SucursalDTO> SearchByDireccion(string direccionFragment)
         {
-            // Llama al método del Logic/Repository
             return _sucursalLogic.SearchByDireccion(direccionFragment);
         }
-
     }
-
 }

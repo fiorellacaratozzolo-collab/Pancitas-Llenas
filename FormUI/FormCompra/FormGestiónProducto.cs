@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Logic.Facade;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +24,7 @@ namespace FormUI.FormCompra
             CargarDatosProductos();
         }
 
-        private void CargarDatosProductos(List<Producto>? productos = null)
+        private void CargarDatosProductos(List<ProductoDTO>? productos = null)
         {
             try
             {
@@ -97,10 +98,10 @@ namespace FormUI.FormCompra
             }
 
             // 2. Buscar el Proveedor por CUIT
-            Proveedor? proveedorEncontrado = null;
+            ProveedorDTO? proveedorEncontradoDTO = null;
             try
             {
-                proveedorEncontrado = _proveedorService.GetByCuit(cuitValue);
+                proveedorEncontradoDTO = _proveedorService.GetByCuit(cuitValue);
             }
             catch (Exception ex)
             {
@@ -108,17 +109,17 @@ namespace FormUI.FormCompra
                 return;
             }
 
-            if (proveedorEncontrado == null)
+            if (proveedorEncontradoDTO == null)
             {
                 MessageBox.Show($"No se encontró un proveedor con el CUIT {cuitValue}. Verifique los datos.", "Proveedor No Encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // El ID del proveedor ya lo tenemos:
-            Guid idProveedor = proveedorEncontrado.IdProveedor;
+            Guid idProveedor = proveedorEncontradoDTO.IdProveedor;
 
             // 3. Creación del Objeto Modelo
-            var nuevoProducto = new Producto
+            var nuevoProductoDTO = new ProductoDTO
             {
                 NombreProducto = txtbNombreProd.Text.Trim(),
                 Marca = txtbMarca.Text.Trim(),
@@ -131,9 +132,9 @@ namespace FormUI.FormCompra
             // 4. Llamada al Servicio (Crea Producto y la relación ProveedorProducto)
             try
             {
-                Guid newProdId = _productoService.CrearProductoConProveedor(nuevoProducto, idProveedor);
+                Guid newProdId = _productoService.CrearProductoConProveedor(nuevoProductoDTO, idProveedor);
 
-                MessageBox.Show($"Producto '{nuevoProducto.NombreProducto}' agregado y vinculado al proveedor {proveedorEncontrado.NombreProveedor}.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Producto '{nuevoProductoDTO.NombreProducto}' agregado y vinculado al proveedor {proveedorEncontradoDTO.NombreProveedor}.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimpiarControles();
                 CargarDatosProductos();
             }
@@ -169,24 +170,24 @@ namespace FormUI.FormCompra
             try
             {
                 // 3. Buscar el Proveedor por CUIT para obtener su ID (GUID)
-                Proveedor? proveedorEncontrado = _proveedorService.GetByCuit(cuitBusqueda);
+                ProveedorDTO? proveedorEncontradoDTO = _proveedorService.GetByCuit(cuitBusqueda);
 
-                if (proveedorEncontrado == null)
+                if (proveedorEncontradoDTO == null)
                 {
                     MessageBox.Show($"No se encontró ningún proveedor con el CUIT {cuitBusqueda}.", "Proveedor No Encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
                 // El ID del proveedor ya lo tenemos
-                Guid idProveedorBusqueda = proveedorEncontrado.IdProveedor;
+                Guid idProveedorBusqueda = proveedorEncontradoDTO.IdProveedor;
 
                 // 4. Obtener lista filtrada por el ID del Proveedor
-                List<Producto> listaFiltrada = _productoService.GetByProveedor(idProveedorBusqueda);
+                List<ProductoDTO> listaFiltrada = _productoService.GetByProveedor(idProveedorBusqueda);
 
                 // 5. Reemplazar la fuente de datos
                 CargarDatosProductos(listaFiltrada);
 
-                MessageBox.Show($"Se encontraron {listaFiltrada.Count} productos del proveedor {proveedorEncontrado.NombreProveedor}.", "Búsqueda Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Se encontraron {listaFiltrada.Count} productos del proveedor {proveedorEncontradoDTO.NombreProveedor}.", "Búsqueda Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

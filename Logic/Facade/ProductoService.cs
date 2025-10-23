@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +12,17 @@ namespace Logic.Facade
     {
         private readonly ProductoLogic _productoLogic = new ProductoLogic();
 
-        public Guid CrearProductoConProveedor(Producto producto, Guid idProveedor)
+        public Guid CrearProductoConProveedor(ProductoDTO productoDTO, Guid idProveedor)
         {
-            return _productoLogic.CrearProductoConProveedor(producto, idProveedor);
+            return _productoLogic.CrearProductoConProveedor(productoDTO, idProveedor);
         }
 
-        public List<Producto> GetByProveedor(Guid idProveedor)
+        public List<ProductoDTO> GetByProveedor(Guid idProveedor)
         {
             return _productoLogic.ObtenerProductosPorProveedor(idProveedor);
         }
 
-        public List<Producto> GetAllProductos()
+        public List<ProductoDTO> GetAllProductos()
         {
             return _productoLogic.ObtenerTodos();
         }
@@ -30,11 +31,11 @@ namespace Logic.Facade
         {
             _productoLogic.DeshabilitarProducto(id);
         }
-        public List<Producto> GetProductosByProveedor(Guid idProveedor)
+        public List<ProductoDTO> GetProductosByProveedor(Guid idProveedor)
         {
             return _productoLogic.GetProductosByProveedor(idProveedor);
         }
-        public List<ProveedorProducto> GetTodosLosVinculosProveedorProducto()
+        public List<ProveedorProductoDTO> GetTodosLosVinculosProveedorProducto()
         {
             return _productoLogic.GetTodosLosVinculosProveedorProducto();
         }

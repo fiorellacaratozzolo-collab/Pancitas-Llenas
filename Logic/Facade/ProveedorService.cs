@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,11 @@ namespace Logic.Facade
             _proveedorLogic = new ProveedorLogic();
         }
 
-        public Guid CreateProveedor(Proveedor proveedor)
+        public Guid CreateProveedor(ProveedorDTO proveedorDTO)
         {
-            return _proveedorLogic.CreateProveedor(proveedor);
+            return _proveedorLogic.CreateProveedor(proveedorDTO);
         }
-        public List<Proveedor> GetAllProveedores()
+        public List<ProveedorDTO> GetAllProveedores()
         {
             return _proveedorLogic.ObtenerTodosLosProveedores();
         }
@@ -30,9 +31,8 @@ namespace Logic.Facade
             _proveedorLogic.DeshabilitarProveedor(id);
         }
 
-        public Proveedor? GetByCuit(int cuit)
+        public ProveedorDTO? GetByCuit(int cuit)
         {
-            // El método de Lógica (ProveedorLogic) debe llamarse de forma similar.
             return _proveedorLogic.GetByCuit(cuit);
         }
 

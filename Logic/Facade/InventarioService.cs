@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
-using Logic.Logic;
+using Logic;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,12 +27,12 @@ namespace Logic.Facade
             _inventarioLogic.RestarStockPorVenta(idSucursal, idProducto, cantidadVendida);
         }
 
-        public List<StockPorSucursal> ObtenerTodoElStock()
+        public List<StockPorSucursalDTO> ObtenerTodoElStock()
         {
             return _inventarioLogic.ObtenerTodoElStock();
         }
 
-        public List<StockPorSucursal> ObtenerStockPorSucursal(Guid idSucursal)
+        public List<StockPorSucursalDTO> ObtenerStockPorSucursal(Guid idSucursal)
         {
             return _inventarioLogic.ObtenerStockPorSucursal(idSucursal);
         }

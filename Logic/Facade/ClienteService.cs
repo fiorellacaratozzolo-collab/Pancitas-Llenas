@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,15 @@ namespace Logic.Facade
             _clienteLogic = new ClienteLogic();
         }
 
-        public Guid CreateCliente(Cliente cliente)
+        public Guid CreateCliente(ClienteDTO clienteDTO)
         {
-            return _clienteLogic.CreateCliente(cliente);
+            return _clienteLogic.CreateCliente(clienteDTO);
         }
-        public List<Cliente> GetAllClientes()
+        public List<ClienteDTO> GetAllClientes()
         {
             return _clienteLogic.ObtenerTodosLosClientes();
         }
-        public List<Cliente> BuscarClientesPorTipo(int idTipoCliente)
+        public List<ClienteDTO> BuscarClientesPorTipo(int idTipoCliente)
         {
             return _clienteLogic.BuscarClientesPorTipo(idTipoCliente);
         }

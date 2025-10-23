@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Logic.Facade;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,13 +26,7 @@ namespace FormUI.FormVenta
 
         }
 
-        // Instantiate the service (can also be done in the constructor)
         private readonly ClienteService _clienteService = new ClienteService();
-
-
-        // =================================================================
-        // MÉTODO DE CARGA DE DATOS PARA EL DATAGRIDVIEW
-        // =================================================================
 
         /// <summary>
         /// Obtiene la lista de clientes y la asigna al DataGridView (dgvClientes).
@@ -42,7 +37,7 @@ namespace FormUI.FormVenta
             {
                 // 1. Obtener la lista de clientes de la capa de servicio/lógica.
                 // Asumiendo que has agregado este método en la capa Logic/Service:
-                List<Cliente> listaClientes = _clienteService.GetAllClientes();
+                List<ClienteDTO> listaClientes = _clienteService.GetAllClientes();
 
                 // 2. Asignar la lista como fuente de datos del DataGridView.
                 dgvCliente.DataSource = listaClientes;
@@ -131,7 +126,7 @@ namespace FormUI.FormVenta
             }
 
             // 2. Creación del Objeto Modelo
-            var nuevoCliente = new Cliente
+            var nuevoCliente = new ClienteDTO
             {
                 // IdCliente is generated in the Repository layer (ClienteRepository.Create)
                 NombreCliente = txtbNombreCliente.Text.Trim(),
@@ -219,11 +214,6 @@ namespace FormUI.FormVenta
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            // Para implementar la búsqueda por Tipo de Cliente, necesitamos obtener la selección.
-
-            // **ASUMIMOS** que tienes un DropDown/ComboBox (o los mismos RadioButtons)
-            // para seleccionar el tipo de cliente a buscar. 
-            // Usaremos un InputBox simple para la demostración, solicitando el ID:
 
             string input = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar:");
 
@@ -232,7 +222,7 @@ namespace FormUI.FormVenta
                 try
                 {
                     // 1. Llamar al servicio para obtener la lista filtrada.
-                    List<Cliente> listaFiltrada = _clienteService.BuscarClientesPorTipo(idTipoCliente);
+                    List<ClienteDTO> listaFiltrada = _clienteService.BuscarClientesPorTipo(idTipoCliente);
 
                     // 2. Asignar la lista filtrada como nueva fuente de datos.
                     dgvCliente.DataSource = listaFiltrada;

@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,9 @@ namespace Logic.Facade
             _ventaLogic = new VentaLogic();
         }
 
-        public Guid RegistrarVenta(Ventum venta, List<VentaDetalle> detalles, Guid idSucursal)
+        public Guid RegistrarVenta(VentumDTO ventaDTO, List<VentaDetalleDTO> detallesDTO, Guid idSucursal)
         {
-            return _ventaLogic.RegistrarVenta(venta, detalles, idSucursal);
+            return _ventaLogic.RegistrarVenta(ventaDTO, detallesDTO, idSucursal);
         }
 
     }

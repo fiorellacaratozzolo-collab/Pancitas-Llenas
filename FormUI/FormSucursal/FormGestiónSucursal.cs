@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Logic.Facade;
+using ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,7 +23,7 @@ namespace FormUI.FormSucursal
             CargarDireccionesEnComboBox();
         }
 
-        private void CargarDatosSucursales(List<Sucursal>? sucursales = null)
+        private void CargarDatosSucursales(List<SucursalDTO>? sucursales = null)
         {
             try
             {
@@ -131,7 +132,7 @@ namespace FormUI.FormSucursal
             }
 
             // 2. Creación del objeto
-            var nuevaSucursal = new Sucursal
+            var nuevaSucursalDTO = new SucursalDTO
             {
                 NombreSucursal = txtbNombreSucursal.Text.Trim(),
                 Direccion = txtbDireccionSucursal.Text.Trim(),
@@ -142,7 +143,7 @@ namespace FormUI.FormSucursal
             // 3. Llamada al servicio
             try
             {
-                _sucursalService.CreateSucursal(nuevaSucursal);
+                _sucursalService.CreateSucursal(nuevaSucursalDTO);
 
                 MessageBox.Show("Sucursal creada exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimpiarControles();
@@ -220,17 +221,17 @@ namespace FormUI.FormSucursal
                     else
                     {
                         // Opción de una Sucursal específica: cargamos solo esa sucursal
-                        Sucursal? sucursalUnica = _sucursalService.GetById(idSucursal);
+                        SucursalDTO? sucursalUnicaDTO = _sucursalService.GetById(idSucursal);
 
-                        if (sucursalUnica != null)
+                        if (sucursalUnicaDTO != null)
                         {
                             // Convertimos la sucursal única en una lista para el DataGridView
-                            CargarDatosSucursales(new List<Sucursal> { sucursalUnica });
+                            CargarDatosSucursales(new List<SucursalDTO> { sucursalUnicaDTO });
                         }
                         else
                         {
                             // Si por alguna razón el ID es válido pero el objeto no existe.
-                            CargarDatosSucursales(new List<Sucursal>());
+                            CargarDatosSucursales(new List<SucursalDTO>());
                         }
                     }
                 }
