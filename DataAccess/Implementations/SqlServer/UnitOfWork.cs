@@ -23,6 +23,8 @@ namespace DataAccess.Implementations.SqlServer
         public IVentaRepository Ventas { get; }
         public IVentaDetalleRepository VentaDetalles { get; }
         public IProveedorProductoRepository ProveedorProductos { get; private set; }
+        public ISolicitudDePedidoRepository SolicitudDePedidos { get; }
+        public ISolicitudDePedidoDetalleRepository SolicitudDePedidoDetalles { get; }
         public UnitOfWork()
         {
             // La magia del UoW: SOLO UNA INSTANCIA del Contexto
@@ -38,6 +40,8 @@ namespace DataAccess.Implementations.SqlServer
             Ventas = new VentaRepository(_context);
             VentaDetalles = new VentaDetalleRepository(_context);
             ProveedorProductos = new ProveedorProductoRepository(_context);
+            SolicitudDePedidos = new SolicitudDePedidoRepository(_context);
+            SolicitudDePedidoDetalles = new SolicitudDePedidoDetalleRepository(_context);
         }
 
         public int Complete()

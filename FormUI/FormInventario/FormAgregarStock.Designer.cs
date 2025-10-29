@@ -100,6 +100,7 @@
             btnVolver.TabIndex = 22;
             btnVolver.Text = "Volver";
             btnVolver.UseVisualStyleBackColor = true;
+            btnVolver.Click += btnVolver_Click;
             // 
             // FormAgregarStock
             // 

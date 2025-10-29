@@ -5,7 +5,7 @@ namespace DataAccess.Models;
 
 public partial class SolicitudDePedidoDetalle
 {
-    public Guid IdSolicitudDePedidoDetalle { get; set; }
+    public Guid IdSolicitudDePedidoDetalle { get; set; } = Guid.NewGuid();
 
     public Guid IdSolicitudDePedido { get; set; }
 

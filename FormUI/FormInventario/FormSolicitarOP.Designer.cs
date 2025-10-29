@@ -28,174 +28,194 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.txt = new System.Windows.Forms.TextBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.SuspendLayout();
+            groupBox1 = new GroupBox();
+            btnGuadar = new Button();
+            dtpFecha = new DateTimePicker();
+            txtbPesoNeto = new TextBox();
+            dgvSolicitarOP = new DataGridView();
+            txtbNombreProd = new TextBox();
+            label2 = new Label();
+            label3 = new Label();
+            txtbCantidad = new TextBox();
+            btnAgregar = new Button();
+            label4 = new Label();
+            btnLimpiar = new Button();
+            btnVolver = new Button();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvSolicitarOP).BeginInit();
+            SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button5);
-            this.groupBox1.Controls.Add(this.button4);
-            this.groupBox1.Controls.Add(this.dateTimePicker1);
-            this.groupBox1.Controls.Add(this.txt);
-            this.groupBox1.Controls.Add(this.dataGridView1);
-            this.groupBox1.Controls.Add(this.textBox2);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.textBox3);
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Location = new System.Drawing.Point(28, 22);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(437, 611);
-            this.groupBox1.TabIndex = 17;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Productos a Solicitar";
-            //this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            groupBox1.Controls.Add(btnGuadar);
+            groupBox1.Controls.Add(dtpFecha);
+            groupBox1.Controls.Add(txtbPesoNeto);
+            groupBox1.Controls.Add(dgvSolicitarOP);
+            groupBox1.Controls.Add(txtbNombreProd);
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(txtbCantidad);
+            groupBox1.Controls.Add(btnAgregar);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Location = new Point(33, 25);
+            groupBox1.Margin = new Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(4, 3, 4, 3);
+            groupBox1.Size = new Size(510, 705);
+            groupBox1.TabIndex = 17;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Productos a Solicitar";
             // 
-            // button5
+            // btnGuadar
             // 
-            this.button5.Location = new System.Drawing.Point(315, 147);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(53, 31);
-            this.button5.TabIndex = 10;
-            this.button5.Text = "Limpiar";
-            this.button5.UseVisualStyleBackColor = true;
+            btnGuadar.Location = new Point(7, 654);
+            btnGuadar.Margin = new Padding(4, 3, 4, 3);
+            btnGuadar.Name = "btnGuadar";
+            btnGuadar.Size = new Size(495, 44);
+            btnGuadar.TabIndex = 13;
+            btnGuadar.Text = "Guardar";
+            btnGuadar.UseVisualStyleBackColor = true;
+            btnGuadar.Click += btnGuadar_Click;
             // 
-            // button4
+            // dtpFecha
             // 
-            this.button4.Location = new System.Drawing.Point(6, 567);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(424, 38);
-            this.button4.TabIndex = 13;
-            this.button4.Text = "Guardar";
-            this.button4.UseVisualStyleBackColor = true;
+            dtpFecha.Location = new Point(21, 44);
+            dtpFecha.Margin = new Padding(4, 3, 4, 3);
+            dtpFecha.Name = "dtpFecha";
+            dtpFecha.Size = new Size(233, 23);
+            dtpFecha.TabIndex = 4;
             // 
-            // dateTimePicker1
+            // txtbPesoNeto
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(18, 38);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker1.TabIndex = 4;
+            txtbPesoNeto.Location = new Point(133, 130);
+            txtbPesoNeto.Margin = new Padding(4, 3, 4, 3);
+            txtbPesoNeto.Name = "txtbPesoNeto";
+            txtbPesoNeto.Size = new Size(102, 23);
+            txtbPesoNeto.TabIndex = 2;
             // 
-            // txt
+            // dgvSolicitarOP
             // 
-            this.txt.Location = new System.Drawing.Point(114, 80);
-            this.txt.Name = "txt";
-            this.txt.Size = new System.Drawing.Size(88, 20);
-            this.txt.TabIndex = 2;
+            dgvSolicitarOP.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvSolicitarOP.Location = new Point(7, 224);
+            dgvSolicitarOP.Margin = new Padding(4, 3, 4, 3);
+            dgvSolicitarOP.Name = "dgvSolicitarOP";
+            dgvSolicitarOP.Size = new Size(496, 423);
+            dgvSolicitarOP.TabIndex = 10;
+            dgvSolicitarOP.CellContentClick += dgvSolicitarOP_CellContentClick;
             // 
-            // dataGridView1
+            // txtbNombreProd
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(6, 194);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(425, 367);
-            this.dataGridView1.TabIndex = 10;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(114, 112);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(316, 20);
-            this.textBox2.TabIndex = 3;
+            txtbNombreProd.Enabled = false;
+            txtbNombreProd.Location = new Point(133, 92);
+            txtbNombreProd.Margin = new Padding(4, 3, 4, 3);
+            txtbNombreProd.Name = "txtbNombreProd";
+            txtbNombreProd.Size = new Size(238, 23);
+            txtbNombreProd.TabIndex = 3;            
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 83);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(89, 13);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "Codigo Producto:";
+            label2.AutoSize = true;
+            label2.Location = new Point(60, 133);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(64, 15);
+            label2.TabIndex = 5;
+            label2.Text = "Peso Neto:";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 115);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(93, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Nombre Producto:";
+            label3.AutoSize = true;
+            label3.Location = new Point(18, 96);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(106, 15);
+            label3.TabIndex = 6;
+            label3.Text = "Nombre Producto:";
             // 
-            // textBox3
+            // txtbCantidad
             // 
-            this.textBox3.Location = new System.Drawing.Point(114, 144);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(88, 20);
-            this.textBox3.TabIndex = 9;
+            txtbCantidad.Location = new Point(133, 166);
+            txtbCantidad.Margin = new Padding(4, 3, 4, 3);
+            txtbCantidad.Name = "txtbCantidad";
+            txtbCantidad.Size = new Size(102, 23);
+            txtbCantidad.TabIndex = 9;
             // 
-            // button1
+            // btnAgregar
             // 
-            this.button1.Location = new System.Drawing.Point(223, 147);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(86, 31);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "Agregar";
-            this.button1.UseVisualStyleBackColor = true;
+            btnAgregar.Location = new Point(271, 158);
+            btnAgregar.Margin = new Padding(4, 3, 4, 3);
+            btnAgregar.Name = "btnAgregar";
+            btnAgregar.Size = new Size(100, 36);
+            btnAgregar.TabIndex = 7;
+            btnAgregar.Text = "Agregar";
+            btnAgregar.UseVisualStyleBackColor = true;
+            btnAgregar.Click += btnAgregar_Click;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 147);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(52, 13);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Cantidad:";
+            label4.AutoSize = true;
+            label4.Location = new Point(60, 170);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(58, 15);
+            label4.TabIndex = 8;
+            label4.Text = "Cantidad:";
             // 
-            // button3
+            // btnLimpiar
             // 
-            this.button3.Location = new System.Drawing.Point(390, 649);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 16;
-            this.button3.Text = "Volver";
-            this.button3.UseVisualStyleBackColor = true;
+            btnLimpiar.Location = new Point(259, 736);
+            btnLimpiar.Margin = new Padding(4, 3, 4, 3);
+            btnLimpiar.Name = "btnLimpiar";
+            btnLimpiar.Size = new Size(62, 36);
+            btnLimpiar.TabIndex = 10;
+            btnLimpiar.Text = "Limpiar";
+            btnLimpiar.UseVisualStyleBackColor = true;
+            btnLimpiar.Click += btnLimpiar_Click;
+            // 
+            // btnVolver
+            // 
+            btnVolver.Location = new Point(455, 749);
+            btnVolver.Margin = new Padding(4, 3, 4, 3);
+            btnVolver.Name = "btnVolver";
+            btnVolver.Size = new Size(88, 27);
+            btnVolver.TabIndex = 16;
+            btnVolver.Text = "Volver";
+            btnVolver.UseVisualStyleBackColor = true;
+            btnVolver.Click += btnVolver_Click;
             // 
             // FormSolicitarOP
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(477, 684);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.button3);
-            this.Name = "FormSolicitarOP";
-            this.Text = "Solicitar Orden de Pedido";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(556, 789);
+            Controls.Add(btnLimpiar);
+            Controls.Add(groupBox1);
+            Controls.Add(btnVolver);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "FormSolicitarOP";
+            Text = "Solicitar Orden de Pedido";
+            Load += FormSolicitarOP_Load;
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvSolicitarOP).EndInit();
+            ResumeLayout(false);
 
         }
 
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.TextBox txt;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Button btnLimpiar;
+        private System.Windows.Forms.Button btnGuadar;
+        private System.Windows.Forms.DateTimePicker dtpFecha;
+        private System.Windows.Forms.TextBox txtbPesoNeto;
+        private System.Windows.Forms.DataGridView dgvSolicitarOP;
+        private System.Windows.Forms.TextBox txtbNombreProd;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox txtbCantidad;
+        private System.Windows.Forms.Button btnAgregar;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnVolver;
     }
 }

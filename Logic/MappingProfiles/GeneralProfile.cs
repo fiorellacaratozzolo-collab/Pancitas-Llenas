@@ -40,6 +40,12 @@ namespace Logic.MappingProfiles
             CreateMap<TipoVentaEnum, TipoVentaEnumDTO>().ReverseMap();
             CreateMap<Ventum, VentumDTO>().ReverseMap();
             CreateMap<VentaDetalle, VentaDetalleDTO>().ReverseMap();
+            CreateMap<SolicitudDePedidoDTO, SolicitudDePedido>().ReverseMap();
+            CreateMap<SolicitudDePedidoDetalleDTO, SolicitudDePedidoDetalle>()
+                .ForMember(dest => dest.IdSolicitudDePedidoDetalle, opt => opt.Ignore())
+                .ForMember(dest => dest.IdSolicitudDePedidoNavigation, opt => opt.Ignore())
+                .ForMember(dest => dest.IdProductoNavigation, opt => opt.Ignore()) // ← CLAVE
+                .ForMember(dest => dest.IdSolicitudDePedido, opt => opt.Ignore());
         }
     }
 }

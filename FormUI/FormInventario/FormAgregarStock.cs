@@ -19,58 +19,110 @@ namespace FormUI.FormInventario
         private readonly ProductoService _productoService = new ProductoService();
         private readonly InventarioService _inventarioService = new InventarioService();
 
-        // IMPORTANTE: ESTE ID DEBE VENIR DE LA SESIÓN DE USUARIO ACTUAL
-        // Reemplaza con el ID de la sucursal donde se está operando.
-        private readonly Guid ID_SUCURSAL_ACTUAL = new Guid("959819F3-9675-4FF9-A265-1CCC1883D951");
+        //ID de sucursal dinámico
+        private readonly Guid ID_SUCURSAL_ACTUAL;
 
-        public FormAgregarStock()
+        public FormAgregarStock(Guid idSucursal)
         {
+            ID_SUCURSAL_ACTUAL = idSucursal;
             InitializeComponent();
             CargarProveedores();
             CargarProductosEnDGV(null);
         }
 
+        // Constructor por defecto
+        public FormAgregarStock() : this(new Guid("959819F3-9675-4FF9-A265-1CCC1883D951")) { }
+
         private void FormAgregarStock_Load(object sender, EventArgs e)
         {
-
+            // Asegurar que el DGV no genere columnas automáticas
+            dgvAgregarStock.AutoGenerateColumns = false;
         }
 
         private void ConfigurarDGV()
         {
-            // 1. Agregar la columna de entrada manual para el usuario
-            if (dgvAgregarStock.Columns.Contains("StockAAgregar") == false)
+            dgvAgregarStock.Columns.Clear();
+
+            // === COLUMNA: IdProducto (oculta) ===
+            var colId = new DataGridViewTextBoxColumn
             {
-                DataGridViewTextBoxColumn txtStock = new DataGridViewTextBoxColumn();
-                txtStock.HeaderText = "Stock a Añadir";
-                txtStock.Name = "StockAAgregar";
-                txtStock.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dgvAgregarStock.Columns.Add(txtStock);
-            }
+                Name = "IdProducto",
+                HeaderText = "IdProducto",
+                DataPropertyName = "IdProducto",  // <-- MAPEAR
+                Visible = false,
+                ReadOnly = true
+            };
+            dgvAgregarStock.Columns.Add(colId);
 
-            // 2. Ocultar IDs y configurar encabezados
-            // NOTA: Estas columnas DEBEN existir en el objeto anónimo (ViewModel) del dataSource.
-            if (dgvAgregarStock.Columns.Contains("IdProducto"))
-                dgvAgregarStock.Columns["IdProducto"].Visible = false;
+            // === COLUMNA: Producto ===
+            var colProducto = new DataGridViewTextBoxColumn
+            {
+                Name = "NombreProducto",
+                HeaderText = "Producto",
+                DataPropertyName = "NombreProducto",  // <-- MAPEAR
+                ReadOnly = true
+            };
+            dgvAgregarStock.Columns.Add(colProducto);
 
-            if (dgvAgregarStock.Columns.Contains("NombreProducto"))
-                dgvAgregarStock.Columns["NombreProducto"].HeaderText = "Producto";
+            // === COLUMNA: Peso Neto ===
+            dgvAgregarStock.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "PesoNeto",
+                HeaderText = "Peso Neto",
+                DataPropertyName = "PesoNeto",
+                ReadOnly = true,
+                DefaultCellStyle = {
+            Format = "N2",  // 2 decimales
+            Alignment = DataGridViewContentAlignment.MiddleRight
+        },
+                Width = 90
+            });
 
-            if (dgvAgregarStock.Columns.Contains("NombreProveedor"))
-                dgvAgregarStock.Columns["NombreProveedor"].HeaderText = "Proveedor";
+            // === COLUMNA: Proveedor ===
+            var colProveedor = new DataGridViewTextBoxColumn
+            {
+                Name = "NombreProveedor",
+                HeaderText = "Proveedor",
+                DataPropertyName = "NombreProveedor",  // <-- MAPEAR
+                ReadOnly = true
+            };
+            dgvAgregarStock.Columns.Add(colProveedor);
 
-            if (dgvAgregarStock.Columns.Contains("StockActual"))
-                dgvAgregarStock.Columns["StockActual"].HeaderText = "Stock Actual";
+            // === COLUMNA: Stock Actual ===
+            var colActual = new DataGridViewTextBoxColumn
+            {
+                Name = "StockActual",
+                HeaderText = "Stock Actual",
+                DataPropertyName = "StockActual",  // <-- MAPEAR
+                ReadOnly = true,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
+            };
+            dgvAgregarStock.Columns.Add(colActual);
 
-            if (dgvAgregarStock.Columns.Contains("StockDeseado"))
-                dgvAgregarStock.Columns["StockDeseado"].HeaderText = "Stock Deseado";
+            // === COLUMNA: Stock Deseado ===
+            var colDeseado = new DataGridViewTextBoxColumn
+            {
+                Name = "StockDeseado",
+                HeaderText = "Stock Deseado",
+                DataPropertyName = "StockDeseado",  // <-- MAPEAR
+                ReadOnly = true,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
+            };
+            dgvAgregarStock.Columns.Add(colDeseado);
 
-            // 3. Permitir edición solo en la columna de entrada
-            dgvAgregarStock.ReadOnly = true;
+            // === COLUMNA: Stock a Añadir (editable) ===
+            var colAgregar = new DataGridViewTextBoxColumn
+            {
+                Name = "StockAAgregar",
+                HeaderText = "Stock a Añadir",
+                DataPropertyName = "StockAAgregar",  // <-- Aunque no exista en dataSource, lo usamos para edición
+                ReadOnly = false,
+                DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
+            };
+            dgvAgregarStock.Columns.Add(colAgregar);
+
             dgvAgregarStock.EditMode = DataGridViewEditMode.EditOnEnter;
-            foreach (DataGridViewColumn col in dgvAgregarStock.Columns)
-            {
-                col.ReadOnly = (col.Name != "StockAAgregar");
-            }
+            dgvAgregarStock.ReadOnly = false;
         }
 
         private void CargarProveedores()
@@ -78,8 +130,6 @@ namespace FormUI.FormInventario
             try
             {
                 List<ProveedorDTO> proveedores = _proveedorService.GetAllProveedores();
-
-                // Opción para ver todos los productos
                 proveedores.Insert(0, new ProveedorDTO { IdProveedor = Guid.Empty, NombreProveedor = "--- Mostrar Todos ---" });
 
                 cmbProveedor.DataSource = proveedores;
@@ -88,7 +138,7 @@ namespace FormUI.FormInventario
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar proveedores: " + ex.Message);
+                MessageBox.Show("Error al cargar proveedores: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -96,23 +146,13 @@ namespace FormUI.FormInventario
         {
             try
             {
-                // 1. OBTENER PRODUCTOS (USANDO LA LÓGICA CORREGIDA PARA N:M)
-                List<ProductoDTO> productos;
-                if (idProveedor.HasValue && idProveedor.Value != Guid.Empty)
-                {
-                    // Usa el método que resuelve la relación N:M (GetProductosByProveedor)
-                    productos = _productoService.GetProductosByProveedor(idProveedor.Value);
-                }
-                else
-                {
-                    // Carga todos los productos
-                    productos = _productoService.GetAllProductos();
-                }
+                List<ProductoDTO> productos = idProveedor.HasValue && idProveedor.Value != Guid.Empty
+                    ? _productoService.GetProductosByProveedor(idProveedor.Value)
+                    : _productoService.GetAllProductos();
 
-                // 2. Obtener el stock actual de la sucursal
                 List<StockPorSucursalDTO> stocks = _inventarioService.ObtenerStockPorSucursal(ID_SUCURSAL_ACTUAL);
-
                 var todosLosVinculos = _productoService.GetTodosLosVinculosProveedorProducto();
+
                 var dataSource = productos.Select(p =>
                 {
                     var stock = stocks.FirstOrDefault(s => s.IdProducto == p.IdProducto);
@@ -122,28 +162,18 @@ namespace FormUI.FormInventario
                     {
                         IdProducto = p.IdProducto,
                         NombreProducto = p.NombreProducto,
-
+                        PesoNeto = p.PesoNeto,
                         NombreProveedor = vinculo?.IdProveedorNavigation?.NombreProveedor ?? "N/A",
-
                         StockActual = stock?.StockActual ?? 0,
-                        StockDeseado = stock?.StockDeseado ?? 0,
-                        StockAAgregar = null as string
+                        StockDeseado = stock?.StockDeseado ?? 0
                     };
                 }).ToList();
 
-                dgvAgregarStock.DataSource = dataSource;
                 ConfigurarDGV();
+                dgvAgregarStock.DataSource = dataSource;
 
-                // Añadir columna StockAAgregar como editable
-                if (!dgvAgregarStock.Columns.Contains("StockAAgregar"))
-                {
-                    DataGridViewTextBoxColumn txtStock = new DataGridViewTextBoxColumn();
-                    txtStock.HeaderText = "Stock a Añadir";
-                    txtStock.Name = "StockAAgregar";
-                    txtStock.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    dgvAgregarStock.Columns.Add(txtStock);
-
-                }
+                //Resaltar productos con stock bajo
+                ResaltarStockBajo();
             }
             catch (Exception ex)
             {
@@ -151,64 +181,113 @@ namespace FormUI.FormInventario
             }
         }
 
+        //Resaltar filas con stock actual < deseado
+        private void ResaltarStockBajo()
+        {
+            foreach (DataGridViewRow row in dgvAgregarStock.Rows)
+            {
+                if (row.Cells["StockActual"].Value is int actual &&
+                    row.Cells["StockDeseado"].Value is int deseado)
+                {
+                    if (actual < deseado)
+                    {
+                        row.DefaultCellStyle.BackColor = Color.LightCoral;
+                        row.DefaultCellStyle.ForeColor = Color.Black;
+                        row.Cells["StockAAgregar"].ToolTipText = "¡Stock por debajo del deseado!";
+                    }
+                    else
+                    {
+                        row.DefaultCellStyle.BackColor = Color.White;
+                        row.DefaultCellStyle.ForeColor = Color.Black;
+                    }
+                }
+            }
+        }
+
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            try
+            int cambiosPendientes = 0;
+            foreach (DataGridViewRow row in dgvAgregarStock.Rows)
             {
-                int cambiosAplicados = 0;
-
-                foreach (DataGridViewRow row in dgvAgregarStock.Rows)
+                if (row.IsNewRow || row.Cells["IdProducto"].Value == null) continue;
+                if (row.Cells["StockAAgregar"].Value != null &&
+                    int.TryParse(row.Cells["StockAAgregar"].Value.ToString(), out int cant) && cant > 0)
                 {
-                    // Salta filas nuevas o sin datos
-                    if (row.IsNewRow || row.Cells["IdProducto"].Value == null) continue;
+                    cambiosPendientes++;
+                }
+            }
 
-                    // 1. Obtener la cantidad de la columna de entrada del usuario
-                    object valorStockAAgregar = row.Cells["StockAAgregar"].Value;
+            if (cambiosPendientes == 0)
+            {
+                MessageBox.Show("No se detectaron cantidades positivas para agregar stock.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                    // 2. Validar y parsear la entrada
-                    if (valorStockAAgregar != null &&
-                        int.TryParse(valorStockAAgregar.ToString(), out int cantidadAAgregar) &&
-                        cantidadAAgregar > 0)
+            // Confirmación antes de guardar
+            var confirmacion = MessageBox.Show(
+                $"Se actualizarán {cambiosPendientes} producto(s). ¿Continuar?",
+                "Confirmar actualización",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirmacion != DialogResult.Yes) return;
+
+            int cambiosAplicados = 0;
+            int errores = 0;
+
+            foreach (DataGridViewRow row in dgvAgregarStock.Rows)
+            {
+                if (row.IsNewRow || row.Cells["IdProducto"].Value == null) continue;
+
+                object valorStockAAgregar = row.Cells["StockAAgregar"].Value;
+
+                if (valorStockAAgregar != null &&
+                    int.TryParse(valorStockAAgregar.ToString(), out int cantidadAAgregar) &&
+                    cantidadAAgregar > 0)
+                {
+                    try
                     {
-                        // Obtener IDs y Stock Deseado
                         Guid idProducto = (Guid)row.Cells["IdProducto"].Value;
                         int stockDeseado = 0;
                         int.TryParse(row.Cells["StockDeseado"].Value?.ToString(), out stockDeseado);
 
-                        // 3. Llamar a la lógica de negocio para actualizar/crear el stock
                         _inventarioService.AgregarStock(ID_SUCURSAL_ACTUAL, idProducto, cantidadAAgregar, stockDeseado);
 
                         cambiosAplicados++;
-
-                        // Limpiar la celda de entrada
                         row.Cells["StockAAgregar"].Value = null;
+                        row.Cells["StockAAgregar"].ErrorText = ""; // Limpiar error
+                    }
+                    catch (Exception ex)
+                    {
+                        errores++;
+                        row.Cells["StockAAgregar"].ErrorText = "Error: " + ex.Message;
                     }
                 }
+            }
 
-                if (cambiosAplicados > 0)
-                {
-                    MessageBox.Show($"Stock actualizado exitosamente. Se aplicaron {cambiosAplicados} cambios.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    // 4. Refrescar el DGV para ver el stock actualizado
-                    CargarProductosEnDGV(cmbProveedor.SelectedValue is Guid idProveedor ? (Guid?)idProveedor : null);
-                }
-                else
-                {
-                    MessageBox.Show("No se detectaron cantidades positivas para agregar stock.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al actualizar stock: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            // Reporte detallado de resultados
+            string mensaje = $"Stock actualizado.\n" +
+                            $"Cambios aplicados: {cambiosAplicados}\n" +
+                            (errores > 0 ? $"Errores: {errores}\n" : "") +
+                            "La tabla se ha actualizado.";
+
+            MessageBox.Show(mensaje, "Resultado", MessageBoxButtons.OK,
+                errores > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
+
+            CargarProductosEnDGV(cmbProveedor.SelectedValue is Guid id ? (Guid?)id : null);
         }
 
         private void cmbProveedor_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Se llama al método de carga con el ID seleccionado del ComboBox.
             if (cmbProveedor.SelectedValue is Guid idProveedor)
             {
                 CargarProductosEnDGV(idProveedor);
             }
+        }
+
+        private void btnVolver_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

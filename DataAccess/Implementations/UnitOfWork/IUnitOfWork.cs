@@ -18,6 +18,9 @@ namespace DataAccess.Implementations.UnitOfWork
         IVentaRepository Ventas { get; }
         IVentaDetalleRepository VentaDetalles { get; }
         IProveedorProductoRepository ProveedorProductos { get; }
+        ISolicitudDePedidoRepository SolicitudDePedidos { get; }
+        ISolicitudDePedidoDetalleRepository SolicitudDePedidoDetalles { get; }
+
 
         // 2. Método para confirmar la transacción
         int Complete();
