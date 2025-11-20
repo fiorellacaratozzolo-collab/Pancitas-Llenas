@@ -1,6 +1,7 @@
 ﻿using DataAccess.Contexts;
 using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Interfaces;
+using DataAccess.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,6 +26,13 @@ namespace DataAccess.Implementations.SqlServer
         public IProveedorProductoRepository ProveedorProductos { get; private set; }
         public ISolicitudDePedidoRepository SolicitudDePedidos { get; }
         public ISolicitudDePedidoDetalleRepository SolicitudDePedidoDetalles { get; }
+        public IOrdenDePedidoRepository OrdenDePedidos { get; }
+        public IOrdenDePedidoDetalleRepository OrdenDePedidoDetalles { get; }
+        public IOrdenDeCompraRepository OrdenDeCompras { get; }
+        public IOrdenDeCompraDetalleRepository OrdenDeCompraDetalles { get; }
+
+
+
         public UnitOfWork()
         {
             // La magia del UoW: SOLO UNA INSTANCIA del Contexto
@@ -42,6 +50,10 @@ namespace DataAccess.Implementations.SqlServer
             ProveedorProductos = new ProveedorProductoRepository(_context);
             SolicitudDePedidos = new SolicitudDePedidoRepository(_context);
             SolicitudDePedidoDetalles = new SolicitudDePedidoDetalleRepository(_context);
+            OrdenDePedidos = new OrdenDePedidoRepository(_context);
+            OrdenDePedidoDetalles = new OrdenDePedidoDetalleRepository(_context);
+            OrdenDeCompras = new OrdenDeCompraRepository(_context);
+            OrdenDeCompraDetalles = new OrdenDeCompraDetalleRepository(_context);
         }
 
         public int Complete()

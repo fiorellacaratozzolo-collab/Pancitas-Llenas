@@ -14,8 +14,6 @@ namespace ModelsDTO
 
         public int IdEstadoSp { get; set; }
 
-        public virtual EstadoSpenumDTO IdEstadoSpNavigation { get; set; } = null!;
-
         public virtual ICollection<SolicitudDePedidoDetalleDTO> SolicitudDePedidoDetalles { get; set; } = new List<SolicitudDePedidoDetalleDTO>();
     }
 }

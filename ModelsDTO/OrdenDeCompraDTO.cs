@@ -16,6 +16,13 @@ namespace ModelsDTO
 
         public int IdEstadoOc { get; set; }
 
+        // Permite rastrear la Orden de Pedido que originó esta Orden de Compra.
+        public Guid? IdOrdenDePedidoOrigen { get; set; }
+
+        // Campo para agrupar y filtrar la impresión
+        public Guid IdProveedor { get; set; }
+        public virtual ProveedorDTO IdProveedorNavigation { get; set; } = null!;
+
         public virtual EstadoOcenumDTO IdEstadoOcNavigation { get; set; } = null!;
 
         public virtual ICollection<OrdenDeCompraDetalleDTO> OrdenDeCompraDetalles { get; set; } = new List<OrdenDeCompraDetalleDTO>();

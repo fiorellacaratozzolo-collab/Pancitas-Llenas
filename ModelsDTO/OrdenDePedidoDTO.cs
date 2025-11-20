@@ -16,6 +16,8 @@ namespace ModelsDTO
 
         public decimal Total { get; set; }
 
+        public Guid? IdSolicitudDePedidoOrigen { get; set; }
+
         public virtual EstadoOpenumDTO IdEstadoOpNavigation { get; set; } = null!;
 
         public virtual ICollection<OrdenDePedidoDetalleDTO> OrdenDePedidoDetalles { get; set; } = new List<OrdenDePedidoDetalleDTO>();

@@ -20,6 +20,11 @@ namespace DataAccess.Implementations.UnitOfWork
         IProveedorProductoRepository ProveedorProductos { get; }
         ISolicitudDePedidoRepository SolicitudDePedidos { get; }
         ISolicitudDePedidoDetalleRepository SolicitudDePedidoDetalles { get; }
+        IOrdenDePedidoRepository OrdenDePedidos { get; }
+        IOrdenDePedidoDetalleRepository OrdenDePedidoDetalles { get; }
+        IOrdenDeCompraRepository OrdenDeCompras { get; }
+        IOrdenDeCompraDetalleRepository OrdenDeCompraDetalles { get; }
+
 
 
         // 2. Método para confirmar la transacción

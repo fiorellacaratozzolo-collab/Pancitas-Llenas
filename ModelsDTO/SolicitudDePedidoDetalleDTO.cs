@@ -14,14 +14,12 @@ namespace ModelsDTO
 
         public Guid IdProducto { get; set; }
 
-        public string Cantidad { get; set; } = null!;
+        public int Cantidad { get; set; }
 
         public decimal PesoNeto { get; set; }
 
         public string Unidad { get; set; } = null!;
 
-        public virtual ProductoDTO IdProductoNavigation { get; set; } = null!;
-
-        public virtual SolicitudDePedidoDTO IdSolicitudDePedidoNavigation { get; set; } = null!;
+        public string NombreProducto { get; set; } = null!;
     }
 }

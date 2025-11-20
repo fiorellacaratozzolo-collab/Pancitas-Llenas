@@ -29,6 +29,4 @@ namespace Logic.MappingProfiles
 
         public static IMapper Mapper => LazyMapper.Value;
     }
-
-
 }

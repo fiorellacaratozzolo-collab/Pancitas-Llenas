@@ -21,7 +21,6 @@ namespace FormUI.FormInventario
         public FormSolicitarOP()
         {
             InitializeComponent();
-            // FORZAR DESBLOQUEO TOTAL
             txtbNombreProd.ReadOnly = false;
             txtbNombreProd.Enabled = true;
             txtbNombreProd.TabStop = true;
@@ -100,6 +99,13 @@ namespace FormUI.FormInventario
                 return false;
             }
 
+            if (!decimal.TryParse(txtbPesoNeto.Text, out decimal peso) || peso <= 0m)
+            {
+                MessageBox.Show("Ingrese un Peso Neto válido mayor a 0.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtbPesoNeto.Focus();
+                return false;
+            }
+
             return true;
         }
 
@@ -114,13 +120,14 @@ namespace FormUI.FormInventario
         {
             var dataSource = _detalles.Select(d => new
             {
-                NombreProducto = d.IdProductoNavigation.NombreProducto,
+                NombreProducto = d.NombreProducto,
                 PesoNeto = $"{d.PesoNeto:N2} {d.Unidad}",
                 Cantidad = d.Cantidad
             }).ToList();
 
             dgvSolicitarOP.DataSource = null;
             dgvSolicitarOP.DataSource = dataSource;
+            dgvSolicitarOP.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
 
         private void MostrarError(string mensaje)
@@ -138,7 +145,7 @@ namespace FormUI.FormInventario
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            if (!ValidarCampos()) return;
+            if (!ValidarCampos()) return; // Valida que el peso también sea un decimal > 0
 
             string nombre = txtbNombreProd.Text.Trim();
 
@@ -153,19 +160,23 @@ namespace FormUI.FormInventario
                 return;
             }
 
-            // Mostrar peso neto
-            txtbPesoNeto.Text = $"{producto.PesoNeto:N2} {producto.Unidad ?? "kg"}";
-
-            // Crear detalle
+            // 1. Obtener valores parseados
+            int.TryParse(txtbCantidad.Text, out int cantidadValue);
+            decimal.TryParse(txtbPesoNeto.Text, out decimal pesoNetoValue);
+            // 2. Mostrar peso neto        
+            txtbPesoNeto.Text = $"{pesoNetoValue:N2} {producto.Unidad ?? "kg"}";
+            // 3. Crear detalle
             var detalle = new SolicitudDePedidoDetalleDTO
             {
                 IdProducto = producto.IdProducto,
-                Cantidad = txtbCantidad.Text,
-                PesoNeto = producto.PesoNeto ?? 0m,
-                Unidad = producto.Unidad ?? "kg"
+                Cantidad = cantidadValue,
+                PesoNeto = pesoNetoValue,
+
+                Unidad = producto.Unidad ?? "kg",
+                NombreProducto = producto.NombreProducto
             };
 
-            _detalles.Add(detalle);          
+            _detalles.Add(detalle);
             LimpiarCamposExceptoProducto();
             ActualizarDGV();
         }
@@ -188,8 +199,29 @@ namespace FormUI.FormInventario
 
             try
             {
+                // 1. Generar un nuevo ID único para la solicitud
+                Guid nuevaSolicitudId = Guid.NewGuid();
+
+                // 2. Asignar el nuevo ID a todos los detalles
+                foreach (var detalle in _detalles)
+                {
+                    // Asigna el ID de la cabecera a la foreign key de los detalles
+                    detalle.IdSolicitudDePedido = nuevaSolicitudId;
+
+                    
+                    // genera un Guid único para la clave primaria del detalle.
+                    if (detalle.IdSolicitudDePedidoDetalle == Guid.Empty)
+                    {
+                        detalle.IdSolicitudDePedidoDetalle = Guid.NewGuid();
+                    }
+                }
+
+                // 3. Crear el DTO de la cabecera con el nuevo ID generado
                 var solicitudDTO = new SolicitudDePedidoDTO
                 {
+                    //Asignar el nuevo GUID para evitar la clave duplicada (Guid.Empty)
+                    IdSolicitudDePedido = nuevaSolicitudId,
+
                     FechaSp = DateTime.Today,
                     IdEstadoSp = 1, // Pendiente
                     SolicitudDePedidoDetalles = _detalles

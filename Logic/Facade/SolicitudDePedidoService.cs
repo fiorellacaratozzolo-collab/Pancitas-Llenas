@@ -1,9 +1,6 @@
 ﻿using ModelsDTO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Logic.Facade
 {
@@ -29,6 +26,17 @@ namespace Logic.Facade
         public SolicitudDePedidoDTO ObtenerPorId(Guid id)
         {
             return _logic.ObtenerPorId(id);
+        }
+
+        // --- Nuevos Métodos de Gestión ---
+        public void RechazarSolicitud(Guid solicitudId)
+        {
+            _logic.RechazarSolicitud(solicitudId);
+        }
+
+        public Guid AprobarYSolicitarOrdenDePedido(Guid solicitudId)
+        {
+            return _logic.AprobarYSolicitarOrdenDePedido(solicitudId);
         }
     }
 }

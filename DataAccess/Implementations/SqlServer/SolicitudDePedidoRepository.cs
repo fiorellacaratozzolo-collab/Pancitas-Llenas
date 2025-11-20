@@ -41,5 +41,17 @@ namespace DataAccess.Implementations.SqlServer
                 .Include("SolicitudDePedidoDetalles.IdProductoNavigation")
                 .FirstOrDefault(x => x.IdSolicitudDePedido == id);
         }
+
+        public SolicitudDePedido? GetByIdWithDetails(Guid id)
+        {
+            return _context.SolicitudDePedidos
+                .Include(s => s.SolicitudDePedidoDetalles)
+                .FirstOrDefault(x => x.IdSolicitudDePedido == id);
+        }
+
+        public void Update(SolicitudDePedido solicitud)
+        {
+            _context.SolicitudDePedidos.Update(solicitud);
+        }
     }
 }
