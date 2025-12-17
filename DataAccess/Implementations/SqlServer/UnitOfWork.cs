@@ -1,7 +1,6 @@
 ﻿using DataAccess.Contexts;
 using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Interfaces;
-using DataAccess.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;

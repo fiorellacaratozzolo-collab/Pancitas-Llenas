@@ -80,6 +80,7 @@ namespace Logic
 
         public Dictionary<Guid, Guid> AprobarYGenerarOrdenesDeCompra(Guid ordenId)
         {
+            // 1. Obtener la OP
             var orden = _unitOfWork.OrdenDePedidos.GetById(ordenId);
             if (orden == null)
                 throw new KeyNotFoundException($"No se encontró la Orden de Pedido con ID {ordenId}");
@@ -87,54 +88,73 @@ namespace Logic
             var proveedorHelper = new Logic.Helpers.ProveedorHelper(_unitOfWork);
             var ordenDeCompraLogic = new OrdenDeCompraLogic(_unitOfWork);
 
-            // 1. Asignar proveedor/precio a CADA detalle y agrupar
+            // 2. Procesar Detalles, Obtener Precio/Proveedor y Mapear a OCDetalle
             var detallesOCConInfo = orden.OrdenDePedidoDetalles
                 .Select(detalleOP =>
                 {
-                    // Obtener info del proveedor y precio del producto
-                    var info = proveedorHelper.ObtenerProveedorInfoParaProducto(detalleOP.IdProducto);
-
-                    // Mapear la entidad de detalle OP a la entidad de detalle OC (usando AutoMapper)
-                    var detalleOC = _mapper.Map<DataAccess.Models.OrdenDeCompraDetalle>(detalleOP);
-
-                    // Soluciones a errores de EF Core e inyección de lógica
-                    detalleOC.IdOrdenDeCompraDetalle = Guid.NewGuid();
-                    detalleOC.PrecioUnitario = info.PrecioNeto;
-                    detalleOC.Subtotal = detalleOC.Cantidad * detalleOC.PrecioUnitario;
-
-                    return new
+                    try
                     {
-                        DetalleOC = detalleOC,
-                        info.IdProveedor
-                    };
-                })
-                .ToList();
+                        // Usa el IdProducto recién agregado a la entidad OPDetalle
+                        //CRÍTICO: La llamada al Helper DEBE lanzar KeyNotFoundException si no hay vínculo.
+                        var info = proveedorHelper.ObtenerProveedorInfoParaProducto(detalleOP.IdProducto);
 
-            // 2. Agrupar los detalles de OC por proveedor
+                        // Mapeo OPDetalle -> OCDetalle
+                        var detalleOC = _mapper.Map<DataAccess.Models.OrdenDeCompraDetalle>(detalleOP);
+                        //Obtenemos la unidad del Producto
+                        var producto = _unitOfWork.Productos.GetById(detalleOP.IdProducto);
+                        // Inyección de lógica financiera
+                        detalleOC.IdOrdenDeCompraDetalle = Guid.NewGuid();
+                        detalleOC.PrecioUnitario = info.PrecioNeto;
+                        detalleOC.Subtotal = detalleOC.Cantidad * detalleOC.PrecioUnitario;
+                        detalleOC.Unidad = producto?.Unidad ?? "Unidad"; // Usar el valor del producto o un valor por defecto.
+                        // Aseguramos que el IdProducto se mantiene
+                        detalleOC.IdProducto = detalleOP.IdProducto;
+
+                        return new
+                        {
+                            DetalleOC = detalleOC,
+                            info.IdProveedor // Este es el campo clave para la agrupación
+                        };
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        // Si el Helper no encuentra el proveedor, relanzamos con una InvalidOperationException 
+                        // para que el Servicio capture el error de forma limpia antes del Commit.
+                        throw new InvalidOperationException($"Fallo de datos: {ex.Message} (OP ID: {ordenId}).", ex);
+                    }
+                })
+                .ToList(); // El ToList() fuerza la ejecución del Select y las llamadas al Helper.
+
+            // 3. Agrupar por Proveedor
             var detallesAgrupados = detallesOCConInfo.GroupBy(d => d.IdProveedor);
 
-            // 3. Marcar la OP como Aprobada (ID 2) y persistir el estado
+            // 4. Marcar OP como Aprobada
             orden.IdEstadoOp = 2;
             _unitOfWork.OrdenDePedidos.Update(orden);
 
             var resultadosOC = new Dictionary<Guid, Guid>();
 
-            // 4. Crear una OC por cada grupo (proveedor)
+            // 5. Crear una OC por cada grupo (proveedor)
             foreach (var grupo in detallesAgrupados)
             {
                 Guid idProveedor = grupo.Key;
 
-                // Extraer las entidades OrdenDeCompraDetalle del objeto anónimo
+                //VALIDACIÓN DE INTEGRIDAD DE DATOS: Asegura que la clave no sea vacía.
+                if (idProveedor == Guid.Empty)
+                {
+                    throw new InvalidOperationException($"Error de integridad de datos: Se detectó un proveedor vacío (GUID 000...) en el pedido {ordenId}. Esto indica un fallo en la obtención de datos del Helper.");
+                }
+
                 List<DataAccess.Models.OrdenDeCompraDetalle> nuevosDetallesOC = grupo
                     .Select(item => item.DetalleOC)
                     .ToList();
 
-                // 5. Llamar a la creación monoproveedor (pasa el ID del proveedor)
+                // Llamada a la creación que ahora persiste IdProveedor en la cabecera
                 Guid idNuevaOC = ordenDeCompraLogic.CrearOrdenDesdePedidoAgrupado(orden, nuevosDetallesOC, idProveedor);
                 resultadosOC.Add(idProveedor, idNuevaOC);
             }
 
-            // 6. Commit de la transacción atómica
+            // 6. Commit de la transacción atómica (actualiza OP y crea todas las OCs)
             _unitOfWork.Complete();
 
             return resultadosOC;

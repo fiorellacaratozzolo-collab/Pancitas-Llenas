@@ -65,7 +65,7 @@ public partial class PetShopDbContext : DbContext
     public virtual DbSet<Ventum> Venta { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=FIORE;Initial Catalog=PetShopDB;Integrated Security=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -174,6 +174,11 @@ public partial class PetShopDbContext : DbContext
                 .HasForeignKey(d => d.IdEstadoOc)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrdenDeCompra_EstadoOCEnum");
+
+            entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.OrdenDeCompras)
+                .HasForeignKey(d => d.IdProveedor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_OrdenDeCompra_Proveedor");
         });
 
         modelBuilder.Entity<OrdenDeCompraDetalle>(entity =>
@@ -194,6 +199,11 @@ public partial class PetShopDbContext : DbContext
                 .HasForeignKey(d => d.IdOrdenDeCompra)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrdenDeCompraDetalle_OrdenDeCompra");
+
+            entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.OrdenDeCompraDetalles)
+                .HasForeignKey(d => d.IdProducto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_OrdenDeCompraDetalle_Producto");
         });
 
         modelBuilder.Entity<OrdenDePedido>(entity =>
@@ -233,6 +243,11 @@ public partial class PetShopDbContext : DbContext
                 .HasForeignKey(d => d.IdOrdenDePedido)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_OrdenDePedidoDetalle_OrdenDePedido");
+
+            entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.OrdenDePedidoDetalles)
+                .HasForeignKey(d => d.IdProducto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_OrdenDePedidoDetalle_Producto");
         });
 
         modelBuilder.Entity<Producto>(entity =>

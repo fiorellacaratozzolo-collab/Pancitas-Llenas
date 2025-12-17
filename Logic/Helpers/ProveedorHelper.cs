@@ -20,23 +20,28 @@ namespace Logic.Helpers
 
         /// <summary>
         /// Obtiene el proveedor asociado al producto y su precio de costo.
-        /// Asume que la entidad Producto tiene la propiedad PrecioNeto (decimal?).
+        /// Lanza KeyNotFoundException si no encuentra el vínculo.
         /// </summary>
         public ProveedorProductoInfo ObtenerProveedorInfoParaProducto(Guid idProducto)
         {
             // Busca el vínculo ProveedorProducto e incluye la entidad Producto.
+            // Nota: Se asume que IdProductoNavigation es la propiedad de navegación al Producto.
             var vinculo = _unitOfWork.ProveedorProductos.GetAll()
                 .AsQueryable()
                 .Include(pp => pp.IdProductoNavigation)
                 .FirstOrDefault(pp => pp.IdProducto == idProducto);
 
+            // Usamos KeyNotFoundException, que tu Servicio
+            // captura y maneja para dar feedback claro al usuario.
             if (vinculo == null || vinculo.IdProductoNavigation == null)
             {
-                throw new InvalidOperationException($"El producto con ID {idProducto} no tiene vínculo de proveedor válido o el producto no existe.");
+                // Este mensaje de error le dirá al usuario qué ID de producto falta en la tabla ProveedorProductos
+                throw new KeyNotFoundException($"No se pudo generar la OC: El Producto con ID '{idProducto}' no tiene un proveedor asignado o los datos de producto están incompletos.");
             }
 
             // Asume que la entidad Producto tiene la propiedad PrecioNeto (decimal?)
-            decimal costoUnitario = vinculo.IdProductoNavigation.PrecioNeto ?? 0M;
+            // Si PrecioNeto es nulo, se asigna 0M (cero decimal)
+            decimal costoUnitario = vinculo.IdProductoNavigation.PrecioNeto ?? 0M;         
 
             return new ProveedorProductoInfo
             {
@@ -45,22 +50,5 @@ namespace Logic.Helpers
             };
         }
 
-        // --- MÉTODO ADICIONAL PARA LA INFERENCIA EN LA LECTURA ---
-
-        /// <summary>
-        /// Obtiene el IdProveedor asociado al IdProducto de un detalle de OC.
-        /// </summary>
-        public Guid InferirProveedorDesdeProducto(Guid idProducto)
-        {
-            var vinculo = _unitOfWork.ProveedorProductos.GetAll()
-                .FirstOrDefault(pp => pp.IdProducto == idProducto);
-
-            if (vinculo == null)
-            {
-                throw new KeyNotFoundException($"No se pudo inferir el proveedor para el producto con ID {idProducto}.");
-            }
-            return vinculo.IdProveedor;
-        }
     }
 }
-

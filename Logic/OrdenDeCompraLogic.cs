@@ -3,6 +3,7 @@ using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Interfaces;
 using DataAccess.Models;
 using Logic.MappingProfiles;
+using Microsoft.EntityFrameworkCore;
 using ModelsDTO;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace Logic
             // 1. Mapeo de Cabecera (OP -> OC)
             var ordenDeCompra = _mapper.Map<OrdenDeCompra>(ordenDePedidoOrigen);
             ordenDeCompra.IdOrdenDeCompra = Guid.NewGuid();
+            ordenDeCompra.IdProveedor = idProveedor;
             ordenDeCompra.FechaOc = DateTime.Today;
             ordenDeCompra.IdEstadoOc = 1;
 
@@ -48,22 +50,15 @@ namespace Logic
 
         public OrdenDeCompraDTO ObtenerPorId(Guid id)
         {
-            var orden = _unitOfWork.OrdenDeCompras.GetById(id);
-            if (orden == null)
-                throw new KeyNotFoundException($"No se encontró la Orden de Compra con ID {id}");
+            // 1. Buscamos en la tabla de Compras incluyendo detalles y productos
+            var orden = _unitOfWork.OrdenDeCompras.GetAll()
+                .AsQueryable()
+                .Include(o => o.OrdenDeCompraDetalles)
+                .ThenInclude(d => d.IdProductoNavigation)
+                .FirstOrDefault(o => o.IdOrdenDeCompra == id);
 
-            var ordenDTO = _mapper.Map<OrdenDeCompraDTO>(orden);
-
-            // --- INFERENCIA DEL PROVEEDOR  ---
-            var primerDetalle = orden.OrdenDeCompraDetalles.FirstOrDefault();
-            if (primerDetalle != null)
-            {
-                // Usamos el Helper para inferir el proveedor desde el producto del detalle
-                var proveedorHelper = new Logic.Helpers.ProveedorHelper(_unitOfWork);
-                ordenDTO.IdProveedor = proveedorHelper.InferirProveedorDesdeProducto(primerDetalle.IdProducto);
-            }
-
-            return ordenDTO;
+            // 2. Mapeamos al DTO de Compra
+            return _mapper.Map<OrdenDeCompraDTO>(orden);
         }
 
         public List<OrdenDeCompraDTO> ObtenerTodas()

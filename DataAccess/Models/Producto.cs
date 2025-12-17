@@ -19,6 +19,10 @@ public partial class Producto
 
     public string? Descripcion { get; set; }
 
+    public virtual ICollection<OrdenDeCompraDetalle> OrdenDeCompraDetalles { get; set; } = new List<OrdenDeCompraDetalle>();
+
+    public virtual ICollection<OrdenDePedidoDetalle> OrdenDePedidoDetalles { get; set; } = new List<OrdenDePedidoDetalle>();
+
     public virtual ICollection<ProveedorProducto> ProveedorProductos { get; set; } = new List<ProveedorProducto>();
 
     public virtual ICollection<SolicitudDePedidoDetalle> SolicitudDePedidoDetalles { get; set; } = new List<SolicitudDePedidoDetalle>();

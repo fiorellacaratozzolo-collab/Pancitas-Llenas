@@ -29,7 +29,7 @@ namespace DataAccess.Implementations.SqlServer
         {
             return _context.OrdenDeCompras
             .Include(op => op.OrdenDeCompraDetalles)
-            .Include(op => op.IdEstadoOcNavigation)
+            //.Include(op => op.IdEstadoOcNavigation)
             .ToList();
         }
 
@@ -37,7 +37,7 @@ namespace DataAccess.Implementations.SqlServer
         {
             return _context.OrdenDeCompras
             .Include(op => op.OrdenDeCompraDetalles)
-            .Include(op => op.IdEstadoOcNavigation)
+            //.Include(op => op.IdEstadoOcNavigation)
             .FirstOrDefault(op => op.IdOrdenDeCompra == id);
         }
 

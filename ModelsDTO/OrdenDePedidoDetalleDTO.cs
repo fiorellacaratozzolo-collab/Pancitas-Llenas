@@ -10,6 +10,8 @@ namespace ModelsDTO
     {
         public Guid IdOrdenDePedidoDetalle { get; set; }
 
+        public Guid IdProducto { get; set; }
+
         public Guid IdOrdenDePedido { get; set; }
 
         public int Cantidad { get; set; }
@@ -22,8 +24,6 @@ namespace ModelsDTO
 
         public decimal Subtotal { get; set; }
 
-        public Guid? IdProveedor { get; set; }
-        public Guid? IdProducto { get; set; }
         public decimal? PrecioNeto { get; set; }
         public virtual OrdenDePedidoDTO IdOrdenDePedidoNavigation { get; set; } = null!;
     }

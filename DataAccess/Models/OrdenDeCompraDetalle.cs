@@ -9,6 +9,8 @@ public partial class OrdenDeCompraDetalle
 
     public Guid IdOrdenDeCompra { get; set; }
 
+    public Guid IdProducto { get; set; }
+
     public int Cantidad { get; set; }
 
     public decimal PesoNeto { get; set; }
@@ -20,4 +22,6 @@ public partial class OrdenDeCompraDetalle
     public decimal Subtotal { get; set; }
 
     public virtual OrdenDeCompra IdOrdenDeCompraNavigation { get; set; } = null!;
+
+    public virtual Producto IdProductoNavigation { get; set; } = null!;
 }

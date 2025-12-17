@@ -126,16 +126,27 @@ namespace FormUI.FormCompra
                     // 1. Obtener el ID
                     Guid idSeleccionado = (Guid)dgvOrdenDePedido.CurrentRow.Cells["IdOrdenDePedido"].Value;
 
-                    // 2. Llamar al método de transición (marcará OP como 5 y creará OC)
-                    Guid nuevaOCId = _ordenService.AprobarYSolicitarOrdenDeCompra(idSeleccionado);
+                    // 2. Llamar al método de transición (AHORA CON EL NOMBRE Y TIPO DE RETORNO CORRECTO)
+                    // _ordenService debe ser una instancia de OrdenDePedidoService
+                    ResultadoGeneracionOCsDTO resultado = _ordenService.AprobarYGenerarOCs(idSeleccionado);
 
-                    MessageBox.Show($"¡Orden de Compra generada con éxito!\nID de la nueva OC: {nuevaOCId}", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    if (resultado.Exito)
+                    {
+                        MessageBox.Show(resultado.Mensaje, "Generación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        // Aquí podrías agregar lógica para navegar al FormGestiónOC o refrescar.
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Fallo: {resultado.Mensaje}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
 
-                    // 3. Actualizar la lista
+                    // 3. Actualizar la lista de OPs (para ver el estado "Aprobado")
                     btnActualizar_Click(this, EventArgs.Empty);
+
                 }
                 catch (Exception ex)
                 {
+                    // Error de la UI o un error no capturado en la capa de servicio
                     MessageBox.Show($"Error al generar la Orden de Compra: {ex.Message}", "Error de Transición", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

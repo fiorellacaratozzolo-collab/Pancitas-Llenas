@@ -15,5 +15,7 @@ public partial class Proveedor
 
     public string? Direccion { get; set; }
 
+    public virtual ICollection<OrdenDeCompra> OrdenDeCompras { get; set; } = new List<OrdenDeCompra>();
+
     public virtual ICollection<ProveedorProducto> ProveedorProductos { get; set; } = new List<ProveedorProducto>();
 }
