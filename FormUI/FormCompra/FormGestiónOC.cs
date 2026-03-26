@@ -131,31 +131,17 @@ namespace FormUI.FormCompra
         {
             if (dgvOrdenCompra.Columns.Count > 0)
             {
-                // Lista extendida de columnas técnicas y de navegación a ocultar
-                string[] columnasAocultar = 
-                {
-                    "IdOrdenDeCompra",
-                    "IdOrdenDePedido",
-                    "IdEstadoOc",
-                    "IdOrdenDePedidoOrigen",  // Nueva a ocultar
-                    "IdProveedorNavigation",  // Nueva a ocultar
-                    "IdEstadoOcNavigation",   // Nueva a ocultar
-                    "OrdenDeCompraDetalles"   // Ocultamos la lista de la cabecera
-                };
+                // Ocultar columnas técnicas y el Id del Proveedor
+                string[] ocultar = { "IdOrdenDeCompra", "IdOrdenDePedido", "IdEstadoOc",
+                             "IdOrdenDePedidoOrigen", "IdProveedorNavigation",
+                             "IdEstadoOcNavigation", "OrdenDeCompraDetalles", "IdProveedor" };
 
-                foreach (var col in columnasAocultar)
-                {
-                    if (dgvOrdenCompra.Columns[col] != null)
-                        dgvOrdenCompra.Columns[col].Visible = false;
-                }
+                foreach (var col in ocultar)
+                    if (dgvOrdenCompra.Columns[col] != null) dgvOrdenCompra.Columns[col].Visible = false;
 
-                // Mejorar encabezados visibles
-                if (dgvOrdenCompra.Columns["FechaOc"] != null) dgvOrdenCompra.Columns["FechaOc"].HeaderText = "Fecha Emisión";
-                if (dgvOrdenCompra.Columns["Total"] != null)
-                {
-                    dgvOrdenCompra.Columns["Total"].HeaderText = "Total Compra";
-                    dgvOrdenCompra.Columns["Total"].DefaultCellStyle.Format = "C2";
-                }
+                if (dgvOrdenCompra.Columns["NombreProveedor"] != null) dgvOrdenCompra.Columns["NombreProveedor"].HeaderText = "Proveedor";
+                if (dgvOrdenCompra.Columns["FechaOc"] != null) dgvOrdenCompra.Columns["FechaOc"].HeaderText = "Fecha";
+                if (dgvOrdenCompra.Columns["Total"] != null) dgvOrdenCompra.Columns["Total"].DefaultCellStyle.Format = "C2";
 
                 dgvOrdenCompra.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
@@ -165,22 +151,13 @@ namespace FormUI.FormCompra
         {
             if (dgvDetalleOC.Columns.Count > 0)
             {
-                // Ocultar IDs y Navegaciones del detalle
-                string[] columnasDetalleOcultar = 
-                {
-                    "IdOrdenDeCompraDetalle",
-                    "IdOrdenDeCompra",
-                    "IdOrdenDeCompraNavigation",
-                    "IdProductoNavigation"       
-                };
+                string[] ocultar = { "IdOrdenDeCompraDetalle", "IdOrdenDeCompra", "IdOrdenDeCompraNavigation", "IdProducto", "IdProductoNavigation" };
 
-                foreach (var col in columnasDetalleOcultar)
-                {
-                    if (dgvDetalleOC.Columns[col] != null)
-                        dgvDetalleOC.Columns[col].Visible = false;
-                }
+                foreach (var col in ocultar)
+                    if (dgvDetalleOC.Columns[col] != null) dgvDetalleOC.Columns[col].Visible = false;
 
-                // Formatear precios y cantidades
+                if (dgvDetalleOC.Columns["NombreProducto"] != null) dgvDetalleOC.Columns["NombreProducto"].HeaderText = "Producto";
+                if (dgvDetalleOC.Columns["PesoNeto"] != null) dgvDetalleOC.Columns["PesoNeto"].HeaderText = "Peso (Kg)";
                 if (dgvDetalleOC.Columns["PrecioUnitario"] != null) dgvDetalleOC.Columns["PrecioUnitario"].DefaultCellStyle.Format = "C2";
                 if (dgvDetalleOC.Columns["Subtotal"] != null) dgvDetalleOC.Columns["Subtotal"].DefaultCellStyle.Format = "C2";
 

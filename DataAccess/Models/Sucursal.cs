@@ -17,5 +17,9 @@ public partial class Sucursal
 
     public virtual TipoSucursalEnum IdTipoSucursalNavigation { get; set; } = null!;
 
+    public virtual ICollection<SolicitudDeTraspasoDeProducto> SolicitudDeTraspasoDeProductoIdSucursalDestinoNavigations { get; set; } = new List<SolicitudDeTraspasoDeProducto>();
+
+    public virtual ICollection<SolicitudDeTraspasoDeProducto> SolicitudDeTraspasoDeProductoIdSucursalOrigenNavigations { get; set; } = new List<SolicitudDeTraspasoDeProducto>();
+
     public virtual ICollection<StockPorSucursal> StockPorSucursals { get; set; } = new List<StockPorSucursal>();
 }

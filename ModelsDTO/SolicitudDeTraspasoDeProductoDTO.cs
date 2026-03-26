@@ -13,7 +13,10 @@ namespace ModelsDTO
         public DateTime FechaStp { get; set; }
 
         public int IdEstadoStp { get; set; }
-
+        public Guid IdSucursalOrigen { get; set; }
+        public Guid IdSucursalDestino { get; set; }     
+        public string? NombreSucursalOrigen { get; set; }
+        public string? NombreSucursalDestino { get; set; }
         public virtual EstadoStpenumDTO IdEstadoStpNavigation { get; set; } = null!;
 
         public virtual ICollection<SolicitudDeTraspasoDeProductosDetalleDTO> SolicitudDeTraspasoDeProductosDetalles { get; set; } = new List<SolicitudDeTraspasoDeProductosDetalleDTO>();

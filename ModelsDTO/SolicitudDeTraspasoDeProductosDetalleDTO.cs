@@ -19,6 +19,7 @@ namespace ModelsDTO
         public decimal PesoNeto { get; set; }
 
         public string Unidad { get; set; } = null!;
+        public string? NombreProducto { get; set; }
 
         public virtual ProductoDTO IdProductoNavigation { get; set; } = null!;
 

@@ -50,20 +50,22 @@ namespace Logic
 
         public OrdenDeCompraDTO ObtenerPorId(Guid id)
         {
-            // 1. Buscamos en la tabla de Compras incluyendo detalles y productos
             var orden = _unitOfWork.OrdenDeCompras.GetAll()
-                .AsQueryable()
-                .Include(o => o.OrdenDeCompraDetalles)
-                .ThenInclude(d => d.IdProductoNavigation)
-                .FirstOrDefault(o => o.IdOrdenDeCompra == id);
+        .AsQueryable()
+        .Include(o => o.IdProveedorNavigation) //Carga el Proveedor
+        .Include(o => o.OrdenDeCompraDetalles) // Carga Detalles
+            .ThenInclude(d => d.IdProductoNavigation) //Carga Producto para Peso/Nombre
+        .FirstOrDefault(o => o.IdOrdenDeCompra == id);
 
-            // 2. Mapeamos al DTO de Compra
             return _mapper.Map<OrdenDeCompraDTO>(orden);
         }
 
         public List<OrdenDeCompraDTO> ObtenerTodas()
         {
-            var ordenes = _unitOfWork.OrdenDeCompras.GetAll();
+            var ordenes = _unitOfWork.OrdenDeCompras.GetAll()
+        .AsQueryable()
+        .Include(o => o.IdProveedorNavigation) // 👈 Carga el Proveedor
+        .ToList();
             return _mapper.Map<List<OrdenDeCompraDTO>>(ordenes);
         }
 

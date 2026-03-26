@@ -14,15 +14,17 @@ namespace DataAccess.Implementations.SqlServer
     {
         private readonly PetShopDbContext _context;
 
-        // Propiedades de Repositorios
-        public IProductoRepository Productos { get; private set; }
-        public IProveedorRepository Proveedores { get; private set; }
-        public ISucursalRepository Sucursales { get; private set; }
-        public IClienteRepository Clientes { get; private set; }
-        public IStockPorSucursalRepository Stocks { get; private set; }
+        // Propiedades de Repositorios - Agrupadas para mejor lectura
+        public IProductoRepository Productos { get; }
+        public IProveedorRepository Proveedores { get; }
+        public ISucursalRepository Sucursales { get; }
+        public IClienteRepository Clientes { get; }
+        public IStockPorSucursalRepository StocksPorSucursal { get; } // Centralizado
         public IVentaRepository Ventas { get; }
         public IVentaDetalleRepository VentaDetalles { get; }
-        public IProveedorProductoRepository ProveedorProductos { get; private set; }
+        public IProveedorProductoRepository ProveedorProductos { get; }
+
+        // Flujo de Pedidos y Compras
         public ISolicitudDePedidoRepository SolicitudDePedidos { get; }
         public ISolicitudDePedidoDetalleRepository SolicitudDePedidoDetalles { get; }
         public IOrdenDePedidoRepository OrdenDePedidos { get; }
@@ -30,20 +32,22 @@ namespace DataAccess.Implementations.SqlServer
         public IOrdenDeCompraRepository OrdenDeCompras { get; }
         public IOrdenDeCompraDetalleRepository OrdenDeCompraDetalles { get; }
 
+        // Flujo de Traspasos (STP)
+        public ISolicitudDeTraspasoRepository SolicitudesTraspaso { get; }
+        public ISolicitudDeTraspasoDetalleRepository SolicitudesTraspasoDetalles { get; }
 
+        public IStockPorSucursalRepository Stocks { get; }
 
         public UnitOfWork()
         {
-            // La magia del UoW: SOLO UNA INSTANCIA del Contexto
             _context = new PetShopDbContext();
 
-            // Inicializar Repositorios y pasarles la instancia del Contexto
-            // NOTA: Debes modificar los Repositorios para que acepten el DbContext en su constructor.
+            // Inicialización coordinada
             Productos = new ProductoRepository(_context);
             Proveedores = new ProveedorRepository(_context);
             Sucursales = new SucursalRepository(_context);
             Clientes = new ClienteRepository(_context);
-            Stocks = new StockPorSucursalRepository(_context);
+            StocksPorSucursal = new StockPorSucursalRepository(_context);
             Ventas = new VentaRepository(_context);
             VentaDetalles = new VentaDetalleRepository(_context);
             ProveedorProductos = new ProveedorProductoRepository(_context);
@@ -53,11 +57,24 @@ namespace DataAccess.Implementations.SqlServer
             OrdenDePedidoDetalles = new OrdenDePedidoDetalleRepository(_context);
             OrdenDeCompras = new OrdenDeCompraRepository(_context);
             OrdenDeCompraDetalles = new OrdenDeCompraDetalleRepository(_context);
-        }
+            StocksPorSucursal = new StockPorSucursalRepository(_context);
+
+            // Repositorios de Traspaso
+            SolicitudesTraspaso = new SolicitudDeTraspasoRepository(_context);
+            SolicitudesTraspasoDetalles = new SolicitudDeTraspasoDetalleRepository(_context);
+
+            var stockRepo = new StockPorSucursalRepository(_context);
+            this.Stocks = stockRepo;
+            this.StocksPorSucursal = stockRepo;
+
+            // Inicialización de Traspasos
+            this.SolicitudesTraspaso = new SolicitudDeTraspasoRepository(_context);
+            this.SolicitudesTraspasoDetalles = new SolicitudDeTraspasoDetalleRepository(_context);
+        }        
 
         public int Complete()
         {
-            // Guardar todos los cambios acumulados en una sola operación
+            // Atómica: Guarda todo o nada
             return _context.SaveChanges();
         }
 

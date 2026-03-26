@@ -11,6 +11,7 @@ namespace ModelsDTO
         public Guid IdOrdenDeCompra { get; set; }
 
         public Guid IdProveedor { get; set; }
+        public string? NombreProveedor { get; set; }
 
         public DateTime FechaOc { get; set; }
 

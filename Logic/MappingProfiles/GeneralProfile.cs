@@ -63,11 +63,7 @@ namespace Logic.MappingProfiles
                 .ForMember(dest => dest.IdOrdenDePedido, opt => opt.Ignore())
                 .ForMember(dest => dest.FechaOp, opt => opt.Ignore())
                 .ForMember(dest => dest.IdEstadoOp, opt => opt.Ignore())
-                .ForMember(dest => dest.Total, opt => opt.Ignore())
-                // Asumiendo que IdSolicitudDePedidoOrigen es una propiedad que agregaste a la Entidad OP
-                // Si solo está en el DTO, ignora esta línea.
-                // .ForMember(dest => dest.IdSolicitudDePedidoOrigen, opt => opt.MapFrom(src => src.IdSolicitudDePedido))
-                ;
+                .ForMember(dest => dest.Total, opt => opt.Ignore());
 
             // Detalle: Copia cantidad/producto, ignora los campos específicos de OP
             CreateMap<SolicitudDePedidoDetalle, OrdenDePedidoDetalle>()
@@ -83,19 +79,50 @@ namespace Logic.MappingProfiles
                 .ForMember(dest => dest.IdOrdenDeCompra, opt => opt.Ignore())
                 .ForMember(dest => dest.FechaOc, opt => opt.Ignore())
                 .ForMember(dest => dest.IdEstadoOc, opt => opt.Ignore())
-                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.Total));
-            // Asumiendo que IdOrdenDePedidoOrigen es una propiedad que agregaste a la Entidad OC
-            // .ForMember(dest => dest.IdOrdenDePedidoOrigen, opt => opt.MapFrom(src => src.IdOrdenDePedido))
-            ;
+                .ForMember(dest => dest.Total, opt => opt.MapFrom(src => src.Total));;
 
             // Detalle: Copia cantidad/precio, ignora los campos específicos de OC
             CreateMap<OrdenDePedidoDetalle, OrdenDeCompraDetalle>()
                 .ForMember(dest => dest.IdOrdenDeCompraDetalle, opt => opt.Ignore())
                 .ForMember(dest => dest.IdOrdenDeCompra, opt => opt.Ignore())
                 .ForMember(dest => dest.Cantidad, opt => opt.MapFrom(src => src.Cantidad))
-                .ForMember(dest => dest.PrecioUnitario, opt => opt.MapFrom(src => src.PrecioUnitario))
-                .ForMember(dest => dest.PesoNeto, opt => opt.Ignore()) // Lo debe asignar la lógica o venir de otra fuente
-                .ForMember(dest => dest.Unidad, opt => opt.Ignore()); // Lo debe asignar la lógica o venir de otra fuente
+                .ForMember(dest => dest.PrecioUnitario, opt => opt.MapFrom(src => src.PrecioUnitario))   
+                .ForMember(dest => dest.PesoNeto, opt => opt.MapFrom(src => src.IdProductoNavigation.PesoNeto))
+                .ForMember(dest => dest.Unidad, opt => opt.Ignore());
+
+            // Mapeo de Cabecera: OC Entidad -> OC DTO
+            CreateMap<OrdenDeCompra, OrdenDeCompraDTO>()
+                // Buscamos el Nombre del Proveedor navegando por la relación
+                .ForMember(dest => dest.NombreProveedor,
+                           opt => opt.MapFrom(src => src.IdProveedorNavigation.NombreProveedor))
+                .ReverseMap();
+
+            // Mapeo de Detalle: OC Detalle Entidad -> OC Detalle DTO
+            CreateMap<OrdenDeCompraDetalle, OrdenDeCompraDetalleDTO>()
+                // Buscamos el Peso y el Nombre navegando por la relación IdProductoNavigation
+                .ForMember(dest => dest.PesoNeto,
+                           opt => opt.MapFrom(src => src.IdProductoNavigation.PesoNeto))
+                .ForMember(dest => dest.NombreProducto,
+                           opt => opt.MapFrom(src => src.IdProductoNavigation.NombreProducto))
+                .ReverseMap();
+
+            // Mapeo de Solicitud de Traspaso (Entidad -> DTO)
+            CreateMap<SolicitudDeTraspasoDeProducto, SolicitudDeTraspasoDeProductoDTO>()
+                .ForMember(dest => dest.NombreSucursalOrigen,
+                           opt => opt.MapFrom(src => src.IdSucursalOrigenNavigation.NombreSucursal))
+                .ForMember(dest => dest.NombreSucursalDestino,
+                           opt => opt.MapFrom(src => src.IdSucursalDestinoNavigation.NombreSucursal))
+                .ForMember(dest => dest.IdEstadoStpNavigation,
+                           opt => opt.MapFrom(src => src.IdEstadoStpNavigation))
+                .ReverseMap();
+
+            // Mapeo de Detalle de Traspaso
+            CreateMap<SolicitudDeTraspasoDeProductosDetalle, SolicitudDeTraspasoDeProductosDetalleDTO>()
+                .ForMember(dest => dest.IdProductoNavigation,
+                           opt => opt.MapFrom(src => src.IdProductoNavigation))
+                .ReverseMap();
+
+
         }
     }
 }

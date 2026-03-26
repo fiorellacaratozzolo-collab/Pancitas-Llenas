@@ -9,12 +9,12 @@ namespace DataAccess.Implementations.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-        // 1. Exponer todos los Repositorios que maneja
+        // Repositorios existentes (NO TOCAR para no romper nada)
         IProductoRepository Productos { get; }
         IProveedorRepository Proveedores { get; }
         ISucursalRepository Sucursales { get; }
         IClienteRepository Clientes { get; }
-        IStockPorSucursalRepository Stocks { get; }
+        IStockPorSucursalRepository Stocks { get; } 
         IVentaRepository Ventas { get; }
         IVentaDetalleRepository VentaDetalles { get; }
         IProveedorProductoRepository ProveedorProductos { get; }
@@ -25,9 +25,11 @@ namespace DataAccess.Implementations.UnitOfWork
         IOrdenDeCompraRepository OrdenDeCompras { get; }
         IOrdenDeCompraDetalleRepository OrdenDeCompraDetalles { get; }
 
+        // Nuevos Repositorios para Traspaso
+        ISolicitudDeTraspasoRepository SolicitudesTraspaso { get; }
+        ISolicitudDeTraspasoDetalleRepository SolicitudesTraspasoDetalles { get; }
+        IStockPorSucursalRepository StocksPorSucursal { get; }
 
-
-        // 2. Método para confirmar la transacción
         int Complete();
     }
 }
