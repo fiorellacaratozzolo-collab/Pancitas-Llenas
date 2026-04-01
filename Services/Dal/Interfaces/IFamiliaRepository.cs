@@ -7,8 +7,9 @@ using Services.DomainModel.Composite;
 
 namespace Services.Dal.Interfaces
 {
-    internal interface IFamiliaRepository
+    public interface IFamiliaRepository : IGenericRepository<Familia>
     {
-        Familia GetById(Guid id);
+        // Espacio para métodos exclusivos de Familia si fueran necesarios
     }
+
 }

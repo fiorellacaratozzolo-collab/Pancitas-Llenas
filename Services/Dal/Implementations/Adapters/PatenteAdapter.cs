@@ -15,24 +15,23 @@ namespace Services.Dal.Implementations.Adapters
 
         public static PatenteAdapter Current
         {
-            get
-            {
-                return _instance;
-            }
+            get { return _instance; }
         }
 
         private PatenteAdapter()
         {
-            //Implent here the initialization of your singleton
+            // Inicialización del singleton si fuera necesaria
         }
-
         #endregion
+
         public Patente Get(object[] values)
         {
             Patente patente = new Patente();
             patente.Id = Guid.Parse(values[0].ToString());
             patente.DataKey = values[1].ToString();
+            patente.Nombre = values[1].ToString(); // Mapeamos el nombre para cumplir con Component
             patente.TipoAcceso = (TipoAcceso)Enum.Parse(typeof(TipoAcceso), values[2].ToString());
+
             return patente;
         }
     }

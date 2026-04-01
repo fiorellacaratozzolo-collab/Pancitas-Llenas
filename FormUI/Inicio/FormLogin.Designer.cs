@@ -72,6 +72,7 @@
             btnIngresar.TabIndex = 3;
             btnIngresar.Text = "Iniciar Sesión";
             btnIngresar.UseVisualStyleBackColor = true;
+            btnIngresar.Click += btnIngresar_Click_1;
             // 
             // txtbUsuario
             // 

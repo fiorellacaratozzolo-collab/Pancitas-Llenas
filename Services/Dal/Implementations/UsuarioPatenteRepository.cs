@@ -12,20 +12,20 @@ using Services.Dal.Interfaces;
 
 namespace Services.Dal.Implementations
 {
-    internal class UsuarioPatenteRepository : IJoinRepository<Patente, Usuario>
+    internal class UsuarioPatenteRepository : IJoinRepository<Usuario>
     {
-        public List<Patente> GetByObject(Usuario obj)
+        public IList<Component> GetByObject(Usuario obj)
         {
-            List<Patente> patentes = new List<Patente>();
+            List<Component> patentes = new List<Component>();
 
-            using (SqlDataReader dataReader = SqlHelper.ExecuteReader("SELECT IdPatente FROM UsuarioPatente WHERE IdUsuario = @IdUsuario",
-                CommandType.Text,
-                new SqlParameter("@IdUsuario", obj.IdUsuario)))
+            string query = "SELECT IdPatente FROM UsuarioPatente WHERE IdUsuario = @IdUsuario";
+            SqlParameter param = new SqlParameter("@IdUsuario", obj.IdUsuario);
+
+            using (SqlDataReader reader = SqlHelper.ExecuteReader(query, CommandType.Text, param))
             {
-                while (dataReader.Read())
+                while (reader.Read())
                 {
-                    Guid idPatente = dataReader.GetGuid(0);
-
+                    Guid idPatente = reader.GetGuid(0);
                     patentes.Add(new PatenteRepository().GetById(idPatente));
                 }
             }

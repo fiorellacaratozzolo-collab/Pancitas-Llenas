@@ -6,51 +6,38 @@ using System.Threading.Tasks;
 
 namespace Services.DomainModel.Composite
 {
-    /// <summary>
-    /// This class (a) defines behaviour for components having children, (b) stores
-    /// child components, and (c) implements child-related operations in the Component
-    /// interface.
-    /// </summary>
-    /// 
-
 
     public class Familia : Component
     {
+        private List<Component> _hijos = new List<Component>();
 
-        private List<Component> hijos = new List<Component>();
-
-        public string Nombre { get; set; }
-
-        public Familia()
+        public override void Add(Component c)
         {
-
+            _hijos.Add(c);
         }
 
-
-        /// 
-        /// <param name="component"></param>
-        public override void Add(Component component)
+        public override void Remove(Component c)
         {
-
-            hijos.Add(component);
+            _hijos.RemoveAll(x => x.Id == c.Id);
         }
 
-        public void AddRange(IEnumerable<Component> components)
+        public override int GetCount()
         {
-            hijos.AddRange(components);
+            return _hijos.Count;
         }
 
-        /// 
-        /// <param name="component"></param>
-        public override void Remove(Component component)
+        // Método vital para que compile tu FamiliaAdapter
+        public void AddRange(IEnumerable<Component> componentes)
         {
-            component.Remove(component);
+            if (componentes != null)
+            {
+                _hijos.AddRange(componentes);
+            }
         }
 
-        public List<Component> GetHijos()
+        public IList<Component> Hijos
         {
-            return hijos;
+            get { return _hijos.AsReadOnly(); }
         }
-
     }
 }

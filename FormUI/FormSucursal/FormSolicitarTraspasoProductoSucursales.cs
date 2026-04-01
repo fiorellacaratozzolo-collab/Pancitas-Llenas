@@ -17,43 +17,44 @@ namespace FormUI.FormSucursal
     public partial class FormSolicitarTraspasoProductoSucursales : Form
     {
         private readonly TraspasoLogic _traspasoLogic;
-        private readonly SucursalLogic? _sucursalLogic; // Para cargar el combo de depósitos
-        private readonly ProductoLogic? _productoLogic; // Para cargar el combo de productos
+        private readonly SucursalLogic _sucursalLogic;
+        private readonly ProductoLogic _productoLogic;
         private BindingList<SolicitudDeTraspasoDeProductosDetalleDTO> _listaDetalles;
 
         public FormSolicitarTraspasoProductoSucursales()
         {
-            InitializeComponent();
-            var uow = new UnitOfWork();
-            _traspasoLogic = new TraspasoLogic(uow, MapperConfigInitializer.Mapper);
+            InitializeComponent();         
+            _traspasoLogic = new TraspasoLogic();           
+            _sucursalLogic = new SucursalLogic();
+            _productoLogic = new ProductoLogic();
             _listaDetalles = new BindingList<SolicitudDeTraspasoDeProductosDetalleDTO>();
             ConfigurarGrilla();
+        }
+
+        private void FormSolicitarTraspasoProductoSucursales_Load(object sender, EventArgs e)
+        {
+            // Ahora ya no necesitas el ?. porque los objetos están inicializados
+            cmbSucursalOrigen.DataSource = _sucursalLogic.ObtenerTodasLasSucursales();
+            cmbSucursalOrigen.DisplayMember = "NombreSucursal";
+            cmbSucursalOrigen.ValueMember = "IdSucursal";
+
+            cmbProductos.DataSource = _productoLogic.ObtenerTodos();
+            cmbProductos.DisplayMember = "NombreProducto";
+            cmbProductos.ValueMember = "IdProducto";
+
+            dgvItemsSolicitados.DataSource = _listaDetalles;
         }
 
         private void ConfigurarGrilla()
         {
             dgvItemsSolicitados.AutoGenerateColumns = true;
             // Esperar a que se asigne el DataSource para ocultar
-            dgvItemsSolicitados.DataBindingComplete += (s, e) => {
+            dgvItemsSolicitados.DataBindingComplete += (s, e) =>
+            {
                 string[] ocultar = { "IdSolicitudDeTraspasoDeProductosDetalle", "IdSolicitudDeTraspasoDeProductos", "IdProducto", "IdSolicitudDeTraspasoDeProductosNavigation", "IdProductoNavigation" };
                 foreach (var col in ocultar)
                     if (dgvItemsSolicitados.Columns[col] != null) dgvItemsSolicitados.Columns[col].Visible = false;
             };
-        }
-
-        private void FormSolicitarTraspasoProductoSucursales_Load(object sender, EventArgs e)
-        {
-            // Cargar Sucursales (Origen: Depósitos)
-            cmbSucursalOrigen.DataSource = _sucursalLogic?.ObtenerTodasLasSucursales();
-            cmbSucursalOrigen.DisplayMember = "NombreSucursal";
-            cmbSucursalOrigen.ValueMember = "IdSucursal";
-
-            // Cargar Productos
-            cmbProductos.DataSource = _productoLogic?.ObtenerTodos();
-            cmbProductos.DisplayMember = "NombreProducto";
-            cmbProductos.ValueMember = "IdProducto";
-
-            dgvItemsSolicitados.DataSource = _listaDetalles;
         }
 
         private void cmbSucursalOrigen_SelectedIndexChanged(object sender, EventArgs e)
@@ -102,6 +103,11 @@ namespace FormUI.FormSucursal
                 _traspasoLogic.CrearSolicitud(nuevaSolicitud);
                 MessageBox.Show($"Solicitud enviada desde {GlobalSettings.NombreSucursal}");
             }
+        }
+
+        private void FormSolicitarTraspasoProductoSucursales_Load_1(object sender, EventArgs e)
+        {
+
         }
     }
 }

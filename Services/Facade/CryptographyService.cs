@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Cryptography
+namespace Services.Facade
 {
     public static class CryptographyService
     {

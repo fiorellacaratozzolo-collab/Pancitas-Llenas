@@ -16,22 +16,15 @@ namespace Services.Dal.Implementations.Adapters
 
         public static UsuarioAdapter Current
         {
-            get
-            {
-                return _instance;
-            }
+            get { return _instance; }
         }
 
-        private UsuarioAdapter()
-        {
-            //Implent here the initialization of your singleton
-        }
-
+        private UsuarioAdapter() { }
         #endregion
+
         public Usuario Get(object[] values)
         {
-            Usuario usuario = new Usuario
-            (
+            Usuario usuario = new Usuario(
                 Guid.Parse(values[0].ToString()),
                 values[1].ToString(),
                 values[2].ToString(),
@@ -39,10 +32,8 @@ namespace Services.Dal.Implementations.Adapters
                 Convert.ToBoolean(values[4].ToString())
             );
 
-            usuario.Privilegios = new List<Component>();
-
+            // Buscamos los roles (familias) y excepciones (patentes) asignadas al usuario
             usuario.Privilegios.AddRange(new UsuarioFamiliaRepository().GetByObject(usuario));
-
             usuario.Privilegios.AddRange(new UsuarioPatenteRepository().GetByObject(usuario));
 
             return usuario;

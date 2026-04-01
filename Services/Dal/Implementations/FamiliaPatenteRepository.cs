@@ -11,20 +11,20 @@ using Services.DomainModel.Composite;
 
 namespace Services.Dal.Implementations
 {
-    internal class FamiliaPatenteRepository : IJoinRepository<Patente, Familia>
+    internal class FamiliaPatenteRepository : IJoinRepository<Familia>
     {
-        public List<Patente> GetByObject(Familia obj)
+        public IList<Component> GetByObject(Familia obj)
         {
-            List<Patente> patentes = new List<Patente>();
+            List<Component> patentes = new List<Component>();
 
-            using (SqlDataReader dataReader = SqlHelper.ExecuteReader("SELECT IdPatente FROM FamiliaPatente WHERE IdFamilia = @IdFamilia",
-                CommandType.Text,
-                new SqlParameter("@IdFamilia", obj.Id)))
+            string query = "SELECT IdPatente FROM FamiliaPatente WHERE IdFamilia = @IdFamilia";
+            SqlParameter param = new SqlParameter("@IdFamilia", obj.Id);
+
+            using (SqlDataReader reader = SqlHelper.ExecuteReader(query, CommandType.Text, param))
             {
-                while (dataReader.Read())
+                while (reader.Read())
                 {
-                    Guid idPatente = dataReader.GetGuid(0);
-
+                    Guid idPatente = reader.GetGuid(0);
                     patentes.Add(new PatenteRepository().GetById(idPatente));
                 }
             }

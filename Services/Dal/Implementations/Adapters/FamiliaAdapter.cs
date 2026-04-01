@@ -15,26 +15,20 @@ namespace Services.Dal.Implementations.Adapters
 
         public static FamiliaAdapter Current
         {
-            get
-            {
-                return _instance;
-            }
+            get { return _instance; }
         }
 
-        private FamiliaAdapter()
-        {
-            //Implent here the initialization of your singleton
-        }
-
+        private FamiliaAdapter() { }
         #endregion
+
         public Familia Get(object[] values)
         {
             Familia familia = new Familia();
             familia.Id = Guid.Parse(values[0].ToString());
             familia.Nombre = values[1].ToString();
 
+            // Magia del Composite: La familia va a buscar a sus hijos a la base de datos
             familia.AddRange(new FamiliaFamiliaRepository().GetByObject(familia));
-
             familia.AddRange(new FamiliaPatenteRepository().GetByObject(familia));
 
             return familia;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Services.Dal.Interfaces
 {
-    internal interface IAdapter<T> where T : class
+    internal interface IAdapter<T> 
     {
         T Get(object[] values);
     }

@@ -7,8 +7,8 @@ using Services.DomainModel.Composite;
 
 namespace Services.Dal.Interfaces
 {
-    internal interface IPatenteRepository
+    public interface IPatenteRepository : IGenericRepository<Patente>
     {
-        Patente GetById(Guid id);
+        // Espacio para métodos exclusivos de Patente si fueran necesarios
     }
 }

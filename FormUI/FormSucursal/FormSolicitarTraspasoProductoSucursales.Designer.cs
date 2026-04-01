@@ -202,6 +202,7 @@
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormSolicitarTraspasoProductoSucursales";
             Text = "Solicitar el Traspaso de Productos a otra Sucursal";
+            Load += FormSolicitarTraspasoProductoSucursales_Load_1;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dgvItemsSolicitados).EndInit();

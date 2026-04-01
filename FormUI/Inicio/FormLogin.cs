@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Services.DomainModel.Composite;
+using Services.Facade;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,9 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Services.Cryptography;
-using Services.DomainModel.Composite;
-using Services.Login;
 
 namespace FormUI
 {
@@ -25,40 +24,48 @@ namespace FormUI
 
         }
         private void btnIngresar_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                //Validamos las credenciales del usuario
-                Usuario usuario = LoginService.ValidarCredenciales(txtbUsuario.Text, txtbContraseña.Text);
-
-                //Si las credenciales son correctas, mostramos un mensaje de bienvenida
-                MessageBox.Show($"Bienvenido {usuario.Nombre} ");
-
-                foreach (var item in usuario.Patentes)
-                {
-                    MessageBox.Show(item.DataKey);
-                }
-
-                //Cerramos el formulario de login
-                this.Hide();
-                new Inicio.FormPrincipal(usuario).ShowDialog();
-                this.Show();
-            }
-            catch (Exception ex)
-            {
-                //Si hay un error, mostramos un mensaje de error
-                MessageBox.Show(ex.Message);
-            }
-
+        {        
         }
+
 
         private void Login_Load(object sender, EventArgs e)
         {
-            // Primero vamos a crear un usuario admin con una pass hasheada
-            LoginService.RegistrarUsuario(new Usuario("admin", "fiorella.caratozzolo@gmail.com", "2001"));
-            Console.WriteLine($"Contraseña: {CryptographyService.HashMd5("2001")}");
+
         }
 
+        private void btnIngresar_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                // 1. Validamos las credenciales y creamos la sesión global
+                LoginService.Login(txtbUsuario.Text, txtbContraseña.Text);
+
+                // 2. Si pasó la línea anterior sin errores, recuperamos el usuario de la sesión actual
+                Usuario usuario = SessionManager.Current.UsuarioLogueado;
+
+                MessageBox.Show($"¡Bienvenido {usuario.Nombre} al sistema PetShop!", "Inicio Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Opcional: Mostramos la cantidad de permisos base (Familias/Patentes) que trajo de la BD para confirmar que el Composite funcionó
+                MessageBox.Show($"Se han cargado {usuario.Privilegios.Count} roles/permisos principales de tu perfil.", "Diagnóstico de Seguridad");
+
+                // 3. Ocultamos el Login y abrimos el Menú Principal
+                this.Hide();
+
+                // NOTA: FormPrincipal ya no necesita recibir (usuario) porque lo saca del SessionManager
+                new Inicio.FormPrincipal().ShowDialog();
+
+                this.Show(); // Cuando se cierre el FormPrincipal, vuelve a aparecer el Login
+
+                // Limpiamos los campos por seguridad
+                txtbUsuario.Clear();
+                txtbContraseña.Clear();
+            }
+            catch (Exception ex)
+            {
+                // Si la BLL lanza una excepción (ej: "Usuario incorrecto"), cae aquí
+                MessageBox.Show(ex.Message, "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 
 }

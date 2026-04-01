@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Services.Dal.Implementations;
+using Services.Dal.Interfaces;
+using Services.DomainModel.Composite;
+using Services.Facade;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Services.Cryptography;
-using Services.Dal.Implementations;
-using Services.Dal.Interfaces;
-using Services.DomainModel.Composite;
 
 namespace Services.Bll
 {
@@ -21,41 +21,29 @@ namespace Services.Bll
 
         public static Usuario ValidarCredenciales(string user, string password)
         {
-            password = CryptographyService.HashMd5(password);
+            // Hasheamos la password ingresada para compararla con la BD
+            //string hashedPassword = CryptographyService.HashMd5(password);
 
-            Usuario usuario = _usuarioRepository.GetByCredentials(user, password);
+            Usuario usuario = _usuarioRepository.GetByCredentials(user, password); //hashedPassword);
 
             if (usuario == null)
-            {
-                //Escribir nuestra regla de negocio como exception
-
                 throw new Exception("Usuario o contraseña incorrectos.");
-            }
-            else if (!usuario.Habilitado)
-            {
-                //Escribir nuestra regla de negocio como exception
-                throw new Exception("Usuario no habilitado.");
-            }
+
+            if (!usuario.Habilitado)
+                throw new Exception("El usuario está deshabilitado. Contacte al administrador.");
 
             return usuario;
         }
 
         public static void RegistrarUsuario(Usuario usuario)
         {
-            //Hacer validaciones previas antes de registrar el usuario
             if (usuario == null)
-            {
-                //Escribir nuestra regla de negocio como exception
                 throw new ArgumentNullException(nameof(usuario), "El usuario no puede ser nulo.");
-            }
 
-            _usuarioRepository.RegistrarUsuario(usuario);
+            // ¡MUY IMPORTANTE! Encriptar la clave ANTES de guardarla
+            usuario.Password = CryptographyService.HashMd5(usuario.Password);
 
-            if (usuario.IdUsuario == Guid.Empty)
-            {
-                //Escribir nuestra regla de negocio como exception
-                throw new Exception("El usuario no pudo ser registrado.");
-            }
+            _usuarioRepository.Add(usuario); // Asegúrate de que tu Repositorio tiene el método Add()
         }
     }
 }

@@ -12,20 +12,20 @@ using Services.Dal.Interfaces;
 
 namespace Services.Dal.Implementations
 {
-    internal class UsuarioFamiliaRepository : IJoinRepository<Familia, Usuario>
+    internal class UsuarioFamiliaRepository : IJoinRepository<Usuario>
     {
-        public List<Familia> GetByObject(Usuario obj)
+        public IList<Component> GetByObject(Usuario obj)
         {
-            List<Familia> familias = new List<Familia>();
+            List<Component> familias = new List<Component>();
 
-            using (SqlDataReader dataReader = SqlHelper.ExecuteReader("SELECT IdFamilia FROM UsuarioFamilia WHERE IdUsuario = @IdUsuario",
-                CommandType.Text,
-                new SqlParameter("@IdUsuario", obj.IdUsuario)))
+            string query = "SELECT IdFamilia FROM UsuarioFamilia WHERE IdUsuario = @IdUsuario";
+            SqlParameter param = new SqlParameter("@IdUsuario", obj.IdUsuario);
+
+            using (SqlDataReader reader = SqlHelper.ExecuteReader(query, CommandType.Text, param))
             {
-                while (dataReader.Read())
+                while (reader.Read())
                 {
-                    Guid idFamilia = dataReader.GetGuid(0);
-
+                    Guid idFamilia = reader.GetGuid(0);
                     familias.Add(new FamiliaRepository().GetById(idFamilia));
                 }
             }

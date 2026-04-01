@@ -35,6 +35,9 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlClient, Version=4.6.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SqlClient.4.9.1\lib\net462\System.Data.SqlClient.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,10 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dal\Interfaces\IGenericRepository.cs" />
     <Compile Include="Bll\IdiomaService.cs" />
     <Compile Include="Bll\LoggerConfiguration.cs" />
     <Compile Include="Bll\UsusarioBll.cs" />
-    <Compile Include="Cryptography\CryptographyService.cs" />
+    <Compile Include="Facade\CryptographyService.cs" />
     <Compile Include="Dal\IdiomaRepository.cs" />
     <Compile Include="Dal\Implementations\Adapters\FamiliaAdapter.cs" />
     <Compile Include="Dal\Implementations\Adapters\PatenteAdapter.cs" />
@@ -70,16 +74,13 @@
     <Compile Include="DomainModel\Composite\Familia.cs" />
     <Compile Include="DomainModel\Composite\Patente.cs" />
     <Compile Include="DomainModel\Composite\Usuario.cs" />
-    <Compile Include="DomainModel\Composite\Usuarios\Permisos.cs" />
-    <Compile Include="DomainModel\Composite\Usuarios\Persona.cs" />
-    <Compile Include="DomainModel\Composite\Usuarios\Rol.cs" />
-    <Compile Include="DomainModel\Composite\Usuarios\Usuario.cs" />
     <Compile Include="DomainModel\Exceptions\WordNotFoundException.cs" />
     <Compile Include="DomainModel\Logging\LogEntry.cs" />
     <Compile Include="DomainModel\Logging\LogLevel.cs" />
     <Compile Include="Facade\Extensions\IdiomaExtension.cs" />
-    <Compile Include="Logger\LoggerService.cs" />
-    <Compile Include="Login\LoginService.cs" />
+    <Compile Include="Facade\LoggerService.cs" />
+    <Compile Include="Facade\LoginService.cs" />
+    <Compile Include="Facade\SessionManager.cs" />
     <Compile Include="PetShopDBDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -93,7 +94,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="PetShopDBDataSet.xsc">
       <DependentUpon>PetShopDBDataSet.xsd</DependentUpon>
     </None>

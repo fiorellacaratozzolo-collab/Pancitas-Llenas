@@ -7,9 +7,12 @@ using Services.DomainModel.Composite;
 
 namespace Services.Dal.Interfaces
 {
-    internal interface IUsuarioRepository
+    public interface IUsuarioRepository : IGenericRepository<Usuario>
     {
-        void RegistrarUsuario(Usuario usuario);
+        // Método para buscar solo por nombre (útil para recuperar contraseñas, por ejemplo)
+        Usuario GetByUserName(string username);
+       
+        // Método para el login comprobando usuario y contraseña hasheada
         Usuario GetByCredentials(string user, string password);
     }
 }
