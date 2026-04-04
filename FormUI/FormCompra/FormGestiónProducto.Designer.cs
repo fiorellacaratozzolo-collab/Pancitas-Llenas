@@ -33,7 +33,6 @@
             btnActualizar = new Button();
             btnBuscar = new Button();
             dgvProducto = new DataGridView();
-            btnVolver = new Button();
             btnAgregar = new Button();
             groupBox2 = new GroupBox();
             txtbDescripcion = new TextBox();
@@ -113,16 +112,6 @@
             dgvProducto.TabIndex = 0;
             dgvProducto.CellContentClick += dgvProducto_CellContentClick;
             // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(13, 378);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(79, 30);
-            btnVolver.TabIndex = 14;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
-            // 
             // btnAgregar
             // 
             btnAgregar.Location = new Point(93, 281);
@@ -151,7 +140,7 @@
             groupBox2.Controls.Add(label2);
             groupBox2.Controls.Add(label9);
             groupBox2.Controls.Add(label8);
-            groupBox2.Location = new Point(13, 24);
+            groupBox2.Location = new Point(13, 46);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
@@ -287,9 +276,8 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1203, 420);
+            ClientSize = new Size(1203, 390);
             Controls.Add(groupBox1);
-            Controls.Add(btnVolver);
             Controls.Add(groupBox2);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGestiónProducto";
@@ -310,7 +298,6 @@
         private System.Windows.Forms.Button btnActualizar;
         private System.Windows.Forms.Button btnBuscar;
         private System.Windows.Forms.DataGridView dgvProducto;
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.Button btnAgregar;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox txtbProveedor;

@@ -31,7 +31,6 @@
             dgvSolicitudDePedido = new DataGridView();
             btnDardeBaja = new Button();
             btnGenerarOP = new Button();
-            btnVolver = new Button();
             btnActualizar = new Button();
             label1 = new Label();
             groupBox1 = new GroupBox();
@@ -69,16 +68,6 @@
             btnGenerarOP.Text = "Generar Orden de Pedido";
             btnGenerarOP.UseVisualStyleBackColor = true;
             btnGenerarOP.Click += btnGenerarOP_Click;
-            // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(289, 534);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(91, 31);
-            btnVolver.TabIndex = 6;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
             // 
             // btnActualizar
             // 
@@ -119,9 +108,8 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(398, 573);
+            ClientSize = new Size(398, 518);
             Controls.Add(groupBox1);
-            Controls.Add(btnVolver);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGestiónSP";
             Text = "Gestión de Solicitud de Pedido";
@@ -138,7 +126,6 @@
         private System.Windows.Forms.DataGridView dgvSolicitudDePedido;
         private System.Windows.Forms.Button btnDardeBaja;
         private System.Windows.Forms.Button btnGenerarOP;
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.Button btnActualizar;
         private System.Windows.Forms.Label label1;
         private GroupBox groupBox1;

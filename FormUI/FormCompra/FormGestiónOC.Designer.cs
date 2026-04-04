@@ -36,7 +36,6 @@ namespace FormUI.FormCompra
             btnAlta = new Button();
             dgvOrdenCompra = new DataGridView();
             btnVer = new Button();
-            btnVolver = new Button();
             groupBox2 = new GroupBox();
             dgvDetalleOC = new DataGridView();
             groupBox1.SuspendLayout();
@@ -61,7 +60,7 @@ namespace FormUI.FormCompra
             groupBox1.Controls.Add(dgvOrdenCompra);
             groupBox1.Controls.Add(btnVer);
             groupBox1.Controls.Add(label1);
-            groupBox1.Location = new Point(24, 22);
+            groupBox1.Location = new Point(12, 22);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(397, 618);
             groupBox1.TabIndex = 1;
@@ -108,21 +107,12 @@ namespace FormUI.FormCompra
             btnVer.UseVisualStyleBackColor = true;
             btnVer.Click += btnVer_Click;
             // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(358, 646);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(75, 23);
-            btnVolver.TabIndex = 5;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
-            // 
             // groupBox2
             // 
             groupBox2.Controls.Add(dgvDetalleOC);
             groupBox2.Location = new Point(444, 22);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(399, 579);
+            groupBox2.Size = new Size(399, 618);
             groupBox2.TabIndex = 6;
             groupBox2.TabStop = false;
             groupBox2.Text = "Detalles de Orden de Compra";
@@ -132,14 +122,13 @@ namespace FormUI.FormCompra
             dgvDetalleOC.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDetalleOC.Location = new Point(20, 36);
             dgvDetalleOC.Name = "dgvDetalleOC";
-            dgvDetalleOC.Size = new Size(358, 519);
+            dgvDetalleOC.Size = new Size(358, 564);
             dgvDetalleOC.TabIndex = 0;
             // 
             // FormGestiónOC
             // 
-            ClientSize = new Size(902, 678);
+            ClientSize = new Size(852, 660);
             Controls.Add(groupBox2);
-            Controls.Add(btnVolver);
             Controls.Add(groupBox1);
             Name = "FormGestiónOC";
             Text = "Gestión de Orden de Compra";
@@ -161,7 +150,6 @@ namespace FormUI.FormCompra
         private Button btnVer;
         private Button btnBaja;
         private Button btnAlta;
-        private Button btnVolver;
         private GroupBox groupBox2;
         private DataGridView dgvDetalleOC;
     }

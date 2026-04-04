@@ -34,7 +34,6 @@
             btnDardeBaja = new Button();
             btnGenerarOC = new Button();
             dgvOrdenDePedido = new DataGridView();
-            btnVolver = new Button();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvOrdenDePedido).BeginInit();
             SuspendLayout();
@@ -107,22 +106,11 @@
             dgvOrdenDePedido.Size = new Size(340, 385);
             dgvOrdenDePedido.TabIndex = 3;
             // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(317, 572);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(79, 33);
-            btnVolver.TabIndex = 4;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
-            // 
             // FormGestiónOP
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(415, 617);
-            Controls.Add(btnVolver);
+            ClientSize = new Size(415, 565);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGestiónOP";
@@ -141,7 +129,6 @@
         private System.Windows.Forms.Button btnActualizar;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.DataGridView dgvOrdenDePedido;
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.Button btnGenerarOC;
         private System.Windows.Forms.Button btnDardeBaja;
     }

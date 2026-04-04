@@ -28,102 +28,96 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnVolver = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.bntBuscar = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.datetimeHistorialVenta = new System.Windows.Forms.DateTimePicker();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.SuspendLayout();
-            // 
-            // btnVolver
-            // 
-            this.btnVolver.Location = new System.Drawing.Point(293, 636);
-            this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(75, 23);
-            this.btnVolver.TabIndex = 6;
-            this.btnVolver.Text = "Volver";
-            this.btnVolver.UseVisualStyleBackColor = true;
+            groupBox1 = new GroupBox();
+            bntBuscar = new Button();
+            label2 = new Label();
+            datetimeHistorialVenta = new DateTimePicker();
+            dataGridView1 = new DataGridView();
+            label1 = new Label();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.bntBuscar);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.datetimeHistorialVenta);
-            this.groupBox1.Controls.Add(this.dataGridView1);
-            this.groupBox1.Location = new System.Drawing.Point(8, 44);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(626, 586);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
+            groupBox1.Controls.Add(bntBuscar);
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(datetimeHistorialVenta);
+            groupBox1.Controls.Add(dataGridView1);
+            groupBox1.Location = new Point(9, 51);
+            groupBox1.Margin = new Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(4, 3, 4, 3);
+            groupBox1.Size = new Size(730, 676);
+            groupBox1.TabIndex = 5;
+            groupBox1.TabStop = false;
             // 
             // bntBuscar
             // 
-            this.bntBuscar.Location = new System.Drawing.Point(415, 32);
-            this.bntBuscar.Name = "bntBuscar";
-            this.bntBuscar.Size = new System.Drawing.Size(34, 23);
-            this.bntBuscar.TabIndex = 11;
-            this.bntBuscar.Text = "Buscar";
-            this.bntBuscar.UseVisualStyleBackColor = true;
+            bntBuscar.Location = new Point(484, 37);
+            bntBuscar.Margin = new Padding(4, 3, 4, 3);
+            bntBuscar.Name = "bntBuscar";
+            bntBuscar.Size = new Size(40, 27);
+            bntBuscar.TabIndex = 11;
+            bntBuscar.Text = "Buscar";
+            bntBuscar.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(94, 16);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(99, 13);
-            this.label2.TabIndex = 10;
-            this.label2.Text = "Seleccionar Fecha:";
+            label2.AutoSize = true;
+            label2.Location = new Point(110, 18);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(104, 15);
+            label2.TabIndex = 10;
+            label2.Text = "Seleccionar Fecha:";
             // 
             // datetimeHistorialVenta
             // 
-            this.datetimeHistorialVenta.Location = new System.Drawing.Point(195, 32);
-            this.datetimeHistorialVenta.Name = "datetimeHistorialVenta";
-            this.datetimeHistorialVenta.Size = new System.Drawing.Size(214, 20);
-            this.datetimeHistorialVenta.TabIndex = 9;
+            datetimeHistorialVenta.Location = new Point(227, 37);
+            datetimeHistorialVenta.Margin = new Padding(4, 3, 4, 3);
+            datetimeHistorialVenta.Name = "datetimeHistorialVenta";
+            datetimeHistorialVenta.Size = new Size(249, 23);
+            datetimeHistorialVenta.TabIndex = 9;
             // 
             // dataGridView1
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(15, 69);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(596, 492);
-            this.dataGridView1.TabIndex = 6;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(18, 80);
+            dataGridView1.Margin = new Padding(4, 3, 4, 3);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(695, 568);
+            dataGridView1.TabIndex = 6;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(237, 28);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(95, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Historial de Ventas";
+            label1.AutoSize = true;
+            label1.Location = new Point(276, 32);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(104, 15);
+            label1.TabIndex = 4;
+            label1.Text = "Historial de Ventas";
             // 
-            // FormHistorialVenta
+            // FormHistorialVentas
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(642, 671);
-            this.Controls.Add(this.btnVolver);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label1);
-            this.Name = "FormHistorialVenta";
-            this.Text = "Historial de Ventas";
-            //this.Load += new System.EventHandler(this.FormHistorialVenta_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(750, 741);
+            Controls.Add(groupBox1);
+            Controls.Add(label1);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "FormHistorialVentas";
+            Text = "Historial de Ventas";
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button bntBuscar;
         private System.Windows.Forms.Label label2;

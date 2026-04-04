@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             label1 = new Label();
-            btnVolver = new Button();
             groupBox1 = new GroupBox();
             bntBuscar = new Button();
             label2 = new Label();
@@ -51,16 +50,6 @@
             label1.Size = new Size(94, 15);
             label1.TabIndex = 10;
             label1.Text = "Gestionar Ventas";
-            // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(359, 741);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(88, 27);
-            btnVolver.TabIndex = 9;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -150,9 +139,8 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(797, 786);
+            ClientSize = new Size(797, 740);
             Controls.Add(label1);
-            Controls.Add(btnVolver);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGestiónVenta";
@@ -168,7 +156,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button bntBuscar;
         private System.Windows.Forms.Label label2;

@@ -34,13 +34,7 @@
             groupBox1 = new GroupBox();
             radioButton1 = new RadioButton();
             txtbDescuento = new TextBox();
-            groupBox3 = new GroupBox();
-            txtbCliente = new TextBox();
-            cmbMediodePago = new ComboBox();
             btnCancelar = new Button();
-            label10 = new Label();
-            btnAceptar = new Button();
-            label11 = new Label();
             groupBox2 = new GroupBox();
             txtbPrecio = new TextBox();
             btnEliminar = new Button();
@@ -51,13 +45,18 @@
             txtbProducto = new TextBox();
             label8 = new Label();
             label7 = new Label();
+            groupBox3 = new GroupBox();
+            txtbCliente = new TextBox();
+            cmbMediodePago = new ComboBox();
+            label10 = new Label();
+            btnAceptar = new Button();
+            label11 = new Label();
             label5 = new Label();
             label6 = new Label();
-            btnVolver = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             groupBox1.SuspendLayout();
-            groupBox3.SuspendLayout();
             groupBox2.SuspendLayout();
+            groupBox3.SuspendLayout();
             SuspendLayout();
             // 
             // btnBuscar
@@ -131,36 +130,6 @@
             txtbDescuento.Size = new Size(116, 23);
             txtbDescuento.TabIndex = 14;
             // 
-            // groupBox3
-            // 
-            groupBox3.Controls.Add(btnBuscar);
-            groupBox3.Controls.Add(txtbCliente);
-            groupBox3.Location = new Point(20, 87);
-            groupBox3.Margin = new Padding(4, 3, 4, 3);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Padding = new Padding(4, 3, 4, 3);
-            groupBox3.Size = new Size(277, 53);
-            groupBox3.TabIndex = 22;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Cliente";
-            // 
-            // txtbCliente
-            // 
-            txtbCliente.Location = new Point(8, 22);
-            txtbCliente.Margin = new Padding(4, 3, 4, 3);
-            txtbCliente.Name = "txtbCliente";
-            txtbCliente.Size = new Size(178, 23);
-            txtbCliente.TabIndex = 9;
-            // 
-            // cmbMediodePago
-            // 
-            cmbMediodePago.FormattingEnabled = true;
-            cmbMediodePago.Location = new Point(468, 189);
-            cmbMediodePago.Margin = new Padding(4, 3, 4, 3);
-            cmbMediodePago.Name = "cmbMediodePago";
-            cmbMediodePago.Size = new Size(119, 23);
-            cmbMediodePago.TabIndex = 21;
-            // 
             // btnCancelar
             // 
             btnCancelar.Location = new Point(476, 610);
@@ -170,36 +139,6 @@
             btnCancelar.TabIndex = 20;
             btnCancelar.Text = "Cancelar";
             btnCancelar.UseVisualStyleBackColor = true;
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Location = new Point(390, 156);
-            label10.Margin = new Padding(4, 0, 4, 0);
-            label10.Name = "label10";
-            label10.Size = new Size(66, 15);
-            label10.TabIndex = 15;
-            label10.Text = "Descuento:";
-            // 
-            // btnAceptar
-            // 
-            btnAceptar.Location = new Point(259, 610);
-            btnAceptar.Margin = new Padding(4, 3, 4, 3);
-            btnAceptar.Name = "btnAceptar";
-            btnAceptar.Size = new Size(209, 37);
-            btnAceptar.TabIndex = 19;
-            btnAceptar.Text = "Aceptar";
-            btnAceptar.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            label11.AutoSize = true;
-            label11.Location = new Point(51, 621);
-            label11.Margin = new Padding(4, 0, 4, 0);
-            label11.Name = "label11";
-            label11.Size = new Size(78, 15);
-            label11.TabIndex = 16;
-            label11.Text = "Total a Pagar:";
             // 
             // groupBox2
             // 
@@ -305,6 +244,66 @@
             label7.TabIndex = 10;
             label7.Text = "Nombre:";
             // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(btnBuscar);
+            groupBox3.Controls.Add(txtbCliente);
+            groupBox3.Location = new Point(20, 87);
+            groupBox3.Margin = new Padding(4, 3, 4, 3);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Padding = new Padding(4, 3, 4, 3);
+            groupBox3.Size = new Size(277, 53);
+            groupBox3.TabIndex = 22;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Cliente";
+            // 
+            // txtbCliente
+            // 
+            txtbCliente.Location = new Point(8, 22);
+            txtbCliente.Margin = new Padding(4, 3, 4, 3);
+            txtbCliente.Name = "txtbCliente";
+            txtbCliente.Size = new Size(178, 23);
+            txtbCliente.TabIndex = 9;
+            // 
+            // cmbMediodePago
+            // 
+            cmbMediodePago.FormattingEnabled = true;
+            cmbMediodePago.Location = new Point(468, 189);
+            cmbMediodePago.Margin = new Padding(4, 3, 4, 3);
+            cmbMediodePago.Name = "cmbMediodePago";
+            cmbMediodePago.Size = new Size(119, 23);
+            cmbMediodePago.TabIndex = 21;
+            // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(390, 156);
+            label10.Margin = new Padding(4, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(66, 15);
+            label10.TabIndex = 15;
+            label10.Text = "Descuento:";
+            // 
+            // btnAceptar
+            // 
+            btnAceptar.Location = new Point(259, 610);
+            btnAceptar.Margin = new Padding(4, 3, 4, 3);
+            btnAceptar.Name = "btnAceptar";
+            btnAceptar.Size = new Size(209, 37);
+            btnAceptar.TabIndex = 19;
+            btnAceptar.Text = "Aceptar";
+            btnAceptar.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(51, 621);
+            label11.Margin = new Padding(4, 0, 4, 0);
+            label11.Name = "label11";
+            label11.Size = new Size(78, 15);
+            label11.TabIndex = 16;
+            label11.Text = "Total a Pagar:";
+            // 
             // label5
             // 
             label5.AutoSize = true;
@@ -325,22 +324,11 @@
             label6.TabIndex = 9;
             label6.Text = "Fecha:";
             // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(19, 700);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(78, 28);
-            btnVolver.TabIndex = 21;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
-            // 
             // FormGenerarVenta
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(645, 739);
-            Controls.Add(btnVolver);
+            ClientSize = new Size(645, 706);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGenerarVenta";
@@ -348,10 +336,10 @@
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
-            groupBox3.ResumeLayout(false);
-            groupBox3.PerformLayout();
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
             ResumeLayout(false);
 
         }
@@ -380,7 +368,6 @@
         private System.Windows.Forms.TextBox txtbDescuento;
         private System.Windows.Forms.TextBox txtbPrecio;
         private System.Windows.Forms.ComboBox cmbMediodePago;
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.RadioButton radioButton1;
     }

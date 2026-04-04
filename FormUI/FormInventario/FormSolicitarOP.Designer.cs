@@ -40,7 +40,6 @@
             btnAgregar = new Button();
             label4 = new Label();
             btnLimpiar = new Button();
-            btnVolver = new Button();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvSolicitarOP).BeginInit();
             SuspendLayout();
@@ -110,7 +109,7 @@
             txtbNombreProd.Margin = new Padding(4, 3, 4, 3);
             txtbNombreProd.Name = "txtbNombreProd";
             txtbNombreProd.Size = new Size(238, 23);
-            txtbNombreProd.TabIndex = 3;            
+            txtbNombreProd.TabIndex = 3;
             // 
             // label2
             // 
@@ -172,17 +171,6 @@
             btnLimpiar.UseVisualStyleBackColor = true;
             btnLimpiar.Click += btnLimpiar_Click;
             // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(455, 749);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(88, 27);
-            btnVolver.TabIndex = 16;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
-            btnVolver.Click += btnVolver_Click;
-            // 
             // FormSolicitarOP
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -190,7 +178,6 @@
             ClientSize = new Size(556, 789);
             Controls.Add(btnLimpiar);
             Controls.Add(groupBox1);
-            Controls.Add(btnVolver);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormSolicitarOP";
             Text = "Solicitar Orden de Pedido";
@@ -216,6 +203,5 @@
         private System.Windows.Forms.TextBox txtbCantidad;
         private System.Windows.Forms.Button btnAgregar;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnVolver;
     }
 }

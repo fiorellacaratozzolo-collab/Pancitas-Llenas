@@ -1,9 +1,11 @@
 ﻿using Services.DomainModel.Composite;
+using Services.Bll;
 using Services.Facade;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -28,44 +30,69 @@ namespace FormUI.Inicio
             {
                 if (item is ToolStripMenuItem menuItem)
                 {
-                    // 1. ¿Es una categoría principal que tiene sub-opciones? (Ej: "Compras")
+                    // 1. Leemos el Tag
+                    string tag = menuItem.Tag?.ToString() ?? "";
+
+                    // 2. ¿Tiene permiso? (Si no hay Tag, por ahora lo dejamos ver para no trabarte)
+                    bool tienePermiso = string.IsNullOrEmpty(tag) || SessionManager.Current.TienePermiso(tag);
+                    menuItem.Visible = tienePermiso;
+
+                    // 3. RECURSIVIDAD: Si tiene sub-elementos, entramos a evaluarlos primero
                     if (menuItem.HasDropDownItems)
                     {
-                        // Llamada recursiva para evaluar a los "hijos" primero
                         EvaluarPermisosMenu(menuItem.DropDownItems);
 
-                        // Si después de evaluar a los hijos, quedó al menos UNO visible, mostramos al padre.
-                        // Si todos los hijos se ocultaron, ocultamos la categoría completa.
-                        bool mostrarPadre = false;
-                        foreach (ToolStripItem subItem in menuItem.DropDownItems)
+                        // Lógica de "Padre Visible": Si el padre tiene permiso, se queda.
+                        // Si el padre no tiene Tag, pero algún hijo es visible, el padre se muestra.
+                        bool algunHijoVisible = false;
+                        foreach (ToolStripItem sub in menuItem.DropDownItems)
                         {
-                            if (subItem.Visible)
-                            {
-                                mostrarPadre = true;
-                                break;
-                            }
+                            if (sub.Visible) { algunHijoVisible = true; break; }
                         }
-                        menuItem.Visible = mostrarPadre;
-                    }
-                    // 2. Es un botón de acción final (Ej: "Gestión Orden de Compra")
-                    else
-                    {
-                        // Leemos el DataKey que configuraste en la propiedad Tag del diseñador
-                        string dataKeyDelBoton = menuItem.Tag?.ToString();
 
-                        if (!string.IsNullOrEmpty(dataKeyDelBoton))
-                        {
-                            // Consultamos al SessionManager si en su árbol recursivo existe este permiso
-                            menuItem.Visible = SessionManager.Current.TienePermiso(dataKeyDelBoton);
-                        }
+                        if (!string.IsNullOrEmpty(tag))
+                            menuItem.Visible = tienePermiso;
                         else
-                        {
-                            // Si te olvidaste de ponerle el Tag en Visual Studio, lo ocultamos por seguridad
-                            // (Opcional: puedes ponerlo en 'true' si quieres que botones sin tag sean públicos)
-                            menuItem.Visible = false;
-                        }
+                            menuItem.Visible = algunHijoVisible;
                     }
+
                 }
+            }
+        }
+
+        private void MenuPatente_Click(object sender, EventArgs e)
+        {
+            
+
+            if (sender is not ToolStripMenuItem itemClickeado) return;
+
+            string nombreForm = itemClickeado.Tag?.ToString() ?? "";
+
+            if (string.IsNullOrEmpty(nombreForm))
+            {
+                MessageBox.Show("Falta el Tag en el diseñador.", "Aviso");
+                return;
+            }
+
+            try
+            {
+                var tipoForm = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(a => a.GetTypes())
+                    .FirstOrDefault(t => t.Name == nombreForm && typeof(Form).IsAssignableFrom(t));
+
+                if (tipoForm != null)
+                {
+                    Form formulario = (Form)Activator.CreateInstance(tipoForm)!;
+                    formulario.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show($"No se encontró la clase '{nombreForm}'.", "Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al abrir: {ex.Message}");
             }
         }
 
@@ -84,8 +111,15 @@ namespace FormUI.Inicio
                 this.Text = $"PetShop - Bienvenido {usuario.Nombre}";
 
                 // Disparamos la validación de todo el menú
-                EvaluarPermisosMenu(menuStrip1.Items);
+                EvaluarPermisosMenu(menuStrip.Items);
+
+                Services.Bll.BitácoraBll bitacora = new Services.Bll.BitácoraBll();
+                bitacora.RegistrarLog(
+                    mensaje: $"El usuario {usuario.Nombre} ingresó al sistema.",
+                    criticidad: Services.DomainModel.Logging.Criticidad.Info,
+                    idUsuario: usuario.IdUsuario);
             }
+
         }    
         private void compraToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -99,8 +133,20 @@ namespace FormUI.Inicio
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Registramos en la bitácora que el usuario cerró sesión (si es que había uno logueado)
+            var usuario = SessionManager.Current.UsuarioLogueado;
+            if (usuario != null)
+            {
+                Services.Bll.BitácoraBll bitacora = new Services.Bll.BitácoraBll();
+                bitacora.RegistrarLog(
+                    mensaje: $"El usuario {usuario.Nombre} cerró sesión manualmente.",
+                    criticidad: Services.DomainModel.Logging.Criticidad.Info,
+                    idUsuario: usuario.IdUsuario
+                );
+            }
+
             SessionManager.Current.Logout();
-            this.Close(); // Cierra el menú principal y te devolverá al Login
+            this.Close(); // Cierra el menú principal y te devuelve al Login
         }
     }
 }

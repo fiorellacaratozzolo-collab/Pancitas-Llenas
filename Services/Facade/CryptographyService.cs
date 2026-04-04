@@ -12,6 +12,8 @@ namespace Services.Facade
     {
         public static string HashMd5(string textPlain)
         {
+            if (string.IsNullOrEmpty(textPlain)) return "";
+
             StringBuilder sb = new StringBuilder();
 
             using (MD5 md5 = MD5.Create())
@@ -26,6 +28,7 @@ namespace Services.Facade
         }
 
         private static string encryptionKey = "su_propia_clave";
+
         public static string Encrypt(string clearText)
         {
             byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);

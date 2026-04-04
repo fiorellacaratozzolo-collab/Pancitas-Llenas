@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            btnVolver = new Button();
             groupBox1 = new GroupBox();
             cmbProductos = new ComboBox();
             cmbSucursalOrigen = new ComboBox();
@@ -45,16 +44,6 @@
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvItemsSolicitados).BeginInit();
             SuspendLayout();
-            // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(609, 825);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(88, 27);
-            btnVolver.TabIndex = 21;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -196,8 +185,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(708, 865);
-            Controls.Add(btnVolver);
+            ClientSize = new Size(708, 834);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormSolicitarTraspasoProductoSucursales";
@@ -211,8 +199,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ComboBox cmbSucursalOrigen;
         private System.Windows.Forms.Label label2;

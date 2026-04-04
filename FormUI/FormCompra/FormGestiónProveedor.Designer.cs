@@ -38,7 +38,6 @@
             lalbel5 = new Label();
             label3 = new Label();
             label2 = new Label();
-            btnVolver = new Button();
             dgvProveedor = new DataGridView();
             groupBox2 = new GroupBox();
             btnDeshabilitar = new Button();
@@ -152,16 +151,6 @@
             label2.TabIndex = 0;
             label2.Text = "Nombre:";
             // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(381, 670);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(88, 27);
-            btnVolver.TabIndex = 3;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
-            // 
             // dgvProveedor
             // 
             dgvProveedor.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -222,10 +211,9 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(509, 709);
+            ClientSize = new Size(509, 662);
             Controls.Add(label1);
             Controls.Add(groupBox2);
-            Controls.Add(btnVolver);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGestiónProveedor";
@@ -252,7 +240,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnAgregar;
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.DataGridView dgvProveedor;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btnDeshabilitar;

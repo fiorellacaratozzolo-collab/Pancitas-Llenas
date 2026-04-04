@@ -87,6 +87,7 @@
             txtbContraseña.Name = "txtbContraseña";
             txtbContraseña.Size = new Size(152, 23);
             txtbContraseña.TabIndex = 5;
+            txtbContraseña.UseSystemPasswordChar = true;
             // 
             // FormLogin
             // 

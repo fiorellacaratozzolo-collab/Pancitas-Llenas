@@ -34,7 +34,7 @@ namespace FormUI
         }
 
         private void btnIngresar_Click_1(object sender, EventArgs e)
-        {
+        {            
             try
             {
                 // 1. Validamos las credenciales y creamos la sesión global

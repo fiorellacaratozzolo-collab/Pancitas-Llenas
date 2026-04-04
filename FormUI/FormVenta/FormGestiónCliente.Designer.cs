@@ -33,7 +33,6 @@
             btnActualizar = new Button();
             btnBuscar = new Button();
             dgvCliente = new DataGridView();
-            btnVolver = new Button();
             btnAgregarCliente = new Button();
             groupBox1 = new GroupBox();
             label4 = new Label();
@@ -106,16 +105,6 @@
             dgvCliente.Name = "dgvCliente";
             dgvCliente.Size = new Size(404, 332);
             dgvCliente.TabIndex = 5;
-            // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(215, 405);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(88, 27);
-            btnVolver.TabIndex = 9;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
             // 
             // btnAgregarCliente
             // 
@@ -232,7 +221,6 @@
             ClientSize = new Size(948, 444);
             Controls.Add(label1);
             Controls.Add(groupBox2);
-            Controls.Add(btnVolver);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGestiónCliente";
@@ -254,7 +242,6 @@
         private System.Windows.Forms.Button btnActualizar;
         private System.Windows.Forms.Button btnBuscar;
         private System.Windows.Forms.DataGridView dgvCliente;
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.Button btnAgregarCliente;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtbDNI;

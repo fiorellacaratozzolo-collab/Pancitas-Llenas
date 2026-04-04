@@ -52,7 +52,6 @@
             label4 = new Label();
             label3 = new Label();
             txtbDniEncargado = new TextBox();
-            btnVolver = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvSucursal).BeginInit();
             gbModificarSucursal.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -319,22 +318,11 @@
             txtbDniEncargado.Size = new Size(229, 23);
             txtbDniEncargado.TabIndex = 8;
             // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(13, 938);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(75, 31);
-            btnVolver.TabIndex = 8;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
-            // 
             // FormGestiónSucursal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(523, 981);
-            Controls.Add(btnVolver);
+            ClientSize = new Size(513, 934);
             Controls.Add(groupBox2);
             Controls.Add(gbModificarSucursal);
             Controls.Add(label1);
@@ -377,7 +365,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtbDireccionSucursal;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.TextBox txtbTelefonoSucursal;
         private System.Windows.Forms.Label label10;
     }

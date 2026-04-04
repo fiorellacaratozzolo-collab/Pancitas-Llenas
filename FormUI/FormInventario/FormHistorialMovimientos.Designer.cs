@@ -28,100 +28,98 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.gpEntregaProductos = new System.Windows.Forms.GroupBox();
-            this.btnVerEntrega = new System.Windows.Forms.Button();
-            this.dgvEntregaProductos = new System.Windows.Forms.DataGridView();
-            this.gbTraspasoProductos = new System.Windows.Forms.GroupBox();
-            this.btnVerTraspaso = new System.Windows.Forms.Button();
-            this.dgvTraspasoProductos = new System.Windows.Forms.DataGridView();
-            this.btnVolver = new System.Windows.Forms.Button();
-            this.gpEntregaProductos.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEntregaProductos)).BeginInit();
-            this.gbTraspasoProductos.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvTraspasoProductos)).BeginInit();
-            this.SuspendLayout();
+            gpEntregaProductos = new GroupBox();
+            btnVerEntrega = new Button();
+            dgvEntregaProductos = new DataGridView();
+            gbTraspasoProductos = new GroupBox();
+            btnVerTraspaso = new Button();
+            dgvTraspasoProductos = new DataGridView();
+            gpEntregaProductos.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvEntregaProductos).BeginInit();
+            gbTraspasoProductos.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvTraspasoProductos).BeginInit();
+            SuspendLayout();
             // 
             // gpEntregaProductos
             // 
-            this.gpEntregaProductos.Controls.Add(this.btnVerEntrega);
-            this.gpEntregaProductos.Controls.Add(this.dgvEntregaProductos);
-            this.gpEntregaProductos.Location = new System.Drawing.Point(22, 32);
-            this.gpEntregaProductos.Name = "gpEntregaProductos";
-            this.gpEntregaProductos.Size = new System.Drawing.Size(483, 673);
-            this.gpEntregaProductos.TabIndex = 0;
-            this.gpEntregaProductos.TabStop = false;
-            this.gpEntregaProductos.Text = "Entrega de Productos";
+            gpEntregaProductos.Controls.Add(btnVerEntrega);
+            gpEntregaProductos.Controls.Add(dgvEntregaProductos);
+            gpEntregaProductos.Location = new Point(26, 37);
+            gpEntregaProductos.Margin = new Padding(4, 3, 4, 3);
+            gpEntregaProductos.Name = "gpEntregaProductos";
+            gpEntregaProductos.Padding = new Padding(4, 3, 4, 3);
+            gpEntregaProductos.Size = new Size(564, 777);
+            gpEntregaProductos.TabIndex = 0;
+            gpEntregaProductos.TabStop = false;
+            gpEntregaProductos.Text = "Entrega de Productos";
             // 
             // btnVerEntrega
             // 
-            this.btnVerEntrega.Location = new System.Drawing.Point(202, 635);
-            this.btnVerEntrega.Name = "btnVerEntrega";
-            this.btnVerEntrega.Size = new System.Drawing.Size(75, 23);
-            this.btnVerEntrega.TabIndex = 4;
-            this.btnVerEntrega.Text = "Ver";
-            this.btnVerEntrega.UseVisualStyleBackColor = true;
+            btnVerEntrega.Location = new Point(236, 733);
+            btnVerEntrega.Margin = new Padding(4, 3, 4, 3);
+            btnVerEntrega.Name = "btnVerEntrega";
+            btnVerEntrega.Size = new Size(88, 27);
+            btnVerEntrega.TabIndex = 4;
+            btnVerEntrega.Text = "Ver";
+            btnVerEntrega.UseVisualStyleBackColor = true;
             // 
             // dgvEntregaProductos
             // 
-            this.dgvEntregaProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvEntregaProductos.Location = new System.Drawing.Point(6, 19);
-            this.dgvEntregaProductos.Name = "dgvEntregaProductos";
-            this.dgvEntregaProductos.Size = new System.Drawing.Size(453, 610);
-            this.dgvEntregaProductos.TabIndex = 0;
+            dgvEntregaProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvEntregaProductos.Location = new Point(7, 22);
+            dgvEntregaProductos.Margin = new Padding(4, 3, 4, 3);
+            dgvEntregaProductos.Name = "dgvEntregaProductos";
+            dgvEntregaProductos.Size = new Size(528, 704);
+            dgvEntregaProductos.TabIndex = 0;
             // 
             // gbTraspasoProductos
             // 
-            this.gbTraspasoProductos.Controls.Add(this.btnVerTraspaso);
-            this.gbTraspasoProductos.Controls.Add(this.dgvTraspasoProductos);
-            this.gbTraspasoProductos.Location = new System.Drawing.Point(540, 32);
-            this.gbTraspasoProductos.Name = "gbTraspasoProductos";
-            this.gbTraspasoProductos.Size = new System.Drawing.Size(528, 673);
-            this.gbTraspasoProductos.TabIndex = 1;
-            this.gbTraspasoProductos.TabStop = false;
-            this.gbTraspasoProductos.Text = "Traspaso de Productos";
+            gbTraspasoProductos.Controls.Add(btnVerTraspaso);
+            gbTraspasoProductos.Controls.Add(dgvTraspasoProductos);
+            gbTraspasoProductos.Location = new Point(630, 37);
+            gbTraspasoProductos.Margin = new Padding(4, 3, 4, 3);
+            gbTraspasoProductos.Name = "gbTraspasoProductos";
+            gbTraspasoProductos.Padding = new Padding(4, 3, 4, 3);
+            gbTraspasoProductos.Size = new Size(616, 777);
+            gbTraspasoProductos.TabIndex = 1;
+            gbTraspasoProductos.TabStop = false;
+            gbTraspasoProductos.Text = "Traspaso de Productos";
             // 
             // btnVerTraspaso
             // 
-            this.btnVerTraspaso.Location = new System.Drawing.Point(245, 635);
-            this.btnVerTraspaso.Name = "btnVerTraspaso";
-            this.btnVerTraspaso.Size = new System.Drawing.Size(75, 23);
-            this.btnVerTraspaso.TabIndex = 4;
-            this.btnVerTraspaso.Text = "Ver";
-            this.btnVerTraspaso.UseVisualStyleBackColor = true;
+            btnVerTraspaso.Location = new Point(286, 733);
+            btnVerTraspaso.Margin = new Padding(4, 3, 4, 3);
+            btnVerTraspaso.Name = "btnVerTraspaso";
+            btnVerTraspaso.Size = new Size(88, 27);
+            btnVerTraspaso.TabIndex = 4;
+            btnVerTraspaso.Text = "Ver";
+            btnVerTraspaso.UseVisualStyleBackColor = true;
             // 
             // dgvTraspasoProductos
             // 
-            this.dgvTraspasoProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvTraspasoProductos.Location = new System.Drawing.Point(16, 28);
-            this.dgvTraspasoProductos.Name = "dgvTraspasoProductos";
-            this.dgvTraspasoProductos.Size = new System.Drawing.Size(497, 601);
-            this.dgvTraspasoProductos.TabIndex = 0;
-            // 
-            // btnVolver
-            // 
-            this.btnVolver.Location = new System.Drawing.Point(995, 740);
-            this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(75, 23);
-            this.btnVolver.TabIndex = 2;
-            this.btnVolver.Text = "Volver";
-            this.btnVolver.UseVisualStyleBackColor = true;
+            dgvTraspasoProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvTraspasoProductos.Location = new Point(19, 32);
+            dgvTraspasoProductos.Margin = new Padding(4, 3, 4, 3);
+            dgvTraspasoProductos.Name = "dgvTraspasoProductos";
+            dgvTraspasoProductos.Size = new Size(580, 693);
+            dgvTraspasoProductos.TabIndex = 0;
             // 
             // FormHistorialMovimientos
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1082, 775);
-            this.Controls.Add(this.btnVolver);
-            this.Controls.Add(this.gbTraspasoProductos);
-            this.Controls.Add(this.gpEntregaProductos);
-            this.Name = "FormHistorialMovimientos";
-            this.Text = "Historial de Movimientos";
-            this.Load += new System.EventHandler(this.FormHistorialMovimientos_Load);
-            this.gpEntregaProductos.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEntregaProductos)).EndInit();
-            this.gbTraspasoProductos.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvTraspasoProductos)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1262, 830);
+            Controls.Add(gbTraspasoProductos);
+            Controls.Add(gpEntregaProductos);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "FormHistorialMovimientos";
+            Text = "Historial de Movimientos";
+            Load += FormHistorialMovimientos_Load;
+            gpEntregaProductos.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvEntregaProductos).EndInit();
+            gbTraspasoProductos.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvTraspasoProductos).EndInit();
+            ResumeLayout(false);
 
         }
 
@@ -130,7 +128,6 @@
         private System.Windows.Forms.GroupBox gpEntregaProductos;
         private System.Windows.Forms.GroupBox gbTraspasoProductos;
         private System.Windows.Forms.DataGridView dgvTraspasoProductos;
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.DataGridView dgvEntregaProductos;
         private System.Windows.Forms.Button btnVerEntrega;
         private System.Windows.Forms.Button btnVerTraspaso;

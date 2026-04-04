@@ -32,7 +32,6 @@
             dgvDetalles = new DataGridView();
             btnAprobar = new Button();
             btnRechazar = new Button();
-            btnVolver = new Button();
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
             ((System.ComponentModel.ISupportInitialize)dgvSolicitudes).BeginInit();
@@ -75,15 +74,6 @@
             btnRechazar.Text = "Rechazar";
             btnRechazar.UseVisualStyleBackColor = true;
             // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(770, 575);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(81, 31);
-            btnVolver.TabIndex = 4;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
-            // 
             // groupBox1
             // 
             groupBox1.Controls.Add(dgvSolicitudes);
@@ -110,10 +100,9 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(863, 618);
+            ClientSize = new Size(863, 498);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
-            Controls.Add(btnVolver);
             Name = "FormGestiónTraspaso";
             Text = "FormGestiónTraspaso";
             ((System.ComponentModel.ISupportInitialize)dgvSolicitudes).EndInit();
@@ -129,7 +118,6 @@
         private DataGridView dgvDetalles;
         private Button btnAprobar;
         private Button btnRechazar;
-        private Button btnVolver;
         private GroupBox groupBox1;
         private GroupBox groupBox2;
     }

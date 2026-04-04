@@ -28,23 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            btnVolver = new Button();
             groupBox1 = new GroupBox();
             btnVer = new Button();
             dgvStock = new DataGridView();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvStock).BeginInit();
             SuspendLayout();
-            // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(583, 642);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(88, 27);
-            btnVolver.TabIndex = 5;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
@@ -83,8 +72,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(684, 680);
-            Controls.Add(btnVolver);
+            ClientSize = new Size(684, 656);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormVerStockDisponible";
@@ -97,8 +85,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnVer;
         private System.Windows.Forms.DataGridView dgvStock;

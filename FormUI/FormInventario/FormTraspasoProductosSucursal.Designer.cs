@@ -28,188 +28,193 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.cmbSucursal = new System.Windows.Forms.ComboBox();
-            this.cmbDeposito = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtbPesoNeto = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnGenerarTraspasoProd = new System.Windows.Forms.Button();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.txtbProd = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.txtbCantidad = new System.Windows.Forms.TextBox();
-            this.btnAgregar = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.btnVolver = new System.Windows.Forms.Button();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
-            this.SuspendLayout();
+            groupBox1 = new GroupBox();
+            cmbSucursal = new ComboBox();
+            cmbDeposito = new ComboBox();
+            label5 = new Label();
+            label2 = new Label();
+            txtbPesoNeto = new TextBox();
+            label1 = new Label();
+            btnGenerarTraspasoProd = new Button();
+            dateTimePicker1 = new DateTimePicker();
+            dataGridView1 = new DataGridView();
+            txtbProd = new TextBox();
+            label3 = new Label();
+            txtbCantidad = new TextBox();
+            btnAgregar = new Button();
+            label4 = new Label();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            SuspendLayout();
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.cmbSucursal);
-            this.groupBox1.Controls.Add(this.cmbDeposito);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.txtbPesoNeto);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.btnGenerarTraspasoProd);
-            this.groupBox1.Controls.Add(this.dateTimePicker1);
-            this.groupBox1.Controls.Add(this.dataGridView1);
-            this.groupBox1.Controls.Add(this.txtbProd);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.txtbCantidad);
-            this.groupBox1.Controls.Add(this.btnAgregar);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Location = new System.Drawing.Point(12, 12);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(585, 697);
-            this.groupBox1.TabIndex = 18;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Productos a Solicitar";
-            //this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
+            groupBox1.Controls.Add(cmbSucursal);
+            groupBox1.Controls.Add(cmbDeposito);
+            groupBox1.Controls.Add(label5);
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(txtbPesoNeto);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(btnGenerarTraspasoProd);
+            groupBox1.Controls.Add(dateTimePicker1);
+            groupBox1.Controls.Add(dataGridView1);
+            groupBox1.Controls.Add(txtbProd);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(txtbCantidad);
+            groupBox1.Controls.Add(btnAgregar);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Location = new Point(14, 14);
+            groupBox1.Margin = new Padding(4, 3, 4, 3);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Padding = new Padding(4, 3, 4, 3);
+            groupBox1.Size = new Size(682, 804);
+            groupBox1.TabIndex = 18;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Productos a Solicitar";
             // 
             // cmbSucursal
             // 
-            this.cmbSucursal.FormattingEnabled = true;
-            this.cmbSucursal.Location = new System.Drawing.Point(253, 109);
-            this.cmbSucursal.Name = "cmbSucursal";
-            this.cmbSucursal.Size = new System.Drawing.Size(121, 21);
-            this.cmbSucursal.TabIndex = 19;
+            cmbSucursal.FormattingEnabled = true;
+            cmbSucursal.Location = new Point(295, 126);
+            cmbSucursal.Margin = new Padding(4, 3, 4, 3);
+            cmbSucursal.Name = "cmbSucursal";
+            cmbSucursal.Size = new Size(140, 23);
+            cmbSucursal.TabIndex = 19;
             // 
             // cmbDeposito
             // 
-            this.cmbDeposito.FormattingEnabled = true;
-            this.cmbDeposito.Location = new System.Drawing.Point(253, 77);
-            this.cmbDeposito.Name = "cmbDeposito";
-            this.cmbDeposito.Size = new System.Drawing.Size(121, 21);
-            this.cmbDeposito.TabIndex = 18;
+            cmbDeposito.FormattingEnabled = true;
+            cmbDeposito.Location = new Point(295, 89);
+            cmbDeposito.Margin = new Padding(4, 3, 4, 3);
+            cmbDeposito.Name = "cmbDeposito";
+            cmbDeposito.Size = new Size(140, 23);
+            cmbDeposito.TabIndex = 18;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(155, 80);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(85, 13);
-            this.label5.TabIndex = 17;
-            this.label5.Text = "Sucursal Origen:";
+            label5.AutoSize = true;
+            label5.Location = new Point(181, 92);
+            label5.Margin = new Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new Size(93, 15);
+            label5.TabIndex = 17;
+            label5.Text = "Sucursal Origen:";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(130, 117);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(110, 13);
-            this.label2.TabIndex = 16;
-            this.label2.Text = "Sucursal a Traspasar:";
+            label2.AutoSize = true;
+            label2.Location = new Point(152, 135);
+            label2.Margin = new Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(115, 15);
+            label2.TabIndex = 16;
+            label2.Text = "Sucursal a Traspasar:";
             // 
             // txtbPesoNeto
             // 
-            this.txtbPesoNeto.Location = new System.Drawing.Point(194, 202);
-            this.txtbPesoNeto.Name = "txtbPesoNeto";
-            this.txtbPesoNeto.Size = new System.Drawing.Size(88, 20);
-            this.txtbPesoNeto.TabIndex = 15;
+            txtbPesoNeto.Location = new Point(226, 233);
+            txtbPesoNeto.Margin = new Padding(4, 3, 4, 3);
+            txtbPesoNeto.Name = "txtbPesoNeto";
+            txtbPesoNeto.Size = new Size(102, 23);
+            txtbPesoNeto.TabIndex = 15;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(128, 205);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
-            this.label1.TabIndex = 14;
-            this.label1.Text = "Peso Neto:";
+            label1.AutoSize = true;
+            label1.Location = new Point(149, 237);
+            label1.Margin = new Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new Size(64, 15);
+            label1.TabIndex = 14;
+            label1.Text = "Peso Neto:";
             // 
             // btnGenerarTraspasoProd
             // 
-            this.btnGenerarTraspasoProd.Location = new System.Drawing.Point(79, 653);
-            this.btnGenerarTraspasoProd.Name = "btnGenerarTraspasoProd";
-            this.btnGenerarTraspasoProd.Size = new System.Drawing.Size(424, 38);
-            this.btnGenerarTraspasoProd.TabIndex = 13;
-            this.btnGenerarTraspasoProd.Text = "Generar Traspaso de Productos";
-            this.btnGenerarTraspasoProd.UseVisualStyleBackColor = true;
+            btnGenerarTraspasoProd.Location = new Point(92, 753);
+            btnGenerarTraspasoProd.Margin = new Padding(4, 3, 4, 3);
+            btnGenerarTraspasoProd.Name = "btnGenerarTraspasoProd";
+            btnGenerarTraspasoProd.Size = new Size(495, 44);
+            btnGenerarTraspasoProd.TabIndex = 13;
+            btnGenerarTraspasoProd.Text = "Generar Traspaso de Productos";
+            btnGenerarTraspasoProd.UseVisualStyleBackColor = true;
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(194, 19);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(200, 20);
-            this.dateTimePicker1.TabIndex = 4;
+            dateTimePicker1.Location = new Point(226, 22);
+            dateTimePicker1.Margin = new Padding(4, 3, 4, 3);
+            dateTimePicker1.Name = "dateTimePicker1";
+            dateTimePicker1.Size = new Size(233, 23);
+            dateTimePicker1.TabIndex = 4;
             // 
             // dataGridView1
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(6, 280);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(573, 367);
-            this.dataGridView1.TabIndex = 10;
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(7, 323);
+            dataGridView1.Margin = new Padding(4, 3, 4, 3);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(668, 423);
+            dataGridView1.TabIndex = 10;
             // 
             // txtbProd
             // 
-            this.txtbProd.Enabled = false;
-            this.txtbProd.Location = new System.Drawing.Point(194, 169);
-            this.txtbProd.Name = "txtbProd";
-            this.txtbProd.Size = new System.Drawing.Size(254, 20);
-            this.txtbProd.TabIndex = 3;
+            txtbProd.Enabled = false;
+            txtbProd.Location = new Point(226, 195);
+            txtbProd.Margin = new Padding(4, 3, 4, 3);
+            txtbProd.Name = "txtbProd";
+            txtbProd.Size = new Size(296, 23);
+            txtbProd.TabIndex = 3;
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(95, 172);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(93, 13);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Nombre Producto:";
+            label3.AutoSize = true;
+            label3.Location = new Point(111, 198);
+            label3.Margin = new Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new Size(106, 15);
+            label3.TabIndex = 6;
+            label3.Text = "Nombre Producto:";
             // 
             // txtbCantidad
             // 
-            this.txtbCantidad.Location = new System.Drawing.Point(194, 233);
-            this.txtbCantidad.Name = "txtbCantidad";
-            this.txtbCantidad.Size = new System.Drawing.Size(88, 20);
-            this.txtbCantidad.TabIndex = 9;
+            txtbCantidad.Location = new Point(226, 269);
+            txtbCantidad.Margin = new Padding(4, 3, 4, 3);
+            txtbCantidad.Name = "txtbCantidad";
+            txtbCantidad.Size = new Size(102, 23);
+            txtbCantidad.TabIndex = 9;
             // 
             // btnAgregar
             // 
-            this.btnAgregar.Location = new System.Drawing.Point(317, 218);
-            this.btnAgregar.Name = "btnAgregar";
-            this.btnAgregar.Size = new System.Drawing.Size(186, 31);
-            this.btnAgregar.TabIndex = 7;
-            this.btnAgregar.Text = "Agregar";
-            this.btnAgregar.UseVisualStyleBackColor = true;
+            btnAgregar.Location = new Point(370, 252);
+            btnAgregar.Margin = new Padding(4, 3, 4, 3);
+            btnAgregar.Name = "btnAgregar";
+            btnAgregar.Size = new Size(217, 36);
+            btnAgregar.TabIndex = 7;
+            btnAgregar.Text = "Agregar";
+            btnAgregar.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(130, 236);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(52, 13);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Cantidad:";
-            // 
-            // btnVolver
-            // 
-            this.btnVolver.Location = new System.Drawing.Point(522, 715);
-            this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(75, 23);
-            this.btnVolver.TabIndex = 19;
-            this.btnVolver.Text = "Volver";
-            this.btnVolver.UseVisualStyleBackColor = true;
+            label4.AutoSize = true;
+            label4.Location = new Point(152, 272);
+            label4.Margin = new Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(58, 15);
+            label4.TabIndex = 8;
+            label4.Text = "Cantidad:";
             // 
             // FormTraspasoProductosSucursal
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(609, 750);
-            this.Controls.Add(this.btnVolver);
-            this.Controls.Add(this.groupBox1);
-            this.Name = "FormTraspasoProductosSucursal";
-            this.Text = "Traspaso de Productos a Sucursal";
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(710, 821);
+            Controls.Add(groupBox1);
+            Margin = new Padding(4, 3, 4, 3);
+            Name = "FormTraspasoProductosSucursal";
+            Text = "Traspaso de Productos a Sucursal";
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ResumeLayout(false);
 
         }
 
@@ -226,7 +231,6 @@
         private System.Windows.Forms.TextBox txtbCantidad;
         private System.Windows.Forms.Button btnAgregar;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.ComboBox cmbSucursal;
         private System.Windows.Forms.ComboBox cmbDeposito;
         private System.Windows.Forms.Label label5;

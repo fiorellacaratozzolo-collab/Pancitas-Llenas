@@ -11,24 +11,26 @@ namespace Services.Facade
 
     public static class LoginService
     {
-        public static void Login(string user, string password)
+        public static void Login(string username, string passwordClara)
         {
-            // La BLL valida las credenciales y trae el árbol de permisos
-            Usuario usuarioValido = UsuarioBll.ValidarCredenciales(user, password);
+            UsuarioBll usuarioBll = new UsuarioBll();
 
-            // El Facade guarda al usuario en el Singleton de Sesión
+            // 1. Validamos que el usuario exista, no esté bloqueado y la clave sea correcta
+            Usuario usuarioValido = usuarioBll.ValidarCredenciales(username, passwordClara);
+
+            // 2. Si pasa la validación, lo guardamos en la sesión global de la aplicación
             SessionManager.Current.Login(usuarioValido);
+
+            // 3. (Opcional) Podemos registrar el login aquí en lugar de hacerlo en el FormPrincipal_Load
+            // BitácoraBll bitacora = new BitácoraBll();
+            // bitacora.RegistrarLog($"El usuario {usuarioValido.Nombre} inició sesión en el sistema.", Criticidad.Info, usuarioValido.IdUsuario);
         }
 
         public static void Logout()
         {
+            // Cerramos la sesión actual
             SessionManager.Current.Logout();
         }
-
-        public static void RegistrarUsuario(Usuario usuario)
-        {
-            UsuarioBll.RegistrarUsuario(usuario);
-        }
     }
-
 }
+

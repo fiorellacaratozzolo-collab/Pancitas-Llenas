@@ -33,7 +33,6 @@
             dgvAgregarStock = new DataGridView();
             cmbProveedor = new ComboBox();
             label1 = new Label();
-            btnVolver = new Button();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAgregarStock).BeginInit();
             SuspendLayout();
@@ -91,23 +90,11 @@
             label1.TabIndex = 21;
             label1.Text = "Seleccionar Proveedor:";
             // 
-            // btnVolver
-            // 
-            btnVolver.Location = new Point(664, 629);
-            btnVolver.Margin = new Padding(4, 3, 4, 3);
-            btnVolver.Name = "btnVolver";
-            btnVolver.Size = new Size(88, 27);
-            btnVolver.TabIndex = 22;
-            btnVolver.Text = "Volver";
-            btnVolver.UseVisualStyleBackColor = true;
-            btnVolver.Click += btnVolver_Click;
-            // 
             // FormAgregarStock
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(765, 669);
-            Controls.Add(btnVolver);
+            ClientSize = new Size(765, 624);
             Controls.Add(label1);
             Controls.Add(cmbProveedor);
             Controls.Add(groupBox1);
@@ -129,6 +116,5 @@
         private System.Windows.Forms.DataGridView dgvAgregarStock;
         private System.Windows.Forms.ComboBox cmbProveedor;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button btnVolver;
     }
 }

@@ -46,10 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bll\BitácoraBll.cs" />
+    <Compile Include="Dal\Implementations\BitácoraRepository.cs" />
     <Compile Include="Dal\Interfaces\IGenericRepository.cs" />
     <Compile Include="Bll\IdiomaService.cs" />
     <Compile Include="Bll\LoggerConfiguration.cs" />
     <Compile Include="Bll\UsusarioBll.cs" />
+    <Compile Include="DomainModel\Logging\Bitácora.cs" />
+    <Compile Include="DomainModel\Logging\Criticidad.cs" />
     <Compile Include="Facade\CryptographyService.cs" />
     <Compile Include="Dal\IdiomaRepository.cs" />
     <Compile Include="Dal\Implementations\Adapters\FamiliaAdapter.cs" />
