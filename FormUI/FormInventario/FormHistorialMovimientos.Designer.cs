@@ -44,18 +44,18 @@
             // 
             gpEntregaProductos.Controls.Add(btnVerEntrega);
             gpEntregaProductos.Controls.Add(dgvEntregaProductos);
-            gpEntregaProductos.Location = new Point(26, 37);
+            gpEntregaProductos.Location = new Point(25, 12);
             gpEntregaProductos.Margin = new Padding(4, 3, 4, 3);
             gpEntregaProductos.Name = "gpEntregaProductos";
             gpEntregaProductos.Padding = new Padding(4, 3, 4, 3);
-            gpEntregaProductos.Size = new Size(564, 777);
+            gpEntregaProductos.Size = new Size(564, 655);
             gpEntregaProductos.TabIndex = 0;
             gpEntregaProductos.TabStop = false;
             gpEntregaProductos.Text = "Entrega de Productos";
             // 
             // btnVerEntrega
             // 
-            btnVerEntrega.Location = new Point(236, 733);
+            btnVerEntrega.Location = new Point(208, 620);
             btnVerEntrega.Margin = new Padding(4, 3, 4, 3);
             btnVerEntrega.Name = "btnVerEntrega";
             btnVerEntrega.Size = new Size(88, 27);
@@ -69,25 +69,25 @@
             dgvEntregaProductos.Location = new Point(7, 22);
             dgvEntregaProductos.Margin = new Padding(4, 3, 4, 3);
             dgvEntregaProductos.Name = "dgvEntregaProductos";
-            dgvEntregaProductos.Size = new Size(528, 704);
+            dgvEntregaProductos.Size = new Size(528, 592);
             dgvEntregaProductos.TabIndex = 0;
             // 
             // gbTraspasoProductos
             // 
             gbTraspasoProductos.Controls.Add(btnVerTraspaso);
             gbTraspasoProductos.Controls.Add(dgvTraspasoProductos);
-            gbTraspasoProductos.Location = new Point(630, 37);
+            gbTraspasoProductos.Location = new Point(633, 12);
             gbTraspasoProductos.Margin = new Padding(4, 3, 4, 3);
             gbTraspasoProductos.Name = "gbTraspasoProductos";
             gbTraspasoProductos.Padding = new Padding(4, 3, 4, 3);
-            gbTraspasoProductos.Size = new Size(616, 777);
+            gbTraspasoProductos.Size = new Size(616, 655);
             gbTraspasoProductos.TabIndex = 1;
             gbTraspasoProductos.TabStop = false;
             gbTraspasoProductos.Text = "Traspaso de Productos";
             // 
             // btnVerTraspaso
             // 
-            btnVerTraspaso.Location = new Point(286, 733);
+            btnVerTraspaso.Location = new Point(285, 620);
             btnVerTraspaso.Margin = new Padding(4, 3, 4, 3);
             btnVerTraspaso.Name = "btnVerTraspaso";
             btnVerTraspaso.Size = new Size(88, 27);
@@ -101,14 +101,14 @@
             dgvTraspasoProductos.Location = new Point(19, 32);
             dgvTraspasoProductos.Margin = new Padding(4, 3, 4, 3);
             dgvTraspasoProductos.Name = "dgvTraspasoProductos";
-            dgvTraspasoProductos.Size = new Size(580, 693);
+            dgvTraspasoProductos.Size = new Size(580, 582);
             dgvTraspasoProductos.TabIndex = 0;
             // 
             // FormHistorialMovimientos
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1262, 830);
+            ClientSize = new Size(1262, 680);
             Controls.Add(gbTraspasoProductos);
             Controls.Add(gpEntregaProductos);
             Margin = new Padding(4, 3, 4, 3);

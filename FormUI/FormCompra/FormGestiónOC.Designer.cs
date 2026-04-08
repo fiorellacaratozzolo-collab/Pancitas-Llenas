@@ -47,7 +47,7 @@ namespace FormUI.FormCompra
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(82, 54);
+            label1.Location = new Point(85, 36);
             label1.Name = "label1";
             label1.Size = new Size(132, 15);
             label1.TabIndex = 0;
@@ -62,14 +62,14 @@ namespace FormUI.FormCompra
             groupBox1.Controls.Add(label1);
             groupBox1.Location = new Point(12, 22);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(397, 618);
+            groupBox1.Size = new Size(508, 554);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Orden de Compra";
             // 
             // btnBaja
             // 
-            btnBaja.Location = new Point(254, 547);
+            btnBaja.Location = new Point(297, 488);
             btnBaja.Name = "btnBaja";
             btnBaja.Size = new Size(105, 53);
             btnBaja.TabIndex = 4;
@@ -79,7 +79,7 @@ namespace FormUI.FormCompra
             // 
             // btnAlta
             // 
-            btnAlta.Location = new Point(27, 547);
+            btnAlta.Location = new Point(91, 488);
             btnAlta.Name = "btnAlta";
             btnAlta.Size = new Size(126, 53);
             btnAlta.TabIndex = 3;
@@ -90,16 +90,16 @@ namespace FormUI.FormCompra
             // dgvOrdenCompra
             // 
             dgvOrdenCompra.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvOrdenCompra.Location = new Point(27, 82);
+            dgvOrdenCompra.Location = new Point(8, 61);
             dgvOrdenCompra.Name = "dgvOrdenCompra";
-            dgvOrdenCompra.Size = new Size(332, 459);
+            dgvOrdenCompra.Size = new Size(494, 409);
             dgvOrdenCompra.TabIndex = 2;
             dgvOrdenCompra.CellContentClick += dgvOrdenCompra_CellContentClick;
             dgvOrdenCompra.SelectionChanged += dgvOrdenCompra_SelectionChanged;
             // 
             // btnVer
             // 
-            btnVer.Location = new Point(220, 50);
+            btnVer.Location = new Point(223, 32);
             btnVer.Name = "btnVer";
             btnVer.Size = new Size(48, 23);
             btnVer.TabIndex = 1;
@@ -110,9 +110,9 @@ namespace FormUI.FormCompra
             // groupBox2
             // 
             groupBox2.Controls.Add(dgvDetalleOC);
-            groupBox2.Location = new Point(444, 22);
+            groupBox2.Location = new Point(555, 22);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(399, 618);
+            groupBox2.Size = new Size(593, 554);
             groupBox2.TabIndex = 6;
             groupBox2.TabStop = false;
             groupBox2.Text = "Detalles de Orden de Compra";
@@ -120,14 +120,14 @@ namespace FormUI.FormCompra
             // dgvDetalleOC
             // 
             dgvDetalleOC.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvDetalleOC.Location = new Point(20, 36);
+            dgvDetalleOC.Location = new Point(6, 36);
             dgvDetalleOC.Name = "dgvDetalleOC";
-            dgvDetalleOC.Size = new Size(358, 564);
+            dgvDetalleOC.Size = new Size(581, 505);
             dgvDetalleOC.TabIndex = 0;
             // 
             // FormGestiónOC
             // 
-            ClientSize = new Size(852, 660);
+            ClientSize = new Size(1160, 586);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "FormGestiónOC";

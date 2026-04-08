@@ -59,7 +59,7 @@
             // 
             // btnModificar
             // 
-            btnModificar.Location = new Point(104, 357);
+            btnModificar.Location = new Point(226, 401);
             btnModificar.Margin = new Padding(4, 3, 4, 3);
             btnModificar.Name = "btnModificar";
             btnModificar.Size = new Size(127, 35);
@@ -72,7 +72,7 @@
             // 
             cmbSeleccionSucursal.DisplayMember = "1,2";
             cmbSeleccionSucursal.FormattingEnabled = true;
-            cmbSeleccionSucursal.Location = new Point(166, 37);
+            cmbSeleccionSucursal.Location = new Point(252, 37);
             cmbSeleccionSucursal.Margin = new Padding(4, 3, 4, 3);
             cmbSeleccionSucursal.Name = "cmbSeleccionSucursal";
             cmbSeleccionSucursal.Size = new Size(297, 23);
@@ -91,16 +91,16 @@
             // dgvSucursal
             // 
             dgvSucursal.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvSucursal.Location = new Point(68, 79);
+            dgvSucursal.Location = new Point(8, 66);
             dgvSucursal.Margin = new Padding(4, 3, 4, 3);
             dgvSucursal.Name = "dgvSucursal";
-            dgvSucursal.Size = new Size(364, 272);
+            dgvSucursal.Size = new Size(657, 331);
             dgvSucursal.TabIndex = 3;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(213, 9);
+            label1.Location = new Point(412, 9);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(121, 15);
@@ -110,7 +110,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(22, 40);
+            label2.Location = new Point(108, 40);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(136, 15);
@@ -124,18 +124,18 @@
             gbModificarSucursal.Controls.Add(dgvSucursal);
             gbModificarSucursal.Controls.Add(label2);
             gbModificarSucursal.Controls.Add(btnModificar);
-            gbModificarSucursal.Location = new Point(17, 50);
+            gbModificarSucursal.Location = new Point(479, 62);
             gbModificarSucursal.Margin = new Padding(4, 3, 4, 3);
             gbModificarSucursal.Name = "gbModificarSucursal";
             gbModificarSucursal.Padding = new Padding(4, 3, 4, 3);
-            gbModificarSucursal.Size = new Size(486, 413);
+            gbModificarSucursal.Size = new Size(673, 444);
             gbModificarSucursal.TabIndex = 6;
             gbModificarSucursal.TabStop = false;
             gbModificarSucursal.Text = "Modificar Sucursal";
             // 
             // btnDeshabilitar
             // 
-            btnDeshabilitar.Location = new Point(260, 357);
+            btnDeshabilitar.Location = new Point(422, 403);
             btnDeshabilitar.Margin = new Padding(4, 3, 4, 3);
             btnDeshabilitar.Name = "btnDeshabilitar";
             btnDeshabilitar.Size = new Size(127, 35);
@@ -162,7 +162,7 @@
             groupBox2.Controls.Add(label3);
             groupBox2.Controls.Add(txtbDniEncargado);
             groupBox2.Controls.Add(txtbNombreEncargado);
-            groupBox2.Location = new Point(39, 481);
+            groupBox2.Location = new Point(13, 62);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
@@ -322,7 +322,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(513, 934);
+            ClientSize = new Size(1168, 518);
             Controls.Add(groupBox2);
             Controls.Add(gbModificarSucursal);
             Controls.Add(label1);

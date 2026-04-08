@@ -10,7 +10,6 @@ namespace Services.Facade
     public class SessionManager
     {
         private static SessionManager _instance;
-        private Usuario _usuarioLogueado;
 
         // Singleton
         public static SessionManager Current
@@ -25,25 +24,34 @@ namespace Services.Facade
 
         private SessionManager() { }
 
-        public Usuario UsuarioLogueado => _usuarioLogueado;
+        // UNIFICAMOS: Una sola propiedad para gobernar a todas
+        public Usuario UsuarioLogueado { get; private set; }
+
+        public Guid? IdSucursalActual { get; set; }
+        public string NombreSucursalActual { get; set; }
 
         public void Login(Usuario usuario)
         {
-            _usuarioLogueado = usuario;
+            UsuarioLogueado = usuario;
+            // Si el usuario tiene una sucursal fija (empleado), la cargamos de una vez.
+            // Si es Admin (null), esto quedará en null hasta que él elija en el siguiente form.
+            IdSucursalActual = usuario.IdSucursal;
         }
 
         public void Logout()
         {
-            _usuarioLogueado = null;
-            // Se puede agregar un evento para avisarle a los Forms que se cerró la sesión
+            UsuarioLogueado = null;
+            IdSucursalActual = null;
+            NombreSucursalActual = null;
         }
 
         // Método clave para que los Forms validen permisos rápidamente
         public bool TienePermiso(string dataKeyPermiso)
         {
-            if (_usuarioLogueado == null) return false;
+            if (UsuarioLogueado == null) return false;
 
-            foreach (var privilegio in _usuarioLogueado.Privilegios)
+            // Ahora lee correctamente la mochila del usuario
+            foreach (var privilegio in UsuarioLogueado.Privilegios)
             {
                 if (ValidarPermisoRecursivo(privilegio, dataKeyPermiso))
                     return true;
@@ -59,9 +67,13 @@ namespace Services.Facade
             }
             else if (componente is Familia familia)
             {
-                foreach (var hijo in familia.Hijos)
+                // Protegemos contra nulos por si la familia viene sin hijos
+                if (familia.Hijos != null)
                 {
-                    if (ValidarPermisoRecursivo(hijo, dataKey)) return true;
+                    foreach (var hijo in familia.Hijos)
+                    {
+                        if (ValidarPermisoRecursivo(hijo, dataKey)) return true;
+                    }
                 }
             }
             return false;

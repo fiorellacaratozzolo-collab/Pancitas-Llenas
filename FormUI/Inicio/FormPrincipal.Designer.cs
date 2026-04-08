@@ -31,42 +31,43 @@
             btnCerrarSesion = new Button();
             menuStrip = new MenuStrip();
             tsmAdministrador = new ToolStripMenuItem();
-            bitácoraToolStripMenuItem = new ToolStripMenuItem();
-            gestiónDeRolesToolStripMenuItem = new ToolStripMenuItem();
-            seleccionarSucursalToolStripMenuItem = new ToolStripMenuItem();
+            FormGestiónRoles = new ToolStripMenuItem();
+            FormGestiónUsuario = new ToolStripMenuItem();
+            FormBitácora = new ToolStripMenuItem();
             tsmCompras = new ToolStripMenuItem();
-            gestiónSolicitudDePedidoToolStripMenuItem = new ToolStripMenuItem();
-            gestiónOrdenDePedidoToolStripMenuItem = new ToolStripMenuItem();
-            gestiónOrdenDeCompraToolStripMenuItem = new ToolStripMenuItem();
-            gestiónDeProveedoresToolStripMenuItem = new ToolStripMenuItem();
-            gestiónDeProductoToolStripMenuItem = new ToolStripMenuItem();
+            FormGestiónSP = new ToolStripMenuItem();
+            FormGestiónOP = new ToolStripMenuItem();
+            FormGestiónOC = new ToolStripMenuItem();
+            FormGestiónProveedor = new ToolStripMenuItem();
+            FormGestiónProducto = new ToolStripMenuItem();
             tsmInventario = new ToolStripMenuItem();
-            solicitarOrdenDePedidoToolStripMenuItem = new ToolStripMenuItem();
-            agregarStockToolStripMenuItem = new ToolStripMenuItem();
-            historialDeMovimientosToolStripMenuItem = new ToolStripMenuItem();
-            traspasoDeProductosASucursalToolStripMenuItem = new ToolStripMenuItem();
-            verStockDisponibleToolStripMenuItem = new ToolStripMenuItem();
+            FormSolicitarOP = new ToolStripMenuItem();
+            FormAgregarStock = new ToolStripMenuItem();
+            FormHistorialMovimientos = new ToolStripMenuItem();
+            FormTraspasoProductosSucursal = new ToolStripMenuItem();
+            FormVerStockDisponible = new ToolStripMenuItem();
             tsmSucursales = new ToolStripMenuItem();
-            gestiónDeSucursalToolStripMenuItem = new ToolStripMenuItem();
-            solicitarTraspasoDeProductosToolStripMenuItem = new ToolStripMenuItem();
-            gestiónDeTraspasoToolStripMenuItem = new ToolStripMenuItem();
+            FormGestiónSucursal = new ToolStripMenuItem();
+            FormSolicitarTraspasoProductoSucursales = new ToolStripMenuItem();
+            FormGestiónTraspaso = new ToolStripMenuItem();
             tsmVenta = new ToolStripMenuItem();
-            generarUnaVentaToolStripMenuItem = new ToolStripMenuItem();
-            gestiónDeClienteToolStripMenuItem = new ToolStripMenuItem();
-            gestiónDeVentasToolStripMenuItem = new ToolStripMenuItem();
-            historialDeVentasToolStripMenuItem = new ToolStripMenuItem();
-            listaDePreciosToolStripMenuItem = new ToolStripMenuItem();
+            FormGenerarVenta = new ToolStripMenuItem();
+            FormGestiónCliente = new ToolStripMenuItem();
+            FormGestiónVenta = new ToolStripMenuItem();
+            FormHistorialVentas = new ToolStripMenuItem();
+            FormListaPrecios = new ToolStripMenuItem();
             toolStripMenuItem1 = new ToolStripMenuItem();
             toolStripMenuItem2 = new ToolStripMenuItem();
-            gestiónDeUsuarioToolStripMenuItem = new ToolStripMenuItem();
+            panelContenedor = new Panel();
+            lblInfoSucursal = new Label();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // btnCerrarSesion
             // 
-            btnCerrarSesion.Location = new Point(304, 418);
+            btnCerrarSesion.Location = new Point(748, 827);
             btnCerrarSesion.Name = "btnCerrarSesion";
-            btnCerrarSesion.Size = new Size(154, 35);
+            btnCerrarSesion.Size = new Size(102, 35);
             btnCerrarSesion.TabIndex = 0;
             btnCerrarSesion.Text = "Cerrar Sesión";
             btnCerrarSesion.UseVisualStyleBackColor = true;
@@ -74,10 +75,12 @@
             // 
             // menuStrip
             // 
+            menuStrip.BackColor = SystemColors.InactiveCaption;
+            menuStrip.Font = new Font("Arial", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             menuStrip.Items.AddRange(new ToolStripItem[] { tsmAdministrador, tsmCompras, tsmInventario, tsmSucursales, tsmVenta });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(470, 24);
+            menuStrip.Size = new Size(1613, 30);
             menuStrip.TabIndex = 1;
             menuStrip.Tag = "MenuStrip";
             menuStrip.Text = "menuStrip1";
@@ -85,213 +88,213 @@
             // 
             // tsmAdministrador
             // 
-            tsmAdministrador.DropDownItems.AddRange(new ToolStripItem[] { seleccionarSucursalToolStripMenuItem, gestiónDeRolesToolStripMenuItem, gestiónDeUsuarioToolStripMenuItem, bitácoraToolStripMenuItem });
+            tsmAdministrador.DropDownItems.AddRange(new ToolStripItem[] { FormGestiónRoles, FormGestiónUsuario, FormBitácora });
             tsmAdministrador.Name = "tsmAdministrador";
-            tsmAdministrador.Size = new Size(95, 20);
+            tsmAdministrador.Size = new Size(139, 26);
             tsmAdministrador.Tag = "tsmAdministrador";
             tsmAdministrador.Text = "Administrador";
             // 
-            // bitácoraToolStripMenuItem
+            // FormGestiónRoles
             // 
-            bitácoraToolStripMenuItem.Name = "bitácoraToolStripMenuItem";
-            bitácoraToolStripMenuItem.Size = new Size(181, 22);
-            bitácoraToolStripMenuItem.Tag = "FormBitácora";
-            bitácoraToolStripMenuItem.Text = "Bitácora";
-            bitácoraToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónRoles.Name = "FormGestiónRoles";
+            FormGestiónRoles.Size = new Size(242, 26);
+            FormGestiónRoles.Tag = "FormGestiónRoles";
+            FormGestiónRoles.Text = "Gestión de Roles";
+            FormGestiónRoles.Click += MenuPatente_Click;
             // 
-            // gestiónDeRolesToolStripMenuItem
+            // FormGestiónUsuario
             // 
-            gestiónDeRolesToolStripMenuItem.Name = "gestiónDeRolesToolStripMenuItem";
-            gestiónDeRolesToolStripMenuItem.Size = new Size(181, 22);
-            gestiónDeRolesToolStripMenuItem.Tag = "FormGestiónRoles";
-            gestiónDeRolesToolStripMenuItem.Text = "Gestión de Roles";
-            gestiónDeRolesToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónUsuario.Name = "FormGestiónUsuario";
+            FormGestiónUsuario.Size = new Size(242, 26);
+            FormGestiónUsuario.Tag = "FormGestiónUsuario";
+            FormGestiónUsuario.Text = "Gestión de Usuario";
+            FormGestiónUsuario.Click += MenuPatente_Click;
             // 
-            // seleccionarSucursalToolStripMenuItem
+            // FormBitácora
             // 
-            seleccionarSucursalToolStripMenuItem.Name = "seleccionarSucursalToolStripMenuItem";
-            seleccionarSucursalToolStripMenuItem.Size = new Size(181, 22);
-            seleccionarSucursalToolStripMenuItem.Tag = "FormSeleccionSucursal";
-            seleccionarSucursalToolStripMenuItem.Text = "Seleccionar Sucursal";
-            seleccionarSucursalToolStripMenuItem.Click += MenuPatente_Click;
+            FormBitácora.Name = "FormBitácora";
+            FormBitácora.Size = new Size(242, 26);
+            FormBitácora.Tag = "FormBitácora";
+            FormBitácora.Text = "Bitácora";
+            FormBitácora.Click += MenuPatente_Click;
             // 
             // tsmCompras
             // 
-            tsmCompras.DropDownItems.AddRange(new ToolStripItem[] { gestiónSolicitudDePedidoToolStripMenuItem, gestiónOrdenDePedidoToolStripMenuItem, gestiónOrdenDeCompraToolStripMenuItem, gestiónDeProveedoresToolStripMenuItem, gestiónDeProductoToolStripMenuItem });
+            tsmCompras.DropDownItems.AddRange(new ToolStripItem[] { FormGestiónSP, FormGestiónOP, FormGestiónOC, FormGestiónProveedor, FormGestiónProducto });
             tsmCompras.Name = "tsmCompras";
-            tsmCompras.Size = new Size(67, 20);
+            tsmCompras.Size = new Size(100, 26);
             tsmCompras.Tag = "tsmCompras";
             tsmCompras.Text = "Compras";
             tsmCompras.Click += compraToolStripMenuItem_Click;
             // 
-            // gestiónSolicitudDePedidoToolStripMenuItem
+            // FormGestiónSP
             // 
-            gestiónSolicitudDePedidoToolStripMenuItem.Name = "gestiónSolicitudDePedidoToolStripMenuItem";
-            gestiónSolicitudDePedidoToolStripMenuItem.Size = new Size(219, 22);
-            gestiónSolicitudDePedidoToolStripMenuItem.Tag = "FormGestiónSP";
-            gestiónSolicitudDePedidoToolStripMenuItem.Text = "Gestión Solicitud de Pedido";
-            gestiónSolicitudDePedidoToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónSP.Name = "FormGestiónSP";
+            FormGestiónSP.Size = new Size(316, 26);
+            FormGestiónSP.Tag = "FormGestiónSP";
+            FormGestiónSP.Text = "Gestión Solicitud de Pedido";
+            FormGestiónSP.Click += MenuPatente_Click;
             // 
-            // gestiónOrdenDePedidoToolStripMenuItem
+            // FormGestiónOP
             // 
-            gestiónOrdenDePedidoToolStripMenuItem.Name = "gestiónOrdenDePedidoToolStripMenuItem";
-            gestiónOrdenDePedidoToolStripMenuItem.Size = new Size(219, 22);
-            gestiónOrdenDePedidoToolStripMenuItem.Tag = "FormGestiónOP";
-            gestiónOrdenDePedidoToolStripMenuItem.Text = "Gestión Orden de Pedido";
-            gestiónOrdenDePedidoToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónOP.Name = "FormGestiónOP";
+            FormGestiónOP.Size = new Size(316, 26);
+            FormGestiónOP.Tag = "FormGestiónOP";
+            FormGestiónOP.Text = "Gestión Orden de Pedido";
+            FormGestiónOP.Click += MenuPatente_Click;
             // 
-            // gestiónOrdenDeCompraToolStripMenuItem
+            // FormGestiónOC
             // 
-            gestiónOrdenDeCompraToolStripMenuItem.Name = "gestiónOrdenDeCompraToolStripMenuItem";
-            gestiónOrdenDeCompraToolStripMenuItem.Size = new Size(219, 22);
-            gestiónOrdenDeCompraToolStripMenuItem.Tag = "FormGestiónOC";
-            gestiónOrdenDeCompraToolStripMenuItem.Text = "Gestión Orden de Compra";
-            gestiónOrdenDeCompraToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónOC.Name = "FormGestiónOC";
+            FormGestiónOC.Size = new Size(316, 26);
+            FormGestiónOC.Tag = "FormGestiónOC";
+            FormGestiónOC.Text = "Gestión Orden de Compra";
+            FormGestiónOC.Click += MenuPatente_Click;
             // 
-            // gestiónDeProveedoresToolStripMenuItem
+            // FormGestiónProveedor
             // 
-            gestiónDeProveedoresToolStripMenuItem.Name = "gestiónDeProveedoresToolStripMenuItem";
-            gestiónDeProveedoresToolStripMenuItem.Size = new Size(219, 22);
-            gestiónDeProveedoresToolStripMenuItem.Tag = "FormGestiónProveedor";
-            gestiónDeProveedoresToolStripMenuItem.Text = "Gestión de Proveedores";
-            gestiónDeProveedoresToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónProveedor.Name = "FormGestiónProveedor";
+            FormGestiónProveedor.Size = new Size(316, 26);
+            FormGestiónProveedor.Tag = "FormGestiónProveedor";
+            FormGestiónProveedor.Text = "Gestión de Proveedores";
+            FormGestiónProveedor.Click += MenuPatente_Click;
             // 
-            // gestiónDeProductoToolStripMenuItem
+            // FormGestiónProducto
             // 
-            gestiónDeProductoToolStripMenuItem.Name = "gestiónDeProductoToolStripMenuItem";
-            gestiónDeProductoToolStripMenuItem.Size = new Size(219, 22);
-            gestiónDeProductoToolStripMenuItem.Tag = "FormGestiónProducto";
-            gestiónDeProductoToolStripMenuItem.Text = "Gestión de Producto";
-            gestiónDeProductoToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónProducto.Name = "FormGestiónProducto";
+            FormGestiónProducto.Size = new Size(316, 26);
+            FormGestiónProducto.Tag = "FormGestiónProducto";
+            FormGestiónProducto.Text = "Gestión de Producto";
+            FormGestiónProducto.Click += MenuPatente_Click;
             // 
             // tsmInventario
             // 
-            tsmInventario.DropDownItems.AddRange(new ToolStripItem[] { solicitarOrdenDePedidoToolStripMenuItem, agregarStockToolStripMenuItem, historialDeMovimientosToolStripMenuItem, traspasoDeProductosASucursalToolStripMenuItem, verStockDisponibleToolStripMenuItem });
+            tsmInventario.DropDownItems.AddRange(new ToolStripItem[] { FormSolicitarOP, FormAgregarStock, FormHistorialMovimientos, FormTraspasoProductosSucursal, FormVerStockDisponible });
             tsmInventario.Name = "tsmInventario";
-            tsmInventario.Size = new Size(72, 20);
+            tsmInventario.Size = new Size(104, 26);
             tsmInventario.Tag = "tsmInventario";
             tsmInventario.Text = "Inventario";
             // 
-            // solicitarOrdenDePedidoToolStripMenuItem
+            // FormSolicitarOP
             // 
-            solicitarOrdenDePedidoToolStripMenuItem.Name = "solicitarOrdenDePedidoToolStripMenuItem";
-            solicitarOrdenDePedidoToolStripMenuItem.Size = new Size(249, 22);
-            solicitarOrdenDePedidoToolStripMenuItem.Tag = "FormSolicitarOP";
-            solicitarOrdenDePedidoToolStripMenuItem.Text = "Solicitar Orden de Pedido";
-            solicitarOrdenDePedidoToolStripMenuItem.Click += MenuPatente_Click;
+            FormSolicitarOP.Name = "FormSolicitarOP";
+            FormSolicitarOP.Size = new Size(371, 26);
+            FormSolicitarOP.Tag = "FormSolicitarOP";
+            FormSolicitarOP.Text = "Solicitar Orden de Pedido";
+            FormSolicitarOP.Click += MenuPatente_Click;
             // 
-            // agregarStockToolStripMenuItem
+            // FormAgregarStock
             // 
-            agregarStockToolStripMenuItem.Name = "agregarStockToolStripMenuItem";
-            agregarStockToolStripMenuItem.Size = new Size(249, 22);
-            agregarStockToolStripMenuItem.Tag = "FormAgregarStock";
-            agregarStockToolStripMenuItem.Text = "Agregar Stock";
-            agregarStockToolStripMenuItem.Click += MenuPatente_Click;
+            FormAgregarStock.Name = "FormAgregarStock";
+            FormAgregarStock.Size = new Size(371, 26);
+            FormAgregarStock.Tag = "FormAgregarStock";
+            FormAgregarStock.Text = "Agregar Stock";
+            FormAgregarStock.Click += MenuPatente_Click;
             // 
-            // historialDeMovimientosToolStripMenuItem
+            // FormHistorialMovimientos
             // 
-            historialDeMovimientosToolStripMenuItem.Name = "historialDeMovimientosToolStripMenuItem";
-            historialDeMovimientosToolStripMenuItem.Size = new Size(249, 22);
-            historialDeMovimientosToolStripMenuItem.Tag = "FormHistorialMovimientos";
-            historialDeMovimientosToolStripMenuItem.Text = "Historial de Movimientos";
-            historialDeMovimientosToolStripMenuItem.Click += MenuPatente_Click;
+            FormHistorialMovimientos.Name = "FormHistorialMovimientos";
+            FormHistorialMovimientos.Size = new Size(371, 26);
+            FormHistorialMovimientos.Tag = "FormHistorialMovimientos";
+            FormHistorialMovimientos.Text = "Historial de Movimientos";
+            FormHistorialMovimientos.Click += MenuPatente_Click;
             // 
-            // traspasoDeProductosASucursalToolStripMenuItem
+            // FormTraspasoProductosSucursal
             // 
-            traspasoDeProductosASucursalToolStripMenuItem.Name = "traspasoDeProductosASucursalToolStripMenuItem";
-            traspasoDeProductosASucursalToolStripMenuItem.Size = new Size(249, 22);
-            traspasoDeProductosASucursalToolStripMenuItem.Tag = "FormTraspasoProductosSucursal";
-            traspasoDeProductosASucursalToolStripMenuItem.Text = "Traspaso de Productos a Sucursal";
-            traspasoDeProductosASucursalToolStripMenuItem.Click += MenuPatente_Click;
+            FormTraspasoProductosSucursal.Name = "FormTraspasoProductosSucursal";
+            FormTraspasoProductosSucursal.Size = new Size(371, 26);
+            FormTraspasoProductosSucursal.Tag = "FormTraspasoProductosSucursal";
+            FormTraspasoProductosSucursal.Text = "Traspaso de Productos a Sucursal";
+            FormTraspasoProductosSucursal.Click += MenuPatente_Click;
             // 
-            // verStockDisponibleToolStripMenuItem
+            // FormVerStockDisponible
             // 
-            verStockDisponibleToolStripMenuItem.Name = "verStockDisponibleToolStripMenuItem";
-            verStockDisponibleToolStripMenuItem.Size = new Size(249, 22);
-            verStockDisponibleToolStripMenuItem.Tag = "FormVerStockDisponible";
-            verStockDisponibleToolStripMenuItem.Text = "Ver Stock Disponible";
-            verStockDisponibleToolStripMenuItem.Click += MenuPatente_Click;
+            FormVerStockDisponible.Name = "FormVerStockDisponible";
+            FormVerStockDisponible.Size = new Size(371, 26);
+            FormVerStockDisponible.Tag = "FormVerStockDisponible";
+            FormVerStockDisponible.Text = "Ver Stock Disponible";
+            FormVerStockDisponible.Click += MenuPatente_Click;
             // 
             // tsmSucursales
             // 
-            tsmSucursales.DropDownItems.AddRange(new ToolStripItem[] { gestiónDeSucursalToolStripMenuItem, solicitarTraspasoDeProductosToolStripMenuItem, gestiónDeTraspasoToolStripMenuItem });
+            tsmSucursales.DropDownItems.AddRange(new ToolStripItem[] { FormGestiónSucursal, FormSolicitarTraspasoProductoSucursales, FormGestiónTraspaso });
             tsmSucursales.Name = "tsmSucursales";
-            tsmSucursales.Size = new Size(74, 20);
+            tsmSucursales.Size = new Size(116, 26);
             tsmSucursales.Tag = "tsmSucursales";
             tsmSucursales.Text = "Sucursales";
             tsmSucursales.Click += sucursalesToolStripMenuItem_Click;
             // 
-            // gestiónDeSucursalToolStripMenuItem
+            // FormGestiónSucursal
             // 
-            gestiónDeSucursalToolStripMenuItem.Name = "gestiónDeSucursalToolStripMenuItem";
-            gestiónDeSucursalToolStripMenuItem.Size = new Size(294, 22);
-            gestiónDeSucursalToolStripMenuItem.Tag = "FormGestiónSucursal";
-            gestiónDeSucursalToolStripMenuItem.Text = "Gestión de Sucursal";
-            gestiónDeSucursalToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónSucursal.Name = "FormGestiónSucursal";
+            FormGestiónSucursal.Size = new Size(443, 26);
+            FormGestiónSucursal.Tag = "FormGestiónSucursal";
+            FormGestiónSucursal.Text = "Gestión de Sucursal";
+            FormGestiónSucursal.Click += MenuPatente_Click;
             // 
-            // solicitarTraspasoDeProductosToolStripMenuItem
+            // FormSolicitarTraspasoProductoSucursales
             // 
-            solicitarTraspasoDeProductosToolStripMenuItem.Name = "solicitarTraspasoDeProductosToolStripMenuItem";
-            solicitarTraspasoDeProductosToolStripMenuItem.Size = new Size(294, 22);
-            solicitarTraspasoDeProductosToolStripMenuItem.Tag = "FormSolicitarTraspasoProductoSucursales";
-            solicitarTraspasoDeProductosToolStripMenuItem.Text = "Solicitar Traspaso de Productos a Sucursal";
-            solicitarTraspasoDeProductosToolStripMenuItem.Click += MenuPatente_Click;
+            FormSolicitarTraspasoProductoSucursales.Name = "FormSolicitarTraspasoProductoSucursales";
+            FormSolicitarTraspasoProductoSucursales.Size = new Size(443, 26);
+            FormSolicitarTraspasoProductoSucursales.Tag = "FormSolicitarTraspasoProductoSucursales";
+            FormSolicitarTraspasoProductoSucursales.Text = "Solicitar Traspaso de Productos a Sucursal";
+            FormSolicitarTraspasoProductoSucursales.Click += MenuPatente_Click;
             // 
-            // gestiónDeTraspasoToolStripMenuItem
+            // FormGestiónTraspaso
             // 
-            gestiónDeTraspasoToolStripMenuItem.Name = "gestiónDeTraspasoToolStripMenuItem";
-            gestiónDeTraspasoToolStripMenuItem.Size = new Size(294, 22);
-            gestiónDeTraspasoToolStripMenuItem.Tag = "FormGestiónTraspaso";
-            gestiónDeTraspasoToolStripMenuItem.Text = "Gestión de Traspaso";
-            gestiónDeTraspasoToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónTraspaso.Name = "FormGestiónTraspaso";
+            FormGestiónTraspaso.Size = new Size(443, 26);
+            FormGestiónTraspaso.Tag = "FormGestiónTraspaso";
+            FormGestiónTraspaso.Text = "Gestión de Traspaso";
+            FormGestiónTraspaso.Click += MenuPatente_Click;
             // 
             // tsmVenta
             // 
-            tsmVenta.DropDownItems.AddRange(new ToolStripItem[] { generarUnaVentaToolStripMenuItem, gestiónDeClienteToolStripMenuItem, gestiónDeVentasToolStripMenuItem, historialDeVentasToolStripMenuItem, listaDePreciosToolStripMenuItem });
+            tsmVenta.DropDownItems.AddRange(new ToolStripItem[] { FormGenerarVenta, FormGestiónCliente, FormGestiónVenta, FormHistorialVentas, FormListaPrecios });
             tsmVenta.Name = "tsmVenta";
-            tsmVenta.Size = new Size(48, 20);
+            tsmVenta.Size = new Size(70, 26);
             tsmVenta.Tag = "tsmVenta";
             tsmVenta.Text = "Venta";
             // 
-            // generarUnaVentaToolStripMenuItem
+            // FormGenerarVenta
             // 
-            generarUnaVentaToolStripMenuItem.Name = "generarUnaVentaToolStripMenuItem";
-            generarUnaVentaToolStripMenuItem.Size = new Size(171, 22);
-            generarUnaVentaToolStripMenuItem.Tag = "FormGenerarVenta";
-            generarUnaVentaToolStripMenuItem.Text = "Generar una Venta";
-            generarUnaVentaToolStripMenuItem.Click += MenuPatente_Click;
+            FormGenerarVenta.Name = "FormGenerarVenta";
+            FormGenerarVenta.Size = new Size(237, 26);
+            FormGenerarVenta.Tag = "FormGenerarVenta";
+            FormGenerarVenta.Text = "Generar una Venta";
+            FormGenerarVenta.Click += MenuPatente_Click;
             // 
-            // gestiónDeClienteToolStripMenuItem
+            // FormGestiónCliente
             // 
-            gestiónDeClienteToolStripMenuItem.Name = "gestiónDeClienteToolStripMenuItem";
-            gestiónDeClienteToolStripMenuItem.Size = new Size(171, 22);
-            gestiónDeClienteToolStripMenuItem.Tag = "FormGestiónCliente";
-            gestiónDeClienteToolStripMenuItem.Text = "Gestión de Cliente";
-            gestiónDeClienteToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónCliente.Name = "FormGestiónCliente";
+            FormGestiónCliente.Size = new Size(237, 26);
+            FormGestiónCliente.Tag = "FormGestiónCliente";
+            FormGestiónCliente.Text = "Gestión de Cliente";
+            FormGestiónCliente.Click += MenuPatente_Click;
             // 
-            // gestiónDeVentasToolStripMenuItem
+            // FormGestiónVenta
             // 
-            gestiónDeVentasToolStripMenuItem.Name = "gestiónDeVentasToolStripMenuItem";
-            gestiónDeVentasToolStripMenuItem.Size = new Size(171, 22);
-            gestiónDeVentasToolStripMenuItem.Tag = "FormGestiónVenta";
-            gestiónDeVentasToolStripMenuItem.Text = "Gestión de Ventas";
-            gestiónDeVentasToolStripMenuItem.Click += MenuPatente_Click;
+            FormGestiónVenta.Name = "FormGestiónVenta";
+            FormGestiónVenta.Size = new Size(237, 26);
+            FormGestiónVenta.Tag = "FormGestiónVenta";
+            FormGestiónVenta.Text = "Gestión de Ventas";
+            FormGestiónVenta.Click += MenuPatente_Click;
             // 
-            // historialDeVentasToolStripMenuItem
+            // FormHistorialVentas
             // 
-            historialDeVentasToolStripMenuItem.Name = "historialDeVentasToolStripMenuItem";
-            historialDeVentasToolStripMenuItem.Size = new Size(171, 22);
-            historialDeVentasToolStripMenuItem.Tag = "FormHistorialVentas";
-            historialDeVentasToolStripMenuItem.Text = "Historial de Ventas";
-            historialDeVentasToolStripMenuItem.Click += MenuPatente_Click;
+            FormHistorialVentas.Name = "FormHistorialVentas";
+            FormHistorialVentas.Size = new Size(237, 26);
+            FormHistorialVentas.Tag = "FormHistorialVentas";
+            FormHistorialVentas.Text = "Historial de Ventas";
+            FormHistorialVentas.Click += MenuPatente_Click;
             // 
-            // listaDePreciosToolStripMenuItem
+            // FormListaPrecios
             // 
-            listaDePreciosToolStripMenuItem.Name = "listaDePreciosToolStripMenuItem";
-            listaDePreciosToolStripMenuItem.Size = new Size(171, 22);
-            listaDePreciosToolStripMenuItem.Tag = "FormListaPrecios";
-            listaDePreciosToolStripMenuItem.Text = "Lista de Precios";
-            listaDePreciosToolStripMenuItem.Click += MenuPatente_Click;
+            FormListaPrecios.Name = "FormListaPrecios";
+            FormListaPrecios.Size = new Size(237, 26);
+            FormListaPrecios.Tag = "FormListaPrecios";
+            FormListaPrecios.Text = "Lista de Precios";
+            FormListaPrecios.Click += MenuPatente_Click;
             // 
             // toolStripMenuItem1
             // 
@@ -305,23 +308,36 @@
             toolStripMenuItem2.Name = "toolStripMenuItem2";
             toolStripMenuItem2.Size = new Size(67, 22);
             // 
-            // gestiónDeUsuarioToolStripMenuItem
+            // panelContenedor
             // 
-            gestiónDeUsuarioToolStripMenuItem.Name = "gestiónDeUsuarioToolStripMenuItem";
-            gestiónDeUsuarioToolStripMenuItem.Size = new Size(181, 22);
-            gestiónDeUsuarioToolStripMenuItem.Tag = "FormGestiónUsuario";
-            gestiónDeUsuarioToolStripMenuItem.Text = "Gestión de Usuario";
-            gestiónDeUsuarioToolStripMenuItem.Click += MenuPatente_Click;
+            panelContenedor.BackColor = SystemColors.ControlLight;
+            panelContenedor.Location = new Point(0, 55);
+            panelContenedor.Name = "panelContenedor";
+            panelContenedor.Size = new Size(1613, 766);
+            panelContenedor.TabIndex = 2;
+            // 
+            // lblInfoSucursal
+            // 
+            lblInfoSucursal.AutoSize = true;
+            lblInfoSucursal.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblInfoSucursal.Location = new Point(805, 32);
+            lblInfoSucursal.Name = "lblInfoSucursal";
+            lblInfoSucursal.Size = new Size(149, 20);
+            lblInfoSucursal.TabIndex = 3;
+            lblInfoSucursal.Text = "Cargando sucursal...";
             // 
             // FormPrincipal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(470, 465);
+            ClientSize = new Size(1613, 874);
+            Controls.Add(lblInfoSucursal);
+            Controls.Add(panelContenedor);
             Controls.Add(btnCerrarSesion);
             Controls.Add(menuStrip);
             MainMenuStrip = menuStrip;
             Name = "FormPrincipal";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Menú";
             Load += FormPrincipal_Load;
             menuStrip.ResumeLayout(false);
@@ -341,27 +357,28 @@
         private ToolStripMenuItem tsmInventario;
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripMenuItem toolStripMenuItem2;
-        private ToolStripMenuItem gestiónSolicitudDePedidoToolStripMenuItem;
-        private ToolStripMenuItem gestiónOrdenDePedidoToolStripMenuItem;
-        private ToolStripMenuItem gestiónOrdenDeCompraToolStripMenuItem;
-        private ToolStripMenuItem gestiónDeProveedoresToolStripMenuItem;
-        private ToolStripMenuItem gestiónDeProductoToolStripMenuItem;
-        private ToolStripMenuItem solicitarOrdenDePedidoToolStripMenuItem;
-        private ToolStripMenuItem agregarStockToolStripMenuItem;
-        private ToolStripMenuItem historialDeMovimientosToolStripMenuItem;
-        private ToolStripMenuItem traspasoDeProductosASucursalToolStripMenuItem;
-        private ToolStripMenuItem verStockDisponibleToolStripMenuItem;
-        private ToolStripMenuItem gestiónDeSucursalToolStripMenuItem;
-        private ToolStripMenuItem solicitarTraspasoDeProductosToolStripMenuItem;
-        private ToolStripMenuItem bitácoraToolStripMenuItem;
-        private ToolStripMenuItem gestiónDeRolesToolStripMenuItem;
-        private ToolStripMenuItem generarUnaVentaToolStripMenuItem;
-        private ToolStripMenuItem gestiónDeClienteToolStripMenuItem;
-        private ToolStripMenuItem gestiónDeVentasToolStripMenuItem;
-        private ToolStripMenuItem historialDeVentasToolStripMenuItem;
-        private ToolStripMenuItem listaDePreciosToolStripMenuItem;
-        private ToolStripMenuItem gestiónDeTraspasoToolStripMenuItem;
-        private ToolStripMenuItem seleccionarSucursalToolStripMenuItem;
-        private ToolStripMenuItem gestiónDeUsuarioToolStripMenuItem;
+        private ToolStripMenuItem FormGestiónSP;
+        private ToolStripMenuItem FormGestiónOP;
+        private ToolStripMenuItem FormGestiónOC;
+        private ToolStripMenuItem FormGestiónProveedor;
+        private ToolStripMenuItem FormGestiónProducto;
+        private ToolStripMenuItem FormSolicitarOP;
+        private ToolStripMenuItem FormAgregarStock;
+        private ToolStripMenuItem FormHistorialMovimientos;
+        private ToolStripMenuItem FormTraspasoProductosSucursal;
+        private ToolStripMenuItem FormVerStockDisponible;
+        private ToolStripMenuItem FormGestiónSucursal;
+        private ToolStripMenuItem FormSolicitarTraspasoProductoSucursales;
+        private ToolStripMenuItem FormBitácora;
+        private ToolStripMenuItem FormGestiónRoles;
+        private ToolStripMenuItem FormGenerarVenta;
+        private ToolStripMenuItem FormGestiónCliente;
+        private ToolStripMenuItem FormGestiónVenta;
+        private ToolStripMenuItem FormHistorialVentas;
+        private ToolStripMenuItem FormListaPrecios;
+        private ToolStripMenuItem FormGestiónTraspaso;
+        private ToolStripMenuItem FormGestiónUsuario;
+        private Panel panelContenedor;
+        private Label lblInfoSucursal;
     }
 }

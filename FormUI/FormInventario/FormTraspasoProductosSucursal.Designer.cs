@@ -67,7 +67,7 @@
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(682, 804);
+            groupBox1.Size = new Size(1077, 555);
             groupBox1.TabIndex = 18;
             groupBox1.TabStop = false;
             groupBox1.Text = "Productos a Solicitar";
@@ -93,7 +93,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(181, 92);
+            label5.Location = new Point(194, 92);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
             label5.Size = new Size(93, 15);
@@ -103,7 +103,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(152, 135);
+            label2.Location = new Point(172, 129);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(115, 15);
@@ -112,7 +112,7 @@
             // 
             // txtbPesoNeto
             // 
-            txtbPesoNeto.Location = new Point(226, 233);
+            txtbPesoNeto.Location = new Point(577, 98);
             txtbPesoNeto.Margin = new Padding(4, 3, 4, 3);
             txtbPesoNeto.Name = "txtbPesoNeto";
             txtbPesoNeto.Size = new Size(102, 23);
@@ -121,7 +121,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(149, 237);
+            label1.Location = new Point(500, 102);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(64, 15);
@@ -130,7 +130,7 @@
             // 
             // btnGenerarTraspasoProd
             // 
-            btnGenerarTraspasoProd.Location = new Point(92, 753);
+            btnGenerarTraspasoProd.Location = new Point(279, 503);
             btnGenerarTraspasoProd.Margin = new Padding(4, 3, 4, 3);
             btnGenerarTraspasoProd.Name = "btnGenerarTraspasoProd";
             btnGenerarTraspasoProd.Size = new Size(495, 44);
@@ -140,7 +140,7 @@
             // 
             // dateTimePicker1
             // 
-            dateTimePicker1.Location = new Point(226, 22);
+            dateTimePicker1.Location = new Point(29, 45);
             dateTimePicker1.Margin = new Padding(4, 3, 4, 3);
             dateTimePicker1.Name = "dateTimePicker1";
             dateTimePicker1.Size = new Size(233, 23);
@@ -149,16 +149,16 @@
             // dataGridView1
             // 
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(7, 323);
+            dataGridView1.Location = new Point(10, 174);
             dataGridView1.Margin = new Padding(4, 3, 4, 3);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(668, 423);
+            dataGridView1.Size = new Size(1061, 323);
             dataGridView1.TabIndex = 10;
             // 
             // txtbProd
             // 
             txtbProd.Enabled = false;
-            txtbProd.Location = new Point(226, 195);
+            txtbProd.Location = new Point(577, 60);
             txtbProd.Margin = new Padding(4, 3, 4, 3);
             txtbProd.Name = "txtbProd";
             txtbProd.Size = new Size(296, 23);
@@ -167,7 +167,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(111, 198);
+            label3.Location = new Point(462, 63);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new Size(106, 15);
@@ -176,7 +176,7 @@
             // 
             // txtbCantidad
             // 
-            txtbCantidad.Location = new Point(226, 269);
+            txtbCantidad.Location = new Point(577, 134);
             txtbCantidad.Margin = new Padding(4, 3, 4, 3);
             txtbCantidad.Name = "txtbCantidad";
             txtbCantidad.Size = new Size(102, 23);
@@ -184,10 +184,10 @@
             // 
             // btnAgregar
             // 
-            btnAgregar.Location = new Point(370, 252);
+            btnAgregar.Location = new Point(719, 126);
             btnAgregar.Margin = new Padding(4, 3, 4, 3);
             btnAgregar.Name = "btnAgregar";
-            btnAgregar.Size = new Size(217, 36);
+            btnAgregar.Size = new Size(129, 36);
             btnAgregar.TabIndex = 7;
             btnAgregar.Text = "Agregar";
             btnAgregar.UseVisualStyleBackColor = true;
@@ -195,7 +195,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(152, 272);
+            label4.Location = new Point(503, 137);
             label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
             label4.Size = new Size(58, 15);
@@ -206,7 +206,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(710, 821);
+            ClientSize = new Size(1104, 574);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormTraspasoProductosSucursal";

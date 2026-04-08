@@ -20,7 +20,7 @@ namespace Services.Bll
             _usuarioRepo = new UsuarioRepository();
         }
 
-        public void RegistrarUsuario(string nombre, string email, string contraseñaClara)
+        public void RegistrarUsuario(string nombre, string email, string contraseñaClara, Guid? idSucursal)
         {
             // 1. Validaciones de campos vacíos (esto ya lo tenías)
             if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(contraseñaClara))
@@ -53,7 +53,8 @@ namespace Services.Bll
                 nombre,
                 email,
                 contraseñaHasheada,
-                true
+                true,
+                idSucursal
             );
 
             _usuarioRepo.Add(nuevoUsuario);
@@ -66,25 +67,20 @@ namespace Services.Bll
         public Usuario ValidarCredenciales(string username, string passwordClara)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(passwordClara))
-            {
                 throw new Exception("Debe ingresar usuario y contraseña.");
-            }
 
-            // Hasheamos lo que escribió el usuario para compararlo con la BD
             string passwordHasheada = CryptographyService.HashMd5(passwordClara);
-
-            // Buscamos en la BD usando tu método que trae los permisos recursivos
             Usuario usuarioLogueado = _usuarioRepo.GetByCredentials(username, passwordHasheada);
 
             if (usuarioLogueado == null)
-            {
                 throw new Exception("Usuario o contraseña incorrectos.");
-            }
 
             if (!usuarioLogueado.Habilitado)
-            {
                 throw new Exception("El usuario se encuentra deshabilitado. Contacte al administrador.");
-            }
+
+            // ---> ¡LA PIEZA FALTANTE! Llenamos la mochila antes de dejarlo entrar <---
+            Services.Dal.Implementations.PermisosRepository permisosRepo = new Services.Dal.Implementations.PermisosRepository();
+            permisosRepo.CargarPrivilegios(usuarioLogueado);
 
             return usuarioLogueado;
         }
@@ -95,8 +91,24 @@ namespace Services.Bll
             return _usuarioRepo.GetAll();
         }
 
+        // MÉTODO PARA OBTENER UN USUARIO POR SU ID (Usado para permisos y edición)
+        public Usuario GetById(Guid idUsuario)
+        {
+            if (idUsuario == Guid.Empty) throw new ArgumentException("El ID no puede estar vacío.");
+
+            Usuario usuarioEncontrado = _usuarioRepo.GetById(idUsuario);
+            
+            if (usuarioEncontrado != null)
+            {
+                Services.Dal.Implementations.PermisosRepository permisosRepo = new Services.Dal.Implementations.PermisosRepository();
+                permisosRepo.CargarPrivilegios(usuarioEncontrado);
+            }
+
+            return usuarioEncontrado;
+        }
+
         // MÉTODO PARA ACTUALIZAR (Solo datos básicos)
-        public void ActualizarUsuario(Guid idUsuario, string nombre, string email)
+        public void ActualizarUsuario(Guid idUsuario, string nombre, string email, Guid? idSucursal)
         {
             if (idUsuario == Guid.Empty) throw new Exception("Debe seleccionar un usuario de la grilla.");
 
@@ -137,6 +149,7 @@ namespace Services.Bll
             // Actualizamos
             usuarioExistente.Nombre = nombre;
             usuarioExistente.Email = email;
+            usuarioExistente.IdSucursal = idSucursal;
 
             _usuarioRepo.Update(usuarioExistente);
 

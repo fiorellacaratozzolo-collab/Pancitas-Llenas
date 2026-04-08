@@ -44,20 +44,20 @@
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(datetimeHistorialVenta);
             groupBox1.Controls.Add(dataGridView1);
-            groupBox1.Location = new Point(9, 51);
+            groupBox1.Location = new Point(9, 28);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(730, 676);
+            groupBox1.Size = new Size(983, 659);
             groupBox1.TabIndex = 5;
             groupBox1.TabStop = false;
             // 
             // bntBuscar
             // 
-            bntBuscar.Location = new Point(484, 37);
+            bntBuscar.Location = new Point(603, 38);
             bntBuscar.Margin = new Padding(4, 3, 4, 3);
             bntBuscar.Name = "bntBuscar";
-            bntBuscar.Size = new Size(40, 27);
+            bntBuscar.Size = new Size(53, 27);
             bntBuscar.TabIndex = 11;
             bntBuscar.Text = "Buscar";
             bntBuscar.UseVisualStyleBackColor = true;
@@ -65,7 +65,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(110, 18);
+            label2.Location = new Point(229, 19);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(104, 15);
@@ -74,7 +74,7 @@
             // 
             // datetimeHistorialVenta
             // 
-            datetimeHistorialVenta.Location = new Point(227, 37);
+            datetimeHistorialVenta.Location = new Point(346, 38);
             datetimeHistorialVenta.Margin = new Padding(4, 3, 4, 3);
             datetimeHistorialVenta.Name = "datetimeHistorialVenta";
             datetimeHistorialVenta.Size = new Size(249, 23);
@@ -86,13 +86,13 @@
             dataGridView1.Location = new Point(18, 80);
             dataGridView1.Margin = new Padding(4, 3, 4, 3);
             dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(695, 568);
+            dataGridView1.Size = new Size(957, 568);
             dataGridView1.TabIndex = 6;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(276, 32);
+            label1.Location = new Point(435, 10);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(104, 15);
@@ -103,7 +103,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(750, 741);
+            ClientSize = new Size(1005, 698);
             Controls.Add(groupBox1);
             Controls.Add(label1);
             Margin = new Padding(4, 3, 4, 3);

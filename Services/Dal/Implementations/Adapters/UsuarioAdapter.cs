@@ -23,13 +23,24 @@ namespace Services.Dal.Implementations.Adapters
         #endregion
 
         public Usuario Get(object[] values)
-        {
+        {           
+            // Si el valor es DBNull, lo dejamos como null. Si tiene un dato, lo convertimos a Guid.
+            Guid? idSucursal = null;
+
+            // Verificamos que el arreglo tenga al menos 6 posiciones y que no sea nulo en BD
+            if (values.Length > 5 && values[5] != DBNull.Value)
+            {
+                idSucursal = Guid.Parse(values[5].ToString());
+            }
+
+            // 2. Instanciamos el Usuario
             Usuario usuario = new Usuario(
                 Guid.Parse(values[0].ToString()),
                 values[1].ToString(),
                 values[2].ToString(),
                 values[3].ToString(),
-                Convert.ToBoolean(values[4].ToString())
+                Convert.ToBoolean(values[4].ToString()),
+                idSucursal 
             );
 
             // Buscamos los roles (familias) y excepciones (patentes) asignadas al usuario
@@ -40,3 +51,4 @@ namespace Services.Dal.Implementations.Adapters
         }
     }
 }
+

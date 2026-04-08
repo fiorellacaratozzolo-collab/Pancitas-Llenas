@@ -91,8 +91,7 @@
             // 
             // FormLogin
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleMode = AutoScaleMode.None;
             ClientSize = new Size(361, 349);
             Controls.Add(txtbContraseña);
             Controls.Add(txtbUsuario);
@@ -101,6 +100,7 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "FormLogin";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "Login";
             Load += FormLogin_Load;
             ResumeLayout(false);

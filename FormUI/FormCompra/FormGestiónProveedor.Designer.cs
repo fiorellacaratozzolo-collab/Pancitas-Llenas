@@ -59,7 +59,7 @@
             groupBox1.Controls.Add(lalbel5);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(label2);
-            groupBox1.Location = new Point(40, 436);
+            groupBox1.Location = new Point(15, 64);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
@@ -157,7 +157,7 @@
             dgvProveedor.Location = new Point(5, 22);
             dgvProveedor.Margin = new Padding(4, 3, 4, 3);
             dgvProveedor.Name = "dgvProveedor";
-            dgvProveedor.Size = new Size(419, 273);
+            dgvProveedor.Size = new Size(498, 216);
             dgvProveedor.TabIndex = 5;
             dgvProveedor.CellContentClick += dgvProveedor_CellContentClick;
             // 
@@ -166,18 +166,18 @@
             groupBox2.Controls.Add(btnDeshabilitar);
             groupBox2.Controls.Add(btnActualizar);
             groupBox2.Controls.Add(dgvProveedor);
-            groupBox2.Location = new Point(40, 27);
+            groupBox2.Location = new Point(458, 33);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
-            groupBox2.Size = new Size(429, 378);
+            groupBox2.Size = new Size(511, 299);
             groupBox2.TabIndex = 6;
             groupBox2.TabStop = false;
             groupBox2.Text = "Gestionar Proveedor";
             // 
             // btnDeshabilitar
             // 
-            btnDeshabilitar.Location = new Point(230, 313);
+            btnDeshabilitar.Location = new Point(279, 244);
             btnDeshabilitar.Margin = new Padding(4, 3, 4, 3);
             btnDeshabilitar.Name = "btnDeshabilitar";
             btnDeshabilitar.Size = new Size(104, 44);
@@ -188,7 +188,7 @@
             // 
             // btnActualizar
             // 
-            btnActualizar.Location = new Point(88, 313);
+            btnActualizar.Location = new Point(140, 244);
             btnActualizar.Margin = new Padding(4, 3, 4, 3);
             btnActualizar.Name = "btnActualizar";
             btnActualizar.Size = new Size(117, 44);
@@ -200,7 +200,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(174, 418);
+            label1.Location = new Point(149, 46);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(164, 15);
@@ -211,7 +211,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(509, 662);
+            ClientSize = new Size(1000, 343);
             Controls.Add(label1);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);

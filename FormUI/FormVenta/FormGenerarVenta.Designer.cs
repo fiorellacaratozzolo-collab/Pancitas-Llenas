@@ -328,7 +328,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(645, 706);
+            ClientSize = new Size(639, 706);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGenerarVenta";

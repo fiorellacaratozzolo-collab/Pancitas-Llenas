@@ -1,4 +1,5 @@
-﻿using Services.DomainModel.Composite;
+﻿using FormUI.Inicio;
+using Services.DomainModel.Composite;
 using Services.Facade;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace FormUI
 
         }
         private void btnIngresar_Click(object sender, EventArgs e)
-        {        
+        {
         }
 
 
@@ -34,39 +35,51 @@ namespace FormUI
         }
 
         private void btnIngresar_Click_1(object sender, EventArgs e)
-        {            
+        {
             try
             {
-                // 1. Validamos las credenciales y creamos la sesión global
-                LoginService.Login(txtbUsuario.Text, txtbContraseña.Text);
+                Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
+                var usuarioValidado = usuarioBll.ValidarCredenciales(txtbUsuario.Text, txtbContraseña.Text);
+                SessionManager.Current.Login(usuarioValidado);
 
-                // 2. Si pasó la línea anterior sin errores, recuperamos el usuario de la sesión actual
-                Usuario usuario = SessionManager.Current.UsuarioLogueado;
+                // Verificamos si es Admin (sucursal en null)
+                if (usuarioValidado.IdSucursal == null)
+                {
+                    // OJO: Cambia el nombre por tu form real
+                    FormSeleccionSucursal formSucursal = new FormSeleccionSucursal();
 
-                MessageBox.Show($"¡Bienvenido {usuario.Nombre} al sistema PetShop!", "Inicio Exitoso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Usamos ShowDialog para pausar el código hasta que la ventana se cierre
+                    DialogResult resultado = formSucursal.ShowDialog();
 
-                // Opcional: Mostramos la cantidad de permisos base (Familias/Patentes) que trajo de la BD para confirmar que el Composite funcionó
-                MessageBox.Show($"Se han cargado {usuario.Privilegios.Count} roles/permisos principales de tu perfil.", "Diagnóstico de Seguridad");
-
-                // 3. Ocultamos el Login y abrimos el Menú Principal
-                this.Hide();
-
-                // NOTA: FormPrincipal ya no necesita recibir (usuario) porque lo saca del SessionManager
-                new Inicio.FormPrincipal().ShowDialog();
-
-                this.Show(); // Cuando se cierre el FormPrincipal, vuelve a aparecer el Login
-
-                // Limpiamos los campos por seguridad
-                txtbUsuario.Clear();
-                txtbContraseña.Clear();
+                    if (resultado == DialogResult.OK)
+                    {
+                        // ¡Todo perfecto! Eligió la sucursal y le dio a Aceptar
+                        FormPrincipal formPrincipal = new FormPrincipal();
+                        formPrincipal.Show();
+                        this.Hide();
+                    }
+                    else
+                    {
+                        // El admin apretó Cancelar o la "X" roja sin elegir nada
+                        // Cerramos la sesión por seguridad y lo dejamos en la pantalla de Login
+                        SessionManager.Current.Logout();
+                        MessageBox.Show("Operación cancelada. Debe seleccionar una sucursal para poder ingresar al sistema.", "Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                {
+                    // Es empleado normal, pasa directo
+                    FormPrincipal formPrincipal = new FormPrincipal();
+                    formPrincipal.Show();
+                    this.Hide();
+                }
             }
             catch (Exception ex)
             {
-                // Si la BLL lanza una excepción (ej: "Usuario incorrecto"), cae aquí
-                MessageBox.Show(ex.Message, "Error de Autenticación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error de autenticación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-    }
 
+    }
 }
 

@@ -70,7 +70,7 @@ namespace Services.Dal.Implementations
 
             public void Remove(Guid id)
             {
-                // Nota: En la vida real, primero debes borrar las dependencias en FamiliaFamilia y FamiliaPatente
+                // Nota: Primero se tiene que borrar las dependencias en FamiliaFamilia y FamiliaPatente
                 string query = "DELETE FROM [dbo].[Familia] WHERE IdFamilia = @IdFamilia";
                 SqlHelper.ExecuteNonQuery(query, CommandType.Text, new SqlParameter("@IdFamilia", id));
             }

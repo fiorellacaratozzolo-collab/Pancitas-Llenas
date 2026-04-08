@@ -43,14 +43,14 @@
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(659, 622);
+            groupBox1.Size = new Size(1007, 602);
             groupBox1.TabIndex = 4;
             groupBox1.TabStop = false;
             groupBox1.Text = "Stock disponible";
             // 
             // btnVer
             // 
-            btnVer.Location = new Point(135, 22);
+            btnVer.Location = new Point(313, 23);
             btnVer.Margin = new Padding(4, 3, 4, 3);
             btnVer.Name = "btnVer";
             btnVer.Size = new Size(392, 37);
@@ -65,14 +65,14 @@
             dgvStock.Location = new Point(7, 66);
             dgvStock.Margin = new Padding(4, 3, 4, 3);
             dgvStock.Name = "dgvStock";
-            dgvStock.Size = new Size(645, 542);
+            dgvStock.Size = new Size(992, 527);
             dgvStock.TabIndex = 0;
             // 
             // FormVerStockDisponible
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(684, 656);
+            ClientSize = new Size(1034, 621);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormVerStockDisponible";

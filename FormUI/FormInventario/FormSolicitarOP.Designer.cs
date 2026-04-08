@@ -46,6 +46,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnLimpiar);
             groupBox1.Controls.Add(btnGuadar);
             groupBox1.Controls.Add(dtpFecha);
             groupBox1.Controls.Add(txtbPesoNeto);
@@ -56,18 +57,18 @@
             groupBox1.Controls.Add(txtbCantidad);
             groupBox1.Controls.Add(btnAgregar);
             groupBox1.Controls.Add(label4);
-            groupBox1.Location = new Point(33, 25);
+            groupBox1.Location = new Point(13, 12);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(510, 705);
+            groupBox1.Size = new Size(731, 547);
             groupBox1.TabIndex = 17;
             groupBox1.TabStop = false;
             groupBox1.Text = "Productos a Solicitar";
             // 
             // btnGuadar
             // 
-            btnGuadar.Location = new Point(7, 654);
+            btnGuadar.Location = new Point(113, 497);
             btnGuadar.Margin = new Padding(4, 3, 4, 3);
             btnGuadar.Name = "btnGuadar";
             btnGuadar.Size = new Size(495, 44);
@@ -78,7 +79,7 @@
             // 
             // dtpFecha
             // 
-            dtpFecha.Location = new Point(21, 44);
+            dtpFecha.Location = new Point(166, 48);
             dtpFecha.Margin = new Padding(4, 3, 4, 3);
             dtpFecha.Name = "dtpFecha";
             dtpFecha.Size = new Size(233, 23);
@@ -86,7 +87,7 @@
             // 
             // txtbPesoNeto
             // 
-            txtbPesoNeto.Location = new Point(133, 130);
+            txtbPesoNeto.Location = new Point(278, 134);
             txtbPesoNeto.Margin = new Padding(4, 3, 4, 3);
             txtbPesoNeto.Name = "txtbPesoNeto";
             txtbPesoNeto.Size = new Size(102, 23);
@@ -98,14 +99,14 @@
             dgvSolicitarOP.Location = new Point(7, 224);
             dgvSolicitarOP.Margin = new Padding(4, 3, 4, 3);
             dgvSolicitarOP.Name = "dgvSolicitarOP";
-            dgvSolicitarOP.Size = new Size(496, 423);
+            dgvSolicitarOP.Size = new Size(716, 267);
             dgvSolicitarOP.TabIndex = 10;
             dgvSolicitarOP.CellContentClick += dgvSolicitarOP_CellContentClick;
             // 
             // txtbNombreProd
             // 
             txtbNombreProd.Enabled = false;
-            txtbNombreProd.Location = new Point(133, 92);
+            txtbNombreProd.Location = new Point(278, 96);
             txtbNombreProd.Margin = new Padding(4, 3, 4, 3);
             txtbNombreProd.Name = "txtbNombreProd";
             txtbNombreProd.Size = new Size(238, 23);
@@ -114,7 +115,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(60, 133);
+            label2.Location = new Point(205, 137);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(64, 15);
@@ -124,7 +125,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(18, 96);
+            label3.Location = new Point(163, 100);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new Size(106, 15);
@@ -133,7 +134,7 @@
             // 
             // txtbCantidad
             // 
-            txtbCantidad.Location = new Point(133, 166);
+            txtbCantidad.Location = new Point(278, 170);
             txtbCantidad.Margin = new Padding(4, 3, 4, 3);
             txtbCantidad.Name = "txtbCantidad";
             txtbCantidad.Size = new Size(102, 23);
@@ -141,7 +142,7 @@
             // 
             // btnAgregar
             // 
-            btnAgregar.Location = new Point(271, 158);
+            btnAgregar.Location = new Point(416, 162);
             btnAgregar.Margin = new Padding(4, 3, 4, 3);
             btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(100, 36);
@@ -153,7 +154,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(60, 170);
+            label4.Location = new Point(205, 174);
             label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
             label4.Size = new Size(58, 15);
@@ -162,7 +163,7 @@
             // 
             // btnLimpiar
             // 
-            btnLimpiar.Location = new Point(259, 736);
+            btnLimpiar.Location = new Point(661, 174);
             btnLimpiar.Margin = new Padding(4, 3, 4, 3);
             btnLimpiar.Name = "btnLimpiar";
             btnLimpiar.Size = new Size(62, 36);
@@ -175,8 +176,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(556, 789);
-            Controls.Add(btnLimpiar);
+            ClientSize = new Size(757, 608);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormSolicitarOP";

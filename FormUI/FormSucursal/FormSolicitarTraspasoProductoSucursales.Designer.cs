@@ -63,7 +63,7 @@
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(682, 804);
+            groupBox1.Size = new Size(682, 657);
             groupBox1.TabIndex = 20;
             groupBox1.TabStop = false;
             groupBox1.Text = "Productos a Solicitar";
@@ -116,7 +116,7 @@
             // 
             // btnSolicitarTraspaso
             // 
-            btnSolicitarTraspaso.Location = new Point(92, 753);
+            btnSolicitarTraspaso.Location = new Point(90, 603);
             btnSolicitarTraspaso.Margin = new Padding(4, 3, 4, 3);
             btnSolicitarTraspaso.Name = "btnSolicitarTraspaso";
             btnSolicitarTraspaso.Size = new Size(495, 44);
@@ -139,7 +139,7 @@
             dgvItemsSolicitados.Location = new Point(7, 278);
             dgvItemsSolicitados.Margin = new Padding(4, 3, 4, 3);
             dgvItemsSolicitados.Name = "dgvItemsSolicitados";
-            dgvItemsSolicitados.Size = new Size(668, 468);
+            dgvItemsSolicitados.Size = new Size(668, 319);
             dgvItemsSolicitados.TabIndex = 10;
             // 
             // label3
@@ -185,7 +185,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(708, 834);
+            ClientSize = new Size(708, 678);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormSolicitarTraspasoProductoSucursales";

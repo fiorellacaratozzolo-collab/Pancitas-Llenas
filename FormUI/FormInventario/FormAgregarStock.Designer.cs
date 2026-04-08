@@ -41,7 +41,7 @@
             // 
             groupBox1.Controls.Add(btnActualizar);
             groupBox1.Controls.Add(dgvAgregarStock);
-            groupBox1.Location = new Point(14, 111);
+            groupBox1.Location = new Point(13, 35);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
@@ -73,7 +73,7 @@
             // cmbProveedor
             // 
             cmbProveedor.FormattingEnabled = true;
-            cmbProveedor.Location = new Point(313, 66);
+            cmbProveedor.Location = new Point(313, 6);
             cmbProveedor.Margin = new Padding(4, 3, 4, 3);
             cmbProveedor.Name = "cmbProveedor";
             cmbProveedor.Size = new Size(168, 23);
@@ -83,7 +83,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(168, 69);
+            label1.Location = new Point(168, 9);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(127, 15);
@@ -94,7 +94,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(765, 624);
+            ClientSize = new Size(765, 550);
             Controls.Add(label1);
             Controls.Add(cmbProveedor);
             Controls.Add(groupBox1);

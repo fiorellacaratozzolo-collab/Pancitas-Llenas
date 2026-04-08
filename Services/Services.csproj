@@ -47,7 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bll\BitácoraBll.cs" />
+    <Compile Include="Bll\FamiliaBll.cs" />
+    <Compile Include="Bll\PatenteBll.cs" />
     <Compile Include="Dal\Implementations\BitácoraRepository.cs" />
+    <Compile Include="Dal\Implementations\PermisosRepository.cs" />
     <Compile Include="Dal\Interfaces\IGenericRepository.cs" />
     <Compile Include="Bll\IdiomaService.cs" />
     <Compile Include="Bll\LoggerConfiguration.cs" />
