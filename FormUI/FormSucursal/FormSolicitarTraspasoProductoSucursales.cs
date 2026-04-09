@@ -33,7 +33,6 @@ namespace FormUI.FormSucursal
 
         private void FormSolicitarTraspasoProductoSucursales_Load(object sender, EventArgs e)
         {
-            // Ahora ya no necesitas el ?. porque los objetos están inicializados
             cmbSucursalOrigen.DataSource = _sucursalLogic.ObtenerTodasLasSucursales();
             cmbSucursalOrigen.DisplayMember = "NombreSucursal";
             cmbSucursalOrigen.ValueMember = "IdSucursal";

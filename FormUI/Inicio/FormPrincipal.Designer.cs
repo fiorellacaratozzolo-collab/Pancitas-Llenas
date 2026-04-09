@@ -65,7 +65,7 @@
             // 
             // btnCerrarSesion
             // 
-            btnCerrarSesion.Location = new Point(748, 827);
+            btnCerrarSesion.Location = new Point(1499, 827);
             btnCerrarSesion.Name = "btnCerrarSesion";
             btnCerrarSesion.Size = new Size(102, 35);
             btnCerrarSesion.TabIndex = 0;
@@ -319,10 +319,10 @@
             // lblInfoSucursal
             // 
             lblInfoSucursal.AutoSize = true;
-            lblInfoSucursal.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblInfoSucursal.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             lblInfoSucursal.Location = new Point(805, 32);
             lblInfoSucursal.Name = "lblInfoSucursal";
-            lblInfoSucursal.Size = new Size(149, 20);
+            lblInfoSucursal.Size = new Size(139, 20);
             lblInfoSucursal.TabIndex = 3;
             lblInfoSucursal.Text = "Cargando sucursal...";
             // 

@@ -23,6 +23,7 @@ namespace ModelsDTO
         public decimal PrecioUnitario { get; set; }
 
         public decimal Subtotal { get; set; }
+        public string Producto { get; set; }
 
         public virtual ProductoDTO IdProductoNavigation { get; set; } = null!;
 

@@ -22,6 +22,8 @@ namespace ModelsDTO
 
         public string? Descripcion { get; set; }
 
+        public string NombreConPeso => $"{NombreProducto} - {PesoNeto} kg";
+
         public virtual ICollection<ProveedorProductoDTO> ProveedorProductos { get; set; } = new List<ProveedorProductoDTO>();
 
         public virtual ICollection<SolicitudDePedidoDetalleDTO> SolicitudDePedidoDetalles { get; set; } = new List<SolicitudDePedidoDetalleDTO>();

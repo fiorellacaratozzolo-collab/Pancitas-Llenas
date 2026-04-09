@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Contexts;
+namespace DataAccess.Models;
 
 public partial class PetShopDbContext : DbContext
 {

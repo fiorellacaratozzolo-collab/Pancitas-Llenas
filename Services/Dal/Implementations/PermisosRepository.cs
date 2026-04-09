@@ -1,5 +1,6 @@
 ﻿using Services.Dal.Implementations.Adapters;
 using Services.Dal.Tools;
+using Services.DomainModel.Composite;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -63,6 +64,77 @@ namespace Services.Dal.Implementations
                     usuario.Privilegios.Add(familia);
                 }
             }
+        }
+
+        public List<Services.DomainModel.Composite.Familia> GetAllFamilias()
+        {
+            var lista = new List<Services.DomainModel.Composite.Familia>();
+            string query = "SELECT IdFamilia, Nombre FROM [dbo].[Familia]";
+
+            using (SqlDataReader reader = SqlHelper.ExecuteReader(query, CommandType.Text))
+            {
+                while (reader.Read())
+                {
+                    object[] data = new object[reader.FieldCount];
+                    reader.GetValues(data);
+
+                    // Usamos tu adaptador para convertir la fila de SQL a objeto Familia
+                    var familia = (Services.DomainModel.Composite.Familia)FamiliaAdapter.Current.Get(data);
+                    lista.Add(familia);
+                }
+            }
+            return lista;
+        }
+
+        public List<Services.DomainModel.Composite.Patente> GetAllPatentes()
+        {
+            var lista = new List<Services.DomainModel.Composite.Patente>();
+            // Incluimos TipoAcceso porque tu adaptador de Patente seguramente lo espera
+            string query = "SELECT IdPatente, DataKey, TipoAcceso FROM [dbo].[Patente]";
+
+            using (SqlDataReader reader = SqlHelper.ExecuteReader(query, CommandType.Text))
+            {
+                while (reader.Read())
+                {
+                    object[] data = new object[reader.FieldCount];
+                    reader.GetValues(data);
+
+                    // Usamos tu adaptador para convertir la fila de SQL a objeto Patente
+                    var patente = (Services.DomainModel.Composite.Patente)PatenteAdapter.Current.Get(data);
+                    lista.Add(patente);
+                }
+            }
+            return lista;
+        }
+
+        public void GuardarPermisosUsuario(Guid idUsuario, List<Guid> familiasIds, List<Guid> patentesIds)
+        {
+            // 1. BARREMOS LA MOCHILA VIEJA (Eliminamos todo)
+            string deleteFamilias = "DELETE FROM [dbo].[UsuarioFamilia] WHERE IdUsuario = @IdUsuario";
+            string deletePatentes = "DELETE FROM [dbo].[UsuarioPatente] WHERE IdUsuario = @IdUsuario";
+
+            // Nota: Si usas SqlHelper o similar, ajústalo a tu método exacto
+            SqlHelper.ExecuteNonQuery(deleteFamilias, CommandType.Text, new SqlParameter("@IdUsuario", idUsuario));
+            SqlHelper.ExecuteNonQuery(deletePatentes, CommandType.Text, new SqlParameter("@IdUsuario", idUsuario));
+
+            // 2. AMUEBLAMOS CON LO NUEVO: Insertamos las Familias tildadas
+            foreach (Guid idFamilia in familiasIds)
+            {
+                string insertFamilia = "INSERT INTO [dbo].[UsuarioFamilia] (IdUsuario, IdFamilia) VALUES (@IdUsuario, @IdFamilia)";
+                SqlHelper.ExecuteNonQuery(insertFamilia, CommandType.Text,
+                    new SqlParameter("@IdUsuario", idUsuario),
+                    new SqlParameter("@IdFamilia", idFamilia));
+            }
+
+            // 3. AMUEBLAMOS CON LO NUEVO: Insertamos las Patentes sueltas tildadas
+            foreach (Guid idPatente in patentesIds)
+            {
+                string insertPatente = "INSERT INTO [dbo].[UsuarioPatente] (IdUsuario, IdPatente) VALUES (@IdUsuario, @IdPatente)";
+                SqlHelper.ExecuteNonQuery(insertPatente, CommandType.Text,
+                    new SqlParameter("@IdUsuario", idUsuario),
+                    new SqlParameter("@IdPatente", idPatente));
+            }
+
         }
     }
 }

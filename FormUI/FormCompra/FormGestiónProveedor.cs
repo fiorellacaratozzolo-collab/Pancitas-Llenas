@@ -21,7 +21,6 @@ namespace FormUI.FormCompra
             CargarDatosProveedores();
         }
 
-        // Instantiate the service (can also be done in the constructor)
         private readonly ProveedorService _proveedorService = new ProveedorService();
 
         /// <summary>

@@ -26,7 +26,6 @@ namespace Logic.MappingProfiles
             CreateMap<EstadoStockEnum, EstadoStockEnumDTO>().ReverseMap();
             CreateMap<TipoClienteEnum, TipoClienteEnumDTO>().ReverseMap();
             CreateMap<TipoSucursalEnum, TipoSucursalEnumDTO>().ReverseMap();
-            CreateMap<TipoVentaEnum, TipoVentaEnumDTO>().ReverseMap();
 
             // Mapeos de Documentos y Detalles (Asegurando unicidad y ReverseMap)
             CreateMap<SolicitudDePedido, SolicitudDePedidoDTO>().ReverseMap();

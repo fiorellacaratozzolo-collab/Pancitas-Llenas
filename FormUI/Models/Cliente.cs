@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace FormUI.Models;
+
+public partial class Cliente
+{
+    public Guid IdCliente { get; set; }
+
+    public string? NombreCliente { get; set; }
+
+    public int? Dni { get; set; }
+
+    public int IdTipoCliente { get; set; }
+
+    public virtual TipoClienteEnum IdTipoClienteNavigation { get; set; } = null!;
+
+    public virtual ICollection<Ventum> Venta { get; set; } = new List<Ventum>();
+}
