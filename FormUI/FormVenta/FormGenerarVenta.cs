@@ -105,17 +105,23 @@ namespace FormUI.FormVenta
                 Logic.Facade.ClienteService clienteService = new Logic.Facade.ClienteService();
                 var listaClientes = clienteService.GetAllClientes();
 
-                // Creamos un "Consumidor Final" ficticio en memoria y lo ponemos en la posición 0
-                listaClientes.Insert(0, new ClienteDTO
-                {
-                    IdCliente = Guid.Empty, // Usamos un Guid vacío para saber que no es un cliente registrado
-                    NombreCliente = "Consumidor Final"
-                });
-
+                // Ya NO inyectamos el falso, cargamos los reales directamente
                 cmbCliente.DataSource = listaClientes;
                 cmbCliente.DisplayMember = "NombreCliente";
                 cmbCliente.ValueMember = "IdCliente";
-                cmbCliente.SelectedIndex = 0;
+                // Buscamos al "Consumidor Final" real en la lista que trajimos de la BD
+                var consumidorFinal = listaClientes.FirstOrDefault(c => c.NombreCliente.ToLower().Contains("consumidor final"));
+
+                if (consumidorFinal != null)
+                {
+                    // Si lo encuentra, lo dejamos seleccionado por defecto usando su ID real
+                    cmbCliente.SelectedValue = consumidorFinal.IdCliente;
+                }
+                else
+                {
+                    // Si por alguna razón no existe, lo dejamos vacío
+                    cmbCliente.SelectedIndex = -1;
+                }
 
                 // --- 3. CONFIGURAMOS MÉTODOS DE PAGO ---
                 cmbPago.Items.Clear();
@@ -237,7 +243,8 @@ namespace FormUI.FormVenta
             // Extraemos el valor de forma segura (si es null, lo tomamos como 0)
             // El (decimal) asegura la conversión si en tu BD es de tipo float/double
             decimal precioSeguro = (decimal)(productoSeleccionado.PrecioNeto ?? 0);
-
+            decimal pesoSeguro = (decimal)(productoSeleccionado.PesoNeto ?? 0);
+            string unidadSegura = string.IsNullOrWhiteSpace(productoSeleccionado.Unidad) ? "Unidad" : productoSeleccionado.Unidad;
             // Creamos el renglón
             VentaDetalleDTO nuevoDetalle = new VentaDetalleDTO
             {
@@ -245,7 +252,9 @@ namespace FormUI.FormVenta
                 Producto = productoSeleccionado.NombreProducto,
                 Cantidad = cantidad,
                 PrecioUnitario = precioSeguro,
-                Subtotal = cantidad * precioSeguro
+                Subtotal = cantidad * precioSeguro,
+                PesoNeto = pesoSeguro,
+                Unidad = unidadSegura
             };
 
             // Lo agregamos a la lista observable (La grilla se actualiza sola)
@@ -297,7 +306,7 @@ namespace FormUI.FormVenta
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            // 1. VALIDACIONES BÁSICAS
+            // 1. VALIDACIONES BÁSICAS DE SEGURIDAD
             if (_carrito.Count == 0)
             {
                 MessageBox.Show("El carrito está vacío. Agregue productos antes de cobrar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -312,7 +321,7 @@ namespace FormUI.FormVenta
 
             try
             {
-                // 2. RECOPILAR DATOS DE LA CABECERA (La Venta)
+                // 2. RECOPILAR DATOS DE LA VENTA (La cabecera)
                 decimal subtotal = _carrito.Sum(item => item.Subtotal);
                 decimal descuento = chkMayorista.Checked ? subtotal * 0.35m : 0;
 
@@ -323,41 +332,34 @@ namespace FormUI.FormVenta
                     MetodoPago = cmbPago.SelectedItem.ToString(),
                     EsMayorista = chkMayorista.Checked,
                     MontoDescuento = descuento,
-                    Total = subtotal - descuento
-                    // Nota: IdSucursal lo manejará tu Logic si lo necesita, o agrégalo aquí si está en el DTO
+                    Total = subtotal - descuento,
+                    IdSucursal = SessionManager.Current.IdSucursalActual.Value
                 };
 
                 // 3. PREPARAR EL DETALLE
-                // Convertimos el BindingList a una List normal que espera tu BLL
+                // Tu BLL espera una List, así que convertimos la BindingList
                 List<VentaDetalleDTO> listaDetalles = _carrito.ToList();
 
-                // 4. OBTENER SUCURSAL ACTUAL
+                // 4. OBTENER SUCURSAL ACTUAL (Para descontar el stock ahí)
                 Guid idSucursalActual = SessionManager.Current.IdSucursalActual.Value;
 
-                // 5. ¡MANDAR A GUARDAR! (Llamamos a tu VentaLogic)
+                // 5. ¡MANDAR A GUARDAR! 
+                // Llamamos a tu servicio (Facade) que ejecuta la transacción atómica
                 Logic.Facade.VentaService ventaService = new Logic.Facade.VentaService();
                 Guid idVentaGenerada = ventaService.RegistrarVenta(nuevaVenta, listaDetalles, idSucursalActual);
 
-                // 6. ÉXITO Y LIMPIEZA
-                MessageBox.Show($"¡Venta registrada con éxito!\nN° de Ticket interno: {idVentaGenerada}", "Venta Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // 6. ÉXITO
+                MessageBox.Show($"¡Venta registrada con éxito!\nSe descontó el stock correctamente.\nN° de Ticket: {idVentaGenerada}", "Venta Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Limpiamos la pantalla para el siguiente cliente
-                _carrito.Clear();
-                CalcularTotal();
-                cmbCliente.SelectedIndex = -1;
-                chkMayorista.Checked = false;
-                cmbPago.SelectedIndex = 0;
+                // 7. LIMPIEZA
+                // Usamos el método que creamos para el botón Cancelar y dejamos todo en blanco
+                LimpiarPantalla();
             }
             catch (Exception ex)
             {
-                // Si no hay stock o falla la BD, el UnitOfWork tira el error y cae aquí:
-                MessageBox.Show(ex.Message, "Error al registrar la venta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Si no hay stock suficiente, el UnitOfWork tira tu mensaje de error y cae aquí:
+                MessageBox.Show(ex.Message, "Error al procesar la venta", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            // Limpiamos la pantalla para el siguiente cliente
-            _carrito.Clear();
-            CalcularTotal();
-            cmbCliente.SelectedIndex = -1;
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)

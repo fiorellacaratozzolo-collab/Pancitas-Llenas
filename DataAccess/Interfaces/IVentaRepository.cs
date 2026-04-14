@@ -10,5 +10,7 @@ namespace DataAccess.Interfaces
     public interface IVentaRepository
     {
         Guid Create(Ventum venta);
+        List<Ventum> GetAll();
+        void Delete(Guid id);
     }
 }

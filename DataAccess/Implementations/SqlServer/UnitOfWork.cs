@@ -35,7 +35,6 @@ namespace DataAccess.Implementations.SqlServer
         // Flujo de Traspasos (STP)
         public ISolicitudDeTraspasoRepository SolicitudesTraspaso { get; }
         public ISolicitudDeTraspasoDetalleRepository SolicitudesTraspasoDetalles { get; }
-
         public IStockPorSucursalRepository Stocks { get; }
 
         public UnitOfWork()
@@ -58,16 +57,11 @@ namespace DataAccess.Implementations.SqlServer
             OrdenDeCompras = new OrdenDeCompraRepository(_context);
             OrdenDeCompraDetalles = new OrdenDeCompraDetalleRepository(_context);
             StocksPorSucursal = new StockPorSucursalRepository(_context);
-
-            // Repositorios de Traspaso
             SolicitudesTraspaso = new SolicitudDeTraspasoRepository(_context);
             SolicitudesTraspasoDetalles = new SolicitudDeTraspasoDetalleRepository(_context);
-
             var stockRepo = new StockPorSucursalRepository(_context);
             this.Stocks = stockRepo;
             this.StocksPorSucursal = stockRepo;
-
-            // Inicialización de Traspasos
             this.SolicitudesTraspaso = new SolicitudDeTraspasoRepository(_context);
             this.SolicitudesTraspasoDetalles = new SolicitudDeTraspasoDetalleRepository(_context);
         }        

@@ -24,7 +24,7 @@ namespace Logic
         public VentaLogic()
         {
             _unitOfWork = new UnitOfWork();
-            _inventarioLogic = new InventarioLogic();
+            _inventarioLogic = new InventarioLogic(_unitOfWork);
         }
 
         /// <summary>
@@ -75,6 +75,50 @@ namespace Logic
             {
                 throw new ApplicationException("Error al registrar la venta. La transacción ha sido revertida.", ex);
             }
-        }       
+        }
+
+        public List<VentumDTO> GetVentasPorSucursalYFecha(Guid idSucursal, DateTime fecha)
+        {
+            // 1. Obtenemos todas las ventas (Tu repositorio debería traerlas)
+            var todasLasVentas = _unitOfWork.Ventas.GetAll();
+
+            // 2. Filtramos en memoria por Sucursal y por la Fecha exacta (ignorando la hora)
+            var ventasFiltradas = todasLasVentas
+                .Where(v => v.IdSucursal == idSucursal && v.FechaVenta.Date == fecha.Date)
+                .ToList();
+
+            // 3. Mapeamos a DTO y devolvemos
+            return _mapper.Map<List<VentumDTO>>(ventasFiltradas);
+        }
+
+        // Y ya que estamos, agregamos este método rápido para traer los detalles de una venta
+        public List<VentaDetalleDTO> GetDetallesDeVenta(Guid idVenta)
+        {
+            var detalles = _unitOfWork.VentaDetalles.GetAll()
+                .Where(d => d.IdVenta == idVenta)
+                .ToList();
+
+            return _mapper.Map<List<VentaDetalleDTO>>(detalles);
+        }
+
+        public void AnularVenta(Guid idVenta, Guid idSucursal)
+        {
+            // 1. Traer los detalles de la venta que vamos a anular
+            var detalles = _unitOfWork.VentaDetalles.GetAll().Where(d => d.IdVenta == idVenta).ToList();
+
+            // 2. Devolver el stock a la sucursal
+            foreach (var detalle in detalles)
+            {
+                // Reutilizamos tu excelente método de inventario para sumar stock
+                _inventarioLogic.AgregarOActualizarStock(idSucursal, detalle.IdProducto, detalle.Cantidad);
+            }
+
+            // 3. Eliminar / Anular la venta
+            _unitOfWork.Ventas.Delete(idVenta);
+
+            // 4. Guardar los cambios (El stock sumado y la venta eliminada)
+            _unitOfWork.Complete();
+        }
+
     }
 }

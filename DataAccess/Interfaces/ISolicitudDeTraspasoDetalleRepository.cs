@@ -9,7 +9,8 @@ namespace DataAccess.Interfaces
 {
     public interface ISolicitudDeTraspasoDetalleRepository
     {
-        void AddRange(List<SolicitudDeTraspasoDeProductosDetalle> detalles);
-        List<SolicitudDeTraspasoDeProductosDetalle> GetBySolicitudId(Guid idSolicitud);
+        void Create(SolicitudDeTraspasoDeProductosDetalle detalle);
+        List<SolicitudDeTraspasoDeProductosDetalle> GetAll();
+        List<SolicitudDeTraspasoDeProductosDetalle> GetByIdSolicitud(Guid idSolicitud);
     }
 }

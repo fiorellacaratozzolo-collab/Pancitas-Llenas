@@ -23,8 +23,6 @@ namespace Services.Facade
         }
 
         private SessionManager() { }
-
-        // UNIFICAMOS: Una sola propiedad para gobernar a todas
         public Usuario UsuarioLogueado { get; private set; }
 
         public Guid? IdSucursalActual { get; set; }

@@ -83,7 +83,7 @@ namespace FormUI.FormInventario
             {
                 Name = "NombreProveedor",
                 HeaderText = "Proveedor",
-                DataPropertyName = "NombreProveedor",  // <-- MAPEAR
+                DataPropertyName = "NombreProveedor",
                 ReadOnly = true
             };
             dgvAgregarStock.Columns.Add(colProveedor);
@@ -93,7 +93,7 @@ namespace FormUI.FormInventario
             {
                 Name = "StockActual",
                 HeaderText = "Stock Actual",
-                DataPropertyName = "StockActual",  // <-- MAPEAR
+                DataPropertyName = "StockActual",  
                 ReadOnly = true,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
             };
@@ -104,7 +104,7 @@ namespace FormUI.FormInventario
             {
                 Name = "StockDeseado",
                 HeaderText = "Stock Deseado",
-                DataPropertyName = "StockDeseado",  // <-- MAPEAR
+                DataPropertyName = "StockDeseado", 
                 ReadOnly = true,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
             };
@@ -115,7 +115,7 @@ namespace FormUI.FormInventario
             {
                 Name = "StockAAgregar",
                 HeaderText = "Stock a Añadir",
-                DataPropertyName = "StockAAgregar",  // <-- Aunque no exista en dataSource, lo usamos para edición
+                DataPropertyName = "StockAAgregar", 
                 ReadOnly = false,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
             };
@@ -255,7 +255,7 @@ namespace FormUI.FormInventario
 
                         cambiosAplicados++;
                         row.Cells["StockAAgregar"].Value = null;
-                        row.Cells["StockAAgregar"].ErrorText = ""; // Limpiar error
+                        row.Cells["StockAAgregar"].ErrorText = ""; 
                     }
                     catch (Exception ex)
                     {
@@ -283,11 +283,6 @@ namespace FormUI.FormInventario
             {
                 CargarProductosEnDGV(idProveedor);
             }
-        }
-
-        private void btnVolver_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }

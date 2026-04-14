@@ -10,5 +10,6 @@ namespace DataAccess.Interfaces
     public interface IVentaDetalleRepository
     {
         void Create(VentaDetalle detalle);
+        List<VentaDetalle> GetAll();
     }
 }

@@ -2,6 +2,7 @@
 using Logic;
 using Logic.MappingProfiles;
 using ModelsDTO;
+using Services.Facade;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,93 +17,135 @@ namespace FormUI.FormSucursal
 {
     public partial class FormGestiónTraspaso : Form
     {
-        private readonly TraspasoLogic _traspasoLogic;
+        private Logic.Facade.TraspasoService _traspasoService;
+
 
         public FormGestiónTraspaso()
         {
             InitializeComponent();
-
-            // Cambio clave: Ya no necesitas instanciar el UnitOfWork aquí, 
-            // la Logic ya lo hace por defecto siguiendo tu nuevo patrón.
-            _traspasoLogic = new TraspasoLogic();
+            _traspasoService = new Logic.Facade.TraspasoService();
         }
 
         private void FormGestionarTraspaso_Load(object sender, EventArgs e)
         {
-            RefrescarGrilla();
-        }
 
-        private void RefrescarGrilla()
+        }
+        private void CargarSolicitudesPendientes()
         {
             try
             {
-                // Mantenemos la lógica de filtrado: 
-                // Solo vemos lo que viene HACIA nuestra sucursal y está PENDIENTE (Estado 1)
-                var lista = _traspasoLogic.ObtenerTodas()
-                            .Where(x => x.IdSucursalOrigen == GlobalSettings.SucursalActualId && x.IdEstadoStp == 1)
-                            .ToList();
-
-                dgvSolicitudes.DataSource = lista;
-
-                // Si la lista está vacía, limpiamos el detalle
-                if (lista.Count == 0) dgvDetalles.DataSource = null;
+                Guid miSucursal = SessionManager.Current.IdSucursalActual.Value;
+                var pendientes = _traspasoService.ObtenerSolicitudesPendientes(miSucursal);
+                dgvSolicitudesPendientes.DataSource = pendientes;
+                // dgvSolicitudesPendientes.Columns["IdSucursalOrigen"].Visible = false;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar solicitudes: {ex.Message}");
+                MessageBox.Show("Error al actualizar la lista: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
+
+
         private void dgvSolicitudes_SelectionChanged(object sender, EventArgs e)
         {
-            // Al cambiar de fila, el DTO ya trae sus detalles mapeados
-            if (dgvSolicitudes.CurrentRow?.DataBoundItem is SolicitudDeTraspasoDeProductoDTO solicitud)
-            {
-                dgvDetalles.DataSource = solicitud.SolicitudDeTraspasoDeProductosDetalles;
-            }
         }
 
         private void btnAprobar_Click(object sender, EventArgs e)
         {
-            if (dgvSolicitudes.CurrentRow?.DataBoundItem is SolicitudDeTraspasoDeProductoDTO selected)
-            {
-                var confirm = MessageBox.Show("¿Confirma la aprobación? Se descontará stock del depósito y se sumará a la sucursal destino.",
-                                            "Confirmar Operación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                if (confirm == DialogResult.Yes)
-                {
-                    try
-                    {
-                        // Llamamos al nuevo método robusto que creamos en la Logic
-                        _traspasoLogic.AprobarYProcesarStock(selected.IdSolicitudDeTraspasoDeProductos);
-
-                        MessageBox.Show("Traspaso procesado con éxito. El inventario ha sido actualizado.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        RefrescarGrilla();
-                        dgvDetalles.DataSource = null;
-                    }
-                    catch (Exception ex)
-                    {
-                        // Aquí capturaremos, por ejemplo, el error de "Stock Insuficiente"
-                        MessageBox.Show($"No se pudo procesar: {ex.Message}", "Error de Inventario", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
         }
 
         private void btnRechazar_Click(object sender, EventArgs e)
         {
-            if (dgvSolicitudes.CurrentRow?.DataBoundItem is SolicitudDeTraspasoDeProductoDTO selected)
-            {
-                var confirm = MessageBox.Show("¿Está seguro de rechazar esta solicitud?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                if (confirm == DialogResult.Yes)
+        }
+
+        private void FormGestiónTraspaso_Load(object sender, EventArgs e)
+        {
+            CargarSolicitudesPendientes();
+        }
+
+        private void dgvSolicitudesPendientes_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvSolicitudesPendientes.CurrentRow != null)
+            {
+                // Obtenemos la solicitud seleccionada
+                var solicitudSeleccionada = (SolicitudDeTraspasoDeProductoDTO)dgvSolicitudesPendientes.CurrentRow.DataBoundItem;
+
+                // Buscamos sus detalles
+                var detalles = _traspasoService.ObtenerDetallesPorSolicitud(solicitudSeleccionada.IdSolicitudDeTraspasoDeProductos);
+
+                dgvDetalle.DataSource = detalles;
+
+                // Ocultar columnas innecesarias del detalle...
+            }
+
+        }
+
+        private void btnAprobar_Click_1(object sender, EventArgs e)
+        {
+            if (dgvSolicitudesPendientes.CurrentRow == null)
+            {
+                MessageBox.Show("Seleccione una solicitud para aprobar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var solicitudSeleccionada = (SolicitudDeTraspasoDeProductoDTO)dgvSolicitudesPendientes.CurrentRow.DataBoundItem;
+
+            var confirmacion = MessageBox.Show($"¿Está seguro que desea APROBAR esta solicitud?\nSe descontará el stock de su sucursal.", "Confirmar Aprobación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (confirmacion == DialogResult.Yes)
+            {
+                try
                 {
-                    _traspasoLogic.RechazarSolicitud(selected.IdSolicitudDeTraspasoDeProductos);
-                    RefrescarGrilla();
-                    dgvDetalles.DataSource = null;
+                    _traspasoService.AprobarTraspaso(solicitudSeleccionada.IdSolicitudDeTraspasoDeProductos);
+
+                    MessageBox.Show("¡Solicitud aprobada y stock actualizado con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Truco: Llamamos al botón actualizar para refrescar la grilla y que desaparezca la solicitud que ya no está "Pendiente"
+                    btnActualizar.PerformClick();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void btnRechazar_Click_1(object sender, EventArgs e)
+        {
+            if (dgvSolicitudesPendientes.CurrentRow == null)
+            {
+                MessageBox.Show("Seleccione una solicitud para rechazar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var solicitudSeleccionada = (SolicitudDeTraspasoDeProductoDTO)dgvSolicitudesPendientes.CurrentRow.DataBoundItem;
+
+            var confirmacion = MessageBox.Show($"¿Está seguro que desea RECHAZAR esta solicitud?", "Confirmar Rechazo", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (confirmacion == DialogResult.Yes)
+            {
+                try
+                {
+                    _traspasoService.RechazarTraspaso(solicitudSeleccionada.IdSolicitudDeTraspasoDeProductos);
+
+                    MessageBox.Show("La solicitud ha sido rechazada.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    btnActualizar.PerformClick();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
+            CargarSolicitudesPendientes();
+            dgvDetalle.DataSource = null;
         }
     }
 }

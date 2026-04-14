@@ -24,5 +24,18 @@ namespace DataAccess.Implementations.SqlServer
             _context.Venta.Add(venta);
             return venta.IdVenta;
         }
+
+        public List<Ventum> GetAll()
+        {
+            return _context.Venta.ToList();
+        }
+        public void Delete(Guid id)
+        {
+            var ventaAEliminar = _context.Venta.Find(id);
+            if (ventaAEliminar != null)
+            {
+                _context.Venta.Remove(ventaAEliminar);
+            }
+        }
     }
 }

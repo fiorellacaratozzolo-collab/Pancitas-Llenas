@@ -23,5 +23,10 @@ namespace DataAccess.Implementations.SqlServer
             detalle.IdVentaDetalle = Guid.NewGuid();
             _context.VentaDetalles.Add(detalle);
         }
+
+        public List<VentaDetalle> GetAll()
+        {
+            return _context.VentaDetalles.ToList();
+        }
     }
 }

@@ -248,11 +248,6 @@ namespace FormUI.FormInventario
             LimpiarCampos();
         }
 
-        private void btnVolver_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
         private void dgvSolicitarOP_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;

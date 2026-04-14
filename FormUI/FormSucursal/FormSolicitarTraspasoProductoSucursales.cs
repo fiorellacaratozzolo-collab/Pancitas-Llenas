@@ -1,7 +1,9 @@
 ﻿using DataAccess.Implementations.SqlServer;
 using Logic;
+using Logic.Facade;
 using Logic.MappingProfiles;
 using ModelsDTO;
+using Services.Facade;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,97 +18,164 @@ namespace FormUI.FormSucursal
 {
     public partial class FormSolicitarTraspasoProductoSucursales : Form
     {
-        private readonly TraspasoLogic _traspasoLogic;
-        private readonly SucursalLogic _sucursalLogic;
-        private readonly ProductoLogic _productoLogic;
-        private BindingList<SolicitudDeTraspasoDeProductosDetalleDTO> _listaDetalles;
+        private BindingList<SolicitudDeTraspasoDeProductosDetalleDTO> _listaProductos = new BindingList<SolicitudDeTraspasoDeProductosDetalleDTO>();
 
         public FormSolicitarTraspasoProductoSucursales()
         {
-            InitializeComponent();         
-            _traspasoLogic = new TraspasoLogic();           
-            _sucursalLogic = new SucursalLogic();
-            _productoLogic = new ProductoLogic();
-            _listaDetalles = new BindingList<SolicitudDeTraspasoDeProductosDetalleDTO>();
-            ConfigurarGrilla();
+            InitializeComponent();
+
         }
 
         private void FormSolicitarTraspasoProductoSucursales_Load(object sender, EventArgs e)
         {
-            cmbSucursalOrigen.DataSource = _sucursalLogic.ObtenerTodasLasSucursales();
-            cmbSucursalOrigen.DisplayMember = "NombreSucursal";
-            cmbSucursalOrigen.ValueMember = "IdSucursal";
-
-            cmbProductos.DataSource = _productoLogic.ObtenerTodos();
-            cmbProductos.DisplayMember = "NombreProducto";
-            cmbProductos.ValueMember = "IdProducto";
-
-            dgvItemsSolicitados.DataSource = _listaDetalles;
         }
 
-        private void ConfigurarGrilla()
+        private void ConfigurarColumnasGrilla()
         {
-            dgvItemsSolicitados.AutoGenerateColumns = true;
-            // Esperar a que se asigne el DataSource para ocultar
-            dgvItemsSolicitados.DataBindingComplete += (s, e) =>
-            {
-                string[] ocultar = { "IdSolicitudDeTraspasoDeProductosDetalle", "IdSolicitudDeTraspasoDeProductos", "IdProducto", "IdSolicitudDeTraspasoDeProductosNavigation", "IdProductoNavigation" };
-                foreach (var col in ocultar)
-                    if (dgvItemsSolicitados.Columns[col] != null) dgvItemsSolicitados.Columns[col].Visible = false;
-            };
+            // Ocultar IDs y acomodar visualmente como hiciste en Ventas
+            dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            // ... (Ocultar IdProducto, etc.)
+        }
+        private void CargarSucursales()
+        {
+            SucursalService sucursalService = new SucursalService();
+            var todasLasSucursales = sucursalService.GetAllSucursales();
+            var sucursalesOrigen = todasLasSucursales
+                .Where(s => s.IdTipoSucursal == 2) 
+                .ToList();
+
+            cmbSucursalOrigen.DataSource = sucursalesOrigen;
+            cmbSucursalOrigen.DisplayMember = "Direccion";
+            cmbSucursalOrigen.ValueMember = "IdSucursal";
+            cmbSucursalOrigen.SelectedIndex = -1;
+        }
+
+        private void CargarProductos()
+        {
+            Logic.Facade.ProductoService productoService = new Logic.Facade.ProductoService();
+            cmbProducto.DataSource = productoService.GetAllProductos();
+            cmbProducto.DisplayMember = "NombreConPeso";
+            cmbProducto.ValueMember = "Marca";
+            cmbProducto.ValueMember = "IdProducto";
+            cmbProducto.SelectedIndex = -1;
         }
 
         private void cmbSucursalOrigen_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbProductos.SelectedItem is ProductoDTO prod)
-            {
-                txtbPesoNeto.Text = prod.PesoNeto.ToString();
-            }
+
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            if (cmbProductos.SelectedItem is not ProductoDTO prod) return;
-            if (!int.TryParse(txtbCantidad.Text, out int cant) || cant <= 0)
+            if (cmbProducto.SelectedItem == null)
             {
-                MessageBox.Show("Ingrese una cantidad válida");
+                MessageBox.Show("Seleccione un producto.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var detalle = new SolicitudDeTraspasoDeProductosDetalleDTO
+            if (!int.TryParse(txtbCantidad.Text, out int cantidad) || cantidad <= 0)
             {
-                IdProducto = prod.IdProducto,
-                NombreProducto = prod.NombreProducto, // Para mostrar en el grid
-                Cantidad = cant,
-                PesoNeto = prod.PesoNeto ?? 0m,
-                Unidad = "KG" // O la unidad que corresponda
-            };
+                MessageBox.Show("Ingrese una cantidad válida mayor a cero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-            _listaDetalles.Add(detalle);
+            var productoElegido = (ProductoDTO)cmbProducto.SelectedItem;
+
+            // Validar si el producto ya está en la grilla para sumar la cantidad en vez de repetir renglón (Opcional)
+            var itemExistente = _listaProductos.FirstOrDefault(p => p.IdProducto == productoElegido.IdProducto);
+            if (itemExistente != null)
+            {
+                itemExistente.Cantidad += cantidad;
+                dgvProductos.Refresh();
+            }
+            else
+            {
+                _listaProductos.Add(new SolicitudDeTraspasoDeProductosDetalleDTO
+                {
+                    IdProducto = productoElegido.IdProducto,
+                    NombreProducto = productoElegido.NombreProducto,
+                    PesoNeto = (decimal)productoElegido.PesoNeto,
+                    Cantidad = cantidad
+                });
+            }
+            cmbProducto.SelectedIndex = -1;
+            txtbCantidad.Clear();
+            txtbPesoNeto.Clear();
+            txtbMarca.Clear();
         }
 
         private void btnSolicitarTraspaso_Click(object sender, EventArgs e)
         {
-            if (cmbSucursalOrigen.SelectedValue is Guid idOrigen)
+            // 1. Validaciones básicas
+            if (_listaProductos.Count == 0)
             {
+                MessageBox.Show("Agregue al menos un producto a la solicitud.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (cmbSucursalOrigen.SelectedItem == null)
+            {
+                MessageBox.Show("Seleccione una sucursal de destino.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                Guid idSucursalOrigen = (Guid)cmbSucursalOrigen.SelectedValue;
+                // La sucursal que recibe es la tuya (la que está logueada pidiendo la mercadería)
+                Guid idSucursalDestino = SessionManager.Current.IdSucursalActual.Value;
+
                 var nuevaSolicitud = new SolicitudDeTraspasoDeProductoDTO
                 {
-                    IdSucursalOrigen = idOrigen, // El depósito seleccionado en el combo
-
-                    // LA SUCURSAL DESTINO ES LA NUESTRA:
-                    IdSucursalDestino = GlobalSettings.SucursalActualId,
-
-                    SolicitudDeTraspasoDeProductosDetalles = _listaDetalles.ToList()
+                    FechaStp = dtpFechaSolicitud.Value.Date,
+                    IdSucursalOrigen = idSucursalOrigen,
+                    IdSucursalDestino = idSucursalDestino
                 };
+                var listaDetalles = _listaProductos.ToList();
+                var service = new Logic.Facade.TraspasoService();
+                service.GenerarSolicitud(nuevaSolicitud, listaDetalles);
 
-                _traspasoLogic.CrearSolicitud(nuevaSolicitud);
-                MessageBox.Show($"Solicitud enviada desde {GlobalSettings.NombreSucursal}");
+                MessageBox.Show("¡Solicitud de traspaso generada con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                _listaProductos.Clear();
+                cmbSucursalOrigen.SelectedIndex = -1;
+                dtpFechaSolicitud.Value = DateTime.Today;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error al procesar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void FormSolicitarTraspasoProductoSucursales_Load_1(object sender, EventArgs e)
         {
+            try
+            {
+                txtbSucursalDestino.Text = SessionManager.Current.NombreSucursalActual;
+                dgvProductos.DataSource = _listaProductos;
+                ConfigurarColumnasGrilla();
+                CargarSucursales();
+                CargarProductos();
+                dtpFechaSolicitud.Value = DateTime.Today;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar la pantalla: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
+        private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbProducto.SelectedItem != null && cmbProducto.SelectedIndex != -1)
+            {
+                var productoSeleccionado = (ProductoDTO)cmbProducto.SelectedItem;
+                txtbPesoNeto.Text = productoSeleccionado.PesoNeto.ToString();
+                txtbMarca.Text = productoSeleccionado.Marca;
+            }
+            else
+            {
+                txtbPesoNeto.Clear();
+            }
         }
     }
 }

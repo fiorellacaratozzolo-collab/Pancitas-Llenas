@@ -21,35 +21,34 @@ namespace DataAccess.Implementations.SqlServer
 
         public Guid Create(SolicitudDeTraspasoDeProducto solicitud)
         {
+            solicitud.IdSolicitudDeTraspasoDeProductos = Guid.NewGuid();
+
             _context.SolicitudDeTraspasoDeProductos.Add(solicitud);
+
             return solicitud.IdSolicitudDeTraspasoDeProductos;
         }
 
         public List<SolicitudDeTraspasoDeProducto> GetAll()
         {
-            return _context.SolicitudDeTraspasoDeProductos
-                .Include(s => s.IdEstadoStpNavigation)
-                .Include(s => s.IdSucursalOrigenNavigation)
-                .Include(s => s.IdSucursalDestinoNavigation)
-                .Include(s => s.SolicitudDeTraspasoDeProductosDetalles)
-                .ToList();
+            return _context.SolicitudDeTraspasoDeProductos.ToList();
         }
 
-        public SolicitudDeTraspasoDeProducto? GetById(Guid id)
+        public SolicitudDeTraspasoDeProducto GetById(Guid idSolicitud)
+        {
+            return _context.SolicitudDeTraspasoDeProductos.Find(idSolicitud);
+        }
+
+        public List<SolicitudDeTraspasoDeProducto> GetPendientesPorSucursalOrigen(Guid idSucursalOrigen)
         {
             return _context.SolicitudDeTraspasoDeProductos
-                .Include(s => s.IdEstadoStpNavigation)
-                .Include(s => s.IdSucursalOrigenNavigation)
-                .Include(s => s.IdSucursalDestinoNavigation)
-                .Include(s => s.SolicitudDeTraspasoDeProductosDetalles)
-                    .ThenInclude(d => d.IdProductoNavigation)
-                .FirstOrDefault(s => s.IdSolicitudDeTraspasoDeProductos == id);
+            .Include(s => s.IdSucursalDestinoNavigation) // Para ver el nombre de la sucursal en la grilla
+            .Where(s => s.IdEstadoStp == 1 && s.IdSucursalOrigen == idSucursalOrigen)
+            .ToList();
         }
 
         public void Update(SolicitudDeTraspasoDeProducto solicitud)
         {
-            _context.SolicitudDeTraspasoDeProductos.Attach(solicitud);
-            _context.Entry(solicitud).State = EntityState.Modified;
+            _context.SolicitudDeTraspasoDeProductos.Update(solicitud);
         }
     }
 }

@@ -20,5 +20,6 @@ namespace DataAccess.Interfaces
         void Update(StockPorSucursal stock);
         List<StockPorSucursal> GetAll();
         List<StockPorSucursal> GetBySucursal(Guid idSucursal);
+        StockPorSucursal GetByProductoYSucursal(Guid idProducto, Guid idSucursal);
     }
 }

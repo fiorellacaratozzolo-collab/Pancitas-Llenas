@@ -26,9 +26,9 @@ namespace Logic
         private readonly IMapper _mapper = MapperConfigInitializer.Mapper;
 
 
-        public InventarioLogic()
+        public InventarioLogic(IUnitOfWork unitOfWork = null)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork ?? new UnitOfWork();
         }
 
         private int CalcularEstadoSemaforo(int stockActual, int stockDeseado)

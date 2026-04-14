@@ -19,15 +19,19 @@ namespace DataAccess.Implementations.SqlServer
             _context = context;
         }
 
-        public void AddRange(List<SolicitudDeTraspasoDeProductosDetalle> detalles)
+        public void Create(SolicitudDeTraspasoDeProductosDetalle detalle)
         {
-            if (detalles != null && detalles.Any())
-            {
-                _context.SolicitudDeTraspasoDeProductosDetalles.AddRange(detalles);
-            }
+            detalle.IdSolicitudDeTraspasoDeProductosDetalle = Guid.NewGuid();
+
+            _context.SolicitudDeTraspasoDeProductosDetalles.Add(detalle);
         }
 
-        public List<SolicitudDeTraspasoDeProductosDetalle> GetBySolicitudId(Guid idSolicitud)
+        public List<SolicitudDeTraspasoDeProductosDetalle> GetAll()
+        {
+            return _context.SolicitudDeTraspasoDeProductosDetalles.ToList();
+        }
+
+        public List<SolicitudDeTraspasoDeProductosDetalle> GetByIdSolicitud(Guid idSolicitud)
         {
             return _context.SolicitudDeTraspasoDeProductosDetalles
                 .Include(d => d.IdProductoNavigation)

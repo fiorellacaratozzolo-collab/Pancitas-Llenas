@@ -9,7 +9,6 @@ namespace DataAccess.Implementations.UnitOfWork
 {
     public interface IUnitOfWork : IDisposable
     {
-        // Repositorios existentes (NO TOCAR para no romper nada)
         IProductoRepository Productos { get; }
         IProveedorRepository Proveedores { get; }
         ISucursalRepository Sucursales { get; }
@@ -24,8 +23,6 @@ namespace DataAccess.Implementations.UnitOfWork
         IOrdenDePedidoDetalleRepository OrdenDePedidoDetalles { get; }
         IOrdenDeCompraRepository OrdenDeCompras { get; }
         IOrdenDeCompraDetalleRepository OrdenDeCompraDetalles { get; }
-
-        // Nuevos Repositorios para Traspaso
         ISolicitudDeTraspasoRepository SolicitudesTraspaso { get; }
         ISolicitudDeTraspasoDetalleRepository SolicitudesTraspasoDetalles { get; }
         IStockPorSucursalRepository StocksPorSucursal { get; }

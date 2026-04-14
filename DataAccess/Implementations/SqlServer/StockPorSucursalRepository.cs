@@ -27,7 +27,6 @@ namespace DataAccess.Implementations.SqlServer
 
             stock.IdStockSucursal = Guid.NewGuid();
             _context.StockPorSucursals.Add(stock);
-            // NO se llama a SaveChanges()
             return stock.IdStockSucursal;
         }
 
@@ -38,7 +37,6 @@ namespace DataAccess.Implementations.SqlServer
 
             // Adjuntar y marcar el estado como modificado
             _context.StockPorSucursals.Update(stock);
-            // NO se llama a SaveChanges()
         }
 
         public StockPorSucursal? GetBySucursalAndProducto(Guid idSucursal, Guid idProducto)
@@ -71,6 +69,12 @@ namespace DataAccess.Implementations.SqlServer
             return _context.StockPorSucursals
                            .Where(s => s.IdProducto == idProducto)
                            .Sum(s => s.StockActual);
+        }
+
+        public StockPorSucursal GetByProductoYSucursal(Guid idProducto, Guid idSucursal)
+        {
+            return _context.StockPorSucursals
+            .FirstOrDefault(s => s.IdProducto == idProducto && s.IdSucursal == idSucursal);
         }
     }
 }

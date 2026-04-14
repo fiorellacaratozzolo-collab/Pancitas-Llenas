@@ -22,5 +22,20 @@ namespace Logic.Facade
             return _ventaLogic.RegistrarVenta(ventaDTO, detallesDTO, idSucursal);
         }
 
+        public List<VentumDTO> GetVentasPorSucursalYFecha(Guid idSucursal, DateTime fecha)
+        {
+            return _ventaLogic.GetVentasPorSucursalYFecha(idSucursal, fecha);
+        }
+
+        public List<VentaDetalleDTO> GetDetallesDeVenta(Guid idVenta)
+        {
+            return _ventaLogic.GetDetallesDeVenta(idVenta);
+        }
+
+        public void AnularVenta(Guid idVenta, Guid idSucursal)
+        {
+            _ventaLogic.AnularVenta(idVenta, idSucursal);
+        }
+
     }
 }

@@ -16,132 +16,131 @@ namespace Logic
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper = MapperConfigInitializer.Mapper;
-
-        // Constructor que instancia el UnitOfWork (Igual a tu ejemplo)
         public TraspasoLogic()
         {
             _unitOfWork = new UnitOfWork();
         }
 
-        // Constructor sobrecargado para permitir UnitOfWork compartido (Útil para transacciones complejas)
-        public TraspasoLogic(IUnitOfWork unitOfWork)
+        public Guid GenerarSolicitud(SolicitudDeTraspasoDeProductoDTO solicitudDTO, List<SolicitudDeTraspasoDeProductosDetalleDTO> detallesDTO)
         {
-            _unitOfWork = unitOfWork;
-        }
-
-        public Guid CrearSolicitud(SolicitudDeTraspasoDeProductoDTO solicitudDTO)
-        {
-            if (solicitudDTO.SolicitudDeTraspasoDeProductosDetalles == null || !solicitudDTO.SolicitudDeTraspasoDeProductosDetalles.Any())
-                throw new ArgumentException("La solicitud debe tener al menos un detalle.");
-
-            // 1. Mapear DTO a Entidad
-            var solicitud = _mapper.Map<SolicitudDeTraspasoDeProducto>(solicitudDTO);
-            solicitud.FechaStp = DateTime.Today;
-            solicitud.IdEstadoStp = 1; // Pendiente
-
-            // 2. Mapear Detalles y enlazar manualmente (Siguiendo tu patrón)
-            solicitud.SolicitudDeTraspasoDeProductosDetalles = new List<SolicitudDeTraspasoDeProductosDetalle>();
-            foreach (var detalleDTO in solicitudDTO.SolicitudDeTraspasoDeProductosDetalles)
+            if (detallesDTO == null || !detallesDTO.Any())
             {
-                var detalle = _mapper.Map<SolicitudDeTraspasoDeProductosDetalle>(detalleDTO);
-                detalle.IdSolicitudDeTraspasoDeProductos = solicitud.IdSolicitudDeTraspasoDeProductos;
-
-                // Buscamos datos técnicos del maestro de productos
-                var productoMaestro = _unitOfWork.Productos.GetById(detalle.IdProducto);
-                if (productoMaestro != null)
-                {
-                    detalle.PesoNeto = productoMaestro.PesoNeto ?? 0;
-                    detalle.Unidad = productoMaestro.Unidad ?? "UN";
-                }
-
-                solicitud.SolicitudDeTraspasoDeProductosDetalles.Add(detalle);
+                throw new ArgumentException("La solicitud debe contener al menos un producto.");
             }
 
-            // 3. Persistencia y Commit (Uso de repositorios específicos)
-            Guid id = _unitOfWork.SolicitudesTraspaso.Create(solicitud);
-            _unitOfWork.SolicitudesTraspasoDetalles.AddRange(solicitud.SolicitudDeTraspasoDeProductosDetalles.ToList());
+            // Mapeamos de DTO a Entidades de EF
+            var solicitud = _mapper.Map<SolicitudDeTraspasoDeProducto>(solicitudDTO);
+            var detalles = _mapper.Map<List<SolicitudDeTraspasoDeProductosDetalle>>(detallesDTO);
+            solicitud.IdSucursalDestinoNavigation = null!; // Evitamos problemas de navegación al crear la solicitud
+            solicitud.IdSucursalOrigenNavigation = null!; // Evitamos problemas de navegación al crear la solicitud
 
-            _unitOfWork.Complete();
+            try
+            {
+                solicitud.IdEstadoStp = 1;
+                Guid idSolicitud = _unitOfWork.SolicitudesTraspaso.Create(solicitud);
 
-            return id;
+                foreach (var detalle in detalles)
+                {
+                    detalle.IdSolicitudDeTraspasoDeProductos = idSolicitud;
+                    detalle.IdSolicitudDeTraspasoDeProductosNavigation = null;
+                    detalle.IdProductoNavigation = null;
+                    if (string.IsNullOrWhiteSpace(detalle.Unidad))
+                    {
+                        detalle.Unidad = "KG";
+                    }
+                    _unitOfWork.SolicitudesTraspasoDetalles.Create(detalle);
+                }
+
+                _unitOfWork.Complete();
+
+                return idSolicitud;
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al registrar la solicitud de traspaso.", ex);
+            }
         }
 
-        public List<SolicitudDeTraspasoDeProductoDTO> ObtenerTodas()
+        public void AprobarTraspaso(Guid idSolicitud)
         {
-            var solicitudes = _unitOfWork.SolicitudesTraspaso.GetAll();
+            var solicitud = _unitOfWork.SolicitudesTraspaso.GetById(idSolicitud);
+            var detalles = _unitOfWork.SolicitudesTraspasoDetalles.GetByIdSolicitud(idSolicitud);
+
+            try
+            {
+                foreach (var item in detalles)
+                {
+                    // 1. Descontamos stock del Origen (Depósito)
+                    var stockOrigen = _unitOfWork.Stocks.GetByProductoYSucursal(item.IdProducto, solicitud.IdSucursalOrigen);
+                    if (stockOrigen != null)
+                    {
+                        stockOrigen.StockActual -= item.Cantidad;
+                        _unitOfWork.Stocks.Update(stockOrigen);
+                    }
+
+                    // 2. Sumamos stock al Destino (Sucursal Venta)
+                    var stockDestino = _unitOfWork.Stocks.GetByProductoYSucursal(item.IdProducto, solicitud.IdSucursalDestino);
+                    if (stockDestino != null)
+                    {
+                        stockDestino.StockActual += item.Cantidad;
+                        _unitOfWork.Stocks.Update(stockDestino);
+                    }
+                    else
+                    {
+                        // Si la sucursal de destino nunca tuvo este producto, le creamos el registro
+                        var nuevoStock = new StockPorSucursal
+                        {
+                            IdStockSucursal = Guid.NewGuid(),
+                            IdProducto = item.IdProducto,
+                            IdSucursal = solicitud.IdSucursalDestino,
+                            StockActual = item.Cantidad,
+                            StockDeseado = 0,
+                            IdEstadoStock = 2
+                        };
+                        _unitOfWork.Stocks.Create(nuevoStock);
+                    }
+                }
+
+                // 3. Cambiamos estado a Aprobado (2)
+                solicitud.IdEstadoStp = 2; 
+                _unitOfWork.SolicitudesTraspaso.Update(solicitud);
+
+                // 4. Commiteamos toda la transacción junta
+                _unitOfWork.Complete();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al aprobar el traspaso y mover el stock.", ex);
+            }
+        }
+
+        public List<SolicitudDeTraspasoDeProductoDTO> ObtenerSolicitudesPendientes(Guid idSucursalOrigen)
+        {
+            var solicitudes = _unitOfWork.SolicitudesTraspaso.GetPendientesPorSucursalOrigen(idSucursalOrigen);
             return _mapper.Map<List<SolicitudDeTraspasoDeProductoDTO>>(solicitudes);
         }
 
-        public SolicitudDeTraspasoDeProductoDTO ObtenerPorId(Guid id)
+        public List<SolicitudDeTraspasoDeProductosDetalleDTO> ObtenerDetallesPorSolicitud(Guid idSolicitud)
         {
-            var solicitud = _unitOfWork.SolicitudesTraspaso.GetById(id);
-            if (solicitud == null)
-                throw new KeyNotFoundException($"No se encontró la solicitud con ID {id}");
-
-            return _mapper.Map<SolicitudDeTraspasoDeProductoDTO>(solicitud);
+            var detalles = _unitOfWork.SolicitudesTraspasoDetalles.GetByIdSolicitud(idSolicitud);
+            return _mapper.Map<List<SolicitudDeTraspasoDeProductosDetalleDTO>>(detalles);
         }
 
-        // --- GESTIÓN DE ESTADO Y STOCK ---
-
-        public void RechazarSolicitud(Guid solicitudId)
+        public void RechazarTraspaso(Guid idSolicitud)
         {
-            var solicitud = _unitOfWork.SolicitudesTraspaso.GetById(solicitudId);
-            if (solicitud == null)
-                throw new KeyNotFoundException($"No se encontró la solicitud con ID {solicitudId}");
+            var solicitud = _unitOfWork.SolicitudesTraspaso.GetById(idSolicitud);
 
-            solicitud.IdEstadoStp = 3; // Rechazada
-            _unitOfWork.SolicitudesTraspaso.Update(solicitud);
-            _unitOfWork.Complete();
-        }
-
-        public void AprobarYProcesarStock(Guid solicitudId)
-        {
-            var solicitud = _unitOfWork.SolicitudesTraspaso.GetById(solicitudId);
-            if (solicitud == null)
-                throw new KeyNotFoundException($"No se encontró la solicitud con ID {solicitudId}");
-
-            if (solicitud.IdEstadoStp != 1)
-                throw new InvalidOperationException("La solicitud ya no se encuentra en estado Pendiente.");
-
-            foreach (var detalle in solicitud.SolicitudDeTraspasoDeProductosDetalles)
+            try
             {
-                // 1. Descuento en Origen (Depósito)
-                var stockOrigen = _unitOfWork.StocksPorSucursal.GetBySucursalAndProducto(solicitud.IdSucursalOrigen, detalle.IdProducto);
-                if (stockOrigen == null || stockOrigen.StockActual < detalle.Cantidad)
-                    throw new Exception($"Stock insuficiente en origen para el producto ID: {detalle.IdProducto}");
+                solicitud.IdEstadoStp = 3;
+                _unitOfWork.SolicitudesTraspaso.Update(solicitud);
 
-                stockOrigen.StockActual -= detalle.Cantidad;
-                _unitOfWork.StocksPorSucursal.Update(stockOrigen);
-
-                // 2. Aumento en Destino (Sucursal solicitante)
-                var stockDestino = _unitOfWork.StocksPorSucursal.GetBySucursalAndProducto(solicitud.IdSucursalDestino, detalle.IdProducto);
-
-                if (stockDestino == null)
-                {
-                    var nuevoStock = new StockPorSucursal
-                    {
-                        IdStockSucursal = Guid.NewGuid(),
-                        IdSucursal = solicitud.IdSucursalDestino,
-                        IdProducto = detalle.IdProducto,
-                        StockActual = detalle.Cantidad,
-                        StockDeseado = 0,
-                        IdEstadoStock = 1 // Activo
-                    };
-                    _unitOfWork.StocksPorSucursal.Create(nuevoStock);
-                }
-                else
-                {
-                    stockDestino.StockActual += detalle.Cantidad;
-                    _unitOfWork.StocksPorSucursal.Update(stockDestino);
-                }
+                _unitOfWork.Complete();
             }
-
-            // 3. Marcar solicitud como Aprobada
-            solicitud.IdEstadoStp = 2; // Aprobada/Procesada
-            _unitOfWork.SolicitudesTraspaso.Update(solicitud);
-
-            // 4. Commit final de toda la operación
-            _unitOfWork.Complete();
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Error al rechazar el traspaso.", ex);
+            }
         }
     }
 }
