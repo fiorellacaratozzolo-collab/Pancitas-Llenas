@@ -17,6 +17,7 @@ namespace ModelsDTO
         public Guid IdSucursalDestino { get; set; }     
         public string? NombreSucursalOrigen { get; set; }
         public string? NombreSucursalDestino { get; set; }
+        public string? DireccionSucursalDestino { get; set; }
         public virtual EstadoStpenumDTO IdEstadoStpNavigation { get; set; } = null!;
 
         public virtual ICollection<SolicitudDeTraspasoDeProductosDetalleDTO> SolicitudDeTraspasoDeProductosDetalles { get; set; } = new List<SolicitudDeTraspasoDeProductosDetalleDTO>();

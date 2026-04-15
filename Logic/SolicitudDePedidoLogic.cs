@@ -25,24 +25,19 @@ namespace Logic
         {
             if (solicitudDTO.SolicitudDePedidoDetalles == null || !solicitudDTO.SolicitudDePedidoDetalles.Any())
                 throw new ArgumentException("La solicitud debe tener al menos un detalle.");
-
-            // 1. Mapear DTO a Entidad (DAO)
             var solicitud = _mapper.Map<SolicitudDePedido>(solicitudDTO);
             solicitud.FechaSp = DateTime.Today;
-            solicitud.IdEstadoSp = 1; // Pendiente
+            solicitud.IdEstadoSp = 1;
+            solicitud.IdEstadoSpNavigation = null;
 
-            // 2. Mapear Detalles y enlazar
-            solicitud.SolicitudDePedidoDetalles = new List<SolicitudDePedidoDetalle>();
-            foreach (var detalleDTO in solicitudDTO.SolicitudDePedidoDetalles)
+            foreach (var detalle in solicitud.SolicitudDePedidoDetalles)
             {
-                var detalle = _mapper.Map<SolicitudDePedidoDetalle>(detalleDTO);
-                detalle.IdSolicitudDePedido = solicitud.IdSolicitudDePedido;
-                solicitud.SolicitudDePedidoDetalles.Add(detalle);
+                detalle.IdProductoNavigation = null;
+                detalle.IdSolicitudDePedidoNavigation = null;
             }
 
-            // 3. Persistencia y Commit
             Guid id = _unitOfWork.SolicitudDePedidos.Create(solicitud);
-            _unitOfWork.SolicitudDePedidoDetalles.AddRange(solicitud.SolicitudDePedidoDetalles);
+
             _unitOfWork.Complete();
 
             return id;
@@ -62,6 +57,14 @@ namespace Logic
                 throw new KeyNotFoundException($"No se encontró la solicitud con ID {id}");
 
             return _mapper.Map<SolicitudDePedidoDTO>(solicitud);
+        }
+
+        public List<SolicitudDePedidoDetalleDTO> ObtenerDetallesPorSolicitud(Guid idSolicitud)
+        {
+            // Ojo: Asegurate de que la propiedad en tu UnitOfWork se llame así
+            var detalles = _unitOfWork.SolicitudDePedidoDetalles.GetByIdSolicitud(idSolicitud);
+
+            return _mapper.Map<List<SolicitudDePedidoDetalleDTO>>(detalles);
         }
 
         // --- GESTIÓN DE ESTADO ---

@@ -37,17 +37,6 @@ namespace FormUI.FormVenta
             ConfigurarColumnasGrilla();
         }
 
-        private void ConfigurarGrillaVentas()
-        {
-            if (dgvVentasRealizadas.Columns.Contains("IdVenta")) dgvVentasRealizadas.Columns["IdVenta"].Visible = false;
-            if (dgvVentasRealizadas.Columns.Contains("IdSucursal")) dgvVentasRealizadas.Columns["IdSucursal"].Visible = false;
-            if (dgvVentasRealizadas.Columns.Contains("IdCliente")) dgvVentasRealizadas.Columns["IdCliente"].Visible = false;
-
-            dgvVentasRealizadas.ReadOnly = true;
-            dgvVentasRealizadas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvVentasRealizadas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        }
-
         private void ConfigurarGrillaDetalles()
         {
             if (dgvDetallesVenta.Columns.Contains("IdVentaDetalle")) dgvDetallesVenta.Columns["IdVentaDetalle"].Visible = false;
@@ -65,6 +54,10 @@ namespace FormUI.FormVenta
             if (dgvVentasRealizadas.Columns.Contains("IdVenta")) dgvVentasRealizadas.Columns["IdVenta"].Visible = false;
             if (dgvVentasRealizadas.Columns.Contains("IdSucursal")) dgvVentasRealizadas.Columns["IdSucursal"].Visible = false;
             if (dgvVentasRealizadas.Columns.Contains("IdCliente")) dgvVentasRealizadas.Columns["IdCliente"].Visible = false;
+            if (dgvVentasRealizadas.Columns.Contains("EsMayorista")) dgvVentasRealizadas.Columns["EsMayorista"].Visible = false;
+            if (dgvVentasRealizadas.Columns.Contains("IdClienteNavigation")) dgvVentasRealizadas.Columns["IdClienteNavigation"].Visible = false;
+            if (dgvVentasRealizadas.Columns.Contains("VentaDetalles")) dgvVentasRealizadas.Columns["VentaDetalles"].Visible = false;
+            if (dgvVentasRealizadas.Columns.Contains("MontoDescuento")) dgvVentasRealizadas.Columns["MontoDescuento"].Visible = false;
 
             // Formatos bonitos
             if (dgvVentasRealizadas.Columns.Contains("FechaVenta"))

@@ -42,6 +42,7 @@ namespace FormUI.FormSucursal
 
         private void ConfigurarColumnasDataGridView()
         {
+            dgvSucursal.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             if (dgvSucursal.Columns.Contains("IdSucursal"))
                 dgvSucursal.Columns["IdSucursal"].Visible = false;
             if (dgvSucursal.Columns.Contains("EncargadoSucursals"))
@@ -50,10 +51,10 @@ namespace FormUI.FormSucursal
                 dgvSucursal.Columns["IdTipoSucursalNavigation"].Visible = false;
             if (dgvSucursal.Columns.Contains("IdTipoSucursal"))
                 dgvSucursal.Columns["IdTipoSucursal"].Visible = false;
+            if (dgvSucursal.Columns.Contains("StockPorSucursals"))
+                dgvSucursal.Columns["StockPorSucursals"].Visible = false;
             if (dgvSucursal.Columns.Contains("NombreSucursal"))
-                dgvSucursal.Columns["NombreSucursal"].HeaderText = "Nombre";
-
-            dgvSucursal.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+                dgvSucursal.Columns["NombreSucursal"].HeaderText = "Nombre de Sucursal";
         }
 
         private void CargarDireccionesEnComboBox()

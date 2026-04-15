@@ -31,7 +31,11 @@ namespace Logic.Facade
             _logic.RechazarOrden(ordenId);
         }
 
-        // Ahora devuelve el DTO de resultado con feedback
+        public List<OrdenDePedidoDetalleDTO> ObtenerDetallesPorOrden(Guid idOrden)
+        {
+            return _logic.ObtenerDetallesPorOrden(idOrden);
+        }
+
         public ResultadoGeneracionOCsDTO AprobarYGenerarOCs(Guid ordenId)
         {
             try

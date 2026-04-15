@@ -51,6 +51,7 @@ namespace FormUI.FormCompra
         /// </summary>
         private void ConfigurarColumnasDataGridView()
         {
+            dgvProveedor.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             // Ocultar las propiedades de navegación y el ID que no son relevantes para el usuario
             if (dgvProveedor.Columns.Contains("IdProveedor"))
             {
@@ -59,6 +60,18 @@ namespace FormUI.FormCompra
             if (dgvProveedor.Columns.Contains("ProveedorProductos"))
             {
                 dgvProveedor.Columns["ProveedorProductos"].Visible = false;
+            }
+            if (dgvProveedor.Columns.Contains("NombreConPeso"))
+            {
+                dgvProveedor.Columns["NombreConPeso"].Visible = false;
+            }
+            if (dgvProveedor.Columns.Contains("StockPorSucursal"))
+            {
+                dgvProveedor.Columns["StockPorSucursal"].Visible = false;
+            }
+            if (dgvProveedor.Columns.Contains("VentaDetalles"))
+            {
+                dgvProveedor.Columns["VentaDetalles"].Visible = false;
             }
             // Renombrar columnas para la visualización del usuario
             if (dgvProveedor.Columns.Contains("NombreProveedor"))

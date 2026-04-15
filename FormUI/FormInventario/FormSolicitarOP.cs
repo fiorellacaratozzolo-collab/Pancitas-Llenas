@@ -21,12 +21,6 @@ namespace FormUI.FormInventario
         public FormSolicitarOP()
         {
             InitializeComponent();
-            txtbNombreProd.ReadOnly = false;
-            txtbNombreProd.Enabled = true;
-            txtbNombreProd.TabStop = true;
-            txtbNombreProd.AutoCompleteMode = AutoCompleteMode.None;
-            txtbNombreProd.AutoCompleteSource = AutoCompleteSource.None;
-
             ConfigurarFecha();
             ConfigurarDGV();
         }
@@ -39,6 +33,7 @@ namespace FormUI.FormInventario
 
         private void ConfigurarDGV()
         {
+            dgvSolicitarOP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvSolicitarOP.AutoGenerateColumns = false;
             dgvSolicitarOP.Columns.Clear();
 
@@ -49,6 +44,15 @@ namespace FormUI.FormInventario
                 DataPropertyName = "NombreProducto",
                 ReadOnly = true,
                 Width = 180
+            });
+
+            dgvSolicitarOP.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Marca",
+                HeaderText = "Marca",
+                DataPropertyName = "Marca",
+                ReadOnly = true,
+                Width = 100
             });
 
             dgvSolicitarOP.Columns.Add(new DataGridViewTextBoxColumn
@@ -82,52 +86,18 @@ namespace FormUI.FormInventario
             dgvSolicitarOP.Columns.Add(colEliminar);
         }
 
-
-        private bool ValidarCampos()
+        private void CargarProductos()
         {
-            if (string.IsNullOrWhiteSpace(txtbNombreProd.Text))
-            {
-                MessageBox.Show("Ingrese el nombre del producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtbNombreProd.Focus();
-                return false;
-            }
-
-            if (!int.TryParse(txtbCantidad.Text, out int cant) || cant <= 0)
-            {
-                MessageBox.Show("Ingrese una cantidad válida mayor a 0.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtbCantidad.Focus();
-                return false;
-            }
-
-            if (!decimal.TryParse(txtbPesoNeto.Text, out decimal peso) || peso <= 0m)
-            {
-                MessageBox.Show("Ingrese un Peso Neto válido mayor a 0.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtbPesoNeto.Focus();
-                return false;
-            }
-
-            return true;
-        }
-
-        private void LimpiarCamposExceptoProducto()
-        {
-            txtbPesoNeto.Clear();
-            txtbCantidad.Clear();
-            txtbCantidad.Focus();
+            cmbProducto.DataSource = _productoService.GetAllProductos();
+            cmbProducto.DisplayMember = "NombreConPeso";
+            cmbProducto.ValueMember = "IdProducto";
+            cmbProducto.SelectedIndex = -1;
         }
 
         private void ActualizarDGV()
         {
-            var dataSource = _detalles.Select(d => new
-            {
-                NombreProducto = d.NombreProducto,
-                PesoNeto = $"{d.PesoNeto:N2} {d.Unidad}",
-                Cantidad = d.Cantidad
-            }).ToList();
-
             dgvSolicitarOP.DataSource = null;
-            dgvSolicitarOP.DataSource = dataSource;
-            dgvSolicitarOP.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            dgvSolicitarOP.DataSource = _detalles;
         }
 
         private void MostrarError(string mensaje)
@@ -137,47 +107,42 @@ namespace FormUI.FormInventario
 
         private void LimpiarCampos()
         {
-            txtbNombreProd.Clear();
             txtbPesoNeto.Clear();
             txtbCantidad.Clear();
-            txtbNombreProd.Focus();
+            cmbProducto.Focus();
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            if (!ValidarCampos()) return; // Valida que el peso también sea un decimal > 0
-
-            string nombre = txtbNombreProd.Text.Trim();
-
-            var producto = _productoService.GetAllProductos()
-                .FirstOrDefault(p => p.NombreProducto.Equals(nombre, StringComparison.OrdinalIgnoreCase));
-
-            if (producto == null)
+            // 1. Validaciones
+            if (cmbProducto.SelectedItem == null)
             {
-                MostrarError("Producto no encontrado. Verifique el nombre.");
-                txtbNombreProd.Focus();
-                txtbNombreProd.SelectAll();
+                MostrarError("Seleccione un producto de la lista.");
+                cmbProducto.Focus();
                 return;
             }
 
-            // 1. Obtener valores parseados
-            int.TryParse(txtbCantidad.Text, out int cantidadValue);
-            decimal.TryParse(txtbPesoNeto.Text, out decimal pesoNetoValue);
-            // 2. Mostrar peso neto        
-            txtbPesoNeto.Text = $"{pesoNetoValue:N2} {producto.Unidad ?? "kg"}";
-            // 3. Crear detalle
+            if (!int.TryParse(txtbCantidad.Text, out int cantidadValue) || cantidadValue <= 0)
+            {
+                MostrarError("Ingrese una cantidad válida mayor a 0.");
+                txtbCantidad.Focus();
+                return;
+            }
+
+            var productoElegido = (ProductoDTO)cmbProducto.SelectedItem;
             var detalle = new SolicitudDePedidoDetalleDTO
             {
-                IdProducto = producto.IdProducto,
+                IdProducto = productoElegido.IdProducto,
                 Cantidad = cantidadValue,
-                PesoNeto = pesoNetoValue,
-
-                Unidad = producto.Unidad ?? "kg",
-                NombreProducto = producto.NombreProducto
+                PesoNeto = (decimal)productoElegido.PesoNeto,
+                Unidad = productoElegido.Unidad ?? "kg",
+                NombreProducto = productoElegido.NombreProducto,
+                Marca = productoElegido.Marca
             };
-
             _detalles.Add(detalle);
-            LimpiarCamposExceptoProducto();
+            cmbProducto.SelectedIndex = -1;
+            txtbCantidad.Clear();
+
             ActualizarDGV();
         }
 
@@ -208,7 +173,7 @@ namespace FormUI.FormInventario
                     // Asigna el ID de la cabecera a la foreign key de los detalles
                     detalle.IdSolicitudDePedido = nuevaSolicitudId;
 
-                    
+
                     // genera un Guid único para la clave primaria del detalle.
                     if (detalle.IdSolicitudDePedidoDetalle == Guid.Empty)
                     {
@@ -234,8 +199,7 @@ namespace FormUI.FormInventario
                     "Éxito",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
-
-                this.Close();
+               
             }
             catch (Exception ex)
             {
@@ -270,7 +234,24 @@ namespace FormUI.FormInventario
 
         private void FormSolicitarOP_Load(object sender, EventArgs e)
         {
+            CargarProductos();
+        }
 
+        private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbProducto.SelectedItem != null && cmbProducto.SelectedIndex != -1)
+            {
+                var productoSeleccionado = (ProductoDTO)cmbProducto.SelectedItem;
+
+                // Autocompletamos los campos
+                txtbPesoNeto.Text = $"{productoSeleccionado.PesoNeto:N2} {productoSeleccionado.Unidad ?? "kg"}";
+                txtbMarca.Text = productoSeleccionado.Marca;
+            }
+            else
+            {
+                txtbPesoNeto.Clear();
+                txtbMarca.Clear();
+            }
         }
     }
 }

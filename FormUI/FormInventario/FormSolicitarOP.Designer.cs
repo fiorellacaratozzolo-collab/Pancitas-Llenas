@@ -29,29 +29,33 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            cmbProducto = new ComboBox();
+            txtbMarca = new TextBox();
+            label1 = new Label();
+            btnLimpiar = new Button();
             btnGuadar = new Button();
             dtpFecha = new DateTimePicker();
             txtbPesoNeto = new TextBox();
             dgvSolicitarOP = new DataGridView();
-            txtbNombreProd = new TextBox();
             label2 = new Label();
             label3 = new Label();
             txtbCantidad = new TextBox();
             btnAgregar = new Button();
             label4 = new Label();
-            btnLimpiar = new Button();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvSolicitarOP).BeginInit();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(cmbProducto);
+            groupBox1.Controls.Add(txtbMarca);
+            groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(btnLimpiar);
             groupBox1.Controls.Add(btnGuadar);
             groupBox1.Controls.Add(dtpFecha);
             groupBox1.Controls.Add(txtbPesoNeto);
             groupBox1.Controls.Add(dgvSolicitarOP);
-            groupBox1.Controls.Add(txtbNombreProd);
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(txtbCantidad);
@@ -65,6 +69,42 @@
             groupBox1.TabIndex = 17;
             groupBox1.TabStop = false;
             groupBox1.Text = "Productos a Solicitar";
+            // 
+            // cmbProducto
+            // 
+            cmbProducto.FormattingEnabled = true;
+            cmbProducto.Location = new Point(276, 97);
+            cmbProducto.Name = "cmbProducto";
+            cmbProducto.Size = new Size(266, 23);
+            cmbProducto.TabIndex = 16;
+            cmbProducto.SelectedIndexChanged += cmbProducto_SelectedIndexChanged;
+            // 
+            // txtbMarca
+            // 
+            txtbMarca.Location = new Point(275, 128);
+            txtbMarca.Name = "txtbMarca";
+            txtbMarca.Size = new Size(100, 23);
+            txtbMarca.TabIndex = 15;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(217, 131);
+            label1.Name = "label1";
+            label1.Size = new Size(43, 15);
+            label1.TabIndex = 14;
+            label1.Text = "Marca:";
+            // 
+            // btnLimpiar
+            // 
+            btnLimpiar.Location = new Point(661, 174);
+            btnLimpiar.Margin = new Padding(4, 3, 4, 3);
+            btnLimpiar.Name = "btnLimpiar";
+            btnLimpiar.Size = new Size(62, 36);
+            btnLimpiar.TabIndex = 10;
+            btnLimpiar.Text = "Limpiar";
+            btnLimpiar.UseVisualStyleBackColor = true;
+            btnLimpiar.Click += btnLimpiar_Click;
             // 
             // btnGuadar
             // 
@@ -87,7 +127,7 @@
             // 
             // txtbPesoNeto
             // 
-            txtbPesoNeto.Location = new Point(278, 134);
+            txtbPesoNeto.Location = new Point(275, 154);
             txtbPesoNeto.Margin = new Padding(4, 3, 4, 3);
             txtbPesoNeto.Name = "txtbPesoNeto";
             txtbPesoNeto.Size = new Size(102, 23);
@@ -103,19 +143,10 @@
             dgvSolicitarOP.TabIndex = 10;
             dgvSolicitarOP.CellContentClick += dgvSolicitarOP_CellContentClick;
             // 
-            // txtbNombreProd
-            // 
-            txtbNombreProd.Enabled = false;
-            txtbNombreProd.Location = new Point(278, 96);
-            txtbNombreProd.Margin = new Padding(4, 3, 4, 3);
-            txtbNombreProd.Name = "txtbNombreProd";
-            txtbNombreProd.Size = new Size(238, 23);
-            txtbNombreProd.TabIndex = 3;
-            // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(205, 137);
+            label2.Location = new Point(202, 157);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(64, 15);
@@ -134,7 +165,7 @@
             // 
             // txtbCantidad
             // 
-            txtbCantidad.Location = new Point(278, 170);
+            txtbCantidad.Location = new Point(275, 181);
             txtbCantidad.Margin = new Padding(4, 3, 4, 3);
             txtbCantidad.Name = "txtbCantidad";
             txtbCantidad.Size = new Size(102, 23);
@@ -154,23 +185,12 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(205, 174);
+            label4.Location = new Point(202, 185);
             label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
             label4.Size = new Size(58, 15);
             label4.TabIndex = 8;
             label4.Text = "Cantidad:";
-            // 
-            // btnLimpiar
-            // 
-            btnLimpiar.Location = new Point(661, 174);
-            btnLimpiar.Margin = new Padding(4, 3, 4, 3);
-            btnLimpiar.Name = "btnLimpiar";
-            btnLimpiar.Size = new Size(62, 36);
-            btnLimpiar.TabIndex = 10;
-            btnLimpiar.Text = "Limpiar";
-            btnLimpiar.UseVisualStyleBackColor = true;
-            btnLimpiar.Click += btnLimpiar_Click;
             // 
             // FormSolicitarOP
             // 
@@ -197,11 +217,13 @@
         private System.Windows.Forms.DateTimePicker dtpFecha;
         private System.Windows.Forms.TextBox txtbPesoNeto;
         private System.Windows.Forms.DataGridView dgvSolicitarOP;
-        private System.Windows.Forms.TextBox txtbNombreProd;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtbCantidad;
         private System.Windows.Forms.Button btnAgregar;
         private System.Windows.Forms.Label label4;
+        private TextBox txtbMarca;
+        private Label label1;
+        private ComboBox cmbProducto;
     }
 }

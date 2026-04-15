@@ -27,12 +27,22 @@ namespace Logic.MappingProfiles
             CreateMap<TipoClienteEnum, TipoClienteEnumDTO>().ReverseMap();
             CreateMap<TipoSucursalEnum, TipoSucursalEnumDTO>().ReverseMap();
 
-            // Mapeos de Documentos y Detalles (Asegurando unicidad y ReverseMap)
             CreateMap<SolicitudDePedido, SolicitudDePedidoDTO>().ReverseMap();
-            CreateMap<SolicitudDePedidoDetalle, SolicitudDePedidoDetalleDTO>().ReverseMap();
+            CreateMap<SolicitudDePedidoDetalle, SolicitudDePedidoDetalleDTO>()
+                .ForMember(dest => dest.NombreProducto,
+                   opt => opt.MapFrom(src => src.IdProductoNavigation.NombreProducto))
+                .ForMember(dest => dest.Marca,
+                   opt => opt.MapFrom(src => src.IdProductoNavigation.Marca))
+                .ReverseMap();
 
             CreateMap<OrdenDePedido, OrdenDePedidoDTO>().ReverseMap();
             CreateMap<OrdenDePedidoDetalle, OrdenDePedidoDetalleDTO>().ReverseMap();
+            CreateMap<OrdenDePedidoDetalle, OrdenDePedidoDetalleDTO>()
+            .ForMember(dest => dest.NombreProducto,
+               opt => opt.MapFrom(src => src.IdProductoNavigation.NombreProducto))
+            .ForMember(dest => dest.Marca,
+               opt => opt.MapFrom(src => src.IdProductoNavigation.Marca))
+            .ReverseMap();
 
             CreateMap<OrdenDeCompra, OrdenDeCompraDTO>().ReverseMap();
             CreateMap<OrdenDeCompraDetalle, OrdenDeCompraDetalleDTO>().ReverseMap();
@@ -100,23 +110,35 @@ namespace Logic.MappingProfiles
                            opt => opt.MapFrom(src => src.IdProductoNavigation.NombreProducto))
                 .ReverseMap();
 
-            // Mapeo de Solicitud de Traspaso (Entidad -> DTO)
+            // =========================================================
+            // Mapeo de Solicitud de Traspaso (Cabecera)
+            // =========================================================
             CreateMap<SolicitudDeTraspasoDeProducto, SolicitudDeTraspasoDeProductoDTO>()
-                .ForMember(dest => dest.NombreSucursalOrigen,
-                           opt => opt.MapFrom(src => src.IdSucursalOrigenNavigation.NombreSucursal))
-                .ForMember(dest => dest.NombreSucursalDestino,
-                           opt => opt.MapFrom(src => src.IdSucursalDestinoNavigation.NombreSucursal))
-                .ForMember(dest => dest.IdEstadoStpNavigation,
-                           opt => opt.MapFrom(src => src.IdEstadoStpNavigation))
-                .ReverseMap();
+            .ForMember(dest => dest.NombreSucursalOrigen,
+               opt => opt.MapFrom(src => src.IdSucursalOrigenNavigation.NombreSucursal))
+            .ForMember(dest => dest.NombreSucursalDestino,
+               opt => opt.MapFrom(src => src.IdSucursalDestinoNavigation.NombreSucursal))
 
-            // Mapeo de Detalle de Traspaso
+            // --> ESTO AGREGA LA DIRECCIÓN PARA LA GRILLA <--
+            .ForMember(dest => dest.DireccionSucursalDestino,
+               opt => opt.MapFrom(src => src.IdSucursalDestinoNavigation.Direccion))
+
+            .ForMember(dest => dest.IdEstadoStpNavigation,
+               opt => opt.MapFrom(src => src.IdEstadoStpNavigation))
+            .ReverseMap();
+
+
+            // =========================================================
+            // Mapeo de Detalle de Traspaso (Renglones)
+            // =========================================================
             CreateMap<SolicitudDeTraspasoDeProductosDetalle, SolicitudDeTraspasoDeProductosDetalleDTO>()
-                .ForMember(dest => dest.IdProductoNavigation,
-                           opt => opt.MapFrom(src => src.IdProductoNavigation))
+                .ForMember(dest => dest.NombreProducto,
+                           opt => opt.MapFrom(src => src.IdProductoNavigation.NombreProducto))
+                .ForMember(dest => dest.Marca,
+                           opt => opt.MapFrom(src => src.IdProductoNavigation.Marca))
+                .ForMember(dest => dest.PesoNeto,
+                           opt => opt.MapFrom(src => src.IdProductoNavigation.PesoNeto))
                 .ReverseMap();
-
-
         }
     }
 }

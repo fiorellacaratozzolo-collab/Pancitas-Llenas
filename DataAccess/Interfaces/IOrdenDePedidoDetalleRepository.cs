@@ -10,5 +10,6 @@ namespace DataAccess.Interfaces
     public interface IOrdenDePedidoDetalleRepository
     {
         void AddRange(IEnumerable<OrdenDePedidoDetalle> detalles);
+        List<OrdenDePedidoDetalle> GetByIdOrden(Guid idOrden);
     }
 }

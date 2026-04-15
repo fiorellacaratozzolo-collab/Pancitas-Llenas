@@ -16,7 +16,7 @@ namespace FormUI.FormCompra
     public partial class FormGestiónProducto : Form
     {
         private readonly ProductoService _productoService = new ProductoService();
-        private readonly ProveedorService _proveedorService = new ProveedorService(); // Se necesitaría para el botón buscar Proveedor
+        private readonly ProveedorService _proveedorService = new ProveedorService();
 
         public FormGestiónProducto()
         {
@@ -58,6 +58,12 @@ namespace FormUI.FormCompra
                 dgvProducto.Columns["SolicitudDePedidoDetalles"].Visible = false;
             if (dgvProducto.Columns.Contains("SolicitudDeTraspasoDeProductosDetalles"))
                 dgvProducto.Columns["SolicitudDeTraspasoDeProductosDetalles"].Visible = false;
+            if (dgvProducto.Columns.Contains("NombreConPeso"))
+                dgvProducto.Columns["NombreConPeso"].Visible = false;
+            if (dgvProducto.Columns.Contains("StockPorSucursal"))
+                dgvProducto.Columns["StockPorSucursal"].Visible = false;
+            if (dgvProducto.Columns.Contains("VentaDetalles"))
+                dgvProducto.Columns["VentaDetalles"].Visible = false;
 
             // Renombrar columnas
             if (dgvProducto.Columns.Contains("NombreProducto"))

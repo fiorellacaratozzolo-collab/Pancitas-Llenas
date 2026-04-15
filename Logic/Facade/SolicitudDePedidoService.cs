@@ -28,7 +28,11 @@ namespace Logic.Facade
             return _logic.ObtenerPorId(id);
         }
 
-        // --- Nuevos Métodos de Gestión ---
+        public List<SolicitudDePedidoDetalleDTO> ObtenerDetallesPorSolicitud(Guid idSolicitud)
+        {
+            return _logic.ObtenerDetallesPorSolicitud(idSolicitud);
+        }
+
         public void RechazarSolicitud(Guid solicitudId)
         {
             _logic.RechazarSolicitud(solicitudId);

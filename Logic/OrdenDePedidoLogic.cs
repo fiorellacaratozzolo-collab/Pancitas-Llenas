@@ -28,26 +28,35 @@ namespace Logic
             var ordenDePedido = _mapper.Map<OrdenDePedido>(solicitudAprobada);
             ordenDePedido.IdOrdenDePedido = Guid.NewGuid();
             ordenDePedido.FechaOp = DateTime.Today;
-            ordenDePedido.IdEstadoOp = 1; // Estado inicial: Pendiente de Gestión
-            ordenDePedido.Total = 0; // Se debe calcular o asignar
+            ordenDePedido.IdEstadoOp = 1;
 
-            // 2. Mapeo Detalles
-            ordenDePedido.OrdenDePedidoDetalles = solicitudAprobada.SolicitudDePedidoDetalles
-                .Select(detalleSP =>
-                {
-                    var detalleOP = _mapper.Map<OrdenDePedidoDetalle>(detalleSP); // Mapeo Detalle SP -> Detalle OP
-                    detalleOP.IdOrdenDePedidoDetalle = Guid.NewGuid();
-                    detalleOP.IdOrdenDePedido = ordenDePedido.IdOrdenDePedido;
-                    // Aquí se calcularía/asignaría PrecioUnitario
-                    detalleOP.PrecioUnitario = 1; // EJEMPLO
-                    return detalleOP;
-                }).ToList();
+            decimal totalCalculado = 0; 
+
+            // 2. Mapeo Detalles y cálculo
+            ordenDePedido.OrdenDePedidoDetalles = new List<OrdenDePedidoDetalle>();
+
+            foreach (var detalleSP in solicitudAprobada.SolicitudDePedidoDetalles)
+            {
+                var detalleOP = _mapper.Map<OrdenDePedidoDetalle>(detalleSP);
+                detalleOP.IdOrdenDePedidoDetalle = Guid.NewGuid();
+                detalleOP.IdOrdenDePedido = ordenDePedido.IdOrdenDePedido;
+                var producto = _unitOfWork.Productos.GetById(detalleSP.IdProducto);
+                decimal precioReal = producto?.PrecioNeto ?? 0m;
+
+                detalleOP.PrecioUnitario = precioReal;
+
+                // Calculamos el subtotal de este renglón y lo sumamos a la factura total
+                totalCalculado += (detalleOP.Cantidad * precioReal);
+
+                ordenDePedido.OrdenDePedidoDetalles.Add(detalleOP);
+            }
+
+            // Asignamos el total final a la cabecera
+            ordenDePedido.Total = totalCalculado;
 
             // 3. Persistencia
             _unitOfWork.OrdenDePedidos.Create(ordenDePedido);
             _unitOfWork.OrdenDePedidoDetalles.AddRange(ordenDePedido.OrdenDePedidoDetalles);
-
-            // NO se llama Complete(). Lo hace SolicitudDePedidoLogic.
             return ordenDePedido.IdOrdenDePedido;
         }
 
@@ -64,6 +73,13 @@ namespace Logic
                 throw new KeyNotFoundException($"No se encontró la Orden de Pedido con ID {id}");
 
             return _mapper.Map<OrdenDePedidoDTO>(orden);
+        }
+
+        public List<OrdenDePedidoDetalleDTO> ObtenerDetallesPorOrden(Guid idOrden)
+        {
+            var detalles = _unitOfWork.OrdenDePedidoDetalles.GetByIdOrden(idOrden);
+
+            return _mapper.Map<List<OrdenDePedidoDetalleDTO>>(detalles);
         }
 
         // --- GESTIÓN DE ESTADO ---

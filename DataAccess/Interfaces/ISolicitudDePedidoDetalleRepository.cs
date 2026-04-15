@@ -11,5 +11,6 @@ namespace DataAccess.Interfaces
     public interface ISolicitudDePedidoDetalleRepository
     {
         void AddRange(IEnumerable<SolicitudDePedidoDetalle> detalles);
+        List<SolicitudDePedidoDetalle> GetByIdSolicitud(Guid idSolicitud);
     }
 }

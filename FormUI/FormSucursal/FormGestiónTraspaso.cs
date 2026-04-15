@@ -37,7 +37,32 @@ namespace FormUI.FormSucursal
                 Guid miSucursal = SessionManager.Current.IdSucursalActual.Value;
                 var pendientes = _traspasoService.ObtenerSolicitudesPendientes(miSucursal);
                 dgvSolicitudesPendientes.DataSource = pendientes;
-                // dgvSolicitudesPendientes.Columns["IdSucursalOrigen"].Visible = false;
+                dgvSolicitudesPendientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                if (dgvSolicitudesPendientes.Columns.Contains("DireccionSucursalDestino"))
+                    dgvSolicitudesPendientes.Columns["DireccionSucursalDestino"].HeaderText = "Dirección Destino";
+                if (dgvSolicitudesPendientes.Columns.Contains("IdSolicitudDeTraspasoDeProductos"))
+                    dgvSolicitudesPendientes.Columns["IdSolicitudDeTraspasoDeProductos"].Visible = false;
+                if (dgvSolicitudesPendientes.Columns.Contains("IdSucursalOrigen"))
+                    dgvSolicitudesPendientes.Columns["IdSucursalOrigen"].Visible = false;
+                if (dgvSolicitudesPendientes.Columns.Contains("IdSucursalDestino"))
+                    dgvSolicitudesPendientes.Columns["IdSucursalDestino"].Visible = false;
+                if (dgvSolicitudesPendientes.Columns.Contains("NombreSucursalOrigen"))
+                    dgvSolicitudesPendientes.Columns["IdSucursalOrigen"].Visible = false;
+                if (dgvSolicitudesPendientes.Columns.Contains("IdEstadoStpNavigation"))
+                    dgvSolicitudesPendientes.Columns["IdEstadoStpNavigation"].Visible = false;
+                if (dgvSolicitudesPendientes.Columns.Contains("SolicitudDeTraspasoDeProductosDetalles"))
+                    dgvSolicitudesPendientes.Columns["SolicitudDeTraspasoDeProductosDetalles"].Visible = false;
+                if (dgvSolicitudesPendientes.Columns.Contains("NombreSucursalOrigen"))
+                    dgvSolicitudesPendientes.Columns["NombreSucursalOrigen"].Visible = false;
+                // Cambiamos los títulos para el usuario
+                if (dgvSolicitudesPendientes.Columns.Contains("FechaStp"))
+                    dgvSolicitudesPendientes.Columns["FechaStp"].HeaderText = "Fecha";
+                if (dgvSolicitudesPendientes.Columns.Contains("IdEstadoStp"))
+                    dgvSolicitudesPendientes.Columns["IdEstadoStp"].HeaderText = "Estado";
+                if (dgvSolicitudesPendientes.Columns.Contains("NombreSucursal"))
+                    dgvSolicitudesPendientes.Columns["NombreSucursal"].HeaderText = "Nombre de Sucursal";
+                if (dgvSolicitudesPendientes.Columns.Contains("NombreSucursalDestino"))
+                    dgvSolicitudesPendientes.Columns["NombreSucursalDestino"].HeaderText = "Sucursal Destino";
             }
             catch (Exception ex)
             {
@@ -72,15 +97,42 @@ namespace FormUI.FormSucursal
             {
                 // Obtenemos la solicitud seleccionada
                 var solicitudSeleccionada = (SolicitudDeTraspasoDeProductoDTO)dgvSolicitudesPendientes.CurrentRow.DataBoundItem;
-
                 // Buscamos sus detalles
                 var detalles = _traspasoService.ObtenerDetallesPorSolicitud(solicitudSeleccionada.IdSolicitudDeTraspasoDeProductos);
-
                 dgvDetalle.DataSource = detalles;
-
-                // Ocultar columnas innecesarias del detalle...
+                ConfigurarColumnasGrillaDetalle();
             }
+        }
 
+        private void ConfigurarColumnasGrillaDetalle()
+        {
+            dgvDetalle.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            if (dgvDetalle.Columns.Contains("IdSolicitudDeTraspasoDeProductos"))
+                dgvDetalle.Columns["IdSolicitudDeTraspasoDeProductos"].Visible = false;
+            if (dgvDetalle.Columns.Contains("IdSolicitudDeTraspasoDeProductosDetalle"))
+                dgvDetalle.Columns["IdSolicitudDeTraspasoDeProductosDetalle"].Visible = false;
+            if (dgvDetalle.Columns.Contains("IdProducto"))
+                dgvDetalle.Columns["IdProducto"].Visible = false;
+            if (dgvDetalle.Columns.Contains("IdProductoNavigation"))
+                dgvDetalle.Columns["IdProductoNavigation"].Visible = false;
+            if (dgvDetalle.Columns.Contains("IdSolicitudDeTraspasoDeProductosNavigation"))
+                dgvDetalle.Columns["IdSolicitudDeTraspasoDeProductosNavigation"].Visible = false;
+
+            if (dgvDetalle.Columns.Contains("NombreProducto"))
+                dgvDetalle.Columns["NombreProducto"].HeaderText = "Producto";
+            if (dgvDetalle.Columns.Contains("PesoNeto"))
+                dgvDetalle.Columns["PesoNeto"].HeaderText = "Peso Neto";
+
+            if (dgvDetalle.Columns.Contains("NombreProducto"))
+                dgvDetalle.Columns["NombreProducto"].DisplayIndex = 0;
+            if (dgvDetalle.Columns.Contains("Marca"))
+                dgvDetalle.Columns["Marca"].DisplayIndex = 1;
+            if (dgvDetalle.Columns.Contains("PesoNeto"))
+                dgvDetalle.Columns["PesoNeto"].DisplayIndex = 2;
+            if (dgvDetalle.Columns.Contains("Cantidad"))
+                dgvDetalle.Columns["Cantidad"].DisplayIndex = 4;
+            if (dgvDetalle.Columns.Contains("Unidad"))
+                dgvDetalle.Columns["Unidad"].DisplayIndex = 3;
         }
 
         private void btnAprobar_Click_1(object sender, EventArgs e)

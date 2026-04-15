@@ -46,7 +46,7 @@
             dgvSolicitudesPendientes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvSolicitudesPendientes.Location = new Point(6, 41);
             dgvSolicitudesPendientes.Name = "dgvSolicitudesPendientes";
-            dgvSolicitudesPendientes.Size = new Size(386, 333);
+            dgvSolicitudesPendientes.Size = new Size(485, 333);
             dgvSolicitudesPendientes.TabIndex = 0;
             dgvSolicitudesPendientes.SelectionChanged += dgvSolicitudesPendientes_SelectionChanged;
             // 
@@ -55,7 +55,7 @@
             dgvDetalle.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDetalle.Location = new Point(6, 25);
             dgvDetalle.Name = "dgvDetalle";
-            dgvDetalle.Size = new Size(414, 443);
+            dgvDetalle.Size = new Size(560, 495);
             dgvDetalle.TabIndex = 1;
             // 
             // btnAprobar
@@ -70,7 +70,7 @@
             // 
             // btnRechazar
             // 
-            btnRechazar.Location = new Point(224, 380);
+            btnRechazar.Location = new Point(323, 380);
             btnRechazar.Name = "btnRechazar";
             btnRechazar.Size = new Size(168, 46);
             btnRechazar.TabIndex = 3;
@@ -84,9 +84,9 @@
             groupBox1.Controls.Add(dgvSolicitudesPendientes);
             groupBox1.Controls.Add(btnAprobar);
             groupBox1.Controls.Add(btnRechazar);
-            groupBox1.Location = new Point(12, 48);
+            groupBox1.Location = new Point(12, 49);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(398, 432);
+            groupBox1.Size = new Size(497, 437);
             groupBox1.TabIndex = 5;
             groupBox1.TabStop = false;
             groupBox1.Text = "Solicitudes de Traspaso Pendientes";
@@ -104,9 +104,9 @@
             // groupBox2
             // 
             groupBox2.Controls.Add(dgvDetalle);
-            groupBox2.Location = new Point(425, 12);
+            groupBox2.Location = new Point(529, 6);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(426, 474);
+            groupBox2.Size = new Size(572, 526);
             groupBox2.TabIndex = 6;
             groupBox2.TabStop = false;
             groupBox2.Text = "Detalle de Solicitud";
@@ -115,7 +115,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(863, 498);
+            ClientSize = new Size(1113, 544);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "FormGestiónTraspaso";

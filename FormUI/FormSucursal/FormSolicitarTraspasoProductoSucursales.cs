@@ -32,9 +32,41 @@ namespace FormUI.FormSucursal
 
         private void ConfigurarColumnasGrilla()
         {
-            // Ocultar IDs y acomodar visualmente como hiciste en Ventas
             dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            // ... (Ocultar IdProducto, etc.)
+            // Ocultamos los IDs y las navegaciones
+            if (dgvProductos.Columns.Contains("IdSolicitudDeTraspasoDeProductosDetalle"))
+                dgvProductos.Columns["IdSolicitudDeTraspasoDeProductosDetalle"].Visible = false;
+
+            if (dgvProductos.Columns.Contains("IdSolicitudDeTraspasoDeProductos"))
+                dgvProductos.Columns["IdSolicitudDeTraspasoDeProductos"].Visible = false;
+
+            if (dgvProductos.Columns.Contains("IdProducto"))
+                dgvProductos.Columns["IdProducto"].Visible = false;
+
+            if (dgvProductos.Columns.Contains("IdProductoNavigation"))
+                dgvProductos.Columns["IdProductoNavigation"].Visible = false;
+
+            if (dgvProductos.Columns.Contains("IdSolicitudDeTraspasoDeProductosNavigation"))
+                dgvProductos.Columns["IdSolicitudDeTraspasoDeProductosNavigation"].Visible = false;
+
+            // Cambiamos los títulos para el usuario
+            if (dgvProductos.Columns.Contains("NombreProducto"))
+                dgvProductos.Columns["NombreProducto"].HeaderText = "Producto";
+            if (dgvProductos.Columns.Contains("PesoNeto"))
+                dgvProductos.Columns["PesoNeto"].HeaderText = "Peso Neto";
+
+            // CAMBIAR EL ORDEN
+            if (dgvProductos.Columns.Contains("NombreProducto"))
+                dgvProductos.Columns["NombreProducto"].DisplayIndex = 0;
+
+            if (dgvProductos.Columns.Contains("Marca"))
+                dgvProductos.Columns["Marca"].DisplayIndex = 1;
+
+            if (dgvProductos.Columns.Contains("Cantidad"))
+                dgvProductos.Columns["Cantidad"].DisplayIndex = 2;
+
+            if (dgvProductos.Columns.Contains("Unidad"))
+                dgvProductos.Columns["Unidad"].DisplayIndex = 3;
         }
         private void CargarSucursales()
         {
@@ -55,7 +87,6 @@ namespace FormUI.FormSucursal
             Logic.Facade.ProductoService productoService = new Logic.Facade.ProductoService();
             cmbProducto.DataSource = productoService.GetAllProductos();
             cmbProducto.DisplayMember = "NombreConPeso";
-            cmbProducto.ValueMember = "Marca";
             cmbProducto.ValueMember = "IdProducto";
             cmbProducto.SelectedIndex = -1;
         }
@@ -95,7 +126,9 @@ namespace FormUI.FormSucursal
                     IdProducto = productoElegido.IdProducto,
                     NombreProducto = productoElegido.NombreProducto,
                     PesoNeto = (decimal)productoElegido.PesoNeto,
-                    Cantidad = cantidad
+                    Marca = productoElegido.Marca,
+                    Cantidad = cantidad,
+                    Unidad = "KG"
                 });
             }
             cmbProducto.SelectedIndex = -1;
@@ -175,6 +208,7 @@ namespace FormUI.FormSucursal
             else
             {
                 txtbPesoNeto.Clear();
+                txtbMarca.Clear();
             }
         }
     }

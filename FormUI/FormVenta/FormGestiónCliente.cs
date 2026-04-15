@@ -56,6 +56,7 @@ namespace FormUI.FormVenta
         /// </summary>
         private void ConfigurarColumnasDataGridView()
         {
+            dgvCliente.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             // Ocultar las propiedades de navegación y el ID que no son relevantes para el usuario
             if (dgvCliente.Columns.Contains("IdCliente"))
             {
@@ -67,9 +68,11 @@ namespace FormUI.FormVenta
             }
             if (dgvCliente.Columns.Contains("IdTipoClienteNavigation"))
             {
-                // Si usaste Eager Loading, puedes mostrar el nombre del tipo:
-                // dgvClientes.Columns["IdTipoClienteNavigation"].HeaderText = "Tipo Cliente";
                 dgvCliente.Columns["IdTipoClienteNavigation"].Visible = false;
+            }
+            if (dgvCliente.Columns.Contains("Venta"))
+            {
+                dgvCliente.Columns["Venta"].Visible = false;
             }
 
             // Renombrar columnas para la visualización del usuario

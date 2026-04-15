@@ -14,9 +14,7 @@ namespace FormUI.FormCompra
 {
     public partial class FormGestiónOP : Form
     {
-        // Instancia del servicio que gestiona la lógica de OP
         private readonly OrdenDePedidoService _ordenService;
-        // Constante para el estado "Pendiente de Gestión"
         private const int ESTADO_PENDIENTE = 1;
 
         public FormGestiónOP()
@@ -28,6 +26,7 @@ namespace FormUI.FormCompra
 
         private void ConfigurarDataGridView()
         {
+            dgvDetalleOP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvOrdenDePedido.AutoGenerateColumns = false;
 
             dgvOrdenDePedido.Columns.Add("IdOrdenDePedido", "ID Orden");
@@ -53,6 +52,7 @@ namespace FormUI.FormCompra
         {
             try
             {
+                dgvDetalleOP.DataSource = null;
                 // 1. Obtener todas las órdenes
                 List<OrdenDePedidoDTO> todasLasOrdenes = _ordenService.ObtenerTodas();
 
@@ -151,5 +151,85 @@ namespace FormUI.FormCompra
                 }
             }
         }
+
+        private void dgvOrdenDePedido_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvOrdenDePedido.CurrentRow != null)
+            {
+                try
+                {
+                    // 1. Obtenemos el ID de la OP seleccionada
+                    Guid idSeleccionado = (Guid)dgvOrdenDePedido.CurrentRow.Cells["IdOrdenDePedido"].Value;
+
+                    // 2. Vamos a buscar los detalles (¡Acordate de armar este método en tu Service/Logic/Repo!)
+                    var detalles = _ordenService.ObtenerDetallesPorOrden(idSeleccionado);
+
+                    // 3. Llenamos la segunda grilla
+                    dgvDetalleOP.DataSource = detalles;
+
+                    // 4. Acomodamos las columnas
+                    ConfigurarDataGridViewDetalle();
+                }
+                catch (Exception ex)
+                {
+                    // Silenciamos el error si justo se está vaciando la grilla
+                    if (dgvOrdenDePedido.DataSource != null)
+                    {
+                        MessageBox.Show($"Error al cargar el detalle: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        private void ConfigurarDataGridViewDetalle()
+        {
+            dgvDetalleOP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // 1. Ocultar IDs y navegaciones
+            if (dgvDetalleOP.Columns.Contains("IdOrdenDePedidoDetalle")) dgvDetalleOP.Columns["IdOrdenDePedidoDetalle"].Visible = false;
+            if (dgvDetalleOP.Columns.Contains("IdOrdenDePedido")) dgvDetalleOP.Columns["IdOrdenDePedido"].Visible = false;
+            if (dgvDetalleOP.Columns.Contains("IdProducto")) dgvDetalleOP.Columns["IdProducto"].Visible = false;
+            if (dgvDetalleOP.Columns.Contains("IdOrdenDePedidoNavigation")) dgvDetalleOP.Columns["IdOrdenDePedidoNavigation"].Visible = false;
+            if (dgvDetalleOP.Columns.Contains("IdProductoNavigation")) dgvDetalleOP.Columns["IdProductoNavigation"].Visible = false;
+            if (dgvDetalleOP.Columns.Contains("PrecioNeto")) dgvDetalleOP.Columns["PrecioNeto"].Visible = false;
+
+            // 2. Renombrar y Ordenar (Asumiendo que traemos Nombre, Marca, Cantidad y Precio)
+            if (dgvDetalleOP.Columns.Contains("NombreProducto"))
+            {
+                dgvDetalleOP.Columns["NombreProducto"].HeaderText = "Producto";
+                dgvDetalleOP.Columns["NombreProducto"].DisplayIndex = 0;
+            }
+
+            if (dgvDetalleOP.Columns.Contains("Marca"))
+            {
+                dgvDetalleOP.Columns["Marca"].HeaderText = "Marca";
+                dgvDetalleOP.Columns["Marca"].DisplayIndex = 1;
+            }
+
+            if (dgvDetalleOP.Columns.Contains("PesoNeto"))
+            {
+                dgvDetalleOP.Columns["PesoNeto"].HeaderText = "PesoNeto";
+                dgvDetalleOP.Columns["PesoNeto"].DisplayIndex = 2;
+            }
+
+            if (dgvDetalleOP.Columns.Contains("Unidad"))
+            {
+                dgvDetalleOP.Columns["Unidad"].HeaderText = "Unidad";
+                dgvDetalleOP.Columns["Unidad"].DisplayIndex = 3;
+            }
+
+            if (dgvDetalleOP.Columns.Contains("Cantidad"))
+            {
+                dgvDetalleOP.Columns["Cantidad"].HeaderText = "Cantidad";
+                dgvDetalleOP.Columns["Cantidad"].DisplayIndex = 4;
+            }
+
+            if (dgvDetalleOP.Columns.Contains("PrecioUnitario"))
+            {
+                dgvDetalleOP.Columns["PrecioUnitario"].HeaderText = "Precio Unit.";
+                dgvDetalleOP.Columns["PrecioUnitario"].DisplayIndex = 5;
+            }
+        }
+
     }
 }

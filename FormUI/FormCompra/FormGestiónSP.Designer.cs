@@ -34,8 +34,12 @@
             btnActualizar = new Button();
             label1 = new Label();
             groupBox1 = new GroupBox();
+            groupBox2 = new GroupBox();
+            dgvDetalleSP = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)dgvSolicitudDePedido).BeginInit();
             groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvDetalleSP).BeginInit();
             SuspendLayout();
             // 
             // dgvSolicitudDePedido
@@ -46,6 +50,7 @@
             dgvSolicitudDePedido.Name = "dgvSolicitudDePedido";
             dgvSolicitudDePedido.Size = new Size(341, 358);
             dgvSolicitudDePedido.TabIndex = 0;
+            dgvSolicitudDePedido.SelectionChanged += dgvSolicitudDePedido_SelectionChanged;
             // 
             // btnDardeBaja
             // 
@@ -104,11 +109,30 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Solicitud de Pedido";
             // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(dgvDetalleSP);
+            groupBox2.Location = new Point(386, 12);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(574, 493);
+            groupBox2.TabIndex = 10;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Detalle";
+            // 
+            // dgvDetalleSP
+            // 
+            dgvDetalleSP.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvDetalleSP.Location = new Point(6, 22);
+            dgvDetalleSP.Name = "dgvDetalleSP";
+            dgvDetalleSP.Size = new Size(562, 465);
+            dgvDetalleSP.TabIndex = 0;
+            // 
             // FormGestiónSP
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(398, 518);
+            ClientSize = new Size(972, 515);
+            Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGestiónSP";
@@ -117,6 +141,8 @@
             ((System.ComponentModel.ISupportInitialize)dgvSolicitudDePedido).EndInit();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
+            groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvDetalleSP).EndInit();
             ResumeLayout(false);
 
         }
@@ -129,5 +155,7 @@
         private System.Windows.Forms.Button btnActualizar;
         private System.Windows.Forms.Label label1;
         private GroupBox groupBox1;
+        private GroupBox groupBox2;
+        private DataGridView dgvDetalleSP;
     }
 }

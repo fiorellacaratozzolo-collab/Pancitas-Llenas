@@ -24,19 +24,19 @@ namespace FormUI.FormCompra
         {
             InitializeComponent();
             _solicitudService = new SolicitudDePedidoService();
-            // Configurar el DataGridView al inicio
             ConfigurarDataGridView();
         }
 
         private void ConfigurarDataGridView()
         {
+            dgvSolicitudDePedido.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             // Esto previene la generación automática de columnas
             dgvSolicitudDePedido.AutoGenerateColumns = false;
 
             // Aquí defines las columnas que quieres mostrar (ejemplos)
             dgvSolicitudDePedido.Columns.Add("IdSolicitudDePedido", "ID Solicitud");
             dgvSolicitudDePedido.Columns["IdSolicitudDePedido"].DataPropertyName = "IdSolicitudDePedido";
-            dgvSolicitudDePedido.Columns["IdSolicitudDePedido"].Visible = false; // Ocultar el GUID
+            dgvSolicitudDePedido.Columns["IdSolicitudDePedido"].Visible = false; 
 
             dgvSolicitudDePedido.Columns.Add("FechaSp", "Fecha");
             dgvSolicitudDePedido.Columns["FechaSp"].DataPropertyName = "FechaSp";
@@ -65,7 +65,7 @@ namespace FormUI.FormCompra
 
                 // 3. Asignar al DataGridView
                 dgvSolicitudDePedido.DataSource = solicitudesPendientes;
-
+                dgvDetalleSP.DataSource = null;
                 if (solicitudesPendientes.Count == 0)
                 {
                     MessageBox.Show("No hay Solicitudes de Pedido pendientes para gestionar.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -75,7 +75,7 @@ namespace FormUI.FormCompra
             {
                 MessageBox.Show($"Error al cargar las solicitudes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }       
+        }
 
         private void btnGenerarOP_Click(object sender, EventArgs e)
         {
@@ -112,7 +112,7 @@ namespace FormUI.FormCompra
         }
 
         private void btnDardeBaja_Click(object sender, EventArgs e)
-        {          
+        {
             if (dgvSolicitudDePedido.CurrentRow == null)
             {
                 MessageBox.Show("Debe seleccionar una Solicitud de Pedido para dar de baja.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -142,5 +142,79 @@ namespace FormUI.FormCompra
                 }
             }
         }
+
+        private void dgvSolicitudDePedido_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvSolicitudDePedido.CurrentRow != null)
+            {
+                try
+                {
+                    // 1. Obtenemos el ID de la fila seleccionada
+                    Guid idSeleccionado = (Guid)dgvSolicitudDePedido.CurrentRow.Cells["IdSolicitudDePedido"].Value;
+
+                    // 2. Buscamos los detalles usando tu servicio 
+                    // (Asegurate de tener este método creado en tu SolicitudDePedidoService/Logic)
+                    var detalles = _solicitudService.ObtenerDetallesPorSolicitud(idSeleccionado);
+
+                    // 3. Llenamos la grilla de detalles
+                    dgvDetalleSP.DataSource = detalles;
+
+                    // 4. La ponemos linda
+                    ConfigurarDataGridViewDetalle();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al cargar el detalle: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void ConfigurarDataGridViewDetalle()
+        {
+            dgvDetalleSP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            // 1. Ocultar IDs y navegaciones de Entity Framework
+            if (dgvDetalleSP.Columns.Contains("IdSolicitudDePedidoDetalle"))
+                dgvDetalleSP.Columns["IdSolicitudDePedidoDetalle"].Visible = false;
+
+            if (dgvDetalleSP.Columns.Contains("IdSolicitudDePedido"))
+                dgvDetalleSP.Columns["IdSolicitudDePedido"].Visible = false;
+
+            if (dgvDetalleSP.Columns.Contains("IdProducto"))
+                dgvDetalleSP.Columns["IdProducto"].Visible = false;
+
+            if (dgvDetalleSP.Columns.Contains("IdProductoNavigation"))
+                dgvDetalleSP.Columns["IdProductoNavigation"].Visible = false;
+
+            if (dgvDetalleSP.Columns.Contains("IdSolicitudDePedidoNavigation"))
+                dgvDetalleSP.Columns["IdSolicitudDePedidoNavigation"].Visible = false;
+
+            // 2. Renombrar las columnas (Asumiendo que tenés estas propiedades en tu DTO)
+            if (dgvDetalleSP.Columns.Contains("NombreProducto"))
+                dgvDetalleSP.Columns["NombreProducto"].HeaderText = "Producto";
+
+            if (dgvDetalleSP.Columns.Contains("PesoNeto"))
+                dgvDetalleSP.Columns["PesoNeto"].HeaderText = "Peso Neto";
+
+            if (dgvDetalleSP.Columns.Contains("Cantidad"))
+                dgvDetalleSP.Columns["Cantidad"].HeaderText = "Cant. Solicitada";
+
+            // 3. (Opcional) Ordenar las columnas
+            if (dgvDetalleSP.Columns.Contains("NombreProducto"))
+                dgvDetalleSP.Columns["NombreProducto"].DisplayIndex = 0;
+
+            if (dgvDetalleSP.Columns.Contains("Marca"))
+                dgvDetalleSP.Columns["Marca"].DisplayIndex = 1;
+
+            if (dgvDetalleSP.Columns.Contains("PesoNeto"))
+                dgvDetalleSP.Columns["PesoNeto"].DisplayIndex = 2;
+
+            if (dgvDetalleSP.Columns.Contains("Unidad"))
+                dgvDetalleSP.Columns["Unidad"].DisplayIndex = 3;
+
+            if (dgvDetalleSP.Columns.Contains("Cantidad"))
+                dgvDetalleSP.Columns["Cantidad"].DisplayIndex = 4;
+        }
+
     }
 }

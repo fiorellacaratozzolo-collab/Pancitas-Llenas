@@ -17,6 +17,7 @@ namespace ModelsDTO
         public int Cantidad { get; set; }
 
         public decimal PesoNeto { get; set; }
+        public string? Marca { get; set; }
 
         public string Unidad { get; set; } = null!;
         public string? NombreProducto { get; set; }

@@ -21,9 +21,9 @@ namespace ModelsDTO
         public decimal PrecioUnitario { get; set; }
 
         public string Unidad { get; set; } = null!;
-
-        public decimal Subtotal { get; set; }
-
+        public string? NombreProducto { get; set; }
+        public string? Marca { get; set; }
+        public decimal Subtotal => Cantidad * PrecioUnitario;
         public decimal? PrecioNeto { get; set; }
         public virtual OrdenDePedidoDTO IdOrdenDePedidoNavigation { get; set; } = null!;
     }

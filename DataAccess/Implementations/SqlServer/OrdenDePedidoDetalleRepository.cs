@@ -23,5 +23,13 @@ namespace DataAccess.Implementations.SqlServer
         {
             _context.OrdenDePedidoDetalles.AddRange(detalles);
         }
+
+        public List<OrdenDePedidoDetalle> GetByIdOrden(Guid idOrden)
+        {
+            return _context.OrdenDePedidoDetalles
+                .Include(d => d.IdProductoNavigation)
+                .Where(d => d.IdOrdenDePedido == idOrden)
+                .ToList();
+        }
     }
 }

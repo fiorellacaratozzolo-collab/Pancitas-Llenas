@@ -41,7 +41,10 @@ namespace FormUI.FormInventario
 
         private void ConfigurarDGV()
         {
+            dgvAgregarStock.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvAgregarStock.Columns.Clear();
+            if (dgvAgregarStock.Columns.Contains("IdProducto"))
+                dgvAgregarStock.Columns["IdProducto"].Visible = false;
 
             // === COLUMNA: IdProducto (oculta) ===
             var colId = new DataGridViewTextBoxColumn
