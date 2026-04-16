@@ -23,7 +23,7 @@ namespace ModelsDTO
         public string MetodoPago { get; set; } = null!;
 
         public decimal MontoDescuento { get; set; }
-
+        public string? NombreCliente { get; set; }
         public bool EsMayorista { get; set; }
 
         public virtual ClienteDTO IdClienteNavigation { get; set; } = null!;

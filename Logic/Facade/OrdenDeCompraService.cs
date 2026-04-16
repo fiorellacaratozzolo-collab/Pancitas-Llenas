@@ -34,5 +34,10 @@ namespace Logic.Facade
         {
             _logic.FinalizarOrden(ordenId);
         }
+
+        public List<OrdenDeCompraDetalleDTO> ObtenerDetallesPorOrden(Guid idOrdenCompra)
+        {
+            return _logic.ObtenerDetallesPorOrden(idOrdenCompra);
+        }
     }
 }

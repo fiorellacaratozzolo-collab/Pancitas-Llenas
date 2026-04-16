@@ -142,5 +142,53 @@ namespace Logic
                 throw new ApplicationException("Error al rechazar el traspaso.", ex);
             }
         }
+
+        public List<HistorialTraspasoDTO> ObtenerHistorialTraspasos(Guid idSucursalActual)
+        {
+
+            // 1. Buscamos en tu repositorio (acordate de cambiar el "2" por tu estado de "Aprobado")
+            var solicitudesBd = _unitOfWork.SolicitudesTraspaso.GetAll()
+                .Where(t => (t.IdSucursalOrigen == idSucursalActual || t.IdSucursalDestino == idSucursalActual)
+                         && t.IdEstadoStp == 2)
+                .OrderByDescending(t => t.FechaStp) // Usamos tu campo FechaStp
+                .ToList();
+
+            var listaHistorial = new List<HistorialTraspasoDTO>();
+
+            foreach (var t in solicitudesBd)
+            {
+                // 2. Usamos el nombre EXACTO de tu colección de detalles
+                foreach (var detalle in t.SolicitudDeTraspasoDeProductosDetalles)
+                {
+                    var dto = new HistorialTraspasoDTO
+                    {
+                        Fecha = t.FechaStp, // Tu campo de fecha
+
+                        // NOTA: Borré el UsuarioResponsable porque no está en tu base de datos.
+
+                        // Asumo que tu detalle tiene una navegación al Producto, chequeá este nombre:
+                        Producto = detalle.IdProductoNavigation?.NombreProducto ?? "Desconocido",
+                        Cantidad = detalle.Cantidad
+                    };
+
+                    // 3. Definimos si entró o salió mercadería
+                    if (t.IdSucursalDestino == idSucursalActual)
+                    {
+                        dto.TipoMovimiento = "INGRESO";
+                        dto.SucursalInvolucrada = $"Desde: {t.IdSucursalOrigenNavigation?.NombreSucursal}";
+                    }
+                    else
+                    {
+                        dto.TipoMovimiento = "EGRESO";
+                        dto.SucursalInvolucrada = $"Hacia: {t.IdSucursalDestinoNavigation?.NombreSucursal}";
+                    }
+
+                    listaHistorial.Add(dto);
+                }
+            }
+
+            return listaHistorial;
+        }
+
     }
 }

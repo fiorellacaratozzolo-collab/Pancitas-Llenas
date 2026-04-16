@@ -1,6 +1,7 @@
 ﻿using DataAccess.Contexts;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,9 @@ namespace DataAccess.Implementations.SqlServer
 
         public List<Ventum> GetAll()
         {
-            return _context.Venta.ToList();
+            return _context.Venta
+                .Include(v => v.IdClienteNavigation)
+                .ToList();
         }
         public void Delete(Guid id)
         {
@@ -36,6 +39,13 @@ namespace DataAccess.Implementations.SqlServer
             {
                 _context.Venta.Remove(ventaAEliminar);
             }
+        }
+        public List<Ventum> GetBySucursal(Guid idSucursal)
+        {
+            return _context.Venta 
+                .Include(v => v.IdClienteNavigation) 
+                .Where(v => v.IdSucursal == idSucursal)
+                .ToList();
         }
     }
 }

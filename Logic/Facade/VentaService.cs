@@ -37,5 +37,9 @@ namespace Logic.Facade
             _ventaLogic.AnularVenta(idVenta, idSucursal);
         }
 
+        public List<VentumDTO> ObtenerVentasPorSucursal(Guid idSucursal)
+        {
+            return _ventaLogic.ObtenerVentasPorSucursal(idSucursal);
+        }
     }
 }

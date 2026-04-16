@@ -120,5 +120,10 @@ namespace Logic
             _unitOfWork.Complete();
         }
 
+        public List<VentumDTO> ObtenerVentasPorSucursal(Guid idSucursal)
+        {
+            var ventas = _unitOfWork.Ventas.GetBySucursal(idSucursal);
+            return _mapper.Map<List<VentumDTO>>(ventas);
+        }
     }
 }

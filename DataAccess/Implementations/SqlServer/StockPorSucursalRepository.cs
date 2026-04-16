@@ -48,8 +48,8 @@ namespace DataAccess.Implementations.SqlServer
 
         public List<StockPorSucursal> GetBySucursal(Guid idSucursal)
         {
-            // Obtiene todos los stocks en una sucursal
             return _context.StockPorSucursals
+                           .Include(s => s.IdProductoNavigation)
                            .Where(s => s.IdSucursal == idSucursal)
                            .ToList();
         }

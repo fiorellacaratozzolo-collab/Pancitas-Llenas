@@ -30,7 +30,12 @@ namespace DataAccess.Implementations.SqlServer
 
         public List<SolicitudDeTraspasoDeProducto> GetAll()
         {
-            return _context.SolicitudDeTraspasoDeProductos.ToList();
+            return _context.SolicitudDeTraspasoDeProductos
+            .Include(s => s.IdSucursalOrigenNavigation)
+            .Include(s => s.IdSucursalDestinoNavigation)
+            .Include(s => s.SolicitudDeTraspasoDeProductosDetalles)
+                .ThenInclude(d => d.IdProductoNavigation) 
+            .ToList();
         }
 
         public SolicitudDeTraspasoDeProducto GetById(Guid idSolicitud)

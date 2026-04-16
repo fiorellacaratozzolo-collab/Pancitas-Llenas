@@ -66,14 +66,20 @@ namespace FormUI.FormVenta
 
             if (dgvProductoPrecio.Columns.Contains("PesoNeto"))
             {
+                dgvProductoPrecio.Columns["Marca"].HeaderText = "Marca";
+                dgvProductoPrecio.Columns["Marca"].DisplayIndex = 1;
+            }
+
+            if (dgvProductoPrecio.Columns.Contains("PesoNeto"))
+            {
                 dgvProductoPrecio.Columns["PesoNeto"].HeaderText = "Peso Neto";
-                dgvProductoPrecio.Columns["PesoNeto"].DisplayIndex = 1;
+                dgvProductoPrecio.Columns["PesoNeto"].DisplayIndex = 2;
             }
 
             if (dgvProductoPrecio.Columns.Contains("Unidad"))
             {
                 dgvProductoPrecio.Columns["Unidad"].HeaderText = "Unidad";
-                dgvProductoPrecio.Columns["Unidad"].DisplayIndex = 2;
+                dgvProductoPrecio.Columns["Unidad"].DisplayIndex = 3;
             }
 
             if (dgvProductoPrecio.Columns.Contains("PrecioNeto"))
@@ -81,14 +87,14 @@ namespace FormUI.FormVenta
                 dgvProductoPrecio.Columns["PrecioNeto"].HeaderText = "Precio";
                 dgvProductoPrecio.Columns["PrecioNeto"].DefaultCellStyle.Format = "N2";
                 dgvProductoPrecio.Columns["PrecioNeto"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dgvProductoPrecio.Columns["PrecioNeto"].DisplayIndex = 3;
+                dgvProductoPrecio.Columns["PrecioNeto"].DisplayIndex = 4;
             }
 
             // 3. Ajustes visuales de seguridad (Solo Lectura)
-            dgvProductoPrecio.ReadOnly = true; // Nadie puede editar los precios desde acá
+            dgvProductoPrecio.ReadOnly = true;
             dgvProductoPrecio.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvProductoPrecio.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dgvProductoPrecio.AllowUserToAddRows = false; // Quita la fila vacía del final
+            dgvProductoPrecio.AllowUserToAddRows = false;
         }
 
         private void txtBuscar_TextChanged(object sender, EventArgs e)

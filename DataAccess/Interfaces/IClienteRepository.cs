@@ -19,5 +19,6 @@ namespace DataAccess.Interfaces
         List<Cliente> GetAll();
         List<Cliente> GetByTipoCliente(int IdTipoCliente);
         Cliente? GetByDni(int? dni);
+        void Update(Cliente cliente);
     }
 }

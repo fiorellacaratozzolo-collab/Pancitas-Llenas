@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Logic.Facade;
+using Services.Facade;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,10 +15,11 @@ namespace FormUI.FormInventario
 {
     public partial class FormVerStockDisponible : Form
     {
+        private readonly InventarioService _stockService;
         public FormVerStockDisponible()
         {
             InitializeComponent();
-            //CargarStockEnDGV();
+            _stockService = new InventarioService();
         }
 
         /// <summary>
@@ -38,42 +40,6 @@ namespace FormUI.FormInventario
                     return Color.White;     // Estado desconocido
             }
         }
-
-        /// <summary>
-        /// Carga el stock de todas las sucursales en el DataGridView.
-        /// </summary>
-        //private void CargarStockEnDGV()
-        //{
-        //    try
-        //    {
-        //        // 1. Obtener todos los registros de stock de la fachada
-        //        List<StockPorSucursal> listaStock = _inventarioLogic.ObtenerTodoElStock();
-
-        //        // 2. Proyectar a un tipo anónimo o ViewModel para el DataGridView
-        //        var dataSource = listaStock.Select(s => new
-        //        {
-        //            // Se asume que las propiedades de navegación están cargadas
-        //            IdEstadoStock = s.IdEstadoStock,
-        //            Producto = s.IdProductoNavigation.NombreProducto,
-        //            Sucursal = s.IdSucursalNavigation.NombreSucursal,
-        //            StockActual = s.StockActual,
-        //            StockDeseado = s.StockDeseado,
-        //            Estado = s.IdEstadoStockNavigation.Descripcion // Descripción del estado (Verde/Amarillo/Rojo)
-        //        }).ToList();
-
-        //        // 3. Asignar la fuente de datos
-        //        dgvStock.DataSource = null;
-        //        dgvStock.DataSource = dataSource;
-
-        //        // 4. Configurar el DGV y aplicar el semáforo
-        //        ConfigurarDGVStock();
-        //        AplicarSemaforoDGV();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show($"Error al cargar el stock: {ex.Message}", "Error de Carga", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-        //}
 
         /// <summary>
         /// Aplica formato y colores de semáforo a las filas del DataGridView.
@@ -103,35 +69,75 @@ namespace FormUI.FormInventario
             }
         }
 
-        /// <summary>
-        /// Configura la visibilidad y encabezados de las columnas del DataGridView.
-        /// </summary>
-        private void ConfigurarDGVStock()
-        {
-            // Ocultar la columna del ID de estado (solo la usamos para el color)
-            if (dgvStock.Columns.Contains("IdEstadoStock"))
-                dgvStock.Columns["IdEstadoStock"].Visible = false;
-
-            // Renombrar y dimensionar las columnas
-            dgvStock.Columns["Producto"].HeaderText = "Producto";
-            dgvStock.Columns["Sucursal"].HeaderText = "Ubicación";
-            dgvStock.Columns["StockActual"].HeaderText = "Stock Actual";
-            dgvStock.Columns["StockDeseado"].HeaderText = "Stock Deseado";
-            dgvStock.Columns["Estado"].HeaderText = "Estado (Semáforo)";
-
-            // Ajustar el ancho de las columnas (opcional)
-            dgvStock.Columns["Producto"].Width = 200;
-        }
-
         private void FormVerStockDisponible_Load(object sender, EventArgs e)
         {
-
+            btnVer_Click(this, EventArgs.Empty);
         }
 
         private void btnVer_Click(object sender, EventArgs e)
         {
-            // Si tienes un botón "Ver" para refrescar la lista
-            //CargarStockEnDGV();
+            try
+            {
+                Guid miSucursal = SessionManager.Current.IdSucursalActual.Value;
+                var miStock = _stockService.ObtenerStockPorSucursal(miSucursal);
+                dgvStock.DataSource = null;
+                dgvStock.DataSource = miStock;
+
+                if (miStock.Count == 0)
+                {
+                    MessageBox.Show("No hay stock registrado para esta sucursal.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                ConfigurarGrillaStock();
+                AplicarSemaforoDGV();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar el stock: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
+
+        private void ConfigurarGrillaStock()
+        {
+            dgvStock.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            if (dgvStock.Columns.Contains("IdStockPorSucursal")) dgvStock.Columns["IdStockPorSucursal"].Visible = false;
+            if (dgvStock.Columns.Contains("IdSucursal")) dgvStock.Columns["IdSucursal"].Visible = false;
+            if (dgvStock.Columns.Contains("IdProducto")) dgvStock.Columns["IdProducto"].Visible = false;
+            if (dgvStock.Columns.Contains("IdSucursalNavigation")) dgvStock.Columns["IdSucursalNavigation"].Visible = false;
+            if (dgvStock.Columns.Contains("IdProductoNavigation")) dgvStock.Columns["IdProductoNavigation"].Visible = false;
+            if (dgvStock.Columns.Contains("IdEstadoStockNavigation")) dgvStock.Columns["IdEstadoStockNavigation"].Visible = false;
+            if (dgvStock.Columns.Contains("IdStockSucursal")) dgvStock.Columns["IdStockSucursal"].Visible = false;
+            if (dgvStock.Columns.Contains("IdEstadoStock")) dgvStock.Columns["IdEstadoStock"].Visible = false;
+
+            // Renombrar y ordenar
+            if (dgvStock.Columns.Contains("NombreProducto"))
+            {
+                dgvStock.Columns["NombreProducto"].HeaderText = "Producto";
+                dgvStock.Columns["NombreProducto"].DisplayIndex = 0;
+            }
+
+            if (dgvStock.Columns.Contains("Marca"))
+            {
+                dgvStock.Columns["Marca"].HeaderText = "Marca";
+                dgvStock.Columns["Marca"].DisplayIndex = 1;
+            }
+            if (dgvStock.Columns.Contains("PesoNeto"))
+            {
+                dgvStock.Columns["PesoNeto"].HeaderText = "Peso Neto";
+                dgvStock.Columns["PesoNeto"].DisplayIndex = 2;
+            }
+            if (dgvStock.Columns.Contains("Unidad"))
+            {
+                dgvStock.Columns["Unidad"].HeaderText = "Unidad";
+                dgvStock.Columns["Unidad"].DisplayIndex = 3;
+            }
+            if (dgvStock.Columns.Contains("Cantidad"))
+            {
+                dgvStock.Columns["Cantidad"].HeaderText = "Stock Disponible";
+                dgvStock.Columns["Cantidad"].DisplayIndex = 4;
+                dgvStock.Columns["Cantidad"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+        }
+
     }
 }

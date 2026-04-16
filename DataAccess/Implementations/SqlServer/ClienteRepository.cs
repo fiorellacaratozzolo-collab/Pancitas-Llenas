@@ -28,14 +28,12 @@ namespace DataAccess.Implementations.SqlServer
 
             cliente.IdCliente = Guid.NewGuid();
             _context.Clientes.Add(cliente);
-            // La persistencia se hará a través del UoW.Complete()
 
             return cliente.IdCliente;
         }
 
         public List<Cliente> GetAll()
         {
-            // Usa ToList() para ejecutar la consulta de Entity Framework
             return _context.Clientes.ToList();
         }
 
@@ -51,19 +49,20 @@ namespace DataAccess.Implementations.SqlServer
             var cliente = _context.Clientes.Find(id);
             if (cliente != null)
             {
-                // Borrado físico (NO RECOMENDADO para producción)
                 _context.Clientes.Remove(cliente);
-
-                // LÓGICA DE BORRADO LÓGICO (Ideal):
-                // cliente.Activo = false; // Se necesita agregar 'public bool Activo { get; set; }' al modelo Cliente
-                // _context.Entry(cliente).State = EntityState.Modified; 
             }
         }
 
         public Cliente? GetByDni(int? dni)
         {
-            // Busca el primer cliente con el DNI proporcionado o devuelve null si no existe
             return _context.Clientes.FirstOrDefault(c => c.Dni == dni);
+        }
+
+        public void Update(Cliente cliente)
+        {
+            if (cliente == null)
+                throw new ArgumentNullException(nameof(cliente));
+            _context.Clientes.Update(cliente);
         }
     }
 }

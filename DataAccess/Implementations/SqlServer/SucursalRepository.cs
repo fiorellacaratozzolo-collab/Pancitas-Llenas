@@ -1,6 +1,7 @@
 ﻿using DataAccess.Contexts;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,6 @@ namespace DataAccess.Implementations.SqlServer
 
         public List<Sucursal> GetByTipoSucursal(int idTipoSucursal)
         {
-            // Filtra por la clave foránea IdTipoSucursal
             return _context.Sucursals
                            .Where(s => s.IdTipoSucursal == idTipoSucursal)
                            .ToList();
@@ -46,7 +46,14 @@ namespace DataAccess.Implementations.SqlServer
 
         public void Update(Sucursal sucursal)
         {
-            _context.Sucursals.Update(sucursal);
+            if (sucursal == null)
+                throw new ArgumentNullException(nameof(sucursal));
+            var sucursalDb = _context.Sucursals.Find(sucursal.IdSucursal);
+
+            if (sucursalDb != null)
+            {
+                _context.Entry(sucursalDb).CurrentValues.SetValues(sucursal);
+            }
         }
 
         public void Delete(Guid id)
@@ -54,14 +61,12 @@ namespace DataAccess.Implementations.SqlServer
             var sucursal = _context.Sucursals.Find(id);
             if (sucursal != null)
             {
-                _context.Sucursals.Remove(sucursal); // Borrado físico
-                // Lógica de Soft Delete si el modelo Sucursal tiene una propiedad 'Activo'
+                _context.Sucursals.Remove(sucursal);
             }
         }
 
         public List<Sucursal> SearchByDireccion(string direccionFragment)
         {
-            // Usamos ToLower() y Contains() para una búsqueda parcial insensible a mayúsculas/minúsculas.
             string search = direccionFragment.ToLower();
 
             return _context.Sucursals

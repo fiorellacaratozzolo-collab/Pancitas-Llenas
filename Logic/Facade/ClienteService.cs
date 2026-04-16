@@ -35,5 +35,9 @@ namespace Logic.Facade
             _clienteLogic.DeshabilitarCliente(id);
         }
 
+        public void UpdateCliente(ClienteDTO clienteDTO)
+        {
+            _clienteLogic.UpdateCliente(clienteDTO);
+        }
     }
 }

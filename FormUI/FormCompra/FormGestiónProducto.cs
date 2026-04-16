@@ -60,8 +60,8 @@ namespace FormUI.FormCompra
                 dgvProducto.Columns["SolicitudDeTraspasoDeProductosDetalles"].Visible = false;
             if (dgvProducto.Columns.Contains("NombreConPeso"))
                 dgvProducto.Columns["NombreConPeso"].Visible = false;
-            if (dgvProducto.Columns.Contains("StockPorSucursal"))
-                dgvProducto.Columns["StockPorSucursal"].Visible = false;
+            if (dgvProducto.Columns.Contains("StockPorSucursals"))
+                dgvProducto.Columns["StockPorSucursals"].Visible = false;
             if (dgvProducto.Columns.Contains("VentaDetalles"))
                 dgvProducto.Columns["VentaDetalles"].Visible = false;
 

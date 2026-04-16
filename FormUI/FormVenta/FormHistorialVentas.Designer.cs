@@ -29,21 +29,23 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            btnVerTodas = new Button();
             bntBuscar = new Button();
             label2 = new Label();
-            datetimeHistorialVenta = new DateTimePicker();
-            dataGridView1 = new DataGridView();
+            dtpFecha = new DateTimePicker();
+            dgvHistorialVentas = new DataGridView();
             label1 = new Label();
             groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvHistorialVentas).BeginInit();
             SuspendLayout();
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnVerTodas);
             groupBox1.Controls.Add(bntBuscar);
             groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(datetimeHistorialVenta);
-            groupBox1.Controls.Add(dataGridView1);
+            groupBox1.Controls.Add(dtpFecha);
+            groupBox1.Controls.Add(dgvHistorialVentas);
             groupBox1.Location = new Point(9, 28);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
@@ -52,15 +54,26 @@
             groupBox1.TabIndex = 5;
             groupBox1.TabStop = false;
             // 
+            // btnVerTodas
+            // 
+            btnVerTodas.Location = new Point(113, 31);
+            btnVerTodas.Name = "btnVerTodas";
+            btnVerTodas.Size = new Size(95, 40);
+            btnVerTodas.TabIndex = 12;
+            btnVerTodas.Text = "Ver Todas";
+            btnVerTodas.UseVisualStyleBackColor = true;
+            btnVerTodas.Click += btnVerTodas_Click;
+            // 
             // bntBuscar
             // 
-            bntBuscar.Location = new Point(603, 38);
+            bntBuscar.Location = new Point(603, 34);
             bntBuscar.Margin = new Padding(4, 3, 4, 3);
             bntBuscar.Name = "bntBuscar";
             bntBuscar.Size = new Size(53, 27);
             bntBuscar.TabIndex = 11;
             bntBuscar.Text = "Buscar";
             bntBuscar.UseVisualStyleBackColor = true;
+            bntBuscar.Click += bntBuscar_Click;
             // 
             // label2
             // 
@@ -72,22 +85,22 @@
             label2.TabIndex = 10;
             label2.Text = "Seleccionar Fecha:";
             // 
-            // datetimeHistorialVenta
+            // dtpFecha
             // 
-            datetimeHistorialVenta.Location = new Point(346, 38);
-            datetimeHistorialVenta.Margin = new Padding(4, 3, 4, 3);
-            datetimeHistorialVenta.Name = "datetimeHistorialVenta";
-            datetimeHistorialVenta.Size = new Size(249, 23);
-            datetimeHistorialVenta.TabIndex = 9;
+            dtpFecha.Location = new Point(346, 38);
+            dtpFecha.Margin = new Padding(4, 3, 4, 3);
+            dtpFecha.Name = "dtpFecha";
+            dtpFecha.Size = new Size(249, 23);
+            dtpFecha.TabIndex = 9;
             // 
-            // dataGridView1
+            // dgvHistorialVentas
             // 
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(18, 80);
-            dataGridView1.Margin = new Padding(4, 3, 4, 3);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.Size = new Size(957, 568);
-            dataGridView1.TabIndex = 6;
+            dgvHistorialVentas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvHistorialVentas.Location = new Point(18, 80);
+            dgvHistorialVentas.Margin = new Padding(4, 3, 4, 3);
+            dgvHistorialVentas.Name = "dgvHistorialVentas";
+            dgvHistorialVentas.Size = new Size(957, 568);
+            dgvHistorialVentas.TabIndex = 6;
             // 
             // label1
             // 
@@ -109,9 +122,10 @@
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormHistorialVentas";
             Text = "Historial de Ventas";
+            Load += FormHistorialVentas_Load_1;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvHistorialVentas).EndInit();
             ResumeLayout(false);
             PerformLayout();
 
@@ -121,8 +135,9 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button bntBuscar;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.DateTimePicker datetimeHistorialVenta;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DateTimePicker dtpFecha;
+        private System.Windows.Forms.DataGridView dgvHistorialVentas;
         private System.Windows.Forms.Label label1;
+        private Button btnVerTodas;
     }
 }

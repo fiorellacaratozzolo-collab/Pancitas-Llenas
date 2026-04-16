@@ -64,22 +64,19 @@ namespace FormUI.FormVenta
 
         private void LimpiarPantalla()
         {
-            // 1. Vaciamos el carrito y recalculamos a cero
-            _carrito.Clear();
+            _carrito = new BindingList<VentaDetalleDTO>();
+            dgvVentas.DataSource = _carrito;
             CalcularTotal();
 
-            // 2. Limpiamos Clientes y Pagos
             cmbCliente.SelectedIndex = -1;
             if (cmbPago.Items.Count > 0) cmbPago.SelectedIndex = 0;
             chkMayorista.Checked = false;
 
-            // 3. Limpiamos la sección de Productos
             cmbProducto.SelectedIndex = -1;
             txtbPrecioProd.Clear();
             txtbPesoNeto.Clear();
             txtbCantidadProd.Clear();
 
-            // 4. Devolvemos el cursor al inicio para la próxima venta
             cmbCliente.Focus();
         }
 
@@ -94,6 +91,7 @@ namespace FormUI.FormVenta
 
         private void FormGenerarVenta_Load_1(object sender, EventArgs e)
         {
+
             try
             {
                 // --- 1. CONFIGURACIÓN DEL CARRITO ---
@@ -103,14 +101,19 @@ namespace FormUI.FormVenta
 
                 // --- 2. CARGAMOS LOS CLIENTES EN EL COMBOBOX ---
                 Logic.Facade.ClienteService clienteService = new Logic.Facade.ClienteService();
-                var listaClientes = clienteService.GetAllClientes();
 
-                // Ya NO inyectamos el falso, cargamos los reales directamente
+                // Traemos los clientes, pero filtramos y DESCARTAMOS los que tengan el nombre vacío
+                var listaClientes = clienteService.GetAllClientes()
+                                                  .Where(c => !string.IsNullOrWhiteSpace(c.NombreCliente))
+                                                  .ToList();
+
                 cmbCliente.DataSource = listaClientes;
                 cmbCliente.DisplayMember = "NombreCliente";
                 cmbCliente.ValueMember = "IdCliente";
                 // Buscamos al "Consumidor Final" real en la lista que trajimos de la BD
-                var consumidorFinal = listaClientes.FirstOrDefault(c => c.NombreCliente.ToLower().Contains("consumidor final"));
+                var consumidorFinal = listaClientes.FirstOrDefault(c =>
+                !string.IsNullOrEmpty(c.NombreCliente) &&
+                c.NombreCliente.ToLower().Contains("consumidor final"));
 
                 if (consumidorFinal != null)
                 {
@@ -129,7 +132,7 @@ namespace FormUI.FormVenta
                 cmbPago.Items.Add("Transferencia");
                 cmbPago.Items.Add("Tarjeta de Débito");
                 cmbPago.Items.Add("Tarjeta de Crédito");
-                cmbPago.SelectedIndex = 0; // Efectivo por defecto
+                cmbPago.SelectedIndex = 0;
 
                 // --- 4. VALIDACIÓN DE SUCURSAL Y MAYORISTA ---
                 Guid? idSucursalActual = SessionManager.Current.IdSucursalActual;
@@ -306,16 +309,17 @@ namespace FormUI.FormVenta
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            // 1. VALIDACIONES BÁSICAS DE SEGURIDAD
+            
             if (_carrito.Count == 0)
             {
                 MessageBox.Show("El carrito está vacío. Agregue productos antes de cobrar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (cmbCliente.SelectedItem == null)
+            if (cmbCliente.SelectedIndex == -1 || cmbCliente.SelectedValue == null)
             {
-                MessageBox.Show("Debe seleccionar un cliente.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, seleccione un Cliente válido de la lista antes de registrar la venta.", "Cliente Faltante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbCliente.Focus();
                 return;
             }
 

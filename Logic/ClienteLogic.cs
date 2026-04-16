@@ -68,5 +68,14 @@ namespace Logic
             _unitOfWork.Clientes.Delete(id);
             _unitOfWork.Complete();
         }
+
+        public void UpdateCliente(ClienteDTO clienteDTO)
+        {
+            if (clienteDTO == null)
+                throw new ArgumentNullException(nameof(clienteDTO));
+            Cliente cliente = _mapper.Map<Cliente>(clienteDTO);
+            _unitOfWork.Clientes.Update(cliente);
+            _unitOfWork.Complete();
+        }
     }
 }

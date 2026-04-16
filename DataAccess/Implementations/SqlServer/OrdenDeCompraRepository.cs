@@ -27,18 +27,18 @@ namespace DataAccess.Implementations.SqlServer
 
         public List<OrdenDeCompra> GetAll()
         {
-            return _context.OrdenDeCompras
-            .Include(op => op.OrdenDeCompraDetalles)
-            //.Include(op => op.IdEstadoOcNavigation)
-            .ToList();
+            return _context.OrdenDeCompras 
+                .Include(oc => oc.IdProveedorNavigation)
+                .ToList();
         }
 
         public OrdenDeCompra? GetById(Guid id)
         {
             return _context.OrdenDeCompras
-            .Include(op => op.OrdenDeCompraDetalles)
-            //.Include(op => op.IdEstadoOcNavigation)
-            .FirstOrDefault(op => op.IdOrdenDeCompra == id);
+                .Include(oc => oc.IdProveedorNavigation)
+                .Include(oc => oc.OrdenDeCompraDetalles)
+                .ThenInclude(detalle => detalle.IdProductoNavigation)
+                .FirstOrDefault(oc => oc.IdOrdenDeCompra == id);
         }
 
         public void Update(OrdenDeCompra orden)

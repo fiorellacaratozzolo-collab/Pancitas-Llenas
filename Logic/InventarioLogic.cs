@@ -131,7 +131,7 @@ namespace Logic
         /// <summary> Obtiene el stock de una sucursal específica y lo mapea a DTO. </summary>
         public List<StockPorSucursalDTO> ObtenerStockPorSucursal(Guid idSucursal)
         {
-            List<StockPorSucursal> stock = _unitOfWork.Stocks.GetBySucursal(idSucursal);
+            var stock = _unitOfWork.Stocks.GetBySucursal(idSucursal);
             return _mapper.Map<List<StockPorSucursalDTO>>(stock);
         }
 

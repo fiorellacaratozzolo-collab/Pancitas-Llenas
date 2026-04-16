@@ -18,6 +18,11 @@ namespace Logic.MappingProfiles
             CreateMap<Producto, ProductoDTO>().ReverseMap();
             CreateMap<Sucursal, SucursalDTO>().ReverseMap();
             CreateMap<Ventum, VentumDTO>().ReverseMap();
+            CreateMap<Ventum, VentumDTO>()
+                .ForMember(dest => dest.NombreCliente,
+               opt => opt.MapFrom(src => src.IdClienteNavigation.NombreCliente))
+                .ReverseMap()
+                .ForMember(dest => dest.IdClienteNavigation, opt => opt.Ignore());
 
             // Mapeos de Estados y Tipos (Enums)
             CreateMap<EstadoOcenum, EstadoOcenumDTO>().ReverseMap();
@@ -54,6 +59,14 @@ namespace Logic.MappingProfiles
             CreateMap<SolicitudDeTraspasoDeProducto, SolicitudDeTraspasoDeProductoDTO>().ReverseMap();
             CreateMap<SolicitudDeTraspasoDeProductosDetalle, SolicitudDeTraspasoDeProductosDetalleDTO>().ReverseMap();
 
+            CreateMap<StockPorSucursal, StockPorSucursalDTO>()
+                .ForMember(dest => dest.NombreProducto,
+               opt => opt.MapFrom(src => src.IdProductoNavigation.NombreProducto))
+                .ForMember(dest => dest.Marca,
+               opt => opt.MapFrom(src => src.IdProductoNavigation.Marca))
+                .ForMember(dest => dest.PesoNeto, opt => opt.MapFrom(src => src.IdProductoNavigation.PesoNeto))
+                .ForMember(dest => dest.Unidad, opt => opt.MapFrom(src => src.IdProductoNavigation.Unidad))
+                .ReverseMap();
 
             // =========================================================
             // 2. Mapeos de TRANSICIÓN (Entidad -> Entidad)
@@ -108,6 +121,8 @@ namespace Logic.MappingProfiles
                            opt => opt.MapFrom(src => src.IdProductoNavigation.PesoNeto))
                 .ForMember(dest => dest.NombreProducto,
                            opt => opt.MapFrom(src => src.IdProductoNavigation.NombreProducto))
+                .ForMember(dest => dest.Marca,
+               opt => opt.MapFrom(src => src.IdProductoNavigation.Marca))
                 .ReverseMap();
 
             // =========================================================

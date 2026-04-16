@@ -19,18 +19,15 @@ namespace FormUI.FormCompra
         public FormGestiónOC()
         {
             InitializeComponent();
-            _ocService = new OrdenDeCompraService(); // Tu servicio que conecta con la Logic
-
-            // Configuraciones iniciales de los Grids (Opcional)
+            _ocService = new OrdenDeCompraService();
             dgvOrdenCompra.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvOrdenCompra.MultiSelect = false;
-            dgvOrdenCompra.ReadOnly = true; // Agregado por seguridad
+            dgvOrdenCompra.ReadOnly = true;
             dgvDetalleOC.ReadOnly = true;
         }
 
         private void FormGestiónOC_Load(object sender, EventArgs e)
-        {
-            // Carga automática al abrir el formulario
+        {           
             btnVer_Click(this, EventArgs.Empty);
         }
 
@@ -43,7 +40,7 @@ namespace FormUI.FormCompra
         private void btnVer_Click(object sender, EventArgs e)
         {
             dgvOrdenCompra.DataSource = _ocService.ObtenerTodas().Where(x => x.IdEstadoOc == 1).ToList();
-            FormatearGridPrincipal(); // Aplicamos los nombres de columnas y ocultamos IDs
+            FormatearGridPrincipal();
         }
 
         private void btnAlta_Click(object sender, EventArgs e)
@@ -95,7 +92,6 @@ namespace FormUI.FormCompra
 
         private void dgvOrdenCompra_SelectionChanged(object sender, EventArgs e)
         {
-            // Validamos que haya una fila seleccionada y que tenga datos
             if (dgvOrdenCompra.CurrentRow == null || dgvOrdenCompra.CurrentRow.DataBoundItem == null)
             {
                 dgvDetalleOC.DataSource = null;
@@ -104,25 +100,14 @@ namespace FormUI.FormCompra
 
             try
             {
-                // 1. Obtenemos el objeto de la fila actual (Casteo al DTO)
                 var ocSeleccionada = (OrdenDeCompraDTO)dgvOrdenCompra.CurrentRow.DataBoundItem;
-
-                // 2. Buscamos la OC completa usando el servicio para traer los detalles del servidor/BD
-                // Usamos el ID de la OC seleccionada
-                var ordenConDetalles = _ocService.ObtenerPorId(ocSeleccionada.IdOrdenDeCompra);
-
-                if (ordenConDetalles != null && ordenConDetalles.OrdenDeCompraDetalles != null)
-                {
-                    // 3. Asignamos la lista de detalles al grid de abajo
-                    dgvDetalleOC.DataSource = ordenConDetalles.OrdenDeCompraDetalles.ToList();
-
-                    // 4. Formateamos el grid de detalles (opcional pero recomendado)
-                    FormatearGridDetalle();
-                }
+                var detalles = _ocService.ObtenerDetallesPorOrden(ocSeleccionada.IdOrdenDeCompra);
+                dgvDetalleOC.DataSource = null; 
+                dgvDetalleOC.DataSource = detalles;
+                FormatearGridDetalle();
             }
             catch (Exception ex)
             {
-                // Errores silenciosos para no molestar al usuario mientras navega
                 Console.WriteLine("Error en vista previa: " + ex.Message);
             }
         }
@@ -162,6 +147,42 @@ namespace FormUI.FormCompra
                 if (dgvDetalleOC.Columns["Subtotal"] != null) dgvDetalleOC.Columns["Subtotal"].DefaultCellStyle.Format = "C2";
 
                 dgvDetalleOC.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                if (dgvDetalleOC.Columns.Contains("NombreProducto"))
+                {
+                    dgvDetalleOC.Columns["NombreProducto"].HeaderText = "Producto";
+                    dgvDetalleOC.Columns["NombreProducto"].DisplayIndex = 0;
+                }
+                if (dgvDetalleOC.Columns.Contains("Marca"))
+                {
+                    dgvDetalleOC.Columns["Marca"].HeaderText = "Marca";
+                    dgvDetalleOC.Columns["Marca"].DisplayIndex = 1;
+                }
+                if (dgvDetalleOC.Columns.Contains("PesoNeto"))
+                {
+                    dgvDetalleOC.Columns["PesoNeto"].HeaderText = "Peso Neto";
+                    dgvDetalleOC.Columns["PesoNeto"].DisplayIndex = 2;
+                }
+                if (dgvDetalleOC.Columns.Contains("Unidad"))
+                {
+                    dgvDetalleOC.Columns["Unidad"].HeaderText = "Unidad";
+                    dgvDetalleOC.Columns["Unidad"].DisplayIndex = 3;
+                }
+                if (dgvDetalleOC.Columns.Contains("PrecioUnitario"))
+                {
+                    dgvDetalleOC.Columns["PrecioUnitario"].HeaderText = "Precio Unitario";
+                    dgvDetalleOC.Columns["PrecioUnitario"].DisplayIndex = 4;
+                }
+                if (dgvDetalleOC.Columns.Contains("Subtotal"))
+                {
+                    dgvDetalleOC.Columns["Cantidad"].HeaderText = "Cantidad";
+                    dgvDetalleOC.Columns["Cantidad"].DisplayIndex = 5;
+                }
+                if (dgvDetalleOC.Columns.Contains("Subtotal"))
+                {
+                    dgvDetalleOC.Columns["Subtotal"].HeaderText = "Subtotal";
+                    dgvDetalleOC.Columns["Subtotal"].DisplayIndex = 6;
+                }
             }
         }
     }

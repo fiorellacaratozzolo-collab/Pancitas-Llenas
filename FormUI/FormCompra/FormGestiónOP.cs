@@ -26,7 +26,7 @@ namespace FormUI.FormCompra
 
         private void ConfigurarDataGridView()
         {
-            dgvDetalleOP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvOrdenDePedido.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvOrdenDePedido.AutoGenerateColumns = false;
 
             dgvOrdenDePedido.Columns.Add("IdOrdenDePedido", "ID Orden");

@@ -161,8 +161,24 @@ namespace FormUI.FormSucursal
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
-            CargarDatosSucursales();
-            MessageBox.Show("Lista de sucursales actualizada.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (dgvSucursal.CurrentRow != null && dgvSucursal.CurrentRow.DataBoundItem is SucursalDTO sucursalEditada)
+            {
+                try
+                {
+                    _sucursalService.UpdateSucursal(sucursalEditada);
+
+                    MessageBox.Show("Los cambios se guardaron correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CargarDatosSucursales();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al guardar los cambios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Por favor, seleccione la sucursal que desea modificar de la lista.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void btnDeshabilitar_Click(object sender, EventArgs e)

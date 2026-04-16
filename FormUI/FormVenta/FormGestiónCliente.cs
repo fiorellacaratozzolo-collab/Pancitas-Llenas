@@ -175,9 +175,29 @@ namespace FormUI.FormVenta
 
         private void btnActualizar_Click_1(object sender, EventArgs e)
         {
-            // Llama al método existente para recargar la lista completa.
-            CargarDatosClientes();
-            MessageBox.Show("Lista de clientes actualizada.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (dgvCliente.CurrentRow != null && dgvCliente.CurrentRow.DataBoundItem is ClienteDTO clienteEditado)
+            {
+                try
+                {
+                    // 2. Mandamos el cliente editado a tu Servicio para que haga el UPDATE
+                    // ⚠️ ATENCIÓN: Revisá cómo se llama este método en tu ClienteService. 
+                    // Puede ser UpdateCliente, ModificarCliente, Update, etc.
+                    _clienteService.UpdateCliente(clienteEditado);
+
+                    MessageBox.Show("Los cambios del cliente se guardaron correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // 3. Recargamos la grilla para confirmar que quedó bien en la BD
+                    CargarDatosClientes();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error al guardar los cambios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Por favor, seleccione el cliente que desea modificar de la lista.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void btnDeshabilitar_Click(object sender, EventArgs e)

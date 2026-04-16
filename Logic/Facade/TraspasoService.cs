@@ -40,5 +40,10 @@ namespace Logic.Facade
         {
             _logic.RechazarTraspaso(idSolicitud);
         }
+
+        public List<HistorialTraspasoDTO> ObtenerHistorialTraspasos(Guid idSucursalActual)
+        {
+            return _logic.ObtenerHistorialTraspasos(idSucursalActual);
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace ModelsDTO
         public decimal PrecioUnitario { get; set; }
 
         public string Unidad { get; set; } = null!;
-
+        public string? Marca { get; set; }
         public decimal Subtotal { get; set; }
         public string? NombreProducto { get; set; }
 

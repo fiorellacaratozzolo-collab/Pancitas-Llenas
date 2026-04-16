@@ -12,5 +12,6 @@ namespace DataAccess.Interfaces
         Guid Create(Ventum venta);
         List<Ventum> GetAll();
         void Delete(Guid id);
+        List<Ventum> GetBySucursal(Guid idSucursal);
     }
 }

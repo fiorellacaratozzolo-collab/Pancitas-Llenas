@@ -46,6 +46,12 @@ namespace Logic
             return ordenDeCompra.IdOrdenDeCompra;
         }
 
+        public List<OrdenDeCompraDetalleDTO> ObtenerDetallesPorOrden(Guid idOrdenCompra)
+        {
+            var detalles = _unitOfWork.OrdenDeCompraDetalles.GetByIdOrdenCompra(idOrdenCompra);
+            return _mapper.Map<List<OrdenDeCompraDetalleDTO>>(detalles);
+        }
+
         // --- CRUD BÁSICO ---
 
         public OrdenDeCompraDTO ObtenerPorId(Guid id)
