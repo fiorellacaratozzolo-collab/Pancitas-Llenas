@@ -30,14 +30,34 @@ namespace FormUI.FormSucursal
         {
 
         }
-        private void CargarSolicitudesPendientes()
+        private void CargarSolicitudes()
         {
             try
             {
+                // 1. Limpiamos la grilla de detalle inferior para que no quede info vieja
+                dgvDetalle.DataSource = null;
+
                 Guid miSucursal = SessionManager.Current.IdSucursalActual.Value;
-                var pendientes = _traspasoService.ObtenerSolicitudesPendientes(miSucursal);
-                dgvSolicitudesPendientes.DataSource = pendientes;
+
+                // 2. Llamamos al NUEVO método de la Logic que trae TODAS (sin filtrar por estado)
+                var todas = _traspasoService.ObtenerTodasPorSucursal(miSucursal);
+                List<SolicitudDeTraspasoDeProductoDTO> filtradas;
+
+                // 3. Aplicamos el filtro mágico del ComboBox
+                if (cmbFiltroEstado.SelectedIndex == 0) // Pendientes
+                    filtradas = todas.Where(x => x.IdEstadoStp == 1).ToList();
+                else if (cmbFiltroEstado.SelectedIndex == 1) // Aprobadas
+                    filtradas = todas.Where(x => x.IdEstadoStp == 2).ToList();
+                else if (cmbFiltroEstado.SelectedIndex == 2) // Rechazadas
+                    filtradas = todas.Where(x => x.IdEstadoStp == 3).ToList();
+                else // Todas
+                    filtradas = todas.ToList();
+
+                // 4. Se lo pasamos a la grilla
+                dgvSolicitudesPendientes.DataSource = filtradas;
                 dgvSolicitudesPendientes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                // 5. MANTENEMOS TODO TU FORMATO ORIGINAL INTACTO
                 if (dgvSolicitudesPendientes.Columns.Contains("DireccionSucursalDestino"))
                     dgvSolicitudesPendientes.Columns["DireccionSucursalDestino"].HeaderText = "Dirección Destino";
                 if (dgvSolicitudesPendientes.Columns.Contains("IdSolicitudDeTraspasoDeProductos"))
@@ -54,23 +74,33 @@ namespace FormUI.FormSucursal
                     dgvSolicitudesPendientes.Columns["SolicitudDeTraspasoDeProductosDetalles"].Visible = false;
                 if (dgvSolicitudesPendientes.Columns.Contains("NombreSucursalOrigen"))
                     dgvSolicitudesPendientes.Columns["NombreSucursalOrigen"].Visible = false;
+                if (dgvSolicitudesPendientes.Columns.Contains("IdEstadoStp"))
+                    dgvSolicitudesPendientes.Columns["IdEstadoStp"].Visible = false;
+
                 // Cambiamos los títulos para el usuario
                 if (dgvSolicitudesPendientes.Columns.Contains("FechaStp"))
                     dgvSolicitudesPendientes.Columns["FechaStp"].HeaderText = "Fecha";
-                if (dgvSolicitudesPendientes.Columns.Contains("IdEstadoStp"))
-                    dgvSolicitudesPendientes.Columns["IdEstadoStp"].HeaderText = "Estado";
+                if (dgvSolicitudesPendientes.Columns.Contains("EstadoTexto"))
+                    dgvSolicitudesPendientes.Columns["EstadoTexto"].HeaderText = "Estado";
                 if (dgvSolicitudesPendientes.Columns.Contains("NombreSucursal"))
                     dgvSolicitudesPendientes.Columns["NombreSucursal"].HeaderText = "Nombre de Sucursal";
                 if (dgvSolicitudesPendientes.Columns.Contains("NombreSucursalDestino"))
                     dgvSolicitudesPendientes.Columns["NombreSucursalDestino"].HeaderText = "Sucursal Destino";
+
+                bool sonPendientes = (cmbFiltroEstado.SelectedIndex == 0);
+
+                btnAprobar.Enabled = sonPendientes;
+                btnRechazar.Enabled = sonPendientes;
+                if (filtradas.Count == 0 && sonPendientes)
+                {
+                    MessageBox.Show("No hay Solicitudes de Traspaso pendientes.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al actualizar la lista: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
 
         private void dgvSolicitudes_SelectionChanged(object sender, EventArgs e)
         {
@@ -88,7 +118,13 @@ namespace FormUI.FormSucursal
 
         private void FormGestiónTraspaso_Load(object sender, EventArgs e)
         {
-            CargarSolicitudesPendientes();
+            cmbFiltroEstado.Items.Add("Pendientes"); // Índice 0
+            cmbFiltroEstado.Items.Add("Aprobadas");  // Índice 1
+            cmbFiltroEstado.Items.Add("Rechazadas"); // Índice 2
+            cmbFiltroEstado.Items.Add("Todas");      // Índice 3
+
+            // Al seleccionar el 0, dispara automáticamente el evento y carga la grilla
+            cmbFiltroEstado.SelectedIndex = 0;
         }
 
         private void dgvSolicitudesPendientes_SelectionChanged(object sender, EventArgs e)
@@ -196,8 +232,12 @@ namespace FormUI.FormSucursal
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            CargarSolicitudesPendientes();
-            dgvDetalle.DataSource = null;
+            CargarSolicitudes();
         }
+
+        private void cmbFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarSolicitudes();
+        }        
     }
 }

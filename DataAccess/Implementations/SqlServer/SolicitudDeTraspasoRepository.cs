@@ -43,12 +43,13 @@ namespace DataAccess.Implementations.SqlServer
             return _context.SolicitudDeTraspasoDeProductos.Find(idSolicitud);
         }
 
-        public List<SolicitudDeTraspasoDeProducto> GetPendientesPorSucursalOrigen(Guid idSucursalOrigen)
+        public List<SolicitudDeTraspasoDeProducto> GetTodasPorSucursalOrigen(Guid idSucursal)
         {
             return _context.SolicitudDeTraspasoDeProductos
-            .Include(s => s.IdSucursalDestinoNavigation) // Para ver el nombre de la sucursal en la grilla
-            .Where(s => s.IdEstadoStp == 1 && s.IdSucursalOrigen == idSucursalOrigen)
-            .ToList();
+                .Include(s => s.IdSucursalOrigenNavigation)
+                .Include(s => s.IdSucursalDestinoNavigation)
+                .Where(s => s.IdSucursalOrigen == idSucursal)
+                .ToList();
         }
 
         public void Update(SolicitudDeTraspasoDeProducto solicitud)

@@ -58,9 +58,10 @@ namespace Logic
         {
             var orden = _unitOfWork.OrdenDeCompras.GetAll()
         .AsQueryable()
-        .Include(o => o.IdProveedorNavigation) //Carga el Proveedor
-        .Include(o => o.OrdenDeCompraDetalles) // Carga Detalles
-            .ThenInclude(d => d.IdProductoNavigation) //Carga Producto para Peso/Nombre
+        .Include(o => o.IdProveedorNavigation)
+        .Include(o => o.OrdenDeCompraDetalles) 
+            .ThenInclude(d => d.IdProductoNavigation) 
+            .Include(o => o.IdEstadoOcNavigation)
         .FirstOrDefault(o => o.IdOrdenDeCompra == id);
 
             return _mapper.Map<OrdenDeCompraDTO>(orden);
@@ -69,9 +70,11 @@ namespace Logic
         public List<OrdenDeCompraDTO> ObtenerTodas()
         {
             var ordenes = _unitOfWork.OrdenDeCompras.GetAll()
-        .AsQueryable()
-        .Include(o => o.IdProveedorNavigation) // 👈 Carga el Proveedor
-        .ToList();
+                .AsQueryable()
+                .Include(o => o.IdProveedorNavigation)
+                .Include(o => o.IdEstadoOcNavigation)
+                .ToList();
+
             return _mapper.Map<List<OrdenDeCompraDTO>>(ordenes);
         }
 

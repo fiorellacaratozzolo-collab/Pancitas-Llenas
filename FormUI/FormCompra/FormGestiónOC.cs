@@ -27,8 +27,8 @@ namespace FormUI.FormCompra
         }
 
         private void FormGestiónOC_Load(object sender, EventArgs e)
-        {           
-            btnVer_Click(this, EventArgs.Empty);
+        {
+           
         }
 
         private void dgvOrdenCompra_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -37,10 +37,33 @@ namespace FormUI.FormCompra
 
         }
 
+        private void CargarOrdenes()
+        {
+            // Traemos todas las órdenes de la base de datos
+            var todas = _ocService.ObtenerTodas();
+            List<OrdenDeCompraDTO> filtradas;
+
+            // Filtramos según lo que eligió el usuario
+            if (cmbFiltroEstado.SelectedIndex == 0) // Pendientes
+                filtradas = todas.Where(x => x.IdEstadoOc == 1).ToList();
+            else if (cmbFiltroEstado.SelectedIndex == 1) // Aprobadas
+                filtradas = todas.Where(x => x.IdEstadoOc == 2).ToList();
+            else if (cmbFiltroEstado.SelectedIndex == 2) // Rechazadas
+                filtradas = todas.Where(x => x.IdEstadoOc == 3).ToList();
+            else // Todas
+                filtradas = todas.ToList();
+
+            // Actualizamos la grilla
+            dgvOrdenCompra.DataSource = filtradas;
+            FormatearGridPrincipal();
+            // Solo habilitamos los botones de Aprobar/Rechazar si estamos viendo las Pendientes
+            bool sonPendientes = cmbFiltroEstado.SelectedIndex == 0;
+            btnAlta.Enabled = sonPendientes;
+            btnBaja.Enabled = sonPendientes;
+        }
         private void btnVer_Click(object sender, EventArgs e)
         {
-            dgvOrdenCompra.DataSource = _ocService.ObtenerTodas().Where(x => x.IdEstadoOc == 1).ToList();
-            FormatearGridPrincipal();
+            CargarOrdenes();
         }
 
         private void btnAlta_Click(object sender, EventArgs e)
@@ -102,7 +125,7 @@ namespace FormUI.FormCompra
             {
                 var ocSeleccionada = (OrdenDeCompraDTO)dgvOrdenCompra.CurrentRow.DataBoundItem;
                 var detalles = _ocService.ObtenerDetallesPorOrden(ocSeleccionada.IdOrdenDeCompra);
-                dgvDetalleOC.DataSource = null; 
+                dgvDetalleOC.DataSource = null;
                 dgvDetalleOC.DataSource = detalles;
                 FormatearGridDetalle();
             }
@@ -117,9 +140,9 @@ namespace FormUI.FormCompra
             if (dgvOrdenCompra.Columns.Count > 0)
             {
                 // Ocultar columnas técnicas y el Id del Proveedor
-                string[] ocultar = { "IdOrdenDeCompra", "IdOrdenDePedido", "IdEstadoOc",
+                string[] ocultar = { "IdOrdenDeCompra", "IdOrdenDePedido",
                              "IdOrdenDePedidoOrigen", "IdProveedorNavigation",
-                             "IdEstadoOcNavigation", "OrdenDeCompraDetalles", "IdProveedor" };
+                             "IdEstadoOcNavigation", "OrdenDeCompraDetalles", "IdProveedor","IdEstadoOc" };
 
                 foreach (var col in ocultar)
                     if (dgvOrdenCompra.Columns[col] != null) dgvOrdenCompra.Columns[col].Visible = false;
@@ -127,7 +150,7 @@ namespace FormUI.FormCompra
                 if (dgvOrdenCompra.Columns["NombreProveedor"] != null) dgvOrdenCompra.Columns["NombreProveedor"].HeaderText = "Proveedor";
                 if (dgvOrdenCompra.Columns["FechaOc"] != null) dgvOrdenCompra.Columns["FechaOc"].HeaderText = "Fecha";
                 if (dgvOrdenCompra.Columns["Total"] != null) dgvOrdenCompra.Columns["Total"].DefaultCellStyle.Format = "C2";
-
+                if (dgvOrdenCompra.Columns["EstadoTexto"] != null) dgvOrdenCompra.Columns["EstadoTexto"].HeaderText = "Estado";
                 dgvOrdenCompra.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
         }
@@ -184,6 +207,24 @@ namespace FormUI.FormCompra
                     dgvDetalleOC.Columns["Subtotal"].DisplayIndex = 6;
                 }
             }
+        }
+
+        private void cmbFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarOrdenes();
+        }
+
+        private void FormGestiónOC_Load_1(object sender, EventArgs e)
+        {
+            // Cargamos las opciones del filtro
+            cmbFiltroEstado.Items.Add("Pendientes"); // Índice 0
+            cmbFiltroEstado.Items.Add("Aprobadas");  // Índice 1
+            cmbFiltroEstado.Items.Add("Rechazadas"); // Índice 2
+            cmbFiltroEstado.Items.Add("Todas");      // Índice 3
+
+            // Al poner el Index en 0 ("Pendientes"), automáticamente dispara 
+            // el evento de cambio y carga la grilla por primera vez.
+            cmbFiltroEstado.SelectedIndex = 0;
         }
     }
 }

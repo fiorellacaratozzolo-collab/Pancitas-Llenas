@@ -18,6 +18,7 @@ namespace ModelsDTO
         public decimal Total { get; set; }
 
         public int IdEstadoOc { get; set; }
+        public string? EstadoTexto { get; set; }
 
         // Permite rastrear la Orden de Pedido que originó esta Orden de Compra.
         public Guid? IdOrdenDePedidoOrigen { get; set; }

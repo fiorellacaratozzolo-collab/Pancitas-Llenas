@@ -114,9 +114,9 @@ namespace Logic
             }
         }
 
-        public List<SolicitudDeTraspasoDeProductoDTO> ObtenerSolicitudesPendientes(Guid idSucursalOrigen)
+        public List<SolicitudDeTraspasoDeProductoDTO> ObtenerTodasPorSucursal(Guid idSucursalOrigen)
         {
-            var solicitudes = _unitOfWork.SolicitudesTraspaso.GetPendientesPorSucursalOrigen(idSucursalOrigen);
+            var solicitudes = _unitOfWork.SolicitudesTraspaso.GetTodasPorSucursalOrigen(idSucursalOrigen);
             return _mapper.Map<List<SolicitudDeTraspasoDeProductoDTO>>(solicitudes);
         }
 

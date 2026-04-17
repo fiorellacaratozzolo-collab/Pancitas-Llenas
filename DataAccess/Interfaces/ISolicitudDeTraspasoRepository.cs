@@ -11,7 +11,7 @@ namespace DataAccess.Interfaces
     {
         Guid Create(SolicitudDeTraspasoDeProducto solicitud);
         List<SolicitudDeTraspasoDeProducto> GetAll();
-        List<SolicitudDeTraspasoDeProducto> GetPendientesPorSucursalOrigen(Guid idSucursalOrigen);
+        List<SolicitudDeTraspasoDeProducto> GetTodasPorSucursalOrigen(Guid idSucursal);
         SolicitudDeTraspasoDeProducto GetById(Guid idSolicitud);
         void Update(SolicitudDeTraspasoDeProducto solicitud);
     }

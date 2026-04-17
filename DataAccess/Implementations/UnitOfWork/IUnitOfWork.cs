@@ -26,7 +26,7 @@ namespace DataAccess.Implementations.UnitOfWork
         ISolicitudDeTraspasoRepository SolicitudesTraspaso { get; }
         ISolicitudDeTraspasoDetalleRepository SolicitudesTraspasoDetalles { get; }
         IStockPorSucursalRepository StocksPorSucursal { get; }
-
+        IHistorialIngresoStockRepository HistorialIngresos { get; }
         int Complete();
     }
 }

@@ -19,6 +19,8 @@ public partial class Producto
 
     public string? Descripcion { get; set; }
 
+    public virtual ICollection<HistorialIngresoStock> HistorialIngresoStocks { get; set; } = new List<HistorialIngresoStock>();
+
     public virtual ICollection<OrdenDeCompraDetalle> OrdenDeCompraDetalles { get; set; } = new List<OrdenDeCompraDetalle>();
 
     public virtual ICollection<OrdenDePedidoDetalle> OrdenDePedidoDetalles { get; set; } = new List<OrdenDePedidoDetalle>();

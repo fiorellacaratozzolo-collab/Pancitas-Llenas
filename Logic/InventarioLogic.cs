@@ -53,16 +53,14 @@ namespace Logic
             }
         }
 
-        public void AgregarOActualizarStock(Guid idSucursal, Guid idProducto, int cantidadAAgregar, int stockDeseado = 0)
+        public void AgregarOActualizarStock(Guid idSucursal, Guid idProducto, int cantidadAAgregar, int stockDeseado = 0, Guid? idProveedor = null)
         {
-
-            // 1. Buscar el registro de stock usando la instancia inyectada
-            StockPorSucursal? stockRegistro =
-                _unitOfWork.Stocks.GetBySucursalAndProducto(idSucursal, idProducto);
+            // Buscar el registro de stock usando la instancia inyectada
+            StockPorSucursal? stockRegistro = _unitOfWork.Stocks.GetBySucursalAndProducto(idSucursal, idProducto);
 
             if (stockRegistro == null)
             {
-                // 2. Si NO existe, crearlo
+                // Si NO existe, crearlo
                 stockRegistro = new StockPorSucursal
                 {
                     IdStockSucursal = Guid.NewGuid(),
@@ -70,14 +68,13 @@ namespace Logic
                     IdProducto = idProducto,
                     StockActual = cantidadAAgregar,
                     StockDeseado = stockDeseado > 0 ? stockDeseado : cantidadAAgregar * 2,
-                    // El estado se calcula al final de la inicialización
                 };
                 stockRegistro.IdEstadoStock = CalcularEstadoSemaforo(stockRegistro.StockActual, stockRegistro.StockDeseado);
                 _unitOfWork.Stocks.Create(stockRegistro);
             }
             else
             {
-                // 3. Si SÍ existe, actualizar
+                // Si SÍ existe, actualizar
                 stockRegistro.StockActual += cantidadAAgregar;
                 if (stockDeseado > 0)
                 {
@@ -86,8 +83,18 @@ namespace Logic
                 stockRegistro.IdEstadoStock = CalcularEstadoSemaforo(stockRegistro.StockActual, stockRegistro.StockDeseado);
                 _unitOfWork.Stocks.Update(stockRegistro);
             }
+            var nuevoIngreso = new HistorialIngresoStock
+            {
+                IdHistorialIngreso = Guid.NewGuid(),
+                FechaIngreso = DateTime.Now,
+                IdSucursal = idSucursal,
+                IdProducto = idProducto,
+                CantidadAgregada = cantidadAAgregar,
+                IdProveedor = idProveedor
 
-            // 4. Confirmar la Transacción
+            };
+
+            _unitOfWork.HistorialIngresos.Create(nuevoIngreso);
             _unitOfWork.Complete();
         }
 
@@ -144,5 +151,33 @@ namespace Logic
             // Este método puede devolver el IdEstadoStock directamente sin mapeo si es solo un entero.
             return stockRegistro?.IdEstadoStock ?? ESTADO_ROJO;
         }
+
+        public List<HistorialEntregaDTO> ObtenerHistorialEntregas(Guid idSucursal)
+        {
+            // 1. Buscamos el historial y filtramos por la sucursal actual
+            var ingresosBd = _unitOfWork.HistorialIngresos.GetAll()
+                .Where(i => i.IdSucursal == idSucursal)
+                .OrderByDescending(i => i.FechaIngreso)
+                .ToList();
+
+            var listaHistorial = new List<HistorialEntregaDTO>();
+
+            // 2. Mapeamos a tu DTO
+            foreach (var ingreso in ingresosBd)
+            {
+                listaHistorial.Add(new HistorialEntregaDTO
+                {
+                    Fecha = ingreso.FechaIngreso,
+                    Producto = ingreso.IdProductoNavigation?.NombreProducto ?? "Desconocido",
+                    Cantidad = ingreso.CantidadAgregada,
+                    NombreProveedor = ingreso.IdProveedorNavigation?.NombreProveedor ?? "Ingreso Manual / Sin Proveedor",
+                    Marca = ingreso.IdProductoNavigation?.Marca,
+                    PesoUnitario = ingreso.IdProductoNavigation?.PesoNeto ?? 0
+                });
+            }
+
+            return listaHistorial;
+        }
+
     }
 }

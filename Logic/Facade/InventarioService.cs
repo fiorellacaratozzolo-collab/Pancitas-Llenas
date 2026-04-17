@@ -42,9 +42,14 @@ namespace Logic.Facade
             return _inventarioLogic.ObtenerEstadoSemaforo(idSucursal, idProducto);
         }
 
-        public void AgregarStock(Guid idSucursal, Guid idProducto, int cantidadAAgregar, int stockDeseado = 0)
+        public void AgregarStock(Guid idSucursal, Guid idProducto, int cantidadAAgregar, int stockDeseado = 0, Guid? idProveedor = null)
         {
-            _inventarioLogic.AgregarOActualizarStock(idSucursal, idProducto, cantidadAAgregar, stockDeseado);
+            _inventarioLogic.AgregarOActualizarStock(idSucursal, idProducto, cantidadAAgregar, stockDeseado, idProveedor);
+        }
+
+        public List<HistorialEntregaDTO> ObtenerHistorialEntregas(Guid idSucursal)
+        {
+            return _inventarioLogic.ObtenerHistorialEntregas(idSucursal);
         }
     }
 }

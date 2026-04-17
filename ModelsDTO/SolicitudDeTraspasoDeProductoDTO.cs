@@ -9,10 +9,9 @@ namespace ModelsDTO
     public partial class SolicitudDeTraspasoDeProductoDTO
     {
         public Guid IdSolicitudDeTraspasoDeProductos { get; set; }
-
         public DateTime FechaStp { get; set; }
-
         public int IdEstadoStp { get; set; }
+        public string? EstadoTexto { get; set; }
         public Guid IdSucursalOrigen { get; set; }
         public Guid IdSucursalDestino { get; set; }     
         public string? NombreSucursalOrigen { get; set; }

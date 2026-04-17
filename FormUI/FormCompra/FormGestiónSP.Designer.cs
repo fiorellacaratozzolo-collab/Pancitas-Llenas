@@ -36,6 +36,8 @@
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
             dgvDetalleSP = new DataGridView();
+            cmbFiltroEstado = new ComboBox();
+            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)dgvSolicitudDePedido).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -45,16 +47,16 @@
             // dgvSolicitudDePedido
             // 
             dgvSolicitudDePedido.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvSolicitudDePedido.Location = new Point(14, 67);
+            dgvSolicitudDePedido.Location = new Point(7, 73);
             dgvSolicitudDePedido.Margin = new Padding(4, 3, 4, 3);
             dgvSolicitudDePedido.Name = "dgvSolicitudDePedido";
-            dgvSolicitudDePedido.Size = new Size(341, 358);
+            dgvSolicitudDePedido.Size = new Size(383, 378);
             dgvSolicitudDePedido.TabIndex = 0;
             dgvSolicitudDePedido.SelectionChanged += dgvSolicitudDePedido_SelectionChanged;
             // 
             // btnDardeBaja
             // 
-            btnDardeBaja.Location = new Point(249, 433);
+            btnDardeBaja.Location = new Point(284, 453);
             btnDardeBaja.Margin = new Padding(4, 3, 4, 3);
             btnDardeBaja.Name = "btnDardeBaja";
             btnDardeBaja.Size = new Size(106, 44);
@@ -65,7 +67,7 @@
             // 
             // btnGenerarOP
             // 
-            btnGenerarOP.Location = new Point(11, 435);
+            btnGenerarOP.Location = new Point(14, 457);
             btnGenerarOP.Margin = new Padding(4, 3, 4, 3);
             btnGenerarOP.Name = "btnGenerarOP";
             btnGenerarOP.Size = new Size(181, 40);
@@ -76,7 +78,7 @@
             // 
             // btnActualizar
             // 
-            btnActualizar.Location = new Point(235, 23);
+            btnActualizar.Location = new Point(169, 39);
             btnActualizar.Margin = new Padding(4, 3, 4, 3);
             btnActualizar.Name = "btnActualizar";
             btnActualizar.Size = new Size(82, 28);
@@ -88,7 +90,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(62, 30);
+            label1.Location = new Point(14, 46);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(147, 15);
@@ -97,6 +99,8 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(cmbFiltroEstado);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(dgvSolicitudDePedido);
             groupBox1.Controls.Add(btnActualizar);
@@ -104,7 +108,7 @@
             groupBox1.Controls.Add(btnGenerarOP);
             groupBox1.Location = new Point(12, 21);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(368, 484);
+            groupBox1.Size = new Size(397, 503);
             groupBox1.TabIndex = 9;
             groupBox1.TabStop = false;
             groupBox1.Text = "Solicitud de Pedido";
@@ -112,9 +116,9 @@
             // groupBox2
             // 
             groupBox2.Controls.Add(dgvDetalleSP);
-            groupBox2.Location = new Point(386, 12);
+            groupBox2.Location = new Point(415, 12);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(574, 493);
+            groupBox2.Size = new Size(617, 519);
             groupBox2.TabIndex = 10;
             groupBox2.TabStop = false;
             groupBox2.Text = "Detalle";
@@ -122,16 +126,35 @@
             // dgvDetalleSP
             // 
             dgvDetalleSP.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvDetalleSP.Location = new Point(6, 22);
+            dgvDetalleSP.Location = new Point(6, 21);
             dgvDetalleSP.Name = "dgvDetalleSP";
-            dgvDetalleSP.Size = new Size(562, 465);
+            dgvDetalleSP.Size = new Size(605, 491);
             dgvDetalleSP.TabIndex = 0;
+            // 
+            // cmbFiltroEstado
+            // 
+            cmbFiltroEstado.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbFiltroEstado.FormattingEnabled = true;
+            cmbFiltroEstado.Location = new Point(284, 43);
+            cmbFiltroEstado.Name = "cmbFiltroEstado";
+            cmbFiltroEstado.Size = new Size(105, 23);
+            cmbFiltroEstado.TabIndex = 9;
+            cmbFiltroEstado.SelectedIndexChanged += cmbFiltroEstado_SelectedIndexChanged;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(284, 25);
+            label2.Name = "label2";
+            label2.Size = new Size(99, 15);
+            label2.TabIndex = 10;
+            label2.Text = "Filtrar por Estado:";
             // 
             // FormGestiónSP
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(972, 515);
+            ClientSize = new Size(1036, 536);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
@@ -157,5 +180,7 @@
         private GroupBox groupBox1;
         private GroupBox groupBox2;
         private DataGridView dgvDetalleSP;
+        private ComboBox cmbFiltroEstado;
+        private Label label2;
     }
 }

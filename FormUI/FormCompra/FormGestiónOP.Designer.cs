@@ -31,6 +31,8 @@
             label1 = new Label();
             btnActualizar = new Button();
             groupBox1 = new GroupBox();
+            cmbFiltroEstado = new ComboBox();
+            label2 = new Label();
             btnDardeBaja = new Button();
             btnGenerarOC = new Button();
             dgvOrdenDePedido = new DataGridView();
@@ -45,7 +47,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(81, 29);
+            label1.Location = new Point(19, 51);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(131, 15);
@@ -54,7 +56,7 @@
             // 
             // btnActualizar
             // 
-            btnActualizar.Location = new Point(225, 22);
+            btnActualizar.Location = new Point(163, 44);
             btnActualizar.Margin = new Padding(4, 3, 4, 3);
             btnActualizar.Name = "btnActualizar";
             btnActualizar.Size = new Size(78, 29);
@@ -65,6 +67,8 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(cmbFiltroEstado);
+            groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(btnDardeBaja);
             groupBox1.Controls.Add(btnGenerarOC);
             groupBox1.Controls.Add(dgvOrdenDePedido);
@@ -74,17 +78,37 @@
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(411, 514);
+            groupBox1.Size = new Size(444, 535);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Orden de Pedido";
+            groupBox1.Enter += groupBox1_Enter;
+            // 
+            // cmbFiltroEstado
+            // 
+            cmbFiltroEstado.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbFiltroEstado.FormattingEnabled = true;
+            cmbFiltroEstado.Location = new Point(300, 48);
+            cmbFiltroEstado.Name = "cmbFiltroEstado";
+            cmbFiltroEstado.Size = new Size(121, 23);
+            cmbFiltroEstado.TabIndex = 7;
+            cmbFiltroEstado.SelectedIndexChanged += cmbFiltroEstado_SelectedIndexChanged;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(300, 30);
+            label2.Name = "label2";
+            label2.Size = new Size(99, 15);
+            label2.TabIndex = 6;
+            label2.Text = "Filtrar por Estado:";
             // 
             // btnDardeBaja
             // 
-            btnDardeBaja.Location = new Point(294, 450);
+            btnDardeBaja.Location = new Point(310, 477);
             btnDardeBaja.Margin = new Padding(4, 3, 4, 3);
             btnDardeBaja.Name = "btnDardeBaja";
-            btnDardeBaja.Size = new Size(100, 52);
+            btnDardeBaja.Size = new Size(126, 52);
             btnDardeBaja.TabIndex = 5;
             btnDardeBaja.Text = "Dar de Baja";
             btnDardeBaja.UseVisualStyleBackColor = true;
@@ -92,7 +116,7 @@
             // 
             // btnGenerarOC
             // 
-            btnGenerarOC.Location = new Point(8, 450);
+            btnGenerarOC.Location = new Point(8, 477);
             btnGenerarOC.Margin = new Padding(4, 3, 4, 3);
             btnGenerarOC.Name = "btnGenerarOC";
             btnGenerarOC.Size = new Size(177, 52);
@@ -104,19 +128,19 @@
             // dgvOrdenDePedido
             // 
             dgvOrdenDePedido.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvOrdenDePedido.Location = new Point(8, 57);
+            dgvOrdenDePedido.Location = new Point(8, 84);
             dgvOrdenDePedido.Margin = new Padding(4, 3, 4, 3);
             dgvOrdenDePedido.Name = "dgvOrdenDePedido";
-            dgvOrdenDePedido.Size = new Size(395, 387);
+            dgvOrdenDePedido.Size = new Size(428, 387);
             dgvOrdenDePedido.TabIndex = 3;
             dgvOrdenDePedido.SelectionChanged += dgvOrdenDePedido_SelectionChanged;
             // 
             // Detalle
             // 
             Detalle.Controls.Add(dgvDetalleOP);
-            Detalle.Location = new Point(431, 12);
+            Detalle.Location = new Point(476, 13);
             Detalle.Name = "Detalle";
-            Detalle.Size = new Size(586, 522);
+            Detalle.Size = new Size(601, 551);
             Detalle.TabIndex = 4;
             Detalle.TabStop = false;
             Detalle.Text = "Detalle";
@@ -126,14 +150,14 @@
             dgvDetalleOP.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDetalleOP.Location = new Point(6, 22);
             dgvDetalleOP.Name = "dgvDetalleOP";
-            dgvDetalleOP.Size = new Size(574, 494);
+            dgvDetalleOP.Size = new Size(589, 520);
             dgvDetalleOP.TabIndex = 0;
             // 
             // FormGestiónOP
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1029, 547);
+            ClientSize = new Size(1089, 567);
             Controls.Add(Detalle);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
@@ -159,5 +183,7 @@
         private System.Windows.Forms.Button btnDardeBaja;
         private GroupBox Detalle;
         private DataGridView dgvDetalleOP;
+        private ComboBox cmbFiltroEstado;
+        private Label label2;
     }
 }

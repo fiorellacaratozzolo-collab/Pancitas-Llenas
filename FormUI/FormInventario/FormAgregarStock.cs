@@ -43,6 +43,7 @@ namespace FormUI.FormInventario
         {
             dgvAgregarStock.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvAgregarStock.Columns.Clear();
+
             if (dgvAgregarStock.Columns.Contains("IdProducto"))
                 dgvAgregarStock.Columns["IdProducto"].Visible = false;
 
@@ -234,6 +235,7 @@ namespace FormUI.FormInventario
                 MessageBoxIcon.Question);
 
             if (confirmacion != DialogResult.Yes) return;
+            Guid? idProv = cmbProveedor.SelectedValue is Guid id && id != Guid.Empty ? id : (Guid?)null;
 
             int cambiosAplicados = 0;
             int errores = 0;
@@ -253,12 +255,11 @@ namespace FormUI.FormInventario
                         Guid idProducto = (Guid)row.Cells["IdProducto"].Value;
                         int stockDeseado = 0;
                         int.TryParse(row.Cells["StockDeseado"].Value?.ToString(), out stockDeseado);
-
-                        _inventarioService.AgregarStock(ID_SUCURSAL_ACTUAL, idProducto, cantidadAAgregar, stockDeseado);
+                        _inventarioService.AgregarStock(ID_SUCURSAL_ACTUAL, idProducto, cantidadAAgregar, stockDeseado, idProv);
 
                         cambiosAplicados++;
                         row.Cells["StockAAgregar"].Value = null;
-                        row.Cells["StockAAgregar"].ErrorText = ""; 
+                        row.Cells["StockAAgregar"].ErrorText = "";
                     }
                     catch (Exception ex)
                     {
@@ -277,7 +278,7 @@ namespace FormUI.FormInventario
             MessageBox.Show(mensaje, "Resultado", MessageBoxButtons.OK,
                 errores > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
 
-            CargarProductosEnDGV(cmbProveedor.SelectedValue is Guid id ? (Guid?)id : null);
+            CargarProductosEnDGV(cmbProveedor.SelectedValue is Guid idCombo ? (Guid?)idCombo : null);
         }
 
         private void cmbProveedor_SelectedIndexChanged(object sender, EventArgs e)

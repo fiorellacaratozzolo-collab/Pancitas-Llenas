@@ -36,7 +36,7 @@ namespace DataAccess.Implementations.SqlServer
         public ISolicitudDeTraspasoRepository SolicitudesTraspaso { get; }
         public ISolicitudDeTraspasoDetalleRepository SolicitudesTraspasoDetalles { get; }
         public IStockPorSucursalRepository Stocks { get; }
-
+        public IHistorialIngresoStockRepository HistorialIngresos { get; }
         public UnitOfWork()
         {
             _context = new PetShopDbContext();
@@ -59,16 +59,17 @@ namespace DataAccess.Implementations.SqlServer
             StocksPorSucursal = new StockPorSucursalRepository(_context);
             SolicitudesTraspaso = new SolicitudDeTraspasoRepository(_context);
             SolicitudesTraspasoDetalles = new SolicitudDeTraspasoDetalleRepository(_context);
+            HistorialIngresos = new HistorialIngresoStockRepository(_context);
             var stockRepo = new StockPorSucursalRepository(_context);
             this.Stocks = stockRepo;
             this.StocksPorSucursal = stockRepo;
             this.SolicitudesTraspaso = new SolicitudDeTraspasoRepository(_context);
             this.SolicitudesTraspasoDetalles = new SolicitudDeTraspasoDetalleRepository(_context);
+
         }        
 
         public int Complete()
         {
-            // Atómica: Guarda todo o nada
             return _context.SaveChanges();
         }
 

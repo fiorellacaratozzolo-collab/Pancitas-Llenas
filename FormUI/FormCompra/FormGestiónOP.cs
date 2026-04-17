@@ -38,14 +38,22 @@ namespace FormUI.FormCompra
 
             dgvOrdenDePedido.Columns.Add("Total", "Total");
             dgvOrdenDePedido.Columns["Total"].DataPropertyName = "Total";
+            if (dgvOrdenDePedido.Columns["Total"] != null) dgvOrdenDePedido.Columns["Total"].DefaultCellStyle.Format = "C2";
 
-            dgvOrdenDePedido.Columns.Add("IdEstadoOp", "Estado (ID)");
-            dgvOrdenDePedido.Columns["IdEstadoOp"].DataPropertyName = "IdEstadoOp";
+            dgvOrdenDePedido.Columns.Add("EstadoTexto", "Estado");
+            dgvOrdenDePedido.Columns["EstadoTexto"].DataPropertyName = "EstadoTexto";
         }
 
         private void FormGestiónOP_Load(object sender, EventArgs e)
         {
+            // Cargamos las opciones del filtro
+            cmbFiltroEstado.Items.Add("Pendientes"); // Índice 0
+            cmbFiltroEstado.Items.Add("Aprobadas");  // Índice 1
+            cmbFiltroEstado.Items.Add("Rechazadas"); // Índice 2
+            cmbFiltroEstado.Items.Add("Todas");      // Índice 3
 
+            // Al seleccionar el 0, dispara automáticamente el evento y carga la grilla
+            cmbFiltroEstado.SelectedIndex = 0;
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)
@@ -192,7 +200,7 @@ namespace FormUI.FormCompra
             if (dgvDetalleOP.Columns.Contains("IdOrdenDePedidoNavigation")) dgvDetalleOP.Columns["IdOrdenDePedidoNavigation"].Visible = false;
             if (dgvDetalleOP.Columns.Contains("IdProductoNavigation")) dgvDetalleOP.Columns["IdProductoNavigation"].Visible = false;
             if (dgvDetalleOP.Columns.Contains("PrecioNeto")) dgvDetalleOP.Columns["PrecioNeto"].Visible = false;
-
+            if (dgvDetalleOP.Columns["Subtotal"] != null) dgvDetalleOP.Columns["Subtotal"].DefaultCellStyle.Format = "C2";
             // 2. Renombrar y Ordenar (Asumiendo que traemos Nombre, Marca, Cantidad y Precio)
             if (dgvDetalleOP.Columns.Contains("NombreProducto"))
             {
@@ -231,5 +239,54 @@ namespace FormUI.FormCompra
             }
         }
 
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cmbFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarOrdenes();
+        }
+
+        private void CargarOrdenes()
+        {
+            try
+            {
+                dgvDetalleOP.DataSource = null;
+
+                // Traemos todas las órdenes
+                List<OrdenDePedidoDTO> todasLasOrdenes = _ordenService.ObtenerTodas();
+                List<OrdenDePedidoDTO> filtradas;
+
+                // Filtramos según el ComboBox
+                if (cmbFiltroEstado.SelectedIndex == 0) // Pendientes (1)
+                    filtradas = todasLasOrdenes.Where(o => o.IdEstadoOp == 1).ToList();
+                else if (cmbFiltroEstado.SelectedIndex == 1) // Aprobadas (2)
+                    filtradas = todasLasOrdenes.Where(o => o.IdEstadoOp == 2).ToList();
+                else if (cmbFiltroEstado.SelectedIndex == 2) // Rechazadas (3)
+                    filtradas = todasLasOrdenes.Where(o => o.IdEstadoOp == 3).ToList();
+                else // Todas
+                    filtradas = todasLasOrdenes.ToList();
+
+                // Asignamos al DataGridView
+                dgvOrdenDePedido.DataSource = filtradas;
+
+                if (filtradas.Count == 0 && cmbFiltroEstado.SelectedIndex == 0)
+                {
+                    // Solo mostramos el cartel si estamos buscando pendientes y no hay
+                    MessageBox.Show("No hay Órdenes de Pedido pendientes para gestionar.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                bool sonPendientes = (cmbFiltroEstado.SelectedIndex == 0);
+
+                // Reemplazá los nombres si tus botones se llaman distinto
+                btnGenerarOC.Enabled = sonPendientes;
+                btnDardeBaja.Enabled = sonPendientes;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar las órdenes de pedido: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

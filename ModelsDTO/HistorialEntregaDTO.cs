@@ -10,7 +10,9 @@ namespace ModelsDTO
     {
         public DateTime Fecha { get; set; }
         public string? Producto { get; set; }
+        public string? Marca { get; set; }
+        public string? NombreProveedor { get; set; }
         public int Cantidad { get; set; }
-
+        public decimal PesoUnitario { get; set; }
     }
 }

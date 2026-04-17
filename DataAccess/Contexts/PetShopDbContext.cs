@@ -28,6 +28,8 @@ public partial class PetShopDbContext : DbContext
 
     public virtual DbSet<EstadoStpenum> EstadoStpenums { get; set; }
 
+    public virtual DbSet<HistorialIngresoStock> HistorialIngresoStocks { get; set; }
+
     public virtual DbSet<OrdenDeCompra> OrdenDeCompras { get; set; }
 
     public virtual DbSet<OrdenDeCompraDetalle> OrdenDeCompraDetalles { get; set; }
@@ -152,6 +154,31 @@ public partial class PetShopDbContext : DbContext
             entity.Property(e => e.Descripcion)
                 .HasMaxLength(20)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<HistorialIngresoStock>(entity =>
+        {
+            entity.HasKey(e => e.IdHistorialIngreso);
+
+            entity.ToTable("HistorialIngresoStock");
+
+            entity.Property(e => e.IdHistorialIngreso).ValueGeneratedNever();
+            entity.Property(e => e.FechaIngreso).HasColumnType("datetime");
+
+            entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.HistorialIngresoStocks)
+                .HasForeignKey(d => d.IdProducto)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_HistorialIngresoStock_Producto");
+
+            entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.HistorialIngresoStocks)
+                .HasForeignKey(d => d.IdProveedor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_HistorialIngresoStock_Proveedor");
+
+            entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.HistorialIngresoStocks)
+                .HasForeignKey(d => d.IdSucursal)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_HistorialIngresoStock_Sucursal");
         });
 
         modelBuilder.Entity<OrdenDeCompra>(entity =>

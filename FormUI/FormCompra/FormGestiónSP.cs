@@ -36,45 +36,31 @@ namespace FormUI.FormCompra
             // Aquí defines las columnas que quieres mostrar (ejemplos)
             dgvSolicitudDePedido.Columns.Add("IdSolicitudDePedido", "ID Solicitud");
             dgvSolicitudDePedido.Columns["IdSolicitudDePedido"].DataPropertyName = "IdSolicitudDePedido";
-            dgvSolicitudDePedido.Columns["IdSolicitudDePedido"].Visible = false; 
+            dgvSolicitudDePedido.Columns["IdSolicitudDePedido"].Visible = false;
 
             dgvSolicitudDePedido.Columns.Add("FechaSp", "Fecha");
             dgvSolicitudDePedido.Columns["FechaSp"].DataPropertyName = "FechaSp";
 
             // Muestra el ID del estado (o podrías mapear la descripción del estado)
-            dgvSolicitudDePedido.Columns.Add("IdEstadoSp", "Estado");
-            dgvSolicitudDePedido.Columns["IdEstadoSp"].DataPropertyName = "IdEstadoSp";
+            dgvSolicitudDePedido.Columns.Add("EstadoTexto", "Estado");
+            dgvSolicitudDePedido.Columns["EstadoTexto"].DataPropertyName = "EstadoTexto";
         }
 
         private void FormGestiónSP_Load(object sender, EventArgs e)
         {
+            // Cargamos las opciones del filtro
+            cmbFiltroEstado.Items.Add("Pendientes"); // Índice 0
+            cmbFiltroEstado.Items.Add("Aprobadas");  // Índice 1
+            cmbFiltroEstado.Items.Add("Rechazadas"); // Índice 2
+            cmbFiltroEstado.Items.Add("Todas");      // Índice 3
 
+            // Al seleccionar el 0, dispara automáticamente el evento y carga la grilla
+            cmbFiltroEstado.SelectedIndex = 0;
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            try
-            {
-                // 1. Obtener todas las solicitudes
-                List<SolicitudDePedidoDTO> todasLasSolicitudes = _solicitudService.ObtenerTodas();
-
-                // 2. Filtrar por estado "Pendiente" (IdEstadoSp = 1)
-                List<SolicitudDePedidoDTO> solicitudesPendientes = todasLasSolicitudes
-                    .Where(s => s.IdEstadoSp == ESTADO_PENDIENTE)
-                    .ToList();
-
-                // 3. Asignar al DataGridView
-                dgvSolicitudDePedido.DataSource = solicitudesPendientes;
-                dgvDetalleSP.DataSource = null;
-                if (solicitudesPendientes.Count == 0)
-                {
-                    MessageBox.Show("No hay Solicitudes de Pedido pendientes para gestionar.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al cargar las solicitudes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            CargarSolicitudes();
         }
 
         private void btnGenerarOP_Click(object sender, EventArgs e)
@@ -216,5 +202,52 @@ namespace FormUI.FormCompra
                 dgvDetalleSP.Columns["Cantidad"].DisplayIndex = 4;
         }
 
+        private void cmbFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarSolicitudes();
+        }
+
+        private void CargarSolicitudes()
+        {
+            try
+            {
+                // Limpiamos el detalle para que no quede pegada información de la vista anterior
+                dgvDetalleSP.DataSource = null;
+
+                // 1. Obtener todas las solicitudes
+                List<SolicitudDePedidoDTO> todasLasSolicitudes = _solicitudService.ObtenerTodas();
+                List<SolicitudDePedidoDTO> filtradas;
+
+                // 2. Filtramos según lo que eligió el usuario en el ComboBox
+                if (cmbFiltroEstado.SelectedIndex == 0) // Pendientes (Estado 1)
+                    filtradas = todasLasSolicitudes.Where(s => s.IdEstadoSp == 1).ToList();
+                else if (cmbFiltroEstado.SelectedIndex == 1) // Aprobadas (Estado 2)
+                    filtradas = todasLasSolicitudes.Where(s => s.IdEstadoSp == 2).ToList();
+                else if (cmbFiltroEstado.SelectedIndex == 2) // Rechazadas (Estado 3)
+                    filtradas = todasLasSolicitudes.Where(s => s.IdEstadoSp == 3).ToList();
+                else // Todas
+                    filtradas = todasLasSolicitudes.ToList();
+
+                // 3. Asignar al DataGridView
+                dgvSolicitudDePedido.DataSource = filtradas;
+
+                // Solo mostramos el cartel de "vacío" si están buscando las pendientes (UX limpia)
+                if (filtradas.Count == 0 && cmbFiltroEstado.SelectedIndex == 0)
+                {
+                    MessageBox.Show("No hay Solicitudes de Pedido pendientes para gestionar.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                // 🌟 MEDIDA DE SEGURIDAD UX: 
+                // Apagamos los botones de acción si están mirando el historial (Aprobadas/Rechazadas/Todas)
+                bool sonPendientes = (cmbFiltroEstado.SelectedIndex == 0);
+
+                btnGenerarOP.Enabled = sonPendientes;
+                btnDardeBaja.Enabled = sonPendientes;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al cargar las solicitudes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
     }
 }

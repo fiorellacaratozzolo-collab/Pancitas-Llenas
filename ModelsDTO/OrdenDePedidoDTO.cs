@@ -15,7 +15,7 @@ namespace ModelsDTO
         public int IdEstadoOp { get; set; }
 
         public decimal Total { get; set; }
-
+        public string? EstadoTexto { get; set; }
         public Guid? IdSolicitudDePedidoOrigen { get; set; }
 
         public virtual EstadoOpenumDTO IdEstadoOpNavigation { get; set; } = null!;

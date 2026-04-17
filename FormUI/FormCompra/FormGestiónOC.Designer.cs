@@ -32,6 +32,8 @@ namespace FormUI.FormCompra
         {
             label1 = new Label();
             groupBox1 = new GroupBox();
+            label2 = new Label();
+            cmbFiltroEstado = new ComboBox();
             btnBaja = new Button();
             btnAlta = new Button();
             dgvOrdenCompra = new DataGridView();
@@ -47,7 +49,7 @@ namespace FormUI.FormCompra
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(85, 36);
+            label1.Location = new Point(43, 56);
             label1.Name = "label1";
             label1.Size = new Size(132, 15);
             label1.TabIndex = 0;
@@ -55,21 +57,42 @@ namespace FormUI.FormCompra
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(cmbFiltroEstado);
             groupBox1.Controls.Add(btnBaja);
             groupBox1.Controls.Add(btnAlta);
             groupBox1.Controls.Add(dgvOrdenCompra);
             groupBox1.Controls.Add(btnVer);
             groupBox1.Controls.Add(label1);
-            groupBox1.Location = new Point(12, 22);
+            groupBox1.Location = new Point(12, 2);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(508, 554);
+            groupBox1.Size = new Size(508, 574);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Orden de Compra";
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(327, 34);
+            label2.Name = "label2";
+            label2.Size = new Size(99, 15);
+            label2.TabIndex = 6;
+            label2.Text = "Filtrar por Estado:";
+            // 
+            // cmbFiltroEstado
+            // 
+            cmbFiltroEstado.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbFiltroEstado.FormattingEnabled = true;
+            cmbFiltroEstado.Location = new Point(327, 52);
+            cmbFiltroEstado.Name = "cmbFiltroEstado";
+            cmbFiltroEstado.Size = new Size(151, 23);
+            cmbFiltroEstado.TabIndex = 5;
+            cmbFiltroEstado.SelectedIndexChanged += cmbFiltroEstado_SelectedIndexChanged;
+            // 
             // btnBaja
             // 
-            btnBaja.Location = new Point(297, 488);
+            btnBaja.Location = new Point(297, 508);
             btnBaja.Name = "btnBaja";
             btnBaja.Size = new Size(105, 53);
             btnBaja.TabIndex = 4;
@@ -79,7 +102,7 @@ namespace FormUI.FormCompra
             // 
             // btnAlta
             // 
-            btnAlta.Location = new Point(91, 488);
+            btnAlta.Location = new Point(91, 508);
             btnAlta.Name = "btnAlta";
             btnAlta.Size = new Size(126, 53);
             btnAlta.TabIndex = 3;
@@ -90,7 +113,7 @@ namespace FormUI.FormCompra
             // dgvOrdenCompra
             // 
             dgvOrdenCompra.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvOrdenCompra.Location = new Point(8, 61);
+            dgvOrdenCompra.Location = new Point(14, 93);
             dgvOrdenCompra.Name = "dgvOrdenCompra";
             dgvOrdenCompra.Size = new Size(494, 409);
             dgvOrdenCompra.TabIndex = 2;
@@ -99,7 +122,7 @@ namespace FormUI.FormCompra
             // 
             // btnVer
             // 
-            btnVer.Location = new Point(223, 32);
+            btnVer.Location = new Point(181, 52);
             btnVer.Name = "btnVer";
             btnVer.Size = new Size(48, 23);
             btnVer.TabIndex = 1;
@@ -132,6 +155,7 @@ namespace FormUI.FormCompra
             Controls.Add(groupBox1);
             Name = "FormGestiónOC";
             Text = "Gestión de Orden de Compra";
+            Load += FormGestiónOC_Load_1;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((ISupportInitialize)dgvOrdenCompra).EndInit();
@@ -152,5 +176,7 @@ namespace FormUI.FormCompra
         private Button btnAlta;
         private GroupBox groupBox2;
         private DataGridView dgvDetalleOC;
+        private Label label2;
+        private ComboBox cmbFiltroEstado;
     }
 }

@@ -21,9 +21,9 @@ namespace Logic.Facade
             return _logic.GenerarSolicitud(solicitud, detalles);
         }
 
-        public List<SolicitudDeTraspasoDeProductoDTO> ObtenerSolicitudesPendientes(Guid idSucursalOrigen)
+        public List<SolicitudDeTraspasoDeProductoDTO> ObtenerTodasPorSucursal(Guid idSucursalOrigen)
         {
-            return _logic.ObtenerSolicitudesPendientes(idSucursalOrigen);
+            return _logic.ObtenerTodasPorSucursal(idSucursalOrigen);
         }
 
         public List<SolicitudDeTraspasoDeProductosDetalleDTO> ObtenerDetallesPorSolicitud(Guid idSolicitud)
