@@ -1,4 +1,5 @@
-﻿using Logic.Facade;
+﻿using Logic.CustomExceptions;
+using Logic.Facade;
 using ModelsDTO;
 using System;
 using System.Collections.Generic;
@@ -47,12 +48,10 @@ namespace FormUI.FormCompra
         private void FormGestiónOP_Load(object sender, EventArgs e)
         {
             // Cargamos las opciones del filtro
-            cmbFiltroEstado.Items.Add("Pendientes"); // Índice 0
-            cmbFiltroEstado.Items.Add("Aprobadas");  // Índice 1
-            cmbFiltroEstado.Items.Add("Rechazadas"); // Índice 2
-            cmbFiltroEstado.Items.Add("Todas");      // Índice 3
-
-            // Al seleccionar el 0, dispara automáticamente el evento y carga la grilla
+            cmbFiltroEstado.Items.Add("Pendientes"); 
+            cmbFiltroEstado.Items.Add("Aprobadas");  
+            cmbFiltroEstado.Items.Add("Rechazadas"); 
+            cmbFiltroEstado.Items.Add("Todas");      
             cmbFiltroEstado.SelectedIndex = 0;
         }
 
@@ -106,15 +105,20 @@ namespace FormUI.FormCompra
 
                     MessageBox.Show("Orden de Pedido dada de baja (rechazada) correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // 3. Actualizar la lista (usando la corrección de sender/e)
-                    btnActualizar_Click(this, EventArgs.Empty);
+                    // 3. Actualizar la lista
+                    CargarOrdenes();
+                }
+                catch (TransicionEstadoInvalidaException ex) 
+                {
+                    MessageBox.Show(ex.Message, "Operación no permitida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CargarOrdenes(); // Refrescamos la grilla porque el estado real es distinto al que veía el usuario
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Error al dar de baja la Orden de Pedido: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-        }
+        }       
 
         private void btnGenerarOC_Click(object sender, EventArgs e)
         {
@@ -134,23 +138,25 @@ namespace FormUI.FormCompra
                     // 1. Obtener el ID
                     Guid idSeleccionado = (Guid)dgvOrdenDePedido.CurrentRow.Cells["IdOrdenDePedido"].Value;
 
-                    // 2. Llamar al método de transición (AHORA CON EL NOMBRE Y TIPO DE RETORNO CORRECTO)
-                    // _ordenService debe ser una instancia de OrdenDePedidoService
+                    // 2. Llamar al método de transición
                     ResultadoGeneracionOCsDTO resultado = _ordenService.AprobarYGenerarOCs(idSeleccionado);
 
                     if (resultado.Exito)
                     {
                         MessageBox.Show(resultado.Mensaje, "Generación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        // Aquí podrías agregar lógica para navegar al FormGestiónOC o refrescar.
                     }
                     else
                     {
                         MessageBox.Show($"Fallo: {resultado.Mensaje}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
-                    // 3. Actualizar la lista de OPs (para ver el estado "Aprobado")
-                    btnActualizar_Click(this, EventArgs.Empty);
-
+                    // 3. Actualizar la lista de OPs
+                    CargarOrdenes();
+                }
+                catch (TransicionEstadoInvalidaException ex) 
+                {
+                    MessageBox.Show(ex.Message, "Operación no permitida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CargarOrdenes();
                 }
                 catch (Exception ex)
                 {

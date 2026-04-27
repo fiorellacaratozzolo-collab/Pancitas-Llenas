@@ -1,4 +1,5 @@
-﻿using Services.Dal.Implementations;
+﻿using Services.Bll.CustomExceptions;
+using Services.Dal.Implementations;
 using Services.Dal.Interfaces;
 using Services.DomainModel.Composite;
 using Services.DomainModel.Logging;
@@ -63,7 +64,7 @@ namespace Services.Bll
             bitacora.RegistrarLog($"Se dio de alta al nuevo usuario: {nombre} ({email})", Criticidad.Info);
         }
 
-        // Método para el LOGIN (soluciona el error de "ValidarCredenciales")
+        // Método para el LOGIN 
         public Usuario ValidarCredenciales(string username, string passwordClara)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(passwordClara))
@@ -75,8 +76,12 @@ namespace Services.Bll
             if (usuarioLogueado == null)
                 throw new Exception("Usuario o contraseña incorrectos.");
 
+            // ---> ACÁ IMPLEMENTAMOS TU EXCEPCIÓN PERSONALIZADA <---
             if (!usuarioLogueado.Habilitado)
-                throw new Exception("El usuario se encuentra deshabilitado. Contacte al administrador.");
+            {
+                // Lanzamos la excepción que creamos, pasándole el username y un motivo
+                throw new UsuarioBloqueadoException(username, "El usuario fue deshabilitado por el administrador.");
+            }
 
             // ---> ¡LA PIEZA FALTANTE! Llenamos la mochila antes de dejarlo entrar <---
             Services.Dal.Implementations.PermisosRepository permisosRepo = new Services.Dal.Implementations.PermisosRepository();

@@ -96,7 +96,7 @@
             dgvVentasRealizadas.Location = new Point(18, 115);
             dgvVentasRealizadas.Margin = new Padding(4, 3, 4, 3);
             dgvVentasRealizadas.Name = "dgvVentasRealizadas";
-            dgvVentasRealizadas.Size = new Size(602, 562);
+            dgvVentasRealizadas.Size = new Size(614, 584);
             dgvVentasRealizadas.TabIndex = 6;
             dgvVentasRealizadas.CellDoubleClick += dgvVentasRealizadas_CellDoubleClick;
             dgvVentasRealizadas.SelectionChanged += dgvVentasRealizadas_SelectionChanged;
@@ -127,7 +127,7 @@
             groupBox2.Controls.Add(dgvDetallesVenta);
             groupBox2.Location = new Point(660, 12);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(464, 721);
+            groupBox2.Size = new Size(535, 721);
             groupBox2.TabIndex = 11;
             groupBox2.TabStop = false;
             groupBox2.Text = "Detalle";
@@ -137,14 +137,14 @@
             dgvDetallesVenta.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDetallesVenta.Location = new Point(6, 22);
             dgvDetallesVenta.Name = "dgvDetallesVenta";
-            dgvDetallesVenta.Size = new Size(452, 694);
+            dgvDetallesVenta.Size = new Size(523, 694);
             dgvDetallesVenta.TabIndex = 0;
             // 
             // FormGestiónVenta
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1136, 740);
+            ClientSize = new Size(1207, 740);
             Controls.Add(groupBox2);
             Controls.Add(label1);
             Controls.Add(groupBox1);

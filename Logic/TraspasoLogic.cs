@@ -2,6 +2,7 @@
 using DataAccess.Implementations.SqlServer;
 using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Models;
+using Logic.CustomExceptions;
 using Logic.MappingProfiles;
 using ModelsDTO;
 using System;
@@ -23,16 +24,33 @@ namespace Logic
 
         public Guid GenerarSolicitud(SolicitudDeTraspasoDeProductoDTO solicitudDTO, List<SolicitudDeTraspasoDeProductosDetalleDTO> detallesDTO)
         {
+            if (solicitudDTO.IdSucursalOrigen == solicitudDTO.IdSucursalDestino)
+            {
+                throw new TraspasoMismaSucursalException();
+            }
+
             if (detallesDTO == null || !detallesDTO.Any())
             {
                 throw new ArgumentException("La solicitud debe contener al menos un producto.");
             }
 
-            // Mapeamos de DTO a Entidades de EF
+            // Revisamos todos los renglones antes de tocar la base de datos
+            foreach (var det in detallesDTO)
+            {
+                if (det.Cantidad <= 0)
+                {
+                    // Usamos el nombre del producto si viene en el DTO, sino un texto genérico
+                    string nombreProd = !string.IsNullOrWhiteSpace(det.NombreProducto) ? det.NombreProducto : "Seleccionado";
+                    throw new CantidadInvalidaException(nombreProd, det.Cantidad);
+                }
+            }
+
+            // 2. Mapeamos de DTO a Entidades de EF
             var solicitud = _mapper.Map<SolicitudDeTraspasoDeProducto>(solicitudDTO);
             var detalles = _mapper.Map<List<SolicitudDeTraspasoDeProductosDetalle>>(detallesDTO);
-            solicitud.IdSucursalDestinoNavigation = null!; // Evitamos problemas de navegación al crear la solicitud
-            solicitud.IdSucursalOrigenNavigation = null!; // Evitamos problemas de navegación al crear la solicitud
+
+            solicitud.IdSucursalDestinoNavigation = null!;
+            solicitud.IdSucursalOrigenNavigation = null!;
 
             try
             {
@@ -44,10 +62,12 @@ namespace Logic
                     detalle.IdSolicitudDeTraspasoDeProductos = idSolicitud;
                     detalle.IdSolicitudDeTraspasoDeProductosNavigation = null;
                     detalle.IdProductoNavigation = null;
+
                     if (string.IsNullOrWhiteSpace(detalle.Unidad))
                     {
                         detalle.Unidad = "KG";
                     }
+
                     _unitOfWork.SolicitudesTraspasoDetalles.Create(detalle);
                 }
 
@@ -108,9 +128,9 @@ namespace Logic
                 // 4. Commiteamos toda la transacción junta
                 _unitOfWork.Complete();
             }
-            catch (Exception ex)
+            catch (StockInsuficienteException)
             {
-                throw new ApplicationException("Error al aprobar el traspaso y mover el stock.", ex);
+                throw;
             }
         }
 

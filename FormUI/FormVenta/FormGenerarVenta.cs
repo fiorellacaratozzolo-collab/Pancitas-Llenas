@@ -252,7 +252,7 @@ namespace FormUI.FormVenta
             VentaDetalleDTO nuevoDetalle = new VentaDetalleDTO
             {
                 IdProducto = productoSeleccionado.IdProducto,
-                Producto = productoSeleccionado.NombreProducto,
+                NombreProducto = productoSeleccionado.NombreProducto,
                 Cantidad = cantidad,
                 PrecioUnitario = precioSeguro,
                 Subtotal = cantidad * precioSeguro,

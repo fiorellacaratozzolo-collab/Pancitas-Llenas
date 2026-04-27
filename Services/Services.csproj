@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bll\BitácoraBll.cs" />
+    <Compile Include="Bll\CustomExceptions\SesionExpiradaException.cs" />
+    <Compile Include="Bll\CustomExceptions\UsuarioBloqueadoException.cs" />
     <Compile Include="Bll\FamiliaBll.cs" />
     <Compile Include="Bll\PatenteBll.cs" />
     <Compile Include="Bll\PermisosBll.cs" />
@@ -82,7 +84,7 @@
     <Compile Include="DomainModel\Composite\Familia.cs" />
     <Compile Include="DomainModel\Composite\Patente.cs" />
     <Compile Include="DomainModel\Composite\Usuario.cs" />
-    <Compile Include="DomainModel\Exceptions\WordNotFoundException.cs" />
+    <Compile Include="Bll\CustomExceptions\PalabraNoEncontradaException.cs" />
     <Compile Include="DomainModel\Logging\LogEntry.cs" />
     <Compile Include="DomainModel\Logging\LogLevel.cs" />
     <Compile Include="Facade\Extensions\IdiomaExtension.cs" />

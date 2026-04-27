@@ -1,4 +1,5 @@
-﻿using Services.DomainModel.Composite;
+﻿using Services.Bll.CustomExceptions;
+using Services.DomainModel.Composite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,23 @@ namespace Services.Facade
         }
 
         private SessionManager() { }
-        public Usuario UsuarioLogueado { get; private set; }
+
+        private Usuario _usuarioLogueado;
+        public Usuario UsuarioLogueado
+        {
+            get
+            {
+                if (_usuarioLogueado == null)
+                {
+                    throw new SesionExpiradaException();
+                }
+                return _usuarioLogueado;
+            }
+            private set
+            {
+                _usuarioLogueado = value;
+            }
+        }
 
         public Guid? IdSucursalActual { get; set; }
         public string NombreSucursalActual { get; set; }
@@ -33,12 +50,12 @@ namespace Services.Facade
             UsuarioLogueado = usuario;
             // Si el usuario tiene una sucursal fija (empleado), la cargamos de una vez.
             // Si es Admin (null), esto quedará en null hasta que él elija en el siguiente form.
-            IdSucursalActual = usuario.IdSucursal;
+            IdSucursalActual = usuario?.IdSucursal;
         }
 
         public void Logout()
         {
-            UsuarioLogueado = null;
+            UsuarioLogueado = null; // Esto "mata" la sesión a propósito
             IdSucursalActual = null;
             NombreSucursalActual = null;
         }
@@ -46,9 +63,9 @@ namespace Services.Facade
         // Método clave para que los Forms validen permisos rápidamente
         public bool TienePermiso(string dataKeyPermiso)
         {
-            if (UsuarioLogueado == null) return false;
-
-            // Ahora lee correctamente la mochila del usuario
+            // Al intentar leer "UsuarioLogueado", si es null, automáticamente 
+            // saltará la SesionExpiradaException y cortará la ejecución, 
+            // lo cual está perfecto por seguridad.
             foreach (var privilegio in UsuarioLogueado.Privilegios)
             {
                 if (ValidarPermisoRecursivo(privilegio, dataKeyPermiso))

@@ -30,9 +30,7 @@
         {
             btnModificar = new Button();
             cmbSeleccionSucursal = new ComboBox();
-            txtbNombreEncargado = new TextBox();
             dgvSucursal = new DataGridView();
-            label1 = new Label();
             label2 = new Label();
             gbModificarSucursal = new GroupBox();
             btnDeshabilitar = new Button();
@@ -48,10 +46,6 @@
             txtbNombreSucursal = new TextBox();
             label7 = new Label();
             label6 = new Label();
-            label5 = new Label();
-            label4 = new Label();
-            label3 = new Label();
-            txtbDniEncargado = new TextBox();
             ((System.ComponentModel.ISupportInitialize)dgvSucursal).BeginInit();
             gbModificarSucursal.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -80,14 +74,6 @@
             cmbSeleccionSucursal.ValueMember = "1,2";
             cmbSeleccionSucursal.SelectedIndexChanged += cmbSeleccionSucursal_SelectedIndexChanged;
             // 
-            // txtbNombreEncargado
-            // 
-            txtbNombreEncargado.Location = new Point(188, 80);
-            txtbNombreEncargado.Margin = new Padding(4, 3, 4, 3);
-            txtbNombreEncargado.Name = "txtbNombreEncargado";
-            txtbNombreEncargado.Size = new Size(229, 23);
-            txtbNombreEncargado.TabIndex = 2;
-            // 
             // dgvSucursal
             // 
             dgvSucursal.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -96,16 +82,6 @@
             dgvSucursal.Name = "dgvSucursal";
             dgvSucursal.Size = new Size(657, 331);
             dgvSucursal.TabIndex = 3;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(412, 9);
-            label1.Margin = new Padding(4, 0, 4, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(121, 15);
-            label1.TabIndex = 4;
-            label1.Text = "Gestión de Sucursales";
             // 
             // label2
             // 
@@ -124,7 +100,7 @@
             gbModificarSucursal.Controls.Add(dgvSucursal);
             gbModificarSucursal.Controls.Add(label2);
             gbModificarSucursal.Controls.Add(btnModificar);
-            gbModificarSucursal.Location = new Point(479, 62);
+            gbModificarSucursal.Location = new Point(482, 12);
             gbModificarSucursal.Margin = new Padding(4, 3, 4, 3);
             gbModificarSucursal.Name = "gbModificarSucursal";
             gbModificarSucursal.Padding = new Padding(4, 3, 4, 3);
@@ -157,23 +133,18 @@
             groupBox2.Controls.Add(txtbNombreSucursal);
             groupBox2.Controls.Add(label7);
             groupBox2.Controls.Add(label6);
-            groupBox2.Controls.Add(label5);
-            groupBox2.Controls.Add(label4);
-            groupBox2.Controls.Add(label3);
-            groupBox2.Controls.Add(txtbDniEncargado);
-            groupBox2.Controls.Add(txtbNombreEncargado);
-            groupBox2.Location = new Point(13, 62);
+            groupBox2.Location = new Point(13, 52);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
-            groupBox2.Size = new Size(446, 444);
+            groupBox2.Size = new Size(436, 344);
             groupBox2.TabIndex = 7;
             groupBox2.TabStop = false;
             groupBox2.Text = "Agregar una Sucursal";
             // 
             // txtbTelefonoSucursal
             // 
-            txtbTelefonoSucursal.Location = new Point(188, 255);
+            txtbTelefonoSucursal.Location = new Point(177, 150);
             txtbTelefonoSucursal.Margin = new Padding(4, 3, 4, 3);
             txtbTelefonoSucursal.Name = "txtbTelefonoSucursal";
             txtbTelefonoSucursal.Size = new Size(229, 23);
@@ -182,7 +153,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(33, 258);
+            label10.Location = new Point(22, 153);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
             label10.Size = new Size(131, 15);
@@ -191,7 +162,7 @@
             // 
             // btnAltaSucursal
             // 
-            btnAltaSucursal.Location = new Point(19, 400);
+            btnAltaSucursal.Location = new Point(8, 295);
             btnAltaSucursal.Margin = new Padding(4, 3, 4, 3);
             btnAltaSucursal.Name = "btnAltaSucursal";
             btnAltaSucursal.Size = new Size(420, 37);
@@ -203,7 +174,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(15, 157);
+            label9.Location = new Point(4, 52);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
             label9.Size = new Size(229, 15);
@@ -212,7 +183,7 @@
             // 
             // txtbDireccionSucursal
             // 
-            txtbDireccionSucursal.Location = new Point(188, 220);
+            txtbDireccionSucursal.Location = new Point(177, 115);
             txtbDireccionSucursal.Margin = new Padding(4, 3, 4, 3);
             txtbDireccionSucursal.Name = "txtbDireccionSucursal";
             txtbDireccionSucursal.Size = new Size(229, 23);
@@ -221,7 +192,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(33, 224);
+            label8.Location = new Point(22, 119);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
             label8.Size = new Size(135, 15);
@@ -231,7 +202,7 @@
             // rbtnVenta
             // 
             rbtnVenta.AutoSize = true;
-            rbtnVenta.Location = new Point(148, 331);
+            rbtnVenta.Location = new Point(137, 226);
             rbtnVenta.Margin = new Padding(4, 3, 4, 3);
             rbtnVenta.Name = "rbtnVenta";
             rbtnVenta.Size = new Size(54, 19);
@@ -243,7 +214,7 @@
             // rbtnDepositoVenta
             // 
             rbtnDepositoVenta.AutoSize = true;
-            rbtnDepositoVenta.Location = new Point(148, 358);
+            rbtnDepositoVenta.Location = new Point(137, 253);
             rbtnDepositoVenta.Margin = new Padding(4, 3, 4, 3);
             rbtnDepositoVenta.Name = "rbtnDepositoVenta";
             rbtnDepositoVenta.Size = new Size(106, 19);
@@ -254,7 +225,7 @@
             // 
             // txtbNombreSucursal
             // 
-            txtbNombreSucursal.Location = new Point(188, 187);
+            txtbNombreSucursal.Location = new Point(177, 82);
             txtbNombreSucursal.Margin = new Padding(4, 3, 4, 3);
             txtbNombreSucursal.Name = "txtbNombreSucursal";
             txtbNombreSucursal.Size = new Size(229, 23);
@@ -263,7 +234,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(145, 300);
+            label7.Location = new Point(134, 195);
             label7.Margin = new Padding(4, 0, 4, 0);
             label7.Name = "label7";
             label7.Size = new Size(97, 15);
@@ -273,59 +244,20 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(42, 190);
+            label6.Location = new Point(31, 85);
             label6.Margin = new Padding(4, 0, 4, 0);
             label6.Name = "label6";
             label6.Size = new Size(129, 15);
             label6.TabIndex = 11;
             label6.Text = "Nombre de la Sucursal:";
             // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(145, 113);
-            label5.Margin = new Padding(4, 0, 4, 0);
-            label5.Name = "label5";
-            label5.Size = new Size(30, 15);
-            label5.TabIndex = 10;
-            label5.Text = "DNI:";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(68, 83);
-            label4.Margin = new Padding(4, 0, 4, 0);
-            label4.Name = "label4";
-            label4.Size = new Size(110, 15);
-            label4.TabIndex = 9;
-            label4.Text = "Nombre y Apellido:";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(15, 42);
-            label3.Margin = new Padding(4, 0, 4, 0);
-            label3.Name = "label3";
-            label3.Size = new Size(295, 15);
-            label3.TabIndex = 8;
-            label3.Text = "Ingrese los siguientes datos del Encargado de Sucursal:";
-            // 
-            // txtbDniEncargado
-            // 
-            txtbDniEncargado.Location = new Point(188, 113);
-            txtbDniEncargado.Margin = new Padding(4, 3, 4, 3);
-            txtbDniEncargado.Name = "txtbDniEncargado";
-            txtbDniEncargado.Size = new Size(229, 23);
-            txtbDniEncargado.TabIndex = 8;
-            // 
             // FormGestiónSucursal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1168, 518);
+            ClientSize = new Size(1168, 468);
             Controls.Add(groupBox2);
             Controls.Add(gbModificarSucursal);
-            Controls.Add(label1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGestiónSucursal";
             StartPosition = FormStartPosition.CenterScreen;
@@ -337,7 +269,6 @@
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
 
         }
 
@@ -345,19 +276,13 @@
 
         private System.Windows.Forms.Button btnModificar;
         private System.Windows.Forms.ComboBox cmbSeleccionSucursal;
-        private System.Windows.Forms.TextBox txtbNombreEncargado;
         private System.Windows.Forms.DataGridView dgvSucursal;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox gbModificarSucursal;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btnDeshabilitar;
-        private System.Windows.Forms.TextBox txtbDniEncargado;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.RadioButton rbtnVenta;
         private System.Windows.Forms.RadioButton rbtnDepositoVenta;
         private System.Windows.Forms.TextBox txtbNombreSucursal;

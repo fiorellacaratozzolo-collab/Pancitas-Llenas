@@ -11,8 +11,6 @@ namespace Services.DomainModel.Composite
         public string Password { get; set; }
         public bool Habilitado { get; set; }
         public Guid? IdSucursal { get; set; }
-
-        // El Adapter utiliza esta lista
         public List<Component> Privilegios { get; set; }
 
         public Usuario(Guid id, string nombre, string email, string password, bool habilitado, Guid? idSucursal = null)

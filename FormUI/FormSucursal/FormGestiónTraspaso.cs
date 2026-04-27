@@ -1,5 +1,6 @@
 ﻿using DataAccess.Implementations.SqlServer;
 using Logic;
+using Logic.CustomExceptions;
 using Logic.MappingProfiles;
 using ModelsDTO;
 using Services.Facade;
@@ -188,15 +189,18 @@ namespace FormUI.FormSucursal
                 try
                 {
                     _traspasoService.AprobarTraspaso(solicitudSeleccionada.IdSolicitudDeTraspasoDeProductos);
-
-                    MessageBox.Show("¡Solicitud aprobada y stock actualizado con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Truco: Llamamos al botón actualizar para refrescar la grilla y que desaparezca la solicitud que ya no está "Pendiente"
+                    MessageBox.Show("¡Éxito!", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnActualizar.PerformClick();
+                }
+                catch (StockInsuficienteException ex)
+                {
+                    // Mensaje ultra detallado gracias a las propiedades de la clase
+                    string msj = $"{ex.Message}\n\nPor favor, revise el inventario de la sucursal de origen.";
+                    MessageBox.Show(msj, "Falta de Stock", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error inesperado: " + ex.Message);
                 }
             }
         }

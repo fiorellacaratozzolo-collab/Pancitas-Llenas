@@ -17,7 +17,6 @@ namespace Services.Bll
             _bitacoraRepo = new BitácoraRepository();
         }
 
-        // Este es el método que vas a llamar desde todo el sistema
         public void RegistrarLog(string mensaje, Criticidad criticidad, Guid? idUsuario = null)
         {
             try
@@ -33,8 +32,6 @@ namespace Services.Bll
             }
             catch (Exception ex)
             {
-                // Si la bitácora falla, no queremos que se caiga el sistema principal.
-                // En un caso real, acá podríamos escribir en un archivo .txt de emergencia.
                 System.Diagnostics.Debug.WriteLine($"Error al guardar en bitácora: {ex.Message}");
             }
         }
@@ -47,7 +44,6 @@ namespace Services.Bll
             }
             catch (Exception ex)
             {
-                // Si hay error, lo ideal es avisar a la UI
                 throw new Exception("Error al consultar la bitácora: " + ex.Message);
             }
         }

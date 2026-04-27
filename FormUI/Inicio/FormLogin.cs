@@ -44,8 +44,7 @@ namespace FormUI
 
                 // Verificamos si es Admin (sucursal en null)
                 if (usuarioValidado.IdSucursal == null)
-                {
-                    // OJO: Cambia el nombre por tu form real
+                {                  
                     FormSeleccionSucursal formSucursal = new FormSeleccionSucursal();
 
                     // Usamos ShowDialog para pausar el código hasta que la ventana se cierre
@@ -60,15 +59,12 @@ namespace FormUI
                     }
                     else
                     {
-                        // El admin apretó Cancelar o la "X" roja sin elegir nada
-                        // Cerramos la sesión por seguridad y lo dejamos en la pantalla de Login
                         SessionManager.Current.Logout();
                         MessageBox.Show("Operación cancelada. Debe seleccionar una sucursal para poder ingresar al sistema.", "Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
                 {
-                    // Es empleado normal, pasa directo
                     FormPrincipal formPrincipal = new FormPrincipal();
                     formPrincipal.Show();
                     this.Hide();

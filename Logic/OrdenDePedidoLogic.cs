@@ -2,10 +2,11 @@
 using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using Logic.CustomExceptions;
+using Logic.Helpers;
 using Logic.MappingProfiles;
 using ModelsDTO;
 using System;
-using Logic.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -88,7 +89,14 @@ namespace Logic
         {
             var orden = _unitOfWork.OrdenDePedidos.GetById(ordenId);
             if (orden == null) throw new KeyNotFoundException();
-
+            if (orden.IdEstadoOp == 2)
+            {
+                throw new TransicionEstadoInvalidaException("Aprobada", "Rechazada");
+            }
+            else if (orden.IdEstadoOp == 3)
+            {
+                throw new TransicionEstadoInvalidaException("Rechazada", "Rechazada");
+            }
             orden.IdEstadoOp = 3; // Rechazada
             _unitOfWork.OrdenDePedidos.Update(orden);
             _unitOfWork.Complete();
@@ -100,6 +108,15 @@ namespace Logic
             var orden = _unitOfWork.OrdenDePedidos.GetById(ordenId);
             if (orden == null)
                 throw new KeyNotFoundException($"No se encontró la Orden de Pedido con ID {ordenId}");
+            // Si no está pendiente (1), no se puede aprobar.
+            if (orden.IdEstadoOp == 2)
+            {
+                throw new TransicionEstadoInvalidaException("Aprobada", "Aprobada");
+            }
+            else if (orden.IdEstadoOp == 3)
+            {
+                throw new TransicionEstadoInvalidaException("Rechazada", "Aprobada");
+            }
 
             var proveedorHelper = new Logic.Helpers.ProveedorHelper(_unitOfWork);
             var ordenDeCompraLogic = new OrdenDeCompraLogic(_unitOfWork);

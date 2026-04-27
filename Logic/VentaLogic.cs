@@ -94,11 +94,26 @@ namespace Logic
         // Y ya que estamos, agregamos este método rápido para traer los detalles de una venta
         public List<VentaDetalleDTO> GetDetallesDeVenta(Guid idVenta)
         {
+            // 1. Traemos los detalles base
             var detalles = _unitOfWork.VentaDetalles.GetAll()
                 .Where(d => d.IdVenta == idVenta)
                 .ToList();
 
-            return _mapper.Map<List<VentaDetalleDTO>>(detalles);
+            // 2. Mapeamos al DTO
+            var listaDTO = _mapper.Map<List<VentaDetalleDTO>>(detalles);
+
+            // 3. Rellenamos el dato que falta yendo a buscar el Producto
+            foreach (var dto in listaDTO)
+            {
+                var producto = _unitOfWork.Productos.GetById(dto.IdProducto);
+                if (producto != null)
+                {
+                    // Ojo: Asegurate de que tu VentaDetalleDTO tenga esta propiedad llamada NombreProducto
+                    dto.NombreProducto = producto.NombreProducto;
+                }
+            }
+
+            return listaDTO;
         }
 
         public void AnularVenta(Guid idVenta, Guid idSucursal)

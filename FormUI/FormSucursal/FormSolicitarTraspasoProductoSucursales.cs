@@ -1,8 +1,10 @@
 ﻿using DataAccess.Implementations.SqlServer;
 using Logic;
+using Logic.CustomExceptions;
 using Logic.Facade;
 using Logic.MappingProfiles;
 using ModelsDTO;
+using Services.Bll.CustomExceptions;
 using Services.Facade;
 using System;
 using System.Collections.Generic;
@@ -155,7 +157,6 @@ namespace FormUI.FormSucursal
             try
             {
                 Guid idSucursalOrigen = (Guid)cmbSucursalOrigen.SelectedValue;
-                // La sucursal que recibe es la tuya (la que está logueada pidiendo la mercadería)
                 Guid idSucursalDestino = SessionManager.Current.IdSucursalActual.Value;
 
                 var nuevaSolicitud = new SolicitudDeTraspasoDeProductoDTO
@@ -164,6 +165,7 @@ namespace FormUI.FormSucursal
                     IdSucursalOrigen = idSucursalOrigen,
                     IdSucursalDestino = idSucursalDestino
                 };
+
                 var listaDetalles = _listaProductos.ToList();
                 var service = new Logic.Facade.TraspasoService();
                 service.GenerarSolicitud(nuevaSolicitud, listaDetalles);
@@ -174,9 +176,24 @@ namespace FormUI.FormSucursal
                 cmbSucursalOrigen.SelectedIndex = -1;
                 dtpFechaSolicitud.Value = DateTime.Today;
             }
+            catch (SesionExpiradaException ex)
+            {
+                MessageBox.Show(ex.Message, "Sesión Expirada", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                // Cierra la aplicación y la vuelve a abrir para forzar el Login
+                Application.Restart();
+            }
+            catch (TraspasoMismaSucursalException ex) 
+            {
+                MessageBox.Show(ex.Message, "Error de Destino", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbSucursalOrigen.Focus(); // Le devolvemos el foco al combo para que lo cambie
+            }
+            catch (CantidadInvalidaException ex)
+            {
+                MessageBox.Show(ex.Message, "Error en los datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error al procesar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ocurrió un error inesperado al procesar la solicitud: {ex.Message}", "Error de Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

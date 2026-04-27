@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Services.Bll.CustomExceptions;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Services.DomainModel.Exceptions;
 
 namespace Services.Dal
 {
@@ -29,54 +30,69 @@ namespace Services.Dal
         }
         #endregion
 
-        private static string folderPath = ConfigurationManager.AppSettings["IdiomaFolderPath"];
+        private static string folder = ConfigurationManager.AppSettings["I18NFolderPath"];
 
-        private static string fileName = ConfigurationManager.AppSettings["IdiomaFileName"];
+        private static string fileName = ConfigurationManager.AppSettings["I18NFileName"];
 
         private static string path = default;
         static IdiomaRepository()
         {
-            path = Path.Combine(folderPath, fileName);
+            path = Path.Combine(folder, fileName);
         }
 
-        public string Traducir(string word)
+        public static string Traducir(string texto)
+        {
+            string fileNameIdioma = Path.Combine(folder, fileName + "." + Thread.CurrentThread.CurrentCulture.Name);
+
+            using (StreamReader sr = new StreamReader(fileNameIdioma))
+            {
+                string line;
+
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string[] parts = line.Split(':');
+
+                    if (parts.Length == 2 && parts[0].Trim().ToLower() == texto.ToLower())
+                    {
+                        //Si estoy acá significa que encontré la clave buscada.
+                        return parts[1].Trim();
+                    }
+                }
+            }
+            throw new PalabraNoEncontradaException(texto);
+        }
+
+
+
+        public static List<CultureInfo> ObtenerIdiomas()
         {
             try
             {
-                string cultura = Thread.CurrentThread.CurrentCulture.Name;
+                DirectoryInfo directoryInfo = new DirectoryInfo(folder);
 
-                string localPath = $"{path}.{cultura}";
+                List<CultureInfo> idiomas = new List<CultureInfo>();
 
-                using (StreamReader sr = new StreamReader(localPath))
+                foreach (FileInfo fo in directoryInfo.GetFiles())
                 {
-                    while (!sr.EndOfStream)
-                    {
-                        string line = sr.ReadLine();
-
-                        string[] strings = line.Split('=');
-                        string key = strings[0];
-                        string value = strings[1];
-
-                        if (key.ToLower() == word.ToLower())
-                        {
-                            return value;
-                        }
-                    }
+                    idiomas.Add(new CultureInfo(fo.Extension.Replace(".", "")));
                 }
-                throw new WordNotFoundException();
+
+                return idiomas;
             }
             catch (Exception ex)
             {
-                //Tratamiento de excepciones genéricas.
-                Console.WriteLine(ex.Message);
-                throw;
+                throw ex;
             }
         }
 
-        public void AgregarDataKey(string key)
+        public static void AgregarPalabra(string palabra, string traduccion = "")
         {
+            string fileNameIdioma = Path.Combine(folder, fileName + "." + Thread.CurrentThread.CurrentCulture.Name);
 
+            using (StreamWriter sw = new StreamWriter(fileNameIdioma, true)) //Append: Sirve para agregar data al final del archivo
+            {
+                sw.WriteLine($"{palabra}:{traduccion}");
+            }
         }
-
     }
 }

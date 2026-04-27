@@ -9,9 +9,9 @@ namespace Services.Facade.Extensions
 {
     public static class IdiomaExtension
     {
-        public static string Traducir(this string word)
+        public static string Traducir(this string texto)
         {
-            return IdiomaService.Current.Traducir(word);
+            return Bll.IdiomaService.Traducir(texto);
         }
     }
 }

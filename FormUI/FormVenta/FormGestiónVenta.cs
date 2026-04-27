@@ -42,10 +42,29 @@ namespace FormUI.FormVenta
             if (dgvDetallesVenta.Columns.Contains("IdVentaDetalle")) dgvDetallesVenta.Columns["IdVentaDetalle"].Visible = false;
             if (dgvDetallesVenta.Columns.Contains("IdVenta")) dgvDetallesVenta.Columns["IdVenta"].Visible = false;
             if (dgvDetallesVenta.Columns.Contains("IdProducto")) dgvDetallesVenta.Columns["IdProducto"].Visible = false;
+            if (dgvDetallesVenta.Columns.Contains("IdProductoNavigation")) dgvDetallesVenta.Columns["IdProductoNavigation"].Visible = false;
+            if (dgvDetallesVenta.Columns.Contains("IdVentaNavigation")) dgvDetallesVenta.Columns["IdVentaNavigation"].Visible = false;
+            if (dgvDetallesVenta.Columns.Contains("Producto")) dgvDetallesVenta.Columns["Producto"].Visible = false;
+
 
             dgvDetallesVenta.ReadOnly = true;
             dgvDetallesVenta.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvDetallesVenta.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            if (dgvDetallesVenta.Columns.Contains("NombreProducto"))
+            {
+                dgvDetallesVenta.Columns["NombreProducto"].HeaderText = "Producto";
+                dgvDetallesVenta.Columns["NombreProducto"].DisplayIndex = 0;
+                dgvDetallesVenta.Columns["NombreProducto"].Visible = true;
+            }
+            if (dgvDetallesVenta.Columns.Contains("PrecioUnitario"))
+            {
+                dgvDetallesVenta.Columns["PrecioUnitario"].DefaultCellStyle.Format = "C2";
+            }
+            if (dgvDetallesVenta.Columns.Contains("Subtotal"))
+            {
+                dgvDetallesVenta.Columns["Subtotal"].DefaultCellStyle.Format = "C2";
+            }
         }
 
         private void ConfigurarColumnasGrilla()
@@ -63,7 +82,7 @@ namespace FormUI.FormVenta
             if (dgvVentasRealizadas.Columns.Contains("FechaVenta"))
             {
                 dgvVentasRealizadas.Columns["FechaVenta"].HeaderText = "Hora";
-                dgvVentasRealizadas.Columns["FechaVenta"].DefaultCellStyle.Format = "HH:mm"; // Mostramos la hora
+                dgvVentasRealizadas.Columns["FechaVenta"].DefaultCellStyle.Format = "HH:mm"; 
             }
 
             if (dgvVentasRealizadas.Columns.Contains("Total"))
@@ -71,7 +90,6 @@ namespace FormUI.FormVenta
                 dgvVentasRealizadas.Columns["Total"].DefaultCellStyle.Format = "N2";
             }
 
-            // Que nadie pueda escribir en la grilla
             dgvVentasRealizadas.ReadOnly = true;
             dgvVentasRealizadas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvVentasRealizadas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
