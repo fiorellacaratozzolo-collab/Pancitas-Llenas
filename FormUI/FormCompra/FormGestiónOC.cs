@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormCompra
 {
@@ -24,17 +25,6 @@ namespace FormUI.FormCompra
             dgvOrdenCompra.MultiSelect = false;
             dgvOrdenCompra.ReadOnly = true;
             dgvDetalleOC.ReadOnly = true;
-        }
-
-        private void FormGestiónOC_Load(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void dgvOrdenCompra_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-
         }
 
         private void CargarOrdenes()
@@ -61,6 +51,7 @@ namespace FormUI.FormCompra
             btnAlta.Enabled = sonPendientes;
             btnBaja.Enabled = sonPendientes;
         }
+
         private void btnVer_Click(object sender, EventArgs e)
         {
             CargarOrdenes();
@@ -96,8 +87,8 @@ namespace FormUI.FormCompra
         {
             if (dgvOrdenCompra.CurrentRow?.DataBoundItem is not OrdenDeCompraDTO oc) return;
 
-            if (MessageBox.Show("¿Rechazar esta orden?", "Cuidado",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBox.Show("¿Rechazar esta orden?".Traducir(), "Cuidado".Traducir(),
+            MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 try
                 {
@@ -108,7 +99,8 @@ namespace FormUI.FormCompra
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    // 2. ex.Message es un string que viene de tu BLL, ¡así que también le podemos pegar el traductor!
+                    MessageBox.Show(ex.Message.Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -131,7 +123,7 @@ namespace FormUI.FormCompra
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error en vista previa: " + ex.Message);
+                Console.WriteLine("Error en vista previa: ".Traducir() + ex.Message);
             }
         }
 
@@ -225,6 +217,7 @@ namespace FormUI.FormCompra
             // Al poner el Index en 0 ("Pendientes"), automáticamente dispara 
             // el evento de cambio y carga la grilla por primera vez.
             cmbFiltroEstado.SelectedIndex = 0;
+            TraductorUI.TraducirFormulario(this);
         }
     }
 }

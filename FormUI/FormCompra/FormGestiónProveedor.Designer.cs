@@ -159,7 +159,6 @@
             dgvProveedor.Name = "dgvProveedor";
             dgvProveedor.Size = new Size(498, 216);
             dgvProveedor.TabIndex = 5;
-            dgvProveedor.CellContentClick += dgvProveedor_CellContentClick;
             // 
             // groupBox2
             // 

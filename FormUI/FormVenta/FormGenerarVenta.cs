@@ -10,12 +10,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormVenta
 {
     public partial class FormGenerarVenta : Form
     {
-        private ProductoDTO _productoSeleccionado = null;
+        private ProductoDTO? _productoSeleccionado = null;
         private BindingList<VentaDetalleDTO> _carrito = new BindingList<VentaDetalleDTO>();
 
         private void ConfigurarColumnasGrilla()
@@ -56,7 +57,6 @@ namespace FormUI.FormVenta
             dgvVentas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
-
         public FormGenerarVenta()
         {
             InitializeComponent();
@@ -91,7 +91,6 @@ namespace FormUI.FormVenta
 
         private void FormGenerarVenta_Load_1(object sender, EventArgs e)
         {
-
             try
             {
                 // --- 1. CONFIGURACIÓN DEL CARRITO ---
@@ -139,7 +138,7 @@ namespace FormUI.FormVenta
 
                 if (idSucursalActual == null)
                 {
-                    MessageBox.Show("Error crítico: No hay una sucursal activa en la sesión.", "Seguridad", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error crítico: No hay una sucursal activa en la sesión.".Traducir(), "Seguridad".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     this.Close(); return;
                 }
 
@@ -162,8 +161,9 @@ namespace FormUI.FormVenta
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al inicializar la pantalla: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al inicializar la pantalla: ".Traducir() + ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)
@@ -178,18 +178,18 @@ namespace FormUI.FormVenta
             else
             {
                 txtbPrecioProd.Clear();
-                txtbPesoNeto.Clear(); // Limpiamos si no hay nada seleccionado
+                txtbPesoNeto.Clear();
             }
         }
 
         private void btnBuscarProd_Click(object sender, EventArgs e)
         {
             // 1. Solicitar el nombre del producto al usuario
-            string input = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el nombre (o parte del nombre) del producto a buscar:", "Buscar Producto", "");
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el nombre (o parte del nombre) del producto a buscar:".Traducir(), "Buscar Producto".Traducir(), "");
 
             if (string.IsNullOrWhiteSpace(input))
             {
-                return; // Usuario canceló o no ingresó nada
+                return;
             }
 
             try
@@ -206,24 +206,21 @@ namespace FormUI.FormVenta
                 // 3. Validar si encontramos algo
                 if (listaFiltrada.Count == 0)
                 {
-                    MessageBox.Show($"No se encontró ningún producto que contenga '{input}'.", "Sin resultados", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"No se encontró ningún producto que contenga '{input}'.".Traducir(), "Sin resultados".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // 4. ¡LA MAGIA! Reemplazamos la lista del ComboBox con la lista filtrada
-                cmbProducto.DataSource = null; // Limpiamos la anterior
+                cmbProducto.DataSource = null;
                 cmbProducto.DataSource = listaFiltrada;
                 cmbProducto.DisplayMember = "NombreProducto";
                 cmbProducto.ValueMember = "IdProducto";
-                cmbProducto.SelectedIndex = -1; // Lo dejamos vacío para que el usuario elija
-
-                // 5. Desplegamos el ComboBox automáticamente para que vea los resultados
+                cmbProducto.SelectedIndex = -1;
                 cmbProducto.DroppedDown = true;
 
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error durante la búsqueda: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error durante la búsqueda: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -231,24 +228,20 @@ namespace FormUI.FormVenta
         {
             if (cmbProducto.SelectedItem == null)
             {
-                MessageBox.Show("Seleccione un producto primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Seleccione un producto primero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (!int.TryParse(txtbCantidadProd.Text, out int cantidad) || cantidad <= 0)
             {
-                MessageBox.Show("Ingrese una cantidad válida mayor a cero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingrese una cantidad válida mayor a cero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             var productoSeleccionado = (ProductoDTO)cmbProducto.SelectedItem;
-
-            // Extraemos el valor de forma segura (si es null, lo tomamos como 0)
-            // El (decimal) asegura la conversión si en tu BD es de tipo float/double
             decimal precioSeguro = (decimal)(productoSeleccionado.PrecioNeto ?? 0);
             decimal pesoSeguro = (decimal)(productoSeleccionado.PesoNeto ?? 0);
             string unidadSegura = string.IsNullOrWhiteSpace(productoSeleccionado.Unidad) ? "Unidad" : productoSeleccionado.Unidad;
-            // Creamos el renglón
             VentaDetalleDTO nuevoDetalle = new VentaDetalleDTO
             {
                 IdProducto = productoSeleccionado.IdProducto,
@@ -260,15 +253,10 @@ namespace FormUI.FormVenta
                 Unidad = unidadSegura
             };
 
-            // Lo agregamos a la lista observable (La grilla se actualiza sola)
             _carrito.Add(nuevoDetalle);
-
-            // Limpiamos los controles para el siguiente producto
             cmbProducto.SelectedIndex = -1;
             txtbCantidadProd.Clear();
-            cmbProducto.Focus(); // Volvemos al combo para que siga tipeando
-
-            // Recalculamos la plata
+            cmbProducto.Focus(); 
             CalcularTotal();
         }
 
@@ -300,8 +288,6 @@ namespace FormUI.FormVenta
             }
 
             decimal totalFinal = subtotalVenta - descuento;
-
-            // Mostramos en los labels (Ajusta los nombres a tus labels reales de la UI)
             lblSubtotal.Text = $"Subtotal: $ {subtotalVenta:N2}";
             lblDescuento.Text = $"Descuento: $ {descuento:N2}";
             lblTotal.Text = $"TOTAL: $ {totalFinal:N2}";
@@ -309,75 +295,79 @@ namespace FormUI.FormVenta
 
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            
+
+            // VALIDACIONES INICIALES
             if (_carrito.Count == 0)
             {
-                MessageBox.Show("El carrito está vacío. Agregue productos antes de cobrar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("El carrito está vacío. Agregue productos antes de cobrar.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (cmbCliente.SelectedIndex == -1 || cmbCliente.SelectedValue == null)
             {
-                MessageBox.Show("Por favor, seleccione un Cliente válido de la lista antes de registrar la venta.", "Cliente Faltante", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, seleccione un Cliente válido de la lista antes de registrar la venta.".Traducir(), "Cliente Faltante".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 cmbCliente.Focus();
+                return;
+            }
+
+            // VALIDACIÓN DE MÉTODO DE PAGO
+            if (cmbPago.SelectedItem == null)
+            {
+                MessageBox.Show("Por favor, seleccione un método de pago.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbPago.Focus();
+                return;
+            }
+
+            // VALIDACIÓN DE SUCURSAL
+            if (!SessionManager.Current.IdSucursalActual.HasValue)
+            {
+                MessageBox.Show("No hay una sucursal seleccionada en la sesión actual para registrar la venta.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             try
             {
-                // 2. RECOPILAR DATOS DE LA VENTA (La cabecera)
                 decimal subtotal = _carrito.Sum(item => item.Subtotal);
                 decimal descuento = chkMayorista.Checked ? subtotal * 0.35m : 0;
+                Guid idSucursalActual = SessionManager.Current.IdSucursalActual.Value;
+                string metodoPagoSeleccionado = cmbPago.SelectedItem.ToString() ?? "Efectivo";
 
                 VentumDTO nuevaVenta = new VentumDTO
                 {
                     IdCliente = (Guid)cmbCliente.SelectedValue,
                     FechaVenta = DateTime.Now,
-                    MetodoPago = cmbPago.SelectedItem.ToString(),
+                    MetodoPago = metodoPagoSeleccionado,
                     EsMayorista = chkMayorista.Checked,
                     MontoDescuento = descuento,
                     Total = subtotal - descuento,
-                    IdSucursal = SessionManager.Current.IdSucursalActual.Value
+                    IdSucursal = idSucursalActual
                 };
 
-                // 3. PREPARAR EL DETALLE
-                // Tu BLL espera una List, así que convertimos la BindingList
                 List<VentaDetalleDTO> listaDetalles = _carrito.ToList();
 
-                // 4. OBTENER SUCURSAL ACTUAL (Para descontar el stock ahí)
-                Guid idSucursalActual = SessionManager.Current.IdSucursalActual.Value;
-
-                // 5. ¡MANDAR A GUARDAR! 
-                // Llamamos a tu servicio (Facade) que ejecuta la transacción atómica
                 Logic.Facade.VentaService ventaService = new Logic.Facade.VentaService();
                 Guid idVentaGenerada = ventaService.RegistrarVenta(nuevaVenta, listaDetalles, idSucursalActual);
 
-                // 6. ÉXITO
-                MessageBox.Show($"¡Venta registrada con éxito!\nSe descontó el stock correctamente.\nN° de Ticket: {idVentaGenerada}", "Venta Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"¡Venta registrada con éxito!\nSe descontó el stock correctamente.\nN° de Ticket: {idVentaGenerada}".Traducir(), "Venta Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // 7. LIMPIEZA
-                // Usamos el método que creamos para el botón Cancelar y dejamos todo en blanco
                 LimpiarPantalla();
             }
             catch (Exception ex)
             {
-                // Si no hay stock suficiente, el UnitOfWork tira tu mensaje de error y cae aquí:
-                MessageBox.Show(ex.Message, "Error al procesar la venta", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message.Traducir(), "Error al procesar la venta".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
+        }       
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            // Validamos si realmente hay algo que valga la pena cancelar
             if (_carrito.Count == 0 && cmbCliente.SelectedIndex == -1 && txtbCantidadProd.Text == "")
             {
-                return; // La pantalla ya está limpia, no molestamos al usuario
+                return;
             }
 
-            // Pedimos confirmación de seguridad
             DialogResult confirmacion = MessageBox.Show(
-                "¿Está seguro que desea cancelar la venta en curso? Se vaciará el carrito.",
-                "Confirmar Cancelación",
+                "¿Está seguro que desea cancelar la venta en curso? Se vaciará el carrito.".Traducir(),
+                "Confirmar Cancelación".Traducir(),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 

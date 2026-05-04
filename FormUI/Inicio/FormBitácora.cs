@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.Inicio
 {
@@ -45,9 +46,13 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-       
+
+        private void FormBitácora_Load(object sender, EventArgs e)
+        {
+            TraductorUI.TraducirFormulario(this);
+        }
     }
 }

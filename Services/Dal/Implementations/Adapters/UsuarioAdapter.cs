@@ -23,27 +23,36 @@ namespace Services.Dal.Implementations.Adapters
         #endregion
 
         public Usuario Get(object[] values)
-        {           
-            // Si el valor es DBNull, lo dejamos como null. Si tiene un dato, lo convertimos a Guid.
+        {
+            // 1. Lógica para la Sucursal (se mantiene igual, es la posición 5)
             Guid? idSucursal = null;
-
-            // Verificamos que el arreglo tenga al menos 6 posiciones y que no sea nulo en BD
             if (values.Length > 5 && values[5] != DBNull.Value)
             {
                 idSucursal = Guid.Parse(values[5].ToString());
             }
 
-            // 2. Instanciamos el Usuario
+            // 2. Instanciamos el Usuario (con el constructor que ya tenés)
             Usuario usuario = new Usuario(
                 Guid.Parse(values[0].ToString()),
                 values[1].ToString(),
                 values[2].ToString(),
                 values[3].ToString(),
                 Convert.ToBoolean(values[4].ToString()),
-                idSucursal 
+                idSucursal
             );
 
-            // Buscamos los roles (familias) y excepciones (patentes) asignadas al usuario
+            // 3. NUEVO: Asignamos el idioma predeterminado (Posición 6)
+            // Usamos un salvavidas: si en la BD es NULL, le asignamos "es-AR" por defecto
+            if (values.Length > 6 && values[6] != DBNull.Value)
+            {
+                usuario.IdiomaPredeterminado = values[6].ToString();
+            }
+            else
+            {
+                usuario.IdiomaPredeterminado = "es-AR";
+            }
+
+            // 4. Cargamos privilegios (se mantiene igual)
             usuario.Privilegios.AddRange(new UsuarioFamiliaRepository().GetByObject(usuario));
             usuario.Privilegios.AddRange(new UsuarioPatenteRepository().GetByObject(usuario));
 

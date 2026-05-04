@@ -1,5 +1,7 @@
 ﻿using FormUI.Inicio;
+using ModelsDTO;
 using Services.Facade;
+using Services.Facade.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,51 +25,48 @@ namespace FormUI
         {
             try
             {
-                // 1. Instanciamos tu lógica de sucursales
                 Logic.SucursalLogic sucursalLogic = new Logic.SucursalLogic();
+                var listaSucursales = sucursalLogic.ObtenerTodasLasSucursales().ToList();
+                var sucursalPlaceholder = new SucursalDTO
+                {
+                    IdSucursal = Guid.Empty,
+                    Direccion = "--- Seleccione una sucursal ---".Traducir()
+                };
 
-                // 2. Traemos la lista de DTOs usando tu método
-                var listaSucursales = sucursalLogic.ObtenerTodasLasSucursales();
-
-                // 3. Atamos la lista al ComboBox
+                listaSucursales.Insert(0, sucursalPlaceholder);
                 cmbSucursales.DataSource = listaSucursales;
-
-                // 4. Le decimos qué propiedad del DTO mostrar al usuario
-                // (Asegúrate de que la propiedad en tu SucursalDTO se llame exactamente así)
                 cmbSucursales.DisplayMember = "Direccion";
-
-                // 5. Le decimos qué propiedad del DTO guardar como "Valor real"
                 cmbSucursales.ValueMember = "IdSucursal";
-
-                // Para que arranque vacío y obligue al Admin a elegir
-                cmbSucursales.SelectedIndex = -1;
+                cmbSucursales.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar las sucursales: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar las sucursales: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void btnSiguiente_Click(object sender, EventArgs e)
         {
             try
             {
-                if (cmbSucursales.SelectedItem == null)
+                Guid idElegido = (Guid)(cmbSucursales.SelectedValue ?? Guid.Empty);
+                if (cmbSucursales.SelectedItem == null || idElegido == Guid.Empty)
                 {
-                    MessageBox.Show("Por favor, elija una sucursal primero.");
+                    MessageBox.Show("Por favor, elija una sucursal primero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                Guid idElegido = (Guid)cmbSucursales.SelectedValue; 
                 SessionManager.Current.IdSucursalActual = idElegido;
                 SessionManager.Current.NombreSucursalActual = cmbSucursales.Text;
-                
+
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ocurrió un error al intentar ingresar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ocurrió un error al intentar ingresar: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

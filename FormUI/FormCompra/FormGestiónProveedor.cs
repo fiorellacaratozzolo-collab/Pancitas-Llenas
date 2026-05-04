@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormCompra
 {
@@ -42,7 +43,7 @@ namespace FormUI.FormCompra
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar los proveedores: {ex.Message}", "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar los proveedores: {ex.Message}".Traducir(), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -94,14 +95,10 @@ namespace FormUI.FormCompra
             // Ajustar el ancho de las columnas
             dgvProveedor.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
-        private void GestiónProveedorForm_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void FormGestiónProveedor_Load(object sender, EventArgs e)
         {
-
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
@@ -109,13 +106,13 @@ namespace FormUI.FormCompra
             // 1. Obtención y Validación de Datos
             if (string.IsNullOrWhiteSpace(txtbNombreProv.Text))
             {
-                MessageBox.Show("El campo Nombre es obligatorio.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("El campo Nombre es obligatorio.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (!int.TryParse(txtbCuitProv.Text, out int cuitValue) || !int.TryParse(txtbTelefonoProv.Text, out int telefonoValue))
             {
-                MessageBox.Show("Debe ser un número válido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Debe ser un número válido.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -135,18 +132,18 @@ namespace FormUI.FormCompra
                 // Call the service layer method to persist the client
                 Guid newProveedorId = _proveedorService.CreateProveedor(nuevoProveedorDTO);
 
-                MessageBox.Show($"Proveedor agregado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Proveedor agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimpiarControles();
             }
             catch (ArgumentNullException ex)
             {
                 // Handle validation/null checks from the Repository
-                MessageBox.Show($"Error de datos: {ex.Message}", "Error de Alta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Error de datos: {ex.Message}".Traducir(), "Error de Alta".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
                 // Handle generic errors (DB connection, unique constraints, etc.)
-                MessageBox.Show($"Ocurrió un error al intentar agregar el proveedor: {ex.Message}", "Error Inesperado", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ocurrió un error al intentar agregar el proveedor: {ex.Message}".Traducir(), "Error Inesperado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
@@ -160,12 +157,11 @@ namespace FormUI.FormCompra
             txtbNombreProv.Focus();
         }
 
-
         private void btnActualizar_Click(object sender, EventArgs e)
         {
             // Llama al método existente para recargar la lista completa.
             CargarDatosProveedores();
-            MessageBox.Show("Lista de proveedoes actualizada.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Lista de proveedoes actualizada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnDeshabilitar_Click(object sender, EventArgs e)
@@ -178,7 +174,7 @@ namespace FormUI.FormCompra
                 string nombre = dgvProveedor.CurrentRow.Cells["NombreProveedor"].Value?.ToString() ?? string.Empty;
 
                 // 2. Confirmación del usuario.
-                DialogResult dialogResult = MessageBox.Show($"¿Está seguro de deshabilitar a {nombre}?", "Confirmar Acción", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult dialogResult = MessageBox.Show($"¿Está seguro de deshabilitar a {nombre}?".Traducir(), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (dialogResult == DialogResult.Yes)
                 {
@@ -189,23 +185,18 @@ namespace FormUI.FormCompra
 
                         // 4. Recargar el DataGridView.
                         CargarDatosProveedores();
-                        MessageBox.Show("Proveedor deshabilitado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Proveedor deshabilitado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Error al deshabilitar el Proveedor: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error al deshabilitar el Proveedor: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Debe seleccionar una fila para deshabilitar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe seleccionar una fila para deshabilitar.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }
-
-        private void dgvProveedor_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }

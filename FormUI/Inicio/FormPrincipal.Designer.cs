@@ -60,6 +60,8 @@
             toolStripMenuItem2 = new ToolStripMenuItem();
             panelContenedor = new Panel();
             lblInfoSucursal = new Label();
+            cmbIdioma = new ComboBox();
+            label1 = new Label();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -125,7 +127,6 @@
             tsmCompras.Size = new Size(100, 26);
             tsmCompras.Tag = "tsmCompras";
             tsmCompras.Text = "Compras";
-            tsmCompras.Click += compraToolStripMenuItem_Click;
             // 
             // FormGestiónSP
             // 
@@ -222,7 +223,6 @@
             tsmSucursales.Size = new Size(116, 26);
             tsmSucursales.Tag = "tsmSucursales";
             tsmSucursales.Text = "Sucursales";
-            tsmSucursales.Click += sucursalesToolStripMenuItem_Click;
             // 
             // FormGestiónSucursal
             // 
@@ -311,26 +311,46 @@
             // panelContenedor
             // 
             panelContenedor.BackColor = SystemColors.ControlLight;
-            panelContenedor.Location = new Point(0, 55);
+            panelContenedor.Location = new Point(0, 53);
             panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(1613, 766);
+            panelContenedor.Size = new Size(1613, 768);
             panelContenedor.TabIndex = 2;
             // 
             // lblInfoSucursal
             // 
             lblInfoSucursal.AutoSize = true;
             lblInfoSucursal.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblInfoSucursal.Location = new Point(805, 32);
+            lblInfoSucursal.Location = new Point(773, 30);
             lblInfoSucursal.Name = "lblInfoSucursal";
             lblInfoSucursal.Size = new Size(139, 20);
             lblInfoSucursal.TabIndex = 3;
             lblInfoSucursal.Text = "Cargando sucursal...";
+            // 
+            // cmbIdioma
+            // 
+            cmbIdioma.FormattingEnabled = true;
+            cmbIdioma.Location = new Point(12, 842);
+            cmbIdioma.Name = "cmbIdioma";
+            cmbIdioma.Size = new Size(206, 23);
+            cmbIdioma.TabIndex = 4;
+            cmbIdioma.SelectionChangeCommitted += cmbIdioma_SelectionChangeCommitted;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 824);
+            label1.Name = "label1";
+            label1.Size = new Size(206, 15);
+            label1.TabIndex = 5;
+            label1.Text = "Seleccione el Idioma Predeterminado:";
             // 
             // FormPrincipal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1613, 874);
+            Controls.Add(label1);
+            Controls.Add(cmbIdioma);
             Controls.Add(lblInfoSucursal);
             Controls.Add(panelContenedor);
             Controls.Add(btnCerrarSesion);
@@ -380,5 +400,7 @@
         private ToolStripMenuItem FormGestiónUsuario;
         private Panel panelContenedor;
         private Label lblInfoSucursal;
+        private ComboBox cmbIdioma;
+        private Label label1;
     }
 }

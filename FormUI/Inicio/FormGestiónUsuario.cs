@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.Inicio
 {
     public partial class FormGestiónUsuario : Form
     {
-        // Esta variable recordará a quién le hicimos clic en la grilla
         private Guid _idUsuarioSeleccionado = Guid.Empty;
 
         public FormGestiónUsuario()
@@ -27,7 +27,7 @@ namespace FormUI.Inicio
                 Logic.SucursalLogic sucursalLogic = new Logic.SucursalLogic();
                 var sucursalesDb = sucursalLogic.ObtenerTodasLasSucursales();               
                 var listaCombo = new List<object>();
-                listaCombo.Add(new { Id = Guid.Empty, Texto = "ADMINISTRADOR (Sin Sucursal Fija)" });
+                listaCombo.Add(new { Id = Guid.Empty, Texto = "ADMINISTRADOR (Sin Sucursal Fija)".Traducir() });
                 if (sucursalesDb != null)
                 {
                     foreach (var s in sucursalesDb)
@@ -45,8 +45,9 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al inicializar el formulario: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al inicializar el formulario: ".Traducir() + ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void CargarGrillaUsuarios()
@@ -61,7 +62,6 @@ namespace FormUI.Inicio
 
                 if (usuarios == null) return;
 
-                // AQUÍ ESTÁ LA MAGIA: Usamos la nueva clase "UsuarioGrillaVisual"
                 var datosGrilla = usuarios.Select(u => new UsuarioGrillaVisual
                 {
                     IdUsuario = u.IdUsuario,
@@ -69,16 +69,14 @@ namespace FormUI.Inicio
                     Email = u.Email ?? "",
                     Habilitado = u.Habilitado,
                     IdSucursal = u.IdSucursal,
-
                     SucursalAsignada = u.IdSucursal.HasValue && u.IdSucursal.Value != Guid.Empty && sucursales != null
-                        ? sucursales.FirstOrDefault(s => s.IdSucursal == u.IdSucursal.Value)?.Direccion ?? "Sucursal Eliminada"
-                        : "ADMINISTRADOR (Sin Sucursal Fija)"
+                        ? sucursales.FirstOrDefault(s => s.IdSucursal == u.IdSucursal.Value)?.Direccion ?? "Sucursal Eliminada".Traducir()
+                        : "ADMINISTRADOR (Sin Sucursal Fija)".Traducir()
                 }).ToList();
 
                 dgvUsuarios.DataSource = null;
                 dgvUsuarios.DataSource = datosGrilla;
 
-                // RED DE SEGURIDAD PARA EVITAR EL ERROR DE "OBJECT REFERENCE"
                 if (dgvUsuarios.Columns.Count > 0)
                 {
                     if (dgvUsuarios.Columns.Contains("IdUsuario")) dgvUsuarios.Columns["IdUsuario"].Visible = false;
@@ -88,14 +86,15 @@ namespace FormUI.Inicio
 
                     if (dgvUsuarios.Columns.Contains("SucursalAsignada"))
                     {
-                        dgvUsuarios.Columns["SucursalAsignada"].HeaderText = "Sucursal";
+                        dgvUsuarios.Columns["SucursalAsignada"].HeaderText = "Sucursal".Traducir();
                         dgvUsuarios.Columns["SucursalAsignada"].AutoSizeMode = DataGridViewAutoSizeColumnMode.DisplayedCells;
                     }
 
                     if (dgvUsuarios.Columns.Contains("Email"))
                         dgvUsuarios.Columns["Email"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-
-                    // Bloqueamos todas las columnas EXCEPTO el CheckBox
+                    if (dgvUsuarios.Columns.Contains("Nombre")) dgvUsuarios.Columns["Nombre"].HeaderText = "Nombre".Traducir();
+                    if (dgvUsuarios.Columns.Contains("Email")) dgvUsuarios.Columns["Email"].HeaderText = "Email".Traducir();
+                    if (dgvUsuarios.Columns.Contains("Habilitado")) dgvUsuarios.Columns["Habilitado"].HeaderText = "Habilitado".Traducir();
                     foreach (DataGridViewColumn col in dgvUsuarios.Columns)
                     {
                         col.ReadOnly = (col.Name != "Habilitado");
@@ -104,7 +103,7 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar la lista de usuarios: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar la lista de usuarios: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -127,7 +126,7 @@ namespace FormUI.Inicio
                     sucursalSeleccionada
                 );
 
-                MessageBox.Show("Usuario creado con éxito.", "Alta Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Usuario creado con éxito.".Traducir(), "Alta Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 txtbNombreUsuario.Clear();
                 txtbEmail.Clear();
@@ -138,7 +137,7 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "Atención".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -175,7 +174,7 @@ namespace FormUI.Inicio
             {
                 if (_idUsuarioSeleccionado == Guid.Empty)
                 {
-                    MessageBox.Show("Seleccione un usuario de la lista primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Seleccione un usuario de la lista primero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -219,7 +218,7 @@ namespace FormUI.Inicio
                         usuarioBll.DeshabilitarUsuario(_idUsuarioSeleccionado);
                 }
 
-                MessageBox.Show("Usuario actualizado con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Usuario actualizado con éxito.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 _idUsuarioSeleccionado = Guid.Empty;
                 txtbNombreUsuario.Clear();
@@ -230,7 +229,7 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }             
 
@@ -241,16 +240,16 @@ namespace FormUI.Inicio
                 Width = 350,
                 Height = 160,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
-                Text = "Modificar Contraseña",
+                Text = "Modificar Contraseña".Traducir(),
                 StartPosition = FormStartPosition.CenterParent,
                 MaximizeBox = false,
                 MinimizeBox = false
             };
 
-            Label lblTexto = new Label() { Left = 20, Top = 20, Text = "Ingrese la nueva contraseña:", Width = 300 };           
+            Label lblTexto = new Label() { Left = 20, Top = 20, Text = "Ingrese la nueva contraseña:".Traducir(), Width = 300 };           
             TextBox txtClave = new TextBox() { Left = 20, Top = 50, Width = 290, UseSystemPasswordChar = true };
-            Button btnAceptar = new Button() { Text = "Aceptar", Left = 210, Width = 100, Top = 80, DialogResult = DialogResult.OK };
-            Button btnCancelar = new Button() { Text = "Cancelar", Left = 100, Width = 100, Top = 80, DialogResult = DialogResult.Cancel };
+            Button btnAceptar = new Button() { Text = "Aceptar".Traducir(), Left = 210, Width = 100, Top = 80, DialogResult = DialogResult.OK };
+            Button btnCancelar = new Button() { Text = "Cancelar".Traducir(), Left = 100, Width = 100, Top = 80, DialogResult = DialogResult.Cancel };
 
             prompt.Controls.Add(lblTexto);
             prompt.Controls.Add(txtClave);
@@ -266,7 +265,7 @@ namespace FormUI.Inicio
             {
                 if (_idUsuarioSeleccionado == Guid.Empty)
                 {
-                    MessageBox.Show("Seleccione un usuario de la lista primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Seleccione un usuario de la lista primero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -280,7 +279,7 @@ namespace FormUI.Inicio
                 }
 
                 // 2. Pedimos la confirmación de seguridad
-                DialogResult respuesta = MessageBox.Show("¿Está seguro que desea sobrescribir la contraseña del usuario seleccionado?", "Confirmar Cambio", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult respuesta = MessageBox.Show("¿Está seguro que desea sobrescribir la contraseña del usuario seleccionado?".Traducir(), "Confirmar Cambio".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (respuesta == DialogResult.Yes)
                 {
@@ -290,7 +289,7 @@ namespace FormUI.Inicio
                     usuarioBll.ModificarContraseña(_idUsuarioSeleccionado, nuevaClave);
 
                     // 4. Mostramos el éxito
-                    MessageBox.Show("Contraseña actualizada con éxito.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Contraseña actualizada con éxito.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     _idUsuarioSeleccionado = Guid.Empty;
                     txtbNombreUsuario.Clear();
@@ -302,7 +301,7 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -311,11 +310,11 @@ namespace FormUI.Inicio
     public class UsuarioGrillaVisual
     {
         public Guid IdUsuario { get; set; }
-        public string Nombre { get; set; }
-        public string Email { get; set; }
-        public bool Habilitado { get; set; } 
+        public string Nombre { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public bool Habilitado { get; set; }
         public Guid? IdSucursal { get; set; }
-        public string SucursalAsignada { get; set; }
+        public string SucursalAsignada { get; set; } = string.Empty;
     }
 
 }

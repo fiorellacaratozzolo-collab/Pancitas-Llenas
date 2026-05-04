@@ -237,6 +237,25 @@ namespace Services.Bll
             bitacora.RegistrarLog($"Se modificó la contraseña del usuario: {usuarioExistente.Nombre}", Criticidad.Warning);
         }
 
+        public void ActualizarIdiomaPredeterminado(Guid idUsuario, string nuevoIdioma)
+        {
+            if (idUsuario == Guid.Empty) throw new Exception("ID de usuario inválido.");
+
+            // 1. Traemos al usuario de la base de datos
+            Usuario usuarioExistente = _usuarioRepo.GetById(idUsuario);
+
+            if (usuarioExistente == null) throw new Exception("El usuario no existe en la base de datos.");
+
+            // 2. Le asignamos el nuevo idioma
+            usuarioExistente.IdiomaPredeterminado = nuevoIdioma;
+
+            // 3. Guardamos el cambio usando tu método Update existente
+            _usuarioRepo.Update(usuarioExistente);
+
+            // 4. Dejamos el registro en la Bitácora
+            BitácoraBll bitacora = new BitácoraBll();
+            bitacora.RegistrarLog($"Se modificó el idioma predeterminado ({nuevoIdioma}) del usuario: {usuarioExistente.Nombre}", Criticidad.Info);
+        }
     }
 }
 

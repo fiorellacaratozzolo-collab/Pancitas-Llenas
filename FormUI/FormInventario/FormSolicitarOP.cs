@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormInventario
 {
@@ -102,7 +103,7 @@ namespace FormUI.FormInventario
 
         private void MostrarError(string mensaje)
         {
-            MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(mensaje, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void LimpiarCampos()
@@ -117,14 +118,14 @@ namespace FormUI.FormInventario
             // 1. Validaciones
             if (cmbProducto.SelectedItem == null)
             {
-                MostrarError("Seleccione un producto de la lista.");
+                MostrarError("Seleccione un producto de la lista.".Traducir());
                 cmbProducto.Focus();
                 return;
             }
 
             if (!int.TryParse(txtbCantidad.Text, out int cantidadValue) || cantidadValue <= 0)
             {
-                MostrarError("Ingrese una cantidad válida mayor a 0.");
+                MostrarError("Ingrese una cantidad válida mayor a 0.".Traducir());
                 txtbCantidad.Focus();
                 return;
             }
@@ -134,7 +135,7 @@ namespace FormUI.FormInventario
             {
                 IdProducto = productoElegido.IdProducto,
                 Cantidad = cantidadValue,
-                PesoNeto = (decimal)productoElegido.PesoNeto,
+                PesoNeto = productoElegido.PesoNeto ?? 0m,
                 Unidad = productoElegido.Unidad ?? "kg",
                 NombreProducto = productoElegido.NombreProducto,
                 Marca = productoElegido.Marca
@@ -150,13 +151,13 @@ namespace FormUI.FormInventario
         {
             if (_detalles.Count == 0)
             {
-                MessageBox.Show("Agregue al menos un producto.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Agregue al menos un producto.".Traducir(), "Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             var confirm = MessageBox.Show(
-                $"¿Crear solicitud de pedido con {_detalles.Count} producto(s)?",
-                "Confirmar",
+                $"¿Crear solicitud de pedido con {_detalles.Count} producto(s)?".Traducir(),
+                "Confirmar".Traducir(),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
@@ -195,15 +196,15 @@ namespace FormUI.FormInventario
                 Guid id = _solicitudService.CrearSolicitud(solicitudDTO);
 
                 MessageBox.Show(
-                    $"Solicitud de Pedido creada exitosamente.\nID: {id}",
-                    "Éxito",
+                    $"Solicitud de Pedido creada exitosamente.\nID: {id}".Traducir(),
+                    "Éxito".Traducir(),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al guardar: ".Traducir() + ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -219,8 +220,8 @@ namespace FormUI.FormInventario
             if (dgvSolicitarOP.Columns[e.ColumnIndex].Name == "Eliminar")
             {
                 var confirm = MessageBox.Show(
-                    "¿Eliminar este producto?",
-                    "Confirmar",
+                    "¿Eliminar este producto?".Traducir(),
+                    "Confirmar".Traducir(),
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Question);
 
@@ -235,6 +236,7 @@ namespace FormUI.FormInventario
         private void FormSolicitarOP_Load(object sender, EventArgs e)
         {
             CargarProductos();
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)

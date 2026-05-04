@@ -62,7 +62,6 @@
             groupBox2.TabIndex = 10;
             groupBox2.TabStop = false;
             groupBox2.Text = "Gestionar Cliente";
-            groupBox2.Enter += groupBox2_Enter;
             // 
             // btnDeshabilitar
             // 
@@ -187,7 +186,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(81, 73);
+            label3.Location = new Point(61, 73);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new Size(30, 15);

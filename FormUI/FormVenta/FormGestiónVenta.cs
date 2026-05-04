@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormVenta
 {
@@ -19,11 +20,6 @@ namespace FormUI.FormVenta
         public FormGestiónVenta()
         {
             InitializeComponent();
-        }
-
-        private void FormGestiónVenta_Load(object sender, EventArgs e)
-        {
-
         }
 
         // Método centralizado para buscar ventas
@@ -103,17 +99,7 @@ namespace FormUI.FormVenta
         private void btnActualizar_Click(object sender, EventArgs e)
         {
             CargarVentasFiltradas(dateTimePickerVenta.Value.Date);
-            MessageBox.Show("Lista actualizada.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        private void dgvVentasRealizadas_DoubleClick(object sender, EventArgs e)
-        {
-
-        }
-
-        private void dgvVentasRealizadas_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-
+            MessageBox.Show("Lista actualizada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void dgvVentasRealizadas_SelectionChanged(object sender, EventArgs e)
@@ -135,7 +121,7 @@ namespace FormUI.FormVenta
             // 1. Validar que haya una venta seleccionada
             if (dgvVentasRealizadas.CurrentRow == null)
             {
-                MessageBox.Show("Seleccione una venta de la lista para anular.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Seleccione una venta de la lista para anular.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -147,8 +133,8 @@ namespace FormUI.FormVenta
 
             // 3. Confirmación de Seguridad
             DialogResult confirmacion = MessageBox.Show(
-                $"¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de $ {ventaElegida.Total:N2}?\n\nLos productos regresarán al stock de la sucursal.",
-                "Confirmar Anulación de Venta",
+                $"¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de $ {ventaElegida.Total:N2}?\n\nLos productos regresarán al stock de la sucursal.".Traducir(),
+                "Confirmar Anulación de Venta".Traducir(),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Error,
                 MessageBoxDefaultButton.Button2);
@@ -160,14 +146,14 @@ namespace FormUI.FormVenta
                     // 4. Llamamos a la lógica
                     _ventaService.AnularVenta(ventaElegida.IdVenta, idSucursal.Value);
 
-                    MessageBox.Show("Venta anulada correctamente. El stock ha sido devuelto.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Venta anulada correctamente. El stock ha sido devuelto.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     // 5. Recargamos la grilla para que desaparezca
                     CargarVentasFiltradas(dateTimePickerVenta.Value.Date);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al anular la venta: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error al anular la venta: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -182,8 +168,9 @@ namespace FormUI.FormVenta
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar la pantalla: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar la pantalla: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            TraductorUI.TraducirFormulario(this);
         }
     }
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.Inicio
 {
@@ -15,11 +16,6 @@ namespace FormUI.Inicio
         public FormGestiónRoles()
         {
             InitializeComponent();
-        }
-
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
         }
 
         private void FormGestiónRoles_Load(object sender, EventArgs e)
@@ -51,8 +47,9 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar los catálogos: " + ex.Message);
+                MessageBox.Show("Error al cargar los catálogos: ".Traducir() + ex.Message);
             }
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void cmbUsuarios_SelectedIndexChanged(object sender, EventArgs e)
@@ -92,7 +89,7 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar los permisos del usuario: " + ex.Message);
+                MessageBox.Show("Error al cargar los permisos del usuario: ".Traducir() + ex.Message);
             }
         }
 
@@ -110,13 +107,12 @@ namespace FormUI.Inicio
             }
         }
 
-
         private void btnGuardarRol_Click(object sender, EventArgs e)
         {
             // 1. Validamos que haya un usuario seleccionado
             if (cmbUsuarios.SelectedItem == null || cmbUsuarios.SelectedIndex == -1)
             {
-                MessageBox.Show("Por favor, seleccione un usuario de la lista superior primero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor, seleccione un usuario de la lista superior primero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -145,11 +141,11 @@ namespace FormUI.Inicio
                 Services.Bll.PermisosBll permisosBll = new Services.Bll.PermisosBll();
                 permisosBll.GuardarPermisosUsuario(usuarioSeleccionado.IdUsuario, familiasTildadas, patentesTildadas);
 
-                MessageBox.Show("¡Los permisos se han guardado exitosamente!", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("¡Los permisos se han guardado exitosamente!".Traducir(), "Operación Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al guardar los permisos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al guardar los permisos: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

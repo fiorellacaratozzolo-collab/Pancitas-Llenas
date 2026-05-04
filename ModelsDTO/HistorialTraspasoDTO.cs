@@ -11,7 +11,10 @@ namespace ModelsDTO
         public DateTime Fecha { get; set; }
         public string? TipoMovimiento { get; set; } //"INGRESO" o "EGRESO"
         public string? SucursalInvolucrada { get; set; }
+        public string? Marca { get; set; }
+        public decimal? PesoNeto { get; set; }
         public string? Producto { get; set; }
+        public string? Unidad { get; set; }
         public int Cantidad { get; set; }
         public string? UsuarioResponsable { get; set; }
     }

@@ -98,9 +98,7 @@
             dgvVentasRealizadas.Name = "dgvVentasRealizadas";
             dgvVentasRealizadas.Size = new Size(614, 584);
             dgvVentasRealizadas.TabIndex = 6;
-            dgvVentasRealizadas.CellDoubleClick += dgvVentasRealizadas_CellDoubleClick;
             dgvVentasRealizadas.SelectionChanged += dgvVentasRealizadas_SelectionChanged;
-            dgvVentasRealizadas.DoubleClick += dgvVentasRealizadas_DoubleClick;
             // 
             // dateTimePickerVenta
             // 

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormInventario
 {
@@ -72,27 +73,34 @@ namespace FormUI.FormInventario
         private void FormVerStockDisponible_Load(object sender, EventArgs e)
         {
             btnVer_Click(this, EventArgs.Empty);
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void btnVer_Click(object sender, EventArgs e)
         {
             try
             {
+                if (!SessionManager.Current.IdSucursalActual.HasValue)
+                {
+                    MessageBox.Show("No hay una sucursal seleccionada en la sesión actual para ver el stock.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return; 
+                }
                 Guid miSucursal = SessionManager.Current.IdSucursalActual.Value;
+
                 var miStock = _stockService.ObtenerStockPorSucursal(miSucursal);
                 dgvStock.DataSource = null;
                 dgvStock.DataSource = miStock;
 
                 if (miStock.Count == 0)
                 {
-                    MessageBox.Show("No hay stock registrado para esta sucursal.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("No hay stock registrado para esta sucursal.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 ConfigurarGrillaStock();
                 AplicarSemaforoDGV();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar el stock: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar el stock: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

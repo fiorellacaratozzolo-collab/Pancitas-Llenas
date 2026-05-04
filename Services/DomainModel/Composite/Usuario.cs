@@ -10,6 +10,7 @@ namespace Services.DomainModel.Composite
         public string Email { get; set; }
         public string Password { get; set; }
         public bool Habilitado { get; set; }
+        public string IdiomaPredeterminado { get; set; }
         public Guid? IdSucursal { get; set; }
         public List<Component> Privilegios { get; set; }
 

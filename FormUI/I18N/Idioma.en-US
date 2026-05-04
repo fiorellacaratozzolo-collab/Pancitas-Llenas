@@ -1,1 +1,283 @@
-﻿
+﻿Login:Login
+Iniciar Sesión:Log In
+Contraseña:Password
+Usuario:User
+Seleccionar Sucursal:Select Branch
+Siguiente:Next
+Seleccione la Sucursal donde desea ingresar::Select the branch you want to log into:
+Menú:Menu
+Seleccione el Idioma Predeterminado::Select Default Language:
+Cargando sucursal...:Loading branch...
+Cerrar Sesión:Log Out
+Gestión de Roles:Role Management
+3.Control Total,"Puede hacer todo lo anterior, además de eliminar registros o realizar acciones críticas.":3.Full Control,"Can do all of the above, plus delete records or perform critical actions."
+2. Escritura,"Puede ver, crear nuevos registros y editar los existentes.":2. Write,"Can view, create new records, and edit existing ones."
+1. Lectura,"El usuario puede abrir el Form y ver los datos, pero los botones de ""Guardar"" o ""Eliminar"" están deshabilitados.":1. Read,"User can open the Form and view data, but 'Save' and 'Delete' buttons are disabled."
+Referencias::References:
+Permisos Extras / Excepciones::Extra Permissions / Exceptions:
+Guardar:Save
+Rol de Usuario::User Role:
+Seleccione un Usuario::Select a User:
+Gestión de Usuario:User Management
+Dar de Alta a un Nuevo Usuario:Register New User
+Gestionar Usuario:Manage User
+Modificar Contraseña:Change Password
+Actualizar:Update
+Sucursal::Branch:
+Contraseña::Password:
+Email::Email:
+Agregar:Add
+Nombre::Name:
+Bitácora:Audit Log
+Ver Bitácora:View Audit Log
+Gestión de Solicitud de Pedido:Order Request Management
+Detalle:Details
+Solicitud de Pedido:Order Request
+Filtrar por Estado::Filter by Status:
+Ver Solicitudes de Pedidos::View Order Requests:
+ID Solicitud:Request ID
+Fecha:Date
+Estado:Status
+Dar de Baja:Deactivate
+Generar Orden de Pedido:Generate Order
+Gestión de Orden de Pedido:Order Management
+Orden de Pedido:Order
+Generar Orden de Compra:Generate Purchase Order
+ID Orden:Order ID
+Total:Total
+Ver Ordenes de Pedidos:View Orders
+Gestión de Orden de Compra:Purchase Order Management
+Detalles de Orden de Compra:Purchase Order Details
+Orden de Compra:Purchase Order
+Dar de Alta:Register
+Ver:View
+Ver Ordenes de Compra:View Purchase Orders
+Gestión de Proveedores:Provider Management
+Agregar un Nuevo Proveedor::Add a New Provider:
+Gestionar Proveedor:Manage Provider
+Deshabilitar:Disable
+IdProveedor:Provider ID
+CUIT:Tax ID (CUIT)
+Telefóno:Phone
+Teléfono:Phone
+Dirección:Address
+ProveedorProductos:Provider Products
+Proveedor:Provider
+Dirección::Address:
+Teléfono::Phone:
+CUIT::Tax ID:
+Gestión de Productos:Product Management
+Gestionar Producto:Manage Product
+Buscar:Search
+IdProducto:Product ID
+Producto:Product
+Marca:Brand
+Peso Neto:Net Weight
+Unidad:Unit
+Precio Neto ($):Net Price ($)
+Descripcion:Description
+NombreConPeso:Name With Weight
+SolicitudDePedidoDetalles:Order Request Details
+SolicitudDeTraspasoDeProductosDetalles:Product Transfer Request Details
+StockPorSucursals:Stock By Branch
+VentaDetalles:Sale Details
+Precio Neto::Net Price:
+Unidad::Unit:
+Peso Neto::Net Weight:
+CUIT Proveedor::Provider Tax ID:
+Argregar:Add
+Descripción::Description:
+Marca::Brand:
+Solicitar Orden de Pedido:Request Order
+Productos a Solicitar:Products to Request
+Limpiar:Clear
+Cantidad:Quantity
+Nombre Producto::Product Name:
+Cantidad::Quantity:
+Agregar Stock:Add Stock
+Seleccionar Proveedor::Select Provider:
+Actualizar Stock:Update Stock
+Stock a Añadir:Stock to Add
+Stock Actual:Current Stock
+Stock Deseado:Desired Stock
+Historial de Movimientos:Movement History
+Traspaso de Productos:Product Transfers
+Entrega de Productos:Product Deliveries
+Ver Stock Disponible:View Available Stock
+Stock disponible:Available stock
+Gestion de Sucursal:Branch Management
+Agregar una Sucursal:Add a Branch
+Teléfono de la Sucursal::Branch Phone:
+Ingrese los siguientes datos de la Sucursal::Enter the following Branch data:
+Dirección de la Sucursal::Branch Address:
+Venta:Sales
+Deposito-Venta:Warehouse-Sales
+Tipo de Sucursal::Branch Type:
+Nombre de la Sucursal::Branch Name:
+Modificar Sucursal:Modify Branch
+IdSucursal:Branch ID
+Direccion:Address
+Nombre de Sucursal:Branch Name
+Telefono:Phone
+IdTipoSucursal:Branch Type ID
+IdTipoSucursalNavigation:Branch Type Navigation
+Seleccione una Sucursal::Select a Branch:
+FormGestiónTraspaso:Transfer Management
+Detalle de Solicitud:Request Details
+Solicitudes de Traspaso:Transfer Requests
+Ver Traspasos:View Transfers
+Aprobar:Approve
+Rechazar:Reject
+Registrar una nueva Venta:Register a New Sale
+Ventas:Sales
+Venta Mayorista:Wholesale
+Total::Total:
+Descuento::Discount:
+Deshacer:Undo
+Cancelar:Cancel
+Precio::Price:
+Cliente:Customer
+Aceptar:Accept
+Subtotal::Subtotal:
+Medio de Pago::Payment Method:
+Fecha::Date:
+Gestión de Cliente:Customer Management
+Dar de Alta a un Nuevo Cliente:Register New Customer
+Gestionar Cliente:Manage Customer
+IdCliente:Customer ID
+D.N.I.:ID Number
+Tipo Cliente:Customer Type
+IdTipoClienteNavigation:Customer Type Navigation
+Tipo de Cliente::Customer Type:
+Minorista:Retail
+Mayorista:Wholesale
+DNI::ID Number:
+Gestiona de Ventas:Sales Management
+Gestionar Ventas:Manage Sales
+Seleccionar Fecha::Select Date:
+Eliminar:Delete
+Historial de Ventas:Sales History
+Ver Todas:View All
+Lista de Precios:Price List
+Lista de precios::Price list:
+Buscar::Search:
+Habilitado:Enabled
+IdUsuario:User ID
+IdSolicitudDePedidoDetalle:Order Request Detail ID
+IdSolicitudDePedido:Order Request ID
+Cant. Solicitada:Requested Qty.
+IdOrdenDePedidoDetalle:Order Detail ID
+IdOrdenDePedido:Order ID
+Precio Unit.:Unit Price
+PrecioNeto:Net Price
+IdOrdenDePedidoNavigation:Order Navigation
+IdOrdenDeCompraDetalle:Purchase Order Detail ID
+IdOrdenDeCompra:Purchase Order ID
+Precio Unitario:Unit Price
+IdOrdenDeCompraNavigation:Purchase Order Navigation
+IdEstadoOc:PO Status ID
+IdOrdenDePedidoOrigen:Origin Order ID
+IdProveedorNavigation:Provider Navigation
+IdEstadoOcNavigation:PO Status Navigation
+OrdenDeCompraDetalles:Purchase Order Details
+Fecha y Hora:Date and Time
+Movimiento:Movement
+Origen / Destino:Origin / Destination
+UsuarioResponsable:Responsible User
+Fecha de Ingreso:Entry Date
+NombreProveedor:Provider Name
+Cant. Agregada:Added Qty.
+Peso Unit.:Unit Weight
+IdStockSucursal:Branch Stock ID
+StockActual:Current Stock
+StockDeseado:Desired Stock
+IdEstadoStock:Stock Status ID
+IdEstadoStockNavigation:Stock Status Navigation
+IdProductoNavigation:Product Navigation
+IdSucursalNavigation:Branch Navigation
+Solicitar el Traspaso de Productos a otra Sucursal:Request Product Transfer to Another Branch
+Sucursal Destino::Destination Branch:
+Sucursal Origen::Origin Branch:
+Solicitar Traspaso de Productos:Request Product Transfer
+IdSolicitudDeTraspasoDeProductosDetalle:Transfer Request Detail ID
+IdSolicitudDeTraspasoDeProductos:Transfer Request ID
+IdSolicitudDeTraspasoDeProductosNavigation:Transfer Request Navigation
+IdVentaDetalle:Sale Detail ID
+IdVenta:Sale ID
+NombreProducto:Product Name
+IdVentaNavigation:Sale Navigation
+NumeroVenta:Sale Number
+Hora:Time
+MetodoPago:Payment Method
+MontoDescuento:Discount Amount
+NombreCliente:Customer Name
+EsMayorista:Is Wholesale
+IdClienteNavigation:Customer Navigation
+Total ($):Total ($)
+--- Seleccione una sucursal ---:--- Select a branch ---
+¡Los permisos se han guardado exitosamente!:Permissions saved successfully!
+Operación Exitosa:Successful Operation
+ADMINISTRADOR (Sin Sucursal Fija):ADMINISTRATOR (No Fixed Branch)
+Usuario actualizado con éxito.:User updated successfully.
+Éxito:Success
+¿Está seguro que desea APROBAR esta Orden de Pedido y generar la Orden de Compra?:Are you sure you want to APPROVE this Order Request and generate the Purchase Order?
+Confirmar Generación de Orden de Compra:Confirm Purchase Order Generation
+¿Está seguro que desea dar de baja (rechazar) la Orden de Pedido seleccionada? Esto CANCELARÁ la solicitud.:Are you sure you want to deactivate (reject) the selected Order Request? This will CANCEL the request.
+Confirmar Baja:Confirm Deactivation
+¿Está seguro que desea APROBAR esta Solicitud y generar la Orden de Pedido?:Are you sure you want to APPROVE this Request and generate the Order?
+Confirmar Aprobación:Confirm Approval
+¿Está seguro que desea dar de baja (rechazar) la Solicitud de Pedido seleccionada?:Are you sure you want to deactivate (reject) the selected Order Request?
+¿Rechazar esta orden?:Reject this order?
+Cuidado:Warning
+El campo Nombre es obligatorio.:The Name field is required.
+Error:Error
+Lista de proveedoes actualizada.:Provider list updated.
+Información:Information
+Confirmar Acción:Confirm Action
+Nombre, Marca y CUIT del Proveedor son obligatorios.:Name, Brand, and Provider Tax ID are required.
+Error de Validación:Validation Error
+Ingrese el CUIT del Proveedor para filtrar::Enter the Provider's Tax ID to filter:
+Buscar Productos por Proveedor:Search Products by Provider
+Lista de productos actualizada.:Product list updated.
+Seleccione un producto de la lista.:Select a product from the list.
+Agregue al menos un producto.:Add at least one product.
+Validación:Validation
+--- Mostrar Todos ---:--- Show All ---
+¡Stock por debajo del deseado!:Stock below desired level!
+No se detectaron cantidades positivas para agregar stock.:No positive quantities detected to add stock.
+Advertencia:Warning
+--- Mostrar Todas las Sucursales ---:--- Show All Branches ---
+Nombre y Dirección son obligatorios.:Name and Address are required.
+Los cambios se guardaron correctamente.:Changes saved successfully.
+Confirmar:Confirm
+Seleccione un producto.:Select a product.
+Aviso:Notice
+Agregue al menos un producto a la solicitud.:Add at least one product to the request.
+Ingrese una cantidad válida mayor a cero.:Enter a valid quantity greater than zero.
+Seleccione una sucursal de destino.:Select a destination branch.
+Operación inválida: La sucursal de origen y la sucursal de destino no pueden ser la misma.:Invalid operation: Origin and destination branches cannot be the same.
+Error de Destino:Destination Error
+Dirección Destino:Destination Address
+¿Está seguro que desea RECHAZAR esta solicitud?:Are you sure you want to REJECT this request?
+Confirmar Rechazo:Confirm Rejection
+¿Está seguro que desea APROBAR esta solicitud? Se descontará el stock de su sucursal.:Are you sure you want to APPROVE this request? Stock will be deducted from your branch.
+El carrito está vacío. Agregue productos antes de cobrar.:The cart is empty. Add products before checking out.
+¿Está seguro que desea cancelar la venta en curso? Se vaciará el carrito.:Are you sure you want to cancel the current sale? The cart will be emptied.
+Confirmar Cancelación:Confirm Cancellation
+Seleccione un producto primero.:Select a product first.
+Ingrese el nombre (o parte del nombre) del producto a buscar::Enter the name (or part of the name) of the product to search:
+Buscar Producto:Search Product
+Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar::Enter the Customer Type ID (0=Retail, 1=Wholesale) to search:
+Seleccione una venta de la lista para anular.:Select a sale from the list to void.
+Lista actualizada.:List updated.
+PetShop - Bienvenido {0}:PetShop - Welcome {0}
+📍 Sucursal: {0} | 🏠 Dir: {1}:📍 Branch: {0} | 🏠 Addr: {1}
+El usuario {0} ingresó al sistema.:User {0} logged into the system.
+¿Está seguro de deshabilitar a {0}?:Are you sure you want to disable {0}?
+¿Está seguro de deshabilitar el producto {0}?:Are you sure you want to disable the product {0}?
+¿Desea deshabilitar {0}?:Do you want to disable {0}?
+¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de {0}? Los productos regresarán al stock de la sucursal.:Are you ABSOLUTELY SURE you want to void this sale for a total of {0}? The products will return to the branch stock.
+El usuario {0} cerró sesión manualmente.:User {0} logged out manually.
+PetShop - Bienvenido Admin:
+📍 Sucursal: Petshop Pancitas Llenas | 🏠 Dir: Villa Adelina, Jorge Washington 4087:
+

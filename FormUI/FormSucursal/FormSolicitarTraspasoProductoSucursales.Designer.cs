@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            label6 = new Label();
             txtbSucursalDestino = new TextBox();
             txtbMarca = new TextBox();
             label5 = new Label();
@@ -44,7 +45,6 @@
             txtbCantidad = new TextBox();
             btnAgregar = new Button();
             label4 = new Label();
-            label6 = new Label();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvProductos).BeginInit();
             SuspendLayout();
@@ -75,6 +75,15 @@
             groupBox1.TabIndex = 20;
             groupBox1.TabStop = false;
             groupBox1.Text = "Productos a Solicitar";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(71, 71);
+            label6.Name = "label6";
+            label6.Size = new Size(97, 15);
+            label6.TabIndex = 24;
+            label6.Text = "Sucursal Destino:";
             // 
             // txtbSucursalDestino
             // 
@@ -117,7 +126,6 @@
             cmbSucursalOrigen.Name = "cmbSucursalOrigen";
             cmbSucursalOrigen.Size = new Size(275, 23);
             cmbSucursalOrigen.TabIndex = 19;
-            cmbSucursalOrigen.SelectedIndexChanged += cmbSucursalOrigen_SelectedIndexChanged;
             // 
             // label2
             // 
@@ -213,15 +221,6 @@
             label4.Size = new Size(58, 15);
             label4.TabIndex = 8;
             label4.Text = "Cantidad:";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(71, 71);
-            label6.Name = "label6";
-            label6.Size = new Size(97, 15);
-            label6.TabIndex = 24;
-            label6.Text = "Sucursal Destino:";
             // 
             // FormSolicitarTraspasoProductoSucursales
             // 

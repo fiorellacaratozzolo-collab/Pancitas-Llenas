@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormCompra
 {
@@ -53,6 +54,7 @@ namespace FormUI.FormCompra
             cmbFiltroEstado.Items.Add("Rechazadas"); 
             cmbFiltroEstado.Items.Add("Todas");      
             cmbFiltroEstado.SelectedIndex = 0;
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)
@@ -73,12 +75,12 @@ namespace FormUI.FormCompra
 
                 if (ordenesPendientes.Count == 0)
                 {
-                    MessageBox.Show("No hay Órdenes de Pedido pendientes para gestionar.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("No hay Órdenes de Pedido pendientes para gestionar.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar las órdenes de pedido: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar las órdenes de pedido: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -86,12 +88,12 @@ namespace FormUI.FormCompra
         {
             if (dgvOrdenDePedido.CurrentRow == null)
             {
-                MessageBox.Show("Debe seleccionar una Orden de Pedido para dar de baja.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe seleccionar una Orden de Pedido para dar de baja.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            DialogResult result = MessageBox.Show("¿Está seguro que desea dar de baja (rechazar) la Orden de Pedido seleccionada? Esto CANCELARÁ la solicitud.",
-                                                  "Confirmar Baja", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("¿Está seguro que desea dar de baja (rechazar) la Orden de Pedido seleccionada? Esto CANCELARÁ la solicitud.".Traducir(),
+                                                  "Confirmar Baja".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
@@ -103,19 +105,19 @@ namespace FormUI.FormCompra
                     // 2. Llamar a la lógica para rechazar (estado 3)
                     _ordenService.RechazarOrden(idSeleccionado);
 
-                    MessageBox.Show("Orden de Pedido dada de baja (rechazada) correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Orden de Pedido dada de baja (rechazada) correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     // 3. Actualizar la lista
                     CargarOrdenes();
                 }
                 catch (TransicionEstadoInvalidaException ex) 
                 {
-                    MessageBox.Show(ex.Message, "Operación no permitida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(ex.Message, "Operación no permitida".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     CargarOrdenes(); // Refrescamos la grilla porque el estado real es distinto al que veía el usuario
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al dar de baja la Orden de Pedido: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error al dar de baja la Orden de Pedido: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }       
@@ -124,12 +126,12 @@ namespace FormUI.FormCompra
         {
             if (dgvOrdenDePedido.CurrentRow == null)
             {
-                MessageBox.Show("Debe seleccionar una Orden de Pedido para generar la Orden de Compra.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe seleccionar una Orden de Pedido para generar la Orden de Compra.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            DialogResult result = MessageBox.Show("¿Está seguro que desea APROBAR esta Orden de Pedido y generar la Orden de Compra?",
-                                                  "Confirmar Generación OC", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("¿Está seguro que desea APROBAR esta Orden de Pedido y generar la Orden de Compra?".Traducir(),
+                                                  "Confirmar Generación de Orden de Compra".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
@@ -143,11 +145,11 @@ namespace FormUI.FormCompra
 
                     if (resultado.Exito)
                     {
-                        MessageBox.Show(resultado.Mensaje, "Generación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show(resultado.Mensaje, "Generación Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        MessageBox.Show($"Fallo: {resultado.Mensaje}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Fallo: {resultado.Mensaje}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     // 3. Actualizar la lista de OPs
@@ -155,13 +157,13 @@ namespace FormUI.FormCompra
                 }
                 catch (TransicionEstadoInvalidaException ex) 
                 {
-                    MessageBox.Show(ex.Message, "Operación no permitida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(ex.Message, "Operación no permitida".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     CargarOrdenes();
                 }
                 catch (Exception ex)
                 {
                     // Error de la UI o un error no capturado en la capa de servicio
-                    MessageBox.Show($"Error al generar la Orden de Compra: {ex.Message}", "Error de Transición", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error al generar la Orden de Compra: {ex.Message}".Traducir(), "Error de Transición".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -189,7 +191,7 @@ namespace FormUI.FormCompra
                     // Silenciamos el error si justo se está vaciando la grilla
                     if (dgvOrdenDePedido.DataSource != null)
                     {
-                        MessageBox.Show($"Error al cargar el detalle: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error al cargar el detalle: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -245,11 +247,6 @@ namespace FormUI.FormCompra
             }
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-
         private void cmbFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
         {
             CargarOrdenes();
@@ -281,7 +278,7 @@ namespace FormUI.FormCompra
                 if (filtradas.Count == 0 && cmbFiltroEstado.SelectedIndex == 0)
                 {
                     // Solo mostramos el cartel si estamos buscando pendientes y no hay
-                    MessageBox.Show("No hay Órdenes de Pedido pendientes para gestionar.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("No hay Órdenes de Pedido pendientes para gestionar.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 bool sonPendientes = (cmbFiltroEstado.SelectedIndex == 0);
 
@@ -291,7 +288,7 @@ namespace FormUI.FormCompra
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar las órdenes de pedido: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar las órdenes de pedido: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

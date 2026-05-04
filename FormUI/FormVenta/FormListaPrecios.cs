@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormVenta
 {
@@ -29,17 +30,15 @@ namespace FormUI.FormVenta
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar la lista de precios: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar la lista de precios: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void CargarListaPrecios()
         {
-            // Traemos TODOS los productos directo de la base de datos (sin importar inventario/stock)
-            var listaProductos = _productoService.GetAllProductos();
-
-            // Enlazamos a la grilla
-            dgvProductoPrecio.DataSource = listaProductos;
+            _todosLosProductos = _productoService.GetAllProductos();
+            dgvProductoPrecio.DataSource = _todosLosProductos;
             ConfigurarGrilla();
         }
 
@@ -114,5 +113,6 @@ namespace FormUI.FormVenta
             dgvProductoPrecio.DataSource = listaFiltrada;
             ConfigurarGrilla();
         }
+
     }
 }

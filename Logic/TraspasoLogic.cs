@@ -182,12 +182,11 @@ namespace Logic
                 {
                     var dto = new HistorialTraspasoDTO
                     {
-                        Fecha = t.FechaStp, // Tu campo de fecha
-
-                        // NOTA: Borré el UsuarioResponsable porque no está en tu base de datos.
-
-                        // Asumo que tu detalle tiene una navegación al Producto, chequeá este nombre:
+                        Fecha = t.FechaStp,
                         Producto = detalle.IdProductoNavigation?.NombreProducto ?? "Desconocido",
+                        Marca = detalle.IdProductoNavigation?.Marca,
+                        Unidad = detalle.Unidad,
+                        PesoNeto = detalle.PesoNeto,
                         Cantidad = detalle.Cantidad
                     };
 

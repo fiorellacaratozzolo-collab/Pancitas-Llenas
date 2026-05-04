@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormSucursal
 {
@@ -27,24 +28,21 @@ namespace FormUI.FormSucursal
             _traspasoService = new Logic.Facade.TraspasoService();
         }
 
-        private void FormGestionarTraspaso_Load(object sender, EventArgs e)
-        {
-
-        }
         private void CargarSolicitudes()
         {
             try
             {
-                // 1. Limpiamos la grilla de detalle inferior para que no quede info vieja
                 dgvDetalle.DataSource = null;
-
+                if (!SessionManager.Current.IdSucursalActual.HasValue)
+                {
+                    MessageBox.Show("No hay una sucursal seleccionada en la sesión actual.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
                 Guid miSucursal = SessionManager.Current.IdSucursalActual.Value;
-
-                // 2. Llamamos al NUEVO método de la Logic que trae TODAS (sin filtrar por estado)
                 var todas = _traspasoService.ObtenerTodasPorSucursal(miSucursal);
                 List<SolicitudDeTraspasoDeProductoDTO> filtradas;
 
-                // 3. Aplicamos el filtro mágico del ComboBox
+                // 3. Aplicamos el ComboBox
                 if (cmbFiltroEstado.SelectedIndex == 0) // Pendientes
                     filtradas = todas.Where(x => x.IdEstadoStp == 1).ToList();
                 else if (cmbFiltroEstado.SelectedIndex == 1) // Aprobadas
@@ -92,29 +90,16 @@ namespace FormUI.FormSucursal
 
                 btnAprobar.Enabled = sonPendientes;
                 btnRechazar.Enabled = sonPendientes;
+
                 if (filtradas.Count == 0 && sonPendientes)
                 {
-                    MessageBox.Show("No hay Solicitudes de Traspaso pendientes.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("No hay Solicitudes de Traspaso pendientes.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al actualizar la lista: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al actualizar la lista: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void dgvSolicitudes_SelectionChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void btnAprobar_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnRechazar_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void FormGestiónTraspaso_Load(object sender, EventArgs e)
@@ -126,6 +111,7 @@ namespace FormUI.FormSucursal
 
             // Al seleccionar el 0, dispara automáticamente el evento y carga la grilla
             cmbFiltroEstado.SelectedIndex = 0;
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void dgvSolicitudesPendientes_SelectionChanged(object sender, EventArgs e)
@@ -176,31 +162,31 @@ namespace FormUI.FormSucursal
         {
             if (dgvSolicitudesPendientes.CurrentRow == null)
             {
-                MessageBox.Show("Seleccione una solicitud para aprobar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Seleccione una solicitud para aprobar.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             var solicitudSeleccionada = (SolicitudDeTraspasoDeProductoDTO)dgvSolicitudesPendientes.CurrentRow.DataBoundItem;
 
-            var confirmacion = MessageBox.Show($"¿Está seguro que desea APROBAR esta solicitud?\nSe descontará el stock de su sucursal.", "Confirmar Aprobación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var confirmacion = MessageBox.Show($"¿Está seguro que desea APROBAR esta solicitud?\nSe descontará el stock de su sucursal.".Traducir(), "Confirmar Aprobación".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirmacion == DialogResult.Yes)
             {
                 try
                 {
                     _traspasoService.AprobarTraspaso(solicitudSeleccionada.IdSolicitudDeTraspasoDeProductos);
-                    MessageBox.Show("¡Éxito!", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("¡Éxito!".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnActualizar.PerformClick();
                 }
                 catch (StockInsuficienteException ex)
                 {
                     // Mensaje ultra detallado gracias a las propiedades de la clase
-                    string msj = $"{ex.Message}\n\nPor favor, revise el inventario de la sucursal de origen.";
-                    MessageBox.Show(msj, "Falta de Stock", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    string msj = $"{ex.Message}\n\nPor favor, revise el inventario de la sucursal de origen.".Traducir();
+                    MessageBox.Show(msj, "Falta de Stock".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error inesperado: " + ex.Message);
+                    MessageBox.Show("Error inesperado: ".Traducir() + ex.Message);
                 }
             }
         }
@@ -209,13 +195,13 @@ namespace FormUI.FormSucursal
         {
             if (dgvSolicitudesPendientes.CurrentRow == null)
             {
-                MessageBox.Show("Seleccione una solicitud para rechazar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Seleccione una solicitud para rechazar.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             var solicitudSeleccionada = (SolicitudDeTraspasoDeProductoDTO)dgvSolicitudesPendientes.CurrentRow.DataBoundItem;
 
-            var confirmacion = MessageBox.Show($"¿Está seguro que desea RECHAZAR esta solicitud?", "Confirmar Rechazo", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            var confirmacion = MessageBox.Show($"¿Está seguro que desea RECHAZAR esta solicitud?".Traducir(), "Confirmar Rechazo".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (confirmacion == DialogResult.Yes)
             {
@@ -223,13 +209,13 @@ namespace FormUI.FormSucursal
                 {
                     _traspasoService.RechazarTraspaso(solicitudSeleccionada.IdSolicitudDeTraspasoDeProductos);
 
-                    MessageBox.Show("La solicitud ha sido rechazada.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("La solicitud ha sido rechazada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     btnActualizar.PerformClick();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

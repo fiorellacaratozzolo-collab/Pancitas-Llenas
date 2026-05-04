@@ -9,15 +9,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormCompra
 {
     public partial class FormGestiónSP : Form
     {
-        // Instancia del servicio que gestiona la lógica de SP
         private readonly SolicitudDePedidoService _solicitudService;
-
-        // Constante para el estado "Pendiente"
         private const int ESTADO_PENDIENTE = 1;
 
         public FormGestiónSP()
@@ -48,14 +46,15 @@ namespace FormUI.FormCompra
 
         private void FormGestiónSP_Load(object sender, EventArgs e)
         {
-            // Cargamos las opciones del filtro
-            cmbFiltroEstado.Items.Add("Pendientes"); // Índice 0
-            cmbFiltroEstado.Items.Add("Aprobadas");  // Índice 1
-            cmbFiltroEstado.Items.Add("Rechazadas"); // Índice 2
-            cmbFiltroEstado.Items.Add("Todas");      // Índice 3
+            // Carga las opciones del filtro
+            cmbFiltroEstado.Items.Add("Pendientes"); 
+            cmbFiltroEstado.Items.Add("Aprobadas");  
+            cmbFiltroEstado.Items.Add("Rechazadas"); 
+            cmbFiltroEstado.Items.Add("Todas");     
 
             // Al seleccionar el 0, dispara automáticamente el evento y carga la grilla
             cmbFiltroEstado.SelectedIndex = 0;
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)
@@ -67,13 +66,13 @@ namespace FormUI.FormCompra
         {
             if (dgvSolicitudDePedido.CurrentRow == null)
             {
-                MessageBox.Show("Debe seleccionar una Solicitud de Pedido para generar la Orden de Pedido.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe seleccionar una Solicitud de Pedido para generar la Orden de Pedido.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // 1. Confirmación
-            DialogResult result = MessageBox.Show("¿Está seguro que desea APROBAR esta Solicitud y generar la Orden de Pedido?",
-                                                  "Confirmar Aprobación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("¿Está seguro que desea APROBAR esta Solicitud y generar la Orden de Pedido?".Traducir(),
+                                                  "Confirmar Aprobación".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
@@ -84,14 +83,14 @@ namespace FormUI.FormCompra
 
                     Guid nuevaOPId = _solicitudService.AprobarYSolicitarOrdenDePedido(idSeleccionado);
 
-                    MessageBox.Show($"¡Orden de Pedido generada con éxito!\nID de la nueva OP: {nuevaOPId}", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"¡Orden de Pedido generada con éxito!\nID de la nueva OP: {nuevaOPId}".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     // 3. Actualizar la lista (la SP debería desaparecer de los "Pendientes")
                     btnActualizar_Click(this, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al generar la Orden de Pedido: {ex.Message}", "Error de Transición", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error al generar la Orden de Pedido: {ex.Message}".Traducir(), "Error de Transición".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -101,13 +100,13 @@ namespace FormUI.FormCompra
         {
             if (dgvSolicitudDePedido.CurrentRow == null)
             {
-                MessageBox.Show("Debe seleccionar una Solicitud de Pedido para dar de baja.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe seleccionar una Solicitud de Pedido para dar de baja.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // 1. Confirmación al usuario
-            DialogResult result = MessageBox.Show("¿Está seguro que desea dar de baja (rechazar) la Solicitud de Pedido seleccionada?",
-                                                  "Confirmar Baja", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult result = MessageBox.Show("¿Está seguro que desea dar de baja (rechazar) la Solicitud de Pedido seleccionada?".Traducir(),
+                                                  "Confirmar Baja".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {
@@ -117,14 +116,14 @@ namespace FormUI.FormCompra
                     Guid idSeleccionado = (Guid)dgvSolicitudDePedido.CurrentRow.Cells["IdSolicitudDePedido"].Value;
                     _solicitudService.RechazarSolicitud(idSeleccionado);
 
-                    MessageBox.Show("Solicitud de Pedido dada de baja correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Solicitud de Pedido dada de baja correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     // 3. Actualizar la lista (debería desaparecer de los "Pendientes")
                     btnActualizar_Click(this, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al dar de baja la solicitud: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error al dar de baja la solicitud: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -150,7 +149,7 @@ namespace FormUI.FormCompra
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al cargar el detalle: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Error al cargar el detalle: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -234,7 +233,7 @@ namespace FormUI.FormCompra
                 // Solo mostramos el cartel de "vacío" si están buscando las pendientes (UX limpia)
                 if (filtradas.Count == 0 && cmbFiltroEstado.SelectedIndex == 0)
                 {
-                    MessageBox.Show("No hay Solicitudes de Pedido pendientes para gestionar.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("No hay Solicitudes de Pedido pendientes para gestionar.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 // 🌟 MEDIDA DE SEGURIDAD UX: 
@@ -246,7 +245,7 @@ namespace FormUI.FormCompra
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar las solicitudes: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar las solicitudes: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

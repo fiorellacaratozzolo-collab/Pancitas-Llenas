@@ -41,7 +41,6 @@ namespace Logic.Facade
             try
             {
                 // 1. Llamada a la lógica de agrupación
-                // (Ahora usa _logic, corrigiendo el error anterior)
                 var resultadosOC = _logic.AprobarYGenerarOrdenesDeCompra(ordenId);
 
                 int numOCs = resultadosOC.Count;

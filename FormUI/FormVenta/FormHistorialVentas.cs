@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormVenta
 {
@@ -23,27 +24,18 @@ namespace FormUI.FormVenta
             _ventaService = new VentaService();
         }
 
-        private void FormHistorialVentas_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void CargarVentas()
         {
             try
             {
                 if (!SessionManager.Current.IdSucursalActual.HasValue)
                 {
-                    MessageBox.Show("Error: No se detectó una sucursal logueada.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error: No se detectó una sucursal logueada.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
                 Guid miSucursal = SessionManager.Current.IdSucursalActual.Value;
-
-                // Traemos TODAS las ventas
                 _todasLasVentas = _ventaService.ObtenerVentasPorSucursal(miSucursal);
-
-                // ¡Acá está el cambio! En lugar de filtrar, mostramos todo de una.
                 dgvHistorialVentas.DataSource = null;
                 dgvHistorialVentas.DataSource = _todasLasVentas;
 
@@ -51,7 +43,7 @@ namespace FormUI.FormVenta
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar el historial: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar el historial: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -80,7 +72,7 @@ namespace FormUI.FormVenta
 
             if (ventasFiltradas.Count == 0)
             {
-                MessageBox.Show("No se encontraron ventas para la fecha seleccionada.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("No se encontraron ventas para la fecha seleccionada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -133,6 +125,7 @@ namespace FormUI.FormVenta
         {
             CargarVentas();
             dtpFecha.Value = DateTime.Today;
+            TraductorUI.TraducirFormulario(this);
         }
     }
 }

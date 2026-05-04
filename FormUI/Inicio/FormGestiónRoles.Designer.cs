@@ -33,10 +33,6 @@
             groupBox1 = new GroupBox();
             clbPermisos = new CheckedListBox();
             clbRoles = new CheckedListBox();
-            label7 = new Label();
-            label6 = new Label();
-            label5 = new Label();
-            label4 = new Label();
             label3 = new Label();
             btnGuardarRol = new Button();
             label2 = new Label();
@@ -65,10 +61,6 @@
             // 
             groupBox1.Controls.Add(clbPermisos);
             groupBox1.Controls.Add(clbRoles);
-            groupBox1.Controls.Add(label7);
-            groupBox1.Controls.Add(label6);
-            groupBox1.Controls.Add(label5);
-            groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(btnGuardarRol);
             groupBox1.Controls.Add(label2);
@@ -76,10 +68,9 @@
             groupBox1.Controls.Add(cmbUsuarios);
             groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(814, 573);
+            groupBox1.Size = new Size(332, 620);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
-            groupBox1.Enter += groupBox1_Enter;
             // 
             // clbPermisos
             // 
@@ -97,42 +88,6 @@
             clbRoles.Size = new Size(279, 184);
             clbRoles.TabIndex = 16;
             // 
-            // label7
-            // 
-            label7.AutoSize = true;
-            label7.Location = new Point(389, 273);
-            label7.Name = "label7";
-            label7.Size = new Size(305, 30);
-            label7.TabIndex = 15;
-            label7.Text = "3.Control Total,\"Puede hacer todo lo anterior,\r\nademás de eliminar registros o realizar acciones críticas.\"";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(389, 240);
-            label6.Name = "label6";
-            label6.Size = new Size(364, 15);
-            label6.TabIndex = 14;
-            label6.Text = "2.\tEscritura,\t\"Puede ver, crear nuevos registros y editar los existentes.\"";
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Location = new Point(389, 192);
-            label5.Name = "label5";
-            label5.Size = new Size(370, 30);
-            label5.TabIndex = 13;
-            label5.Text = "1. Lectura,\"El usuario puede abrir el Form y ver los datos,\r\npero los botones de \"\"Guardar\"\" o \"\"Eliminar\"\" están deshabilitados.\"\r\n";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(510, 145);
-            label4.Name = "label4";
-            label4.Size = new Size(70, 15);
-            label4.TabIndex = 12;
-            label4.Text = "Referencias:";
-            // 
             // label3
             // 
             label3.AutoSize = true;
@@ -144,9 +99,9 @@
             // 
             // btnGuardarRol
             // 
-            btnGuardarRol.Location = new Point(357, 314);
+            btnGuardarRol.Location = new Point(18, 569);
             btnGuardarRol.Name = "btnGuardarRol";
-            btnGuardarRol.Size = new Size(407, 33);
+            btnGuardarRol.Size = new Size(279, 33);
             btnGuardarRol.TabIndex = 6;
             btnGuardarRol.Text = "Guardar";
             btnGuardarRol.UseVisualStyleBackColor = true;
@@ -165,7 +120,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(841, 597);
+            ClientSize = new Size(359, 642);
             Controls.Add(groupBox1);
             Name = "FormGestiónRoles";
             Text = "Gestión de Roles";
@@ -182,10 +137,6 @@
         private GroupBox groupBox1;
         private Label label2;
         private Label label3;
-        private Label label7;
-        private Label label6;
-        private Label label5;
-        private Label label4;
         private Button btnGuardarRol;
         private CheckedListBox clbPermisos;
         private CheckedListBox clbRoles;

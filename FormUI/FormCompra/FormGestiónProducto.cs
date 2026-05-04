@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormCompra
 {
@@ -36,7 +37,7 @@ namespace FormUI.FormCompra
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar los productos: {ex.Message}", "Error de Conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar los productos: {ex.Message}".Traducir(), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -78,7 +79,7 @@ namespace FormUI.FormCompra
 
         private void FormGestiónProducto_Load(object sender, EventArgs e)
         {
-
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void btnAgregar_Click(object sender, EventArgs e)
@@ -86,20 +87,20 @@ namespace FormUI.FormCompra
             // 1. Validación de entradas
             if (string.IsNullOrWhiteSpace(txtbNombreProd.Text) || string.IsNullOrWhiteSpace(txtbMarca.Text) || string.IsNullOrWhiteSpace(txtbProveedor.Text))
             {
-                MessageBox.Show("Nombre, Marca y CUIT del Proveedor son obligatorios.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nombre, Marca y CUIT del Proveedor son obligatorios.".Traducir(), "Error de Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (!decimal.TryParse(txtbPesoNeto.Text, out decimal pesoNetoValue) || !decimal.TryParse(txtbPrecioNeto.Text, out decimal precioNetoValue))
             {
-                MessageBox.Show("Peso Neto y Precio Neto deben ser valores numéricos válidos.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Peso Neto y Precio Neto deben ser valores numéricos válidos.".Traducir(), "Error de Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             // Validar y obtener el CUIT del proveedor
             if (!int.TryParse(txtbProveedor.Text, out int cuitValue))
             {
-                MessageBox.Show("El CUIT del Proveedor debe ser un número entero válido.", "Error de Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("El CUIT del Proveedor debe ser un número entero válido.".Traducir(), "Error de Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -111,13 +112,13 @@ namespace FormUI.FormCompra
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al buscar el proveedor: {ex.Message}", "Error de Búsqueda", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al buscar el proveedor: {ex.Message}".Traducir(), "Error de Búsqueda".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (proveedorEncontradoDTO == null)
             {
-                MessageBox.Show($"No se encontró un proveedor con el CUIT {cuitValue}. Verifique los datos.", "Proveedor No Encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"No se encontró un proveedor con el CUIT {cuitValue}. Verifique los datos.".Traducir(), "Proveedor No Encontrado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -140,26 +141,26 @@ namespace FormUI.FormCompra
             {
                 Guid newProdId = _productoService.CrearProductoConProveedor(nuevoProductoDTO, idProveedor);
 
-                MessageBox.Show($"Producto '{nuevoProductoDTO.NombreProducto}' agregado y vinculado al proveedor {proveedorEncontradoDTO.NombreProveedor}.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Producto '{nuevoProductoDTO.NombreProducto}' agregado y vinculado al proveedor {proveedorEncontradoDTO.NombreProveedor}.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimpiarControles();
                 CargarDatosProductos();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al agregar el producto: {ex.Message}", "Error de Persistencia", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al agregar el producto: {ex.Message}".Traducir(), "Error de Persistencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
             CargarDatosProductos(); // Carga todos los productos
-            MessageBox.Show("Lista de productos actualizada.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Lista de productos actualizada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
             // 1. Solicitar el CUIT al usuario
-            string input = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el CUIT del Proveedor para filtrar:", "Buscar Productos por Proveedor", "");
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el CUIT del Proveedor para filtrar:".Traducir(), "Buscar Productos por Proveedor".Traducir(), "");
 
             if (string.IsNullOrEmpty(input))
             {
@@ -169,7 +170,7 @@ namespace FormUI.FormCompra
             // 2. Validar que el input sea un número (CUIT)
             if (!int.TryParse(input, out int cuitBusqueda))
             {
-                MessageBox.Show("Debe ingresar un CUIT numérico válido.", "Error de Entrada", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Debe ingresar un CUIT numérico válido.".Traducir(), "Error de Entrada".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -180,7 +181,7 @@ namespace FormUI.FormCompra
 
                 if (proveedorEncontradoDTO == null)
                 {
-                    MessageBox.Show($"No se encontró ningún proveedor con el CUIT {cuitBusqueda}.", "Proveedor No Encontrado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show($"No se encontró ningún proveedor con el CUIT {cuitBusqueda}.".Traducir(), "Proveedor No Encontrado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -193,11 +194,11 @@ namespace FormUI.FormCompra
                 // 5. Reemplazar la fuente de datos
                 CargarDatosProductos(listaFiltrada);
 
-                MessageBox.Show($"Se encontraron {listaFiltrada.Count} productos del proveedor {proveedorEncontradoDTO.NombreProveedor}.", "Búsqueda Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Se encontraron {listaFiltrada.Count} productos del proveedor {proveedorEncontradoDTO.NombreProveedor}.".Traducir(), "Búsqueda Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error durante la búsqueda: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error durante la búsqueda: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -211,11 +212,11 @@ namespace FormUI.FormCompra
 
                 if (productoId == Guid.Empty)
                 {
-                    MessageBox.Show("Error: No se pudo obtener el ID del producto seleccionado.", "Error de Datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Error: No se pudo obtener el ID del producto seleccionado.".Traducir(), "Error de Datos".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
-                DialogResult dialogResult = MessageBox.Show($"¿Está seguro de deshabilitar el producto {nombre}?", "Confirmar Acción", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult dialogResult = MessageBox.Show($"¿Está seguro de deshabilitar el producto {nombre}?".Traducir(), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (dialogResult == DialogResult.Yes)
                 {
@@ -223,17 +224,17 @@ namespace FormUI.FormCompra
                     {
                         _productoService.DeshabilitarProducto(productoId);
                         CargarDatosProductos(); // Recargar para reflejar el cambio
-                        MessageBox.Show("Producto deshabilitado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Producto deshabilitado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Error al deshabilitar el producto: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error al deshabilitar el producto: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Debe seleccionar una fila para deshabilitar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe seleccionar una fila para deshabilitar.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -249,9 +250,5 @@ namespace FormUI.FormCompra
             txtbNombreProd.Focus();
         }
 
-        private void dgvProducto_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
     }
 }

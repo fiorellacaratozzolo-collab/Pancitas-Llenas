@@ -117,7 +117,6 @@ namespace FormUI.FormCompra
             dgvOrdenCompra.Name = "dgvOrdenCompra";
             dgvOrdenCompra.Size = new Size(494, 409);
             dgvOrdenCompra.TabIndex = 2;
-            dgvOrdenCompra.CellContentClick += dgvOrdenCompra_CellContentClick;
             dgvOrdenCompra.SelectionChanged += dgvOrdenCompra_SelectionChanged;
             // 
             // btnVer

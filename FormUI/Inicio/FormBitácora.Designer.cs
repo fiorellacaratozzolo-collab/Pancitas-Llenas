@@ -60,6 +60,7 @@
             Controls.Add(btnVer);
             Name = "FormBitácora";
             Text = "Bitácora";
+            Load += FormBitácora_Load;
             ((System.ComponentModel.ISupportInitialize)dgvBitácora).EndInit();
             ResumeLayout(false);
         }

@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormSucursal
 {
@@ -25,11 +26,6 @@ namespace FormUI.FormSucursal
         public FormSolicitarTraspasoProductoSucursales()
         {
             InitializeComponent();
-
-        }
-
-        private void FormSolicitarTraspasoProductoSucursales_Load(object sender, EventArgs e)
-        {
         }
 
         private void ConfigurarColumnasGrilla()
@@ -70,12 +66,13 @@ namespace FormUI.FormSucursal
             if (dgvProductos.Columns.Contains("Unidad"))
                 dgvProductos.Columns["Unidad"].DisplayIndex = 3;
         }
+
         private void CargarSucursales()
         {
             SucursalService sucursalService = new SucursalService();
             var todasLasSucursales = sucursalService.GetAllSucursales();
             var sucursalesOrigen = todasLasSucursales
-                .Where(s => s.IdTipoSucursal == 2) 
+                .Where(s => s.IdTipoSucursal == 2)
                 .ToList();
 
             cmbSucursalOrigen.DataSource = sucursalesOrigen;
@@ -93,22 +90,17 @@ namespace FormUI.FormSucursal
             cmbProducto.SelectedIndex = -1;
         }
 
-        private void cmbSucursalOrigen_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             if (cmbProducto.SelectedItem == null)
             {
-                MessageBox.Show("Seleccione un producto.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Seleccione un producto.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (!int.TryParse(txtbCantidad.Text, out int cantidad) || cantidad <= 0)
             {
-                MessageBox.Show("Ingrese una cantidad válida mayor a cero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Ingrese una cantidad válida mayor a cero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -127,7 +119,7 @@ namespace FormUI.FormSucursal
                 {
                     IdProducto = productoElegido.IdProducto,
                     NombreProducto = productoElegido.NombreProducto,
-                    PesoNeto = (decimal)productoElegido.PesoNeto,
+                    PesoNeto = (decimal)(productoElegido.PesoNeto ?? 0),
                     Marca = productoElegido.Marca,
                     Cantidad = cantidad,
                     Unidad = "KG"
@@ -144,19 +136,25 @@ namespace FormUI.FormSucursal
             // 1. Validaciones básicas
             if (_listaProductos.Count == 0)
             {
-                MessageBox.Show("Agregue al menos un producto a la solicitud.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Agregue al menos un producto a la solicitud.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (cmbSucursalOrigen.SelectedItem == null)
             {
-                MessageBox.Show("Seleccione una sucursal de destino.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Seleccione una sucursal de destino.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!SessionManager.Current.IdSucursalActual.HasValue)
+            {
+                MessageBox.Show("No hay una sucursal seleccionada en la sesión actual.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             try
             {
-                Guid idSucursalOrigen = (Guid)cmbSucursalOrigen.SelectedValue;
+                Guid idSucursalOrigen = (Guid)(cmbSucursalOrigen.SelectedValue ?? Guid.Empty);
                 Guid idSucursalDestino = SessionManager.Current.IdSucursalActual.Value;
 
                 var nuevaSolicitud = new SolicitudDeTraspasoDeProductoDTO
@@ -170,7 +168,7 @@ namespace FormUI.FormSucursal
                 var service = new Logic.Facade.TraspasoService();
                 service.GenerarSolicitud(nuevaSolicitud, listaDetalles);
 
-                MessageBox.Show("¡Solicitud de traspaso generada con éxito!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("¡Solicitud de traspaso generada con éxito!".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 _listaProductos.Clear();
                 cmbSucursalOrigen.SelectedIndex = -1;
@@ -178,22 +176,21 @@ namespace FormUI.FormSucursal
             }
             catch (SesionExpiradaException ex)
             {
-                MessageBox.Show(ex.Message, "Sesión Expirada", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-                // Cierra la aplicación y la vuelve a abrir para forzar el Login
+                MessageBox.Show(ex.Message.Traducir(), "Sesión Expirada".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 Application.Restart();
             }
-            catch (TraspasoMismaSucursalException ex) 
+            catch (TraspasoMismaSucursalException ex)
             {
-                MessageBox.Show(ex.Message, "Error de Destino", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbSucursalOrigen.Focus(); // Le devolvemos el foco al combo para que lo cambie
+                MessageBox.Show(ex.Message.Traducir(), "Error de Destino".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbSucursalOrigen.Focus();
             }
             catch (CantidadInvalidaException ex)
             {
-                MessageBox.Show(ex.Message, "Error en los datos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message.Traducir(), "Error en los datos".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error inesperado al procesar la solicitud: {ex.Message}", "Error de Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Ocurrió un error inesperado al procesar la solicitud: {ex.Message}".Traducir(), "Error de Sistema".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -210,8 +207,9 @@ namespace FormUI.FormSucursal
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar la pantalla: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar la pantalla: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)

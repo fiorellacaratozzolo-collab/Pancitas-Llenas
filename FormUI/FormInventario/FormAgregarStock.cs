@@ -1,6 +1,7 @@
 ﻿using DataAccess.Models;
 using Logic.Facade;
 using ModelsDTO;
+using Services.Facade;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Services.Facade.Extensions;
 
 namespace FormUI.FormInventario
 {
@@ -18,25 +20,28 @@ namespace FormUI.FormInventario
         private readonly ProveedorService _proveedorService = new ProveedorService();
         private readonly ProductoService _productoService = new ProductoService();
         private readonly InventarioService _inventarioService = new InventarioService();
-
-        //ID de sucursal dinámico
         private readonly Guid ID_SUCURSAL_ACTUAL;
 
-        public FormAgregarStock(Guid idSucursal)
+        public FormAgregarStock()
         {
-            ID_SUCURSAL_ACTUAL = idSucursal;
+            // Validamos que haya una sesión activa por seguridad
+            if (SessionManager.Current.IdSucursalActual == null)
+            {
+                MessageBox.Show("Error crítico: No se detectó una sucursal logueada.".Traducir(), "Error de Sesión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Enabled = false;
+                return;
+            }
+            ID_SUCURSAL_ACTUAL = SessionManager.Current.IdSucursalActual.Value;
             InitializeComponent();
             CargarProveedores();
             CargarProductosEnDGV(null);
         }
 
-        // Constructor por defecto
-        public FormAgregarStock() : this(new Guid("959819F3-9675-4FF9-A265-1CCC1883D951")) { }
-
         private void FormAgregarStock_Load(object sender, EventArgs e)
         {
             // Asegurar que el DGV no genere columnas automáticas
             dgvAgregarStock.AutoGenerateColumns = false;
+            TraductorUI.TraducirFormulario(this);
         }
 
         private void ConfigurarDGV()
@@ -81,7 +86,15 @@ namespace FormUI.FormInventario
         },
                 Width = 90
             });
-
+            // === COLUMNA: Marca ===
+            var colMarca = new DataGridViewTextBoxColumn
+            {
+                Name = "Marca",
+                HeaderText = "Marca",
+                DataPropertyName = "Marca",  // <-- MAPEAR a la propiedad que vamos a enviar
+                ReadOnly = true
+            };
+            dgvAgregarStock.Columns.Add(colMarca);
             // === COLUMNA: Proveedor ===
             var colProveedor = new DataGridViewTextBoxColumn
             {
@@ -134,7 +147,7 @@ namespace FormUI.FormInventario
             try
             {
                 List<ProveedorDTO> proveedores = _proveedorService.GetAllProveedores();
-                proveedores.Insert(0, new ProveedorDTO { IdProveedor = Guid.Empty, NombreProveedor = "--- Mostrar Todos ---" });
+                proveedores.Insert(0, new ProveedorDTO { IdProveedor = Guid.Empty, NombreProveedor = "--- Mostrar Todos ---".Traducir() });
 
                 cmbProveedor.DataSource = proveedores;
                 cmbProveedor.DisplayMember = "NombreProveedor";
@@ -142,7 +155,7 @@ namespace FormUI.FormInventario
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar proveedores: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al cargar proveedores: ".Traducir() + ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -167,6 +180,7 @@ namespace FormUI.FormInventario
                         IdProducto = p.IdProducto,
                         NombreProducto = p.NombreProducto,
                         PesoNeto = p.PesoNeto,
+                        Marca = p.Marca,
                         NombreProveedor = vinculo?.IdProveedorNavigation?.NombreProveedor ?? "N/A",
                         StockActual = stock?.StockActual ?? 0,
                         StockDeseado = stock?.StockDeseado ?? 0
@@ -181,11 +195,10 @@ namespace FormUI.FormInventario
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar productos: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al cargar productos: ".Traducir() + ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        //Resaltar filas con stock actual < deseado
         private void ResaltarStockBajo()
         {
             foreach (DataGridViewRow row in dgvAgregarStock.Rows)
@@ -197,7 +210,7 @@ namespace FormUI.FormInventario
                     {
                         row.DefaultCellStyle.BackColor = Color.LightCoral;
                         row.DefaultCellStyle.ForeColor = Color.Black;
-                        row.Cells["StockAAgregar"].ToolTipText = "¡Stock por debajo del deseado!";
+                        row.Cells["StockAAgregar"].ToolTipText = "¡Stock por debajo del deseado!".Traducir();
                     }
                     else
                     {
@@ -223,14 +236,14 @@ namespace FormUI.FormInventario
 
             if (cambiosPendientes == 0)
             {
-                MessageBox.Show("No se detectaron cantidades positivas para agregar stock.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("No se detectaron cantidades positivas para agregar stock.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // Confirmación antes de guardar
             var confirmacion = MessageBox.Show(
-                $"Se actualizarán {cambiosPendientes} producto(s). ¿Continuar?",
-                "Confirmar actualización",
+                $"Se actualizarán {cambiosPendientes} producto(s). ¿Continuar?".Traducir(),
+                "Confirmar actualización".Traducir(),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
@@ -264,18 +277,18 @@ namespace FormUI.FormInventario
                     catch (Exception ex)
                     {
                         errores++;
-                        row.Cells["StockAAgregar"].ErrorText = "Error: " + ex.Message;
+                        row.Cells["StockAAgregar"].ErrorText = "Error: ".Traducir() + ex.Message;
                     }
                 }
             }
 
             // Reporte detallado de resultados
-            string mensaje = $"Stock actualizado.\n" +
-                            $"Cambios aplicados: {cambiosAplicados}\n" +
-                            (errores > 0 ? $"Errores: {errores}\n" : "") +
-                            "La tabla se ha actualizado.";
+            string mensaje = $"Stock actualizado.\n".Traducir() +
+                            $"Cambios aplicados: {cambiosAplicados}\n".Traducir() +
+                            (errores > 0 ? $"Errores: {errores}\n".Traducir() : "") +
+                            "La tabla se ha actualizado.".Traducir();
 
-            MessageBox.Show(mensaje, "Resultado", MessageBoxButtons.OK,
+            MessageBox.Show(mensaje, "Resultado".Traducir(), MessageBoxButtons.OK,
                 errores > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
 
             CargarProductosEnDGV(cmbProveedor.SelectedValue is Guid idCombo ? (Guid?)idCombo : null);

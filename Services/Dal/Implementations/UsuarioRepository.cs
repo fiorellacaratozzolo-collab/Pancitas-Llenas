@@ -49,29 +49,32 @@ namespace Services.Dal.Implementations
 
         public void Add(Usuario obj)
         {
-            // Reutilizando tu lógica de RegistrarUsuario
             obj.IdUsuario = Guid.NewGuid();
-            string commandText = "INSERT INTO Usuario (IdUsuario, Nombre, Password, Email, Habilitado, IdSucursal) VALUES (@IdUsuario, @Nombre, @Password, @Email, @Habilitado, @IdSucursal)";
+            string commandText = "INSERT INTO Usuario (IdUsuario, Nombre, Password, Email, Habilitado, IdSucursal, IdiomaPredeterminado) VALUES (@IdUsuario, @Nombre, @Password, @Email, @Habilitado, @IdSucursal, @IdiomaPredeterminado)";
+
             SqlHelper.ExecuteNonQuery(commandText, CommandType.Text,
                 new SqlParameter("@IdUsuario", obj.IdUsuario),
                 new SqlParameter("@Nombre", obj.Nombre),
                 new SqlParameter("@Password", obj.Password),
                 new SqlParameter("@Email", obj.Email),
                 new SqlParameter("@Habilitado", obj.Habilitado),
-                new SqlParameter("@IdSucursal", (object)obj.IdSucursal ?? DBNull.Value)
+                new SqlParameter("@IdSucursal", (object)obj.IdSucursal ?? DBNull.Value),
+                new SqlParameter("@IdiomaPredeterminado", (object)obj.IdiomaPredeterminado ?? DBNull.Value)
             );
         }
 
         public void Update(Usuario obj)
         {
-            string query = "UPDATE Usuario SET Nombre = @Nombre, Password = @Password, Email = @Email, Habilitado = @Habilitado, IdSucursal = @IdSucursal WHERE IdUsuario = @IdUsuario";
+            string query = "UPDATE Usuario SET Nombre = @Nombre, Password = @Password, Email = @Email, Habilitado = @Habilitado, IdSucursal = @IdSucursal, IdiomaPredeterminado = @IdiomaPredeterminado WHERE IdUsuario = @IdUsuario";
+
             SqlHelper.ExecuteNonQuery(query, CommandType.Text,
                 new SqlParameter("@IdUsuario", obj.IdUsuario),
                 new SqlParameter("@Nombre", obj.Nombre),
                 new SqlParameter("@Password", obj.Password),
                 new SqlParameter("@Email", obj.Email),
                 new SqlParameter("@Habilitado", obj.Habilitado),
-                new SqlParameter("@IdSucursal", (object)obj.IdSucursal ?? DBNull.Value)
+                new SqlParameter("@IdSucursal", (object)obj.IdSucursal ?? DBNull.Value),
+                new SqlParameter("@IdiomaPredeterminado", (object)obj.IdiomaPredeterminado ?? DBNull.Value)
             );
         }
 
