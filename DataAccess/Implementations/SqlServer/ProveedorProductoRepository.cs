@@ -10,19 +10,26 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Implementations.SqlServer
 {
+    /// <summary>
+    /// Implementación concreta del repositorio para la tabla de resolución de muchos a muchos entre Proveedores y Productos.
+    /// </summary>
     public class ProveedorProductoRepository : IProveedorProductoRepository
     {
         private readonly PetShopDbContext _context;
 
+        /// <summary>
+        /// Inicializa una nueva instancia del repositorio.
+        /// </summary>
         public ProveedorProductoRepository(PetShopDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Obtiene la colección completa de vínculos, asegurando la carga de los objetos relacionados y desconectando el seguimiento de cambios (AsNoTracking).
+        /// </summary>
         public List<ProveedorProducto> GetAll()
         {
-            // 1. Obtiene todos los registros de la tabla intermedia
-            // 2. Utiliza .Include() para cargar los objetos Producto y Proveedor relacionados
             return _context.ProveedorProductos
                            .Include(pp => pp.IdProductoNavigation)
                            .Include(pp => pp.IdProveedorNavigation)
@@ -30,6 +37,9 @@ namespace DataAccess.Implementations.SqlServer
                            .ToList();
         }
 
+        /// <summary>
+        /// Registra un nuevo vínculo entre un proveedor y un producto.
+        /// </summary>
         public Guid Create(ProveedorProducto proveedorProducto)
         {
             _context.ProveedorProductos.Add(proveedorProducto);

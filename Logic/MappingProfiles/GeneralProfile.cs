@@ -4,13 +4,16 @@ using ModelsDTO;
 
 namespace Logic.MappingProfiles
 {
+    /// <summary>
+    /// Perfil principal de AutoMapper que define las reglas de transformación bidireccional entre las entidades de dominio y los objetos de transferencia de datos (DTOs).
+    /// </summary>
     public class GeneralProfile : Profile
     {
+        /// <summary>
+        /// Inicializa una nueva instancia del perfil de mapeo configurando las reglas para operaciones CRUD estándar, navegación de propiedades y transiciones de flujo de negocio (SP -> OP -> OC).
+        /// </summary>
         public GeneralProfile()
         {
-            // =========================================================
-            // 1. MAPEOS BÁSICOS Y ENUMS
-            // =========================================================
             CreateMap<Cliente, ClienteDTO>().ReverseMap();
             CreateMap<Proveedor, ProveedorDTO>().ReverseMap();
             CreateMap<Producto, ProductoDTO>().ReverseMap();
@@ -25,9 +28,6 @@ namespace Logic.MappingProfiles
             CreateMap<TipoClienteEnum, TipoClienteEnumDTO>().ReverseMap();
             CreateMap<TipoSucursalEnum, TipoSucursalEnumDTO>().ReverseMap();
 
-            // =========================================================
-            // 2. VENTAS Y STOCKS (Con navegación)
-            // =========================================================
             CreateMap<Ventum, VentumDTO>()
                 .ForMember(dest => dest.NombreCliente, opt => opt.MapFrom(src => src.IdClienteNavigation.NombreCliente))
                 .ReverseMap()
@@ -42,11 +42,6 @@ namespace Logic.MappingProfiles
                 .ForMember(dest => dest.Unidad, opt => opt.MapFrom(src => src.IdProductoNavigation.Unidad))
                 .ReverseMap();
 
-            // =========================================================
-            // 3. FLUJO DE COMPRAS (SP -> OP -> OC) Bidireccional
-            // =========================================================
-
-            // --- SOLICITUD DE PEDIDO (SP) ---
             CreateMap<SolicitudDePedido, SolicitudDePedidoDTO>()
                 .ForMember(dest => dest.EstadoTexto, opt => opt.MapFrom(src =>
                     src.IdEstadoSp == 1 ? "Pendiente" :
@@ -59,7 +54,6 @@ namespace Logic.MappingProfiles
                 .ForMember(dest => dest.Marca, opt => opt.MapFrom(src => src.IdProductoNavigation.Marca))
                 .ReverseMap();
 
-            // --- ORDEN DE PEDIDO (OP) ---
             CreateMap<OrdenDePedido, OrdenDePedidoDTO>()
                 .ForMember(dest => dest.EstadoTexto, opt => opt.MapFrom(src =>
                     src.IdEstadoOp == 1 ? "Pendiente" :
@@ -72,7 +66,6 @@ namespace Logic.MappingProfiles
                 .ForMember(dest => dest.Marca, opt => opt.MapFrom(src => src.IdProductoNavigation.Marca))
                 .ReverseMap();
 
-            // --- ORDEN DE COMPRA (OC) ---
             CreateMap<OrdenDeCompra, OrdenDeCompraDTO>()
                 .ForMember(dest => dest.NombreProveedor, opt => opt.MapFrom(src => src.IdProveedorNavigation.NombreProveedor))
                 .ForMember(dest => dest.EstadoTexto, opt => opt.MapFrom(src =>
@@ -88,10 +81,6 @@ namespace Logic.MappingProfiles
                 .ForMember(dest => dest.Marca, opt => opt.MapFrom(src => src.IdProductoNavigation.Marca))
                 .ReverseMap();
 
-
-            // =========================================================
-            // 4. TRASPASOS ENTRE SUCURSALES (STP)
-            // =========================================================
             CreateMap<SolicitudDeTraspasoDeProducto, SolicitudDeTraspasoDeProductoDTO>()
                 .ForMember(dest => dest.NombreSucursalOrigen, opt => opt.MapFrom(src => src.IdSucursalOrigenNavigation.NombreSucursal))
                 .ForMember(dest => dest.NombreSucursalDestino, opt => opt.MapFrom(src => src.IdSucursalDestinoNavigation.NombreSucursal))
@@ -109,12 +98,6 @@ namespace Logic.MappingProfiles
                 .ForMember(dest => dest.PesoNeto, opt => opt.MapFrom(src => src.IdProductoNavigation.PesoNeto))
                 .ReverseMap();
 
-
-            // =========================================================
-            // 5. MAPEOS DE TRANSICIÓN (Lógica de Negocio SP -> OP -> OC)
-            // =========================================================
-
-            // SP -> OP
             CreateMap<SolicitudDePedido, OrdenDePedido>()
                 .ForMember(dest => dest.IdOrdenDePedido, opt => opt.Ignore())
                 .ForMember(dest => dest.FechaOp, opt => opt.Ignore())
@@ -126,7 +109,6 @@ namespace Logic.MappingProfiles
                 .ForMember(dest => dest.IdOrdenDePedido, opt => opt.Ignore())
                 .ForMember(dest => dest.PrecioUnitario, opt => opt.Ignore());
 
-            // OP -> OC
             CreateMap<OrdenDePedido, OrdenDeCompra>()
                 .ForMember(dest => dest.IdOrdenDeCompra, opt => opt.Ignore())
                 .ForMember(dest => dest.FechaOc, opt => opt.Ignore())

@@ -9,39 +9,37 @@ using System.Threading.Tasks;
 
 namespace Logic.Helpers
 {
+    /// <summary>
+    /// Proporciona métodos de asistencia para resolver relaciones complejas entre proveedores y productos, extrayendo información crítica para las operaciones de compra.
+    /// </summary>
     public class ProveedorHelper
     {
         private readonly IUnitOfWork _unitOfWork;
 
+        /// <summary>
+        /// Inicializa una nueva instancia del helper inyectando un contexto de trabajo (Unit of Work) compartido para mantener la consistencia en las consultas.
+        /// </summary>
         public ProveedorHelper(IUnitOfWork uow)
         {
             _unitOfWork = uow;
         }
 
         /// <summary>
-        /// Obtiene el proveedor asociado al producto y su precio de costo.
-        /// Lanza KeyNotFoundException si no encuentra el vínculo.
+        /// Obtiene el proveedor asociado a un producto y su precio de costo actual, resolviendo la tabla intermedia. Lanza una excepción si la relación no existe o los datos están incompletos.
         /// </summary>
         public ProveedorProductoInfo ObtenerProveedorInfoParaProducto(Guid idProducto)
         {
-            // Busca el vínculo ProveedorProducto e incluye la entidad Producto.
-            // Nota: Se asume que IdProductoNavigation es la propiedad de navegación al Producto.
             var vinculo = _unitOfWork.ProveedorProductos.GetAll()
                 .AsQueryable()
                 .Include(pp => pp.IdProductoNavigation)
                 .FirstOrDefault(pp => pp.IdProducto == idProducto);
 
-            // Usamos KeyNotFoundException, que tu Servicio
-            // captura y maneja para dar feedback claro al usuario.
             if (vinculo == null || vinculo.IdProductoNavigation == null)
             {
-                // Este mensaje de error le dirá al usuario qué ID de producto falta en la tabla ProveedorProductos
-                throw new KeyNotFoundException($"No se pudo generar la OC: El Producto con ID '{idProducto}' no tiene un proveedor asignado o los datos de producto están incompletos.");
+                throw new KeyNotFoundException(string.Format("No se pudo generar la OC: El Producto con ID '{0}' no tiene un proveedor asignado o los datos de producto están incompletos.", idProducto));
             }
 
-            // Asume que la entidad Producto tiene la propiedad PrecioNeto (decimal?)
-            // Si PrecioNeto es nulo, se asigna 0M (cero decimal)
-            decimal costoUnitario = vinculo.IdProductoNavigation.PrecioNeto ?? 0M;         
+            decimal costoUnitario = vinculo.IdProductoNavigation.PrecioNeto ?? 0M;
 
             return new ProveedorProductoInfo
             {
@@ -49,6 +47,5 @@ namespace Logic.Helpers
                 PrecioNeto = costoUnitario
             };
         }
-
     }
 }

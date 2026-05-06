@@ -14,13 +14,18 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-
+    /// <summary>
+    /// Centraliza las reglas de negocio, validaciones y la orquestación transaccional para las operaciones de venta.
+    /// </summary>
     public class VentaLogic
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper = MapperConfigInitializer.Mapper;
         private readonly InventarioLogic _inventarioLogic;
 
+        /// <summary>
+        /// Inicializa una nueva instancia de la lógica de ventas junto con sus dependencias de acceso a datos e inventario.
+        /// </summary>
         public VentaLogic()
         {
             _unitOfWork = new UnitOfWork();
@@ -28,7 +33,7 @@ namespace Logic
         }
 
         /// <summary>
-        /// Procesa una venta completa, garantizando la atomicidad de la transacción.
+        /// Procesa una venta completa validando el stock y garantizando la atomicidad de la transacción (Venta, Detalles y Descuento de Inventario).
         /// </summary>
         public Guid RegistrarVenta(VentumDTO ventaDTO, List<VentaDetalleDTO> detallesDTO, Guid idSucursal)
         {
@@ -40,20 +45,18 @@ namespace Logic
             Ventum venta = _mapper.Map<Ventum>(ventaDTO);
             List<VentaDetalle> detalles = _mapper.Map<List<VentaDetalle>>(detallesDTO);
 
-            // 1. VALIDACIÓN DE STOCK (Usando el UoW de VentaLogic para la consulta)
             foreach (var detalle in detalles)
             {
                 var stockActual = _unitOfWork.Stocks.GetBySucursalAndProducto(idSucursal, detalle.IdProducto);
 
                 if (stockActual == null || stockActual.StockActual < detalle.Cantidad)
                 {
-                    throw new InvalidOperationException($"Stock insuficiente para el producto ID {detalle.IdProducto}. Disponible: {stockActual?.StockActual ?? 0}. Requerido: {detalle.Cantidad}.");
+                    throw new InvalidOperationException(string.Format("Stock insuficiente para el producto ID {0}. Disponible: {1}. Requerido: {2}.", detalle.IdProducto, stockActual?.StockActual ?? 0, detalle.Cantidad));
                 }
             }
 
             try
             {
-                // 2. CREACIÓN DE LA VENTA
                 Guid idVenta = _unitOfWork.Ventas.Create(venta);
 
                 foreach (var detalle in detalles)
@@ -61,12 +64,9 @@ namespace Logic
                     detalle.IdVenta = idVenta;
                     _unitOfWork.VentaDetalles.Create(detalle);
 
-                    // 3. DESCUENTO DE STOCK 
-                    // Se llama a la lógica de inventario, que solo modifica la entidad en memoria.
                     _inventarioLogic.RestarStockPorVenta(idSucursal, detalle.IdProducto, detalle.Cantidad);
                 }
 
-                // 4. COMMIT ATÓMICO: Guarda Venta, Detalle Y los cambios hechos al Stock por InventarioLogic.
                 _unitOfWork.Complete();
 
                 return idVenta;
@@ -77,38 +77,36 @@ namespace Logic
             }
         }
 
+        /// <summary>
+        /// Recupera y mapea la lista de ventas realizadas en una sucursal específica durante una fecha determinada.
+        /// </summary>
         public List<VentumDTO> GetVentasPorSucursalYFecha(Guid idSucursal, DateTime fecha)
         {
-            // 1. Obtenemos todas las ventas (Tu repositorio debería traerlas)
             var todasLasVentas = _unitOfWork.Ventas.GetAll();
 
-            // 2. Filtramos en memoria por Sucursal y por la Fecha exacta (ignorando la hora)
             var ventasFiltradas = todasLasVentas
                 .Where(v => v.IdSucursal == idSucursal && v.FechaVenta.Date == fecha.Date)
                 .ToList();
 
-            // 3. Mapeamos a DTO y devolvemos
             return _mapper.Map<List<VentumDTO>>(ventasFiltradas);
         }
 
-        // Y ya que estamos, agregamos este método rápido para traer los detalles de una venta
+        /// <summary>
+        /// Obtiene los detalles de los productos correspondientes a una venta específica, rellenando la información relacional como el nombre del producto.
+        /// </summary>
         public List<VentaDetalleDTO> GetDetallesDeVenta(Guid idVenta)
         {
-            // 1. Traemos los detalles base
             var detalles = _unitOfWork.VentaDetalles.GetAll()
                 .Where(d => d.IdVenta == idVenta)
                 .ToList();
 
-            // 2. Mapeamos al DTO
             var listaDTO = _mapper.Map<List<VentaDetalleDTO>>(detalles);
 
-            // 3. Rellenamos el dato que falta yendo a buscar el Producto
             foreach (var dto in listaDTO)
             {
                 var producto = _unitOfWork.Productos.GetById(dto.IdProducto);
                 if (producto != null)
                 {
-                    // Ojo: Asegurate de que tu VentaDetalleDTO tenga esta propiedad llamada NombreProducto
                     dto.NombreProducto = producto.NombreProducto;
                 }
             }
@@ -116,25 +114,26 @@ namespace Logic
             return listaDTO;
         }
 
+        /// <summary>
+        /// Revierte una venta procesada, devolviendo las cantidades al inventario de la sucursal y eliminando el registro original.
+        /// </summary>
         public void AnularVenta(Guid idVenta, Guid idSucursal)
         {
-            // 1. Traer los detalles de la venta que vamos a anular
             var detalles = _unitOfWork.VentaDetalles.GetAll().Where(d => d.IdVenta == idVenta).ToList();
 
-            // 2. Devolver el stock a la sucursal
             foreach (var detalle in detalles)
             {
-                // Reutilizamos tu excelente método de inventario para sumar stock
                 _inventarioLogic.AgregarOActualizarStock(idSucursal, detalle.IdProducto, detalle.Cantidad);
             }
 
-            // 3. Eliminar / Anular la venta
             _unitOfWork.Ventas.Delete(idVenta);
 
-            // 4. Guardar los cambios (El stock sumado y la venta eliminada)
             _unitOfWork.Complete();
         }
 
+        /// <summary>
+        /// Recupera el historial completo de ventas correspondientes a una sucursal específica.
+        /// </summary>
         public List<VentumDTO> ObtenerVentasPorSucursal(Guid idSucursal)
         {
             var ventas = _unitOfWork.Ventas.GetBySucursal(idSucursal);

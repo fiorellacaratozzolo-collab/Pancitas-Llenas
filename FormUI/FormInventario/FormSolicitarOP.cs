@@ -19,19 +19,26 @@ namespace FormUI.FormInventario
         private readonly SolicitudDePedidoService _solicitudService = new SolicitudDePedidoService();
         private readonly List<SolicitudDePedidoDetalleDTO> _detalles = new List<SolicitudDePedidoDetalleDTO>();
 
+        /// <summary>
+        /// Inicializa el formulario, sus componentes visuales y configura la fecha y grilla por defecto.
+        /// </summary>
         public FormSolicitarOP()
         {
             InitializeComponent();
             ConfigurarFecha();
             ConfigurarDGV();
         }
-
+        /// <summary>
+        /// Asigna la fecha actual al selector de fechas y lo bloquea para evitar modificaciones.
+        /// </summary>
         private void ConfigurarFecha()
         {
             dtpFecha.Value = DateTime.Today;
             dtpFecha.Enabled = false;
         }
-
+        /// <summary>
+        /// Define y estructura las columnas de la grilla de productos solicitados, aplicando traducciones y formatos.
+        /// </summary>
         private void ConfigurarDGV()
         {
             dgvSolicitarOP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -86,7 +93,9 @@ namespace FormUI.FormInventario
             };
             dgvSolicitarOP.Columns.Add(colEliminar);
         }
-
+        /// <summary>
+        /// Carga la lista completa de productos disponibles en el menú desplegable.
+        /// </summary>
         private void CargarProductos()
         {
             cmbProducto.DataSource = _productoService.GetAllProductos();
@@ -94,28 +103,35 @@ namespace FormUI.FormInventario
             cmbProducto.ValueMember = "IdProducto";
             cmbProducto.SelectedIndex = -1;
         }
-
+        /// <summary>
+        /// Refresca la grilla para mostrar los elementos actualmente cargados en la lista de detalles temporal.
+        /// </summary>
         private void ActualizarDGV()
         {
             dgvSolicitarOP.DataSource = null;
             dgvSolicitarOP.DataSource = _detalles;
         }
-
+        /// <summary>
+        /// Muestra un cuadro de diálogo estandarizado para notificar errores al usuario.
+        /// </summary>
         private void MostrarError(string mensaje)
         {
             MessageBox.Show(mensaje, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
-
+        /// <summary>
+        /// Vacía los campos de texto del formulario y devuelve el foco al selector de productos.
+        /// </summary>
         private void LimpiarCampos()
         {
             txtbPesoNeto.Clear();
             txtbCantidad.Clear();
             cmbProducto.Focus();
         }
-
+        /// <summary>
+        /// Valida los datos ingresados y añade el producto a la lista temporal de la solicitud de pedido.
+        /// </summary>
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            // 1. Validaciones
             if (cmbProducto.SelectedItem == null)
             {
                 MostrarError("Seleccione un producto de la lista.".Traducir());
@@ -140,13 +156,16 @@ namespace FormUI.FormInventario
                 NombreProducto = productoElegido.NombreProducto,
                 Marca = productoElegido.Marca
             };
+
             _detalles.Add(detalle);
             cmbProducto.SelectedIndex = -1;
             txtbCantidad.Clear();
 
             ActualizarDGV();
         }
-
+        /// <summary>
+        /// Solicita confirmación, ensambla la solicitud final generándole nuevos identificadores únicos y la guarda en la base de datos.
+        /// </summary>
         private void btnGuadar_Click(object sender, EventArgs e)
         {
             if (_detalles.Count == 0)
@@ -156,7 +175,7 @@ namespace FormUI.FormInventario
             }
 
             var confirm = MessageBox.Show(
-                $"¿Crear solicitud de pedido con {_detalles.Count} producto(s)?".Traducir(),
+                string.Format("¿Crear solicitud de pedido con {0} producto(s)?".Traducir(), _detalles.Count),
                 "Confirmar".Traducir(),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
@@ -165,54 +184,49 @@ namespace FormUI.FormInventario
 
             try
             {
-                // 1. Generar un nuevo ID único para la solicitud
                 Guid nuevaSolicitudId = Guid.NewGuid();
 
-                // 2. Asignar el nuevo ID a todos los detalles
                 foreach (var detalle in _detalles)
                 {
-                    // Asigna el ID de la cabecera a la foreign key de los detalles
                     detalle.IdSolicitudDePedido = nuevaSolicitudId;
 
-
-                    // genera un Guid único para la clave primaria del detalle.
                     if (detalle.IdSolicitudDePedidoDetalle == Guid.Empty)
                     {
                         detalle.IdSolicitudDePedidoDetalle = Guid.NewGuid();
                     }
                 }
 
-                // 3. Crear el DTO de la cabecera con el nuevo ID generado
                 var solicitudDTO = new SolicitudDePedidoDTO
                 {
-                    //Asignar el nuevo GUID para evitar la clave duplicada (Guid.Empty)
                     IdSolicitudDePedido = nuevaSolicitudId,
-
                     FechaSp = DateTime.Today,
-                    IdEstadoSp = 1, // Pendiente
+                    IdEstadoSp = 1,
                     SolicitudDePedidoDetalles = _detalles
                 };
 
                 Guid id = _solicitudService.CrearSolicitud(solicitudDTO);
 
                 MessageBox.Show(
-                    $"Solicitud de Pedido creada exitosamente.\nID: {id}".Traducir(),
+                    string.Format("Solicitud de Pedido creada exitosamente.\nID: {0}".Traducir(), id),
                     "Éxito".Traducir(),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
-               
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al guardar: ".Traducir() + ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al guardar: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Restablece manualmente los controles de ingreso de datos llamando a la función de limpieza.
+        /// </summary>
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             LimpiarCampos();
         }
-
+        /// <summary>
+        /// Detecta clics dentro de la grilla y procesa la eliminación de productos si el usuario presiona el botón de eliminar.
+        /// </summary>
         private void dgvSolicitarOP_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
@@ -232,20 +246,23 @@ namespace FormUI.FormInventario
                 }
             }
         }
-
+        /// <summary>
+        /// Evento de carga inicial del formulario que pobla el menú de productos y aplica traducciones a toda la vista.
+        /// </summary>
         private void FormSolicitarOP_Load(object sender, EventArgs e)
         {
             CargarProductos();
             TraductorUI.TraducirFormulario(this);
         }
-
+        /// <summary>
+        /// Autocompleta automáticamente los campos de peso neto y marca de acuerdo al producto seleccionado en el menú desplegable.
+        /// </summary>
         private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbProducto.SelectedItem != null && cmbProducto.SelectedIndex != -1)
             {
                 var productoSeleccionado = (ProductoDTO)cmbProducto.SelectedItem;
 
-                // Autocompletamos los campos
                 txtbPesoNeto.Text = $"{productoSeleccionado.PesoNeto:N2} {productoSeleccionado.Unidad ?? "kg"}";
                 txtbMarca.Text = productoSeleccionado.Marca;
             }

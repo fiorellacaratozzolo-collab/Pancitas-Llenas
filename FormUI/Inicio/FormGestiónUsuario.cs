@@ -15,19 +15,26 @@ namespace FormUI.Inicio
     {
         private Guid _idUsuarioSeleccionado = Guid.Empty;
 
+        /// <summary>
+        /// Inicializa el formulario y sus componentes visuales predeterminados.
+        /// </summary>
         public FormGestiónUsuario()
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Evento de carga inicial que obtiene las sucursales, configura el menú desplegable, carga la grilla de usuarios y traduce la interfaz.
+        /// </summary>
         private void FormGestiónUsuario_Load(object sender, EventArgs e)
         {
             try
             {
                 Logic.SucursalLogic sucursalLogic = new Logic.SucursalLogic();
-                var sucursalesDb = sucursalLogic.ObtenerTodasLasSucursales();               
+                var sucursalesDb = sucursalLogic.ObtenerTodasLasSucursales();
                 var listaCombo = new List<object>();
+
                 listaCombo.Add(new { Id = Guid.Empty, Texto = "ADMINISTRADOR (Sin Sucursal Fija)".Traducir() });
+
                 if (sucursalesDb != null)
                 {
                     foreach (var s in sucursalesDb)
@@ -45,11 +52,13 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al inicializar el formulario: ".Traducir() + ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al inicializar el formulario: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             TraductorUI.TraducirFormulario(this);
         }
-
+        /// <summary>
+        /// Consulta los usuarios del sistema, cruza los datos con sus sucursales asignadas y configura la grilla principal.
+        /// </summary>
         private void CargarGrillaUsuarios()
         {
             try
@@ -92,9 +101,11 @@ namespace FormUI.Inicio
 
                     if (dgvUsuarios.Columns.Contains("Email"))
                         dgvUsuarios.Columns["Email"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
                     if (dgvUsuarios.Columns.Contains("Nombre")) dgvUsuarios.Columns["Nombre"].HeaderText = "Nombre".Traducir();
                     if (dgvUsuarios.Columns.Contains("Email")) dgvUsuarios.Columns["Email"].HeaderText = "Email".Traducir();
                     if (dgvUsuarios.Columns.Contains("Habilitado")) dgvUsuarios.Columns["Habilitado"].HeaderText = "Habilitado".Traducir();
+
                     foreach (DataGridViewColumn col in dgvUsuarios.Columns)
                     {
                         col.ReadOnly = (col.Name != "Habilitado");
@@ -103,10 +114,12 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar la lista de usuarios: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar la lista de usuarios: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Recopila los datos ingresados en el formulario y solicita a la capa de negocios el registro de un nuevo usuario.
+        /// </summary>
         private void btnAgregarUsuario_Click(object sender, EventArgs e)
         {
             try
@@ -137,17 +150,18 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Atención".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message.Traducir(), "Atención".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
+        /// <summary>
+        /// Detecta la selección de una fila en la grilla y carga los datos del usuario en los campos de edición correspondientes.
+        /// </summary>
         private void dgvUsuarios_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow fila = dgvUsuarios.Rows[e.RowIndex];
 
-                // Soluciona la advertencia del Guid.Parse
                 if (fila.Cells["IdUsuario"].Value != null)
                 {
                     _idUsuarioSeleccionado = Guid.Parse(fila.Cells["IdUsuario"].Value.ToString()!);
@@ -167,7 +181,9 @@ namespace FormUI.Inicio
                 }
             }
         }
-
+        /// <summary>
+        /// Recopila las modificaciones realizadas a un usuario existente y las envía a la base de datos, gestionando también su habilitación/deshabilitación.
+        /// </summary>
         private void btnActualizar_Click(object sender, EventArgs e)
         {
             try
@@ -178,12 +194,10 @@ namespace FormUI.Inicio
                     return;
                 }
 
-                // Forzamos a la grilla a terminar cualquier edición pendiente
                 dgvUsuarios.EndEdit();
 
                 Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
 
-                // 1. OBTENER SUCURSAL (Protegido contra nulos)
                 Guid? sucursalSeleccionada = null;
                 string valorCombo = cmbSucursales.SelectedValue?.ToString() ?? "";
 
@@ -192,7 +206,6 @@ namespace FormUI.Inicio
                     sucursalSeleccionada = idParseado;
                 }
 
-                // 2. ACTUALIZAR TEXTOS Y SUCURSAL (Protegido contra nulos de la UI)
                 string nombreSeguro = txtbNombreUsuario.Text ?? "";
                 string emailSeguro = txtbEmail.Text ?? "";
 
@@ -203,8 +216,6 @@ namespace FormUI.Inicio
                     sucursalSeleccionada
                 );
 
-                // 3. ACTUALIZAR ESTADO (Usando var para permitir el nulo que devuelve FirstOrDefault)
-                // Y evitamos el casteo (Guid) comparando directamente los strings seguros
                 var filaActual = dgvUsuarios.Rows.Cast<DataGridViewRow>()
                     .FirstOrDefault(r => r.Cells["IdUsuario"].Value?.ToString() == _idUsuarioSeleccionado.ToString());
 
@@ -229,10 +240,12 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message.Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-        }             
-
+        }
+        /// <summary>
+        /// Genera y muestra un cuadro de diálogo dinámico que solicita y retorna una nueva contraseña.
+        /// </summary>
         private string PedirNuevaContraseñaCartel()
         {
             Form prompt = new Form()
@@ -246,7 +259,7 @@ namespace FormUI.Inicio
                 MinimizeBox = false
             };
 
-            Label lblTexto = new Label() { Left = 20, Top = 20, Text = "Ingrese la nueva contraseña:".Traducir(), Width = 300 };           
+            Label lblTexto = new Label() { Left = 20, Top = 20, Text = "Ingrese la nueva contraseña:".Traducir(), Width = 300 };
             TextBox txtClave = new TextBox() { Left = 20, Top = 50, Width = 290, UseSystemPasswordChar = true };
             Button btnAceptar = new Button() { Text = "Aceptar".Traducir(), Left = 210, Width = 100, Top = 80, DialogResult = DialogResult.OK };
             Button btnCancelar = new Button() { Text = "Cancelar".Traducir(), Left = 100, Width = 100, Top = 80, DialogResult = DialogResult.Cancel };
@@ -256,9 +269,12 @@ namespace FormUI.Inicio
             prompt.Controls.Add(btnAceptar);
             prompt.Controls.Add(btnCancelar);
             prompt.AcceptButton = btnAceptar;
+
             return prompt.ShowDialog(this) == DialogResult.OK ? txtClave.Text : "";
         }
-
+        /// <summary>
+        /// Dispara el proceso de cambio de contraseña, solicita validación de seguridad y actualiza la clave en la base de datos.
+        /// </summary>
         private void btnModificarContra_Click(object sender, EventArgs e)
         {
             try
@@ -269,26 +285,20 @@ namespace FormUI.Inicio
                     return;
                 }
 
-                // 1. Abrimos el cartel
                 string nuevaClave = PedirNuevaContraseñaCartel();
 
-                // Si el usuario presionó Cancelar o lo dejó vacío, frenamos todo
                 if (string.IsNullOrWhiteSpace(nuevaClave))
                 {
                     return;
                 }
 
-                // 2. Pedimos la confirmación de seguridad
                 DialogResult respuesta = MessageBox.Show("¿Está seguro que desea sobrescribir la contraseña del usuario seleccionado?".Traducir(), "Confirmar Cambio".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (respuesta == DialogResult.Yes)
                 {
                     Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
-
-                    // 3. Mandamos la nueva clave a encriptar y guardar
                     usuarioBll.ModificarContraseña(_idUsuarioSeleccionado, nuevaClave);
 
-                    // 4. Mostramos el éxito
                     MessageBox.Show("Contraseña actualizada con éxito.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     _idUsuarioSeleccionado = Guid.Empty;
@@ -301,12 +311,14 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message.Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
     }
 
+    /// <summary>
+    /// Clase modelo auxiliar (DTO visual) utilizada para representar y formatear los datos de un usuario dentro de la grilla.
+    /// </summary>
     public class UsuarioGrillaVisual
     {
         public Guid IdUsuario { get; set; }

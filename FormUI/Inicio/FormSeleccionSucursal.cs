@@ -16,11 +16,16 @@ namespace FormUI
 {
     public partial class FormSeleccionSucursal : Form
     {
+        /// <summary>
+        /// Inicializa el formulario de selección de sucursal y sus componentes visuales.
+        /// </summary>
         public FormSeleccionSucursal()
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Evento de carga inicial que obtiene las sucursales de la base de datos, configura el menú desplegable con una opción por defecto y traduce la interfaz.
+        /// </summary>
         private void FormSeleccionSucursal_Load(object sender, EventArgs e)
         {
             try
@@ -41,12 +46,14 @@ namespace FormUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar las sucursales: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar las sucursales: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             TraductorUI.TraducirFormulario(this);
         }
-
+        /// <summary>
+        /// Valida la sucursal elegida, la asigna a la sesión activa del usuario y cierra el formulario devolviendo un resultado exitoso para continuar al menú principal.
+        /// </summary>
         private void btnSiguiente_Click(object sender, EventArgs e)
         {
             try
@@ -66,8 +73,8 @@ namespace FormUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error al intentar ingresar: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Ocurrió un error al intentar ingresar: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-    }
+    }   
 }

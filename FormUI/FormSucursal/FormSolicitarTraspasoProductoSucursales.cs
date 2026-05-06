@@ -23,15 +23,20 @@ namespace FormUI.FormSucursal
     {
         private BindingList<SolicitudDeTraspasoDeProductosDetalleDTO> _listaProductos = new BindingList<SolicitudDeTraspasoDeProductosDetalleDTO>();
 
+        /// <summary>
+        /// Inicializa el formulario y la lista vinculante temporal para los productos del traspaso.
+        /// </summary>
         public FormSolicitarTraspasoProductoSucursales()
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Oculta identificadores internos, ajusta el orden visual y aplica traducciones a los encabezados de la grilla temporal de productos.
+        /// </summary>
         private void ConfigurarColumnasGrilla()
         {
             dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            // Ocultamos los IDs y las navegaciones
+
             if (dgvProductos.Columns.Contains("IdSolicitudDeTraspasoDeProductosDetalle"))
                 dgvProductos.Columns["IdSolicitudDeTraspasoDeProductosDetalle"].Visible = false;
 
@@ -47,13 +52,11 @@ namespace FormUI.FormSucursal
             if (dgvProductos.Columns.Contains("IdSolicitudDeTraspasoDeProductosNavigation"))
                 dgvProductos.Columns["IdSolicitudDeTraspasoDeProductosNavigation"].Visible = false;
 
-            // Cambiamos los títulos para el usuario
             if (dgvProductos.Columns.Contains("NombreProducto"))
-                dgvProductos.Columns["NombreProducto"].HeaderText = "Producto";
+                dgvProductos.Columns["NombreProducto"].HeaderText = "Producto".Traducir();
             if (dgvProductos.Columns.Contains("PesoNeto"))
-                dgvProductos.Columns["PesoNeto"].HeaderText = "Peso Neto";
+                dgvProductos.Columns["PesoNeto"].HeaderText = "Peso Neto".Traducir();
 
-            // CAMBIAR EL ORDEN
             if (dgvProductos.Columns.Contains("NombreProducto"))
                 dgvProductos.Columns["NombreProducto"].DisplayIndex = 0;
 
@@ -66,7 +69,9 @@ namespace FormUI.FormSucursal
             if (dgvProductos.Columns.Contains("Unidad"))
                 dgvProductos.Columns["Unidad"].DisplayIndex = 3;
         }
-
+        /// <summary>
+        /// Consulta las sucursales habilitadas como origen (tipo Depósito-Venta) y las carga en el menú desplegable correspondiente.
+        /// </summary>
         private void CargarSucursales()
         {
             SucursalService sucursalService = new SucursalService();
@@ -80,7 +85,9 @@ namespace FormUI.FormSucursal
             cmbSucursalOrigen.ValueMember = "IdSucursal";
             cmbSucursalOrigen.SelectedIndex = -1;
         }
-
+        /// <summary>
+        /// Obtiene el catálogo completo de productos y lo vincula al menú desplegable de selección.
+        /// </summary>
         private void CargarProductos()
         {
             Logic.Facade.ProductoService productoService = new Logic.Facade.ProductoService();
@@ -89,7 +96,9 @@ namespace FormUI.FormSucursal
             cmbProducto.ValueMember = "IdProducto";
             cmbProducto.SelectedIndex = -1;
         }
-
+        /// <summary>
+        /// Valida la entrada, agrega el producto a la lista temporal de traspasos o incrementa su cantidad si ya existía en la grilla.
+        /// </summary>
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             if (cmbProducto.SelectedItem == null)
@@ -106,7 +115,6 @@ namespace FormUI.FormSucursal
 
             var productoElegido = (ProductoDTO)cmbProducto.SelectedItem;
 
-            // Validar si el producto ya está en la grilla para sumar la cantidad en vez de repetir renglón (Opcional)
             var itemExistente = _listaProductos.FirstOrDefault(p => p.IdProducto == productoElegido.IdProducto);
             if (itemExistente != null)
             {
@@ -130,10 +138,11 @@ namespace FormUI.FormSucursal
             txtbPesoNeto.Clear();
             txtbMarca.Clear();
         }
-
+        /// <summary>
+        /// Verifica los datos de origen y destino, ensambla la solicitud de traspaso completa y la envía a la base de datos.
+        /// </summary>
         private void btnSolicitarTraspaso_Click(object sender, EventArgs e)
         {
-            // 1. Validaciones básicas
             if (_listaProductos.Count == 0)
             {
                 MessageBox.Show("Agregue al menos un producto a la solicitud.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -190,10 +199,12 @@ namespace FormUI.FormSucursal
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error inesperado al procesar la solicitud: {ex.Message}".Traducir(), "Error de Sistema".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Ocurrió un error inesperado al procesar la solicitud: {0}".Traducir(), ex.Message), "Error de Sistema".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Evento de carga inicial que asocia la grilla, preconfigura el destino, llena las opciones desplegables y traduce el formulario.
+        /// </summary>
         private void FormSolicitarTraspasoProductoSucursales_Load_1(object sender, EventArgs e)
         {
             try
@@ -207,11 +218,13 @@ namespace FormUI.FormSucursal
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar la pantalla: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar la pantalla: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             TraductorUI.TraducirFormulario(this);
         }
-
+        /// <summary>
+        /// Detecta la selección de un producto en el menú desplegable y rellena automáticamente los campos visuales vinculados.
+        /// </summary>
         private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbProducto.SelectedItem != null && cmbProducto.SelectedIndex != -1)

@@ -16,94 +16,80 @@ namespace FormUI.FormCompra
 {
     public partial class FormGestiónProveedor : Form
     {
+        private readonly ProveedorService _proveedorService = new ProveedorService();
+
+        /// <summary>
+        /// Inicializa el formulario, instancia los servicios necesarios y ejecuta la carga inicial de proveedores.
+        /// </summary>
         public FormGestiónProveedor()
         {
             InitializeComponent();
             CargarDatosProveedores();
         }
-
-        private readonly ProveedorService _proveedorService = new ProveedorService();
-
         /// <summary>
-        /// Obtiene la lista de clientes y la asigna al DataGridView (dgvClientes).
+        /// Obtiene la lista de proveedores desde la capa de servicios y actualiza la fuente de datos de la grilla.
         /// </summary>
         private void CargarDatosProveedores()
         {
             try
             {
-                // 1. Obtener la lista de clientes de la capa de servicio/lógica.
-                // Asumiendo que has agregado este método en la capa Logic/Service:
                 List<ProveedorDTO> listaProveedor = _proveedorService.GetAllProveedores();
-
-                // 2. Asignar la lista como fuente de datos del DataGridView.
                 dgvProveedor.DataSource = listaProveedor;
-
-                // 3. Configurar la apariencia de las columnas.
                 ConfigurarColumnasDataGridView();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar los proveedores: {ex.Message}".Traducir(), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar los proveedores: {0}".Traducir(), ex.Message), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         /// <summary>
-        /// Ajusta la visibilidad y el encabezado de las columnas generadas.
+        /// Oculta columnas técnicas e IDs irrelevantes para el usuario y aplica traducciones a los encabezados visibles.
         /// </summary>
         private void ConfigurarColumnasDataGridView()
         {
             dgvProveedor.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            // Ocultar las propiedades de navegación y el ID que no son relevantes para el usuario
-            if (dgvProveedor.Columns.Contains("IdProveedor"))
-            {
-                dgvProveedor.Columns["IdProveedor"].Visible = false;
-            }
-            if (dgvProveedor.Columns.Contains("ProveedorProductos"))
-            {
-                dgvProveedor.Columns["ProveedorProductos"].Visible = false;
-            }
-            if (dgvProveedor.Columns.Contains("NombreConPeso"))
-            {
-                dgvProveedor.Columns["NombreConPeso"].Visible = false;
-            }
-            if (dgvProveedor.Columns.Contains("StockPorSucursal"))
-            {
-                dgvProveedor.Columns["StockPorSucursal"].Visible = false;
-            }
-            if (dgvProveedor.Columns.Contains("VentaDetalles"))
-            {
-                dgvProveedor.Columns["VentaDetalles"].Visible = false;
-            }
-            // Renombrar columnas para la visualización del usuario
-            if (dgvProveedor.Columns.Contains("NombreProveedor"))
-            {
-                dgvProveedor.Columns["NombreProveedor"].HeaderText = "Nombre";
-            }
-            if (dgvProveedor.Columns.Contains("Cuit"))
-            {
-                dgvProveedor.Columns["Cuit"].HeaderText = "CUIT";
-            }
-            if (dgvProveedor.Columns.Contains("Telefono"))
-            {
-                dgvProveedor.Columns["Telefono"].HeaderText = "Telefóno";
-            }
-            if (dgvProveedor.Columns.Contains("Direccion"))
-            {
-                dgvProveedor.Columns["Direccion"].HeaderText = "Dirección";
-            }
 
-            // Ajustar el ancho de las columnas
+            if (dgvProveedor.Columns.Contains("IdProveedor"))
+                dgvProveedor.Columns["IdProveedor"].Visible = false;
+
+            if (dgvProveedor.Columns.Contains("ProveedorProductos"))
+                dgvProveedor.Columns["ProveedorProductos"].Visible = false;
+
+            if (dgvProveedor.Columns.Contains("NombreConPeso"))
+                dgvProveedor.Columns["NombreConPeso"].Visible = false;
+
+            if (dgvProveedor.Columns.Contains("StockPorSucursal"))
+                dgvProveedor.Columns["StockPorSucursal"].Visible = false;
+
+            if (dgvProveedor.Columns.Contains("VentaDetalles"))
+                dgvProveedor.Columns["VentaDetalles"].Visible = false;
+
+            if (dgvProveedor.Columns.Contains("NombreProveedor"))
+                dgvProveedor.Columns["NombreProveedor"].HeaderText = "Nombre".Traducir();
+
+            if (dgvProveedor.Columns.Contains("Cuit"))
+                dgvProveedor.Columns["Cuit"].HeaderText = "CUIT".Traducir();
+
+            if (dgvProveedor.Columns.Contains("Telefono"))
+                dgvProveedor.Columns["Telefono"].HeaderText = "Teléfono".Traducir(); // Corregido tilde visual
+
+            if (dgvProveedor.Columns.Contains("Direccion"))
+                dgvProveedor.Columns["Direccion"].HeaderText = "Dirección".Traducir();
+
             dgvProveedor.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
-
+        /// <summary>
+        /// Evento de carga del formulario que aplica el sistema de internacionalización a los controles visuales.
+        /// </summary>
         private void FormGestiónProveedor_Load(object sender, EventArgs e)
         {
             TraductorUI.TraducirFormulario(this);
         }
-
+        /// <summary>
+        /// Valida los datos ingresados en el formulario y registra un nuevo proveedor en la base de datos.
+        /// </summary>
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            // 1. Obtención y Validación de Datos
             if (string.IsNullOrWhiteSpace(txtbNombreProv.Text))
             {
                 MessageBox.Show("El campo Nombre es obligatorio.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -116,38 +102,33 @@ namespace FormUI.FormCompra
                 return;
             }
 
-            // 2. Creación del Objeto Modelo
             var nuevoProveedorDTO = new ProveedorDTO
             {
-                // IdProveedor is generated in the Repository layer (ProveedorRepository.Create)
                 NombreProveedor = txtbNombreProv.Text.Trim(),
                 Cuit = cuitValue,
                 Telefono = telefonoValue,
                 Direccion = txtbDireccionProv.Text.Trim(),
             };
 
-            // 3. Llamada a la Lógica de Negocio y Manejo de Excepciones
             try
             {
-                // Call the service layer method to persist the client
                 Guid newProveedorId = _proveedorService.CreateProveedor(nuevoProveedorDTO);
-
-                MessageBox.Show($"Proveedor agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Proveedor agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimpiarControles();
+                CargarDatosProveedores();
             }
             catch (ArgumentNullException ex)
             {
-                // Handle validation/null checks from the Repository
-                MessageBox.Show($"Error de datos: {ex.Message}".Traducir(), "Error de Alta".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(string.Format("Error de datos: {0}".Traducir(), ex.Message), "Error de Alta".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                // Handle generic errors (DB connection, unique constraints, etc.)
-                MessageBox.Show($"Ocurrió un error al intentar agregar el proveedor: {ex.Message}".Traducir(), "Error Inesperado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Ocurrió un error al intentar agregar el proveedor: {0}".Traducir(), ex.Message), "Error Inesperado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
         }
-
+        /// <summary>
+        /// Vacía los campos de texto del formulario preparándolos para un nuevo ingreso de datos.
+        /// </summary>
         private void LimpiarControles()
         {
             txtbNombreProv.Text = string.Empty;
@@ -156,40 +137,37 @@ namespace FormUI.FormCompra
             txtbDireccionProv.Text = string.Empty;
             txtbNombreProv.Focus();
         }
-
+        /// <summary>
+        /// Fuerza la recarga de los datos en la grilla desde la base de datos y avisa al usuario.
+        /// </summary>
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            // Llama al método existente para recargar la lista completa.
             CargarDatosProveedores();
-            MessageBox.Show("Lista de proveedoes actualizada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Lista de proveedores actualizada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
+        /// <summary>
+        /// Solicita confirmación y ejecuta la baja lógica del proveedor seleccionado en la grilla principal.
+        /// </summary>
         private void btnDeshabilitar_Click(object sender, EventArgs e)
         {
-            if (dgvProveedor.CurrentRow != null)
+            if (dgvProveedor.CurrentRow != null && !dgvProveedor.CurrentRow.IsNewRow)
             {
-                // 1. Obtener la clave primaria del proveedor seleccionado.
-                // Se asume que la columna IdProveedor existe, aunque esté oculta.
                 Guid proveedorId = (Guid)dgvProveedor.CurrentRow.Cells["IdProveedor"].Value;
                 string nombre = dgvProveedor.CurrentRow.Cells["NombreProveedor"].Value?.ToString() ?? string.Empty;
 
-                // 2. Confirmación del usuario.
-                DialogResult dialogResult = MessageBox.Show($"¿Está seguro de deshabilitar a {nombre}?".Traducir(), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult dialogResult = MessageBox.Show(string.Format("¿Está seguro de deshabilitar a {0}?".Traducir(), nombre), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (dialogResult == DialogResult.Yes)
                 {
                     try
                     {
-                        // 3. Llamar al servicio para deshabilitar el cliente.
                         _proveedorService.DeshabilitarProveedor(proveedorId);
-
-                        // 4. Recargar el DataGridView.
                         CargarDatosProveedores();
                         MessageBox.Show("Proveedor deshabilitado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Error al deshabilitar el Proveedor: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(string.Format("Error al deshabilitar el Proveedor: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }

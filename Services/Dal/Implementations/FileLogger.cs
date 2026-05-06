@@ -9,84 +9,85 @@ using Services.DomainModel.Logging;
 
 namespace Services.Dal.Implementations
 {
-    public class FileLogger : ILogger, IDisposable
+    /// <summary>
+    /// Implementación concreta de ILogger que registra los eventos de la aplicación en un archivo físico de texto de forma segura y sin bloqueos de concurrencia.
+    /// </summary>
+    public class FileLogger : ILogger
     {
         private readonly string _logFilePath;
         private readonly LogLevel _minimumLogLevel;
-        private readonly StreamWriter _writer;
-        private bool _disposed = false;
 
+        /// <summary>
+        /// Inicializa el registrador comprobando o creando el directorio requerido.
+        /// </summary>
         public FileLogger(string logFilePath, LogLevel minimumLogLevel)
         {
             _logFilePath = logFilePath;
             _minimumLogLevel = minimumLogLevel;
 
-            //Verificar que exista el directorio
             string directoryPath = Path.GetDirectoryName(_logFilePath);
             if (!Directory.Exists(directoryPath))
             {
                 Directory.CreateDirectory(directoryPath);
             }
-
-            _writer = new StreamWriter(_logFilePath, true); // true para append
         }
 
+        /// <summary>
+        /// Evalúa la severidad, abre el archivo de texto, escribe la entrada de registro y lo cierra inmediatamente para evitar bloqueos del sistema operativo.
+        /// </summary>
         private void Log(LogLevel level, string message, Exception exception = null)
         {
-            try
+            if (level >= _minimumLogLevel)
             {
-                if (level >= _minimumLogLevel)
+                var logEntry = new LogEntry
                 {
-                    var logEntry = new LogEntry
-                    {
-                        Timestamp = DateTime.Now,
-                        Level = level,
-                        Message = message,
-                        Exception = exception
-                    };
-                    _writer.WriteLine(logEntry.ToString());
-                    _writer.Flush(); //Me aseguro que se escriba inmediatamente
+                    Timestamp = DateTime.Now,
+                    Level = level,
+                    Message = message,
+                    Exception = exception
+                };
+
+                using (StreamWriter writer = new StreamWriter(_logFilePath, true))
+                {
+                    writer.WriteLine(logEntry.ToString());
                 }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                _writer.Close();
             }
         }
 
+        /// <summary>Registra un mensaje de seguimiento.</summary>
         public void Trace(string message) => Log(LogLevel.Trace, message);
+
+        /// <summary>Registra un mensaje de seguimiento con excepción.</summary>
         public void Trace(string message, Exception exception) => Log(LogLevel.Trace, message, exception);
+
+        /// <summary>Registra un mensaje de depuración.</summary>
         public void Debug(string message) => Log(LogLevel.Debug, message);
+
+        /// <summary>Registra un mensaje de depuración con excepción.</summary>
         public void Debug(string message, Exception exception) => Log(LogLevel.Debug, message, exception);
+
+        /// <summary>Registra un mensaje informativo.</summary>
         public void Information(string message) => Log(LogLevel.Information, message);
+
+        /// <summary>Registra un mensaje informativo con excepción.</summary>
         public void Information(string message, Exception exception) => Log(LogLevel.Information, message, exception);
+
+        /// <summary>Registra una advertencia.</summary>
         public void Warning(string message) => Log(LogLevel.Warning, message);
+
+        /// <summary>Registra una advertencia con excepción.</summary>
         public void Warning(string message, Exception exception) => Log(LogLevel.Warning, message, exception);
+
+        /// <summary>Registra un error.</summary>
         public void Error(string message) => Log(LogLevel.Error, message);
+
+        /// <summary>Registra un error con excepción.</summary>
         public void Error(string message, Exception exception) => Log(LogLevel.Error, message, exception);
+
+        /// <summary>Registra un error crítico o fatal.</summary>
         public void Fatal(string message) => Log(LogLevel.Fatal, message);
+
+        /// <summary>Registra un error crítico o fatal con excepción.</summary>
         public void Fatal(string message, Exception exception) => Log(LogLevel.Fatal, message, exception);
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    _writer?.Dispose();
-                }
-                _disposed = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this); //Evitar redundancia con el dispose del writer
-        }
     }
 }

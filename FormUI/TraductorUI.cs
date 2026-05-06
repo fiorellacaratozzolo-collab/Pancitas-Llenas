@@ -7,11 +7,16 @@ using System.Threading.Tasks;
 
 namespace FormUI
 {
+    /// <summary>
+    /// Clase estática utilitaria encargada de recorrer y aplicar el sistema de internacionalización a los componentes visuales.
+    /// </summary>
     public static class TraductorUI
     {
+        /// <summary>
+        /// Recorre recursivamente un control contenedor (como un Formulario o Panel) y traduce dinámicamente el texto visible de sus elementos de interfaz gráfica y encabezados.
+        /// </summary>
         public static void TraducirFormulario(Control controlPadre)
         {
-            // 1. Traducimos el título de la ventana si es un Form
             if (controlPadre is Form form && !string.IsNullOrWhiteSpace(form.Text))
             {
                 form.Text = form.Text.Traducir();
@@ -19,7 +24,6 @@ namespace FormUI
 
             foreach (Control control in controlPadre.Controls)
             {
-                // 2. Solo traducimos el texto si el control es puramente de Interfaz Gráfica
                 if (control is Label || control is Button || control is CheckBox || control is RadioButton || control is GroupBox)
                 {
                     if (!string.IsNullOrWhiteSpace(control.Text))
@@ -28,7 +32,6 @@ namespace FormUI
                     }
                 }
 
-                // 3. Si es una grilla, solo le tocamos los Encabezados (HeaderText), NUNCA los datos de adentro
                 if (control is DataGridView dgv)
                 {
                     foreach (DataGridViewColumn col in dgv.Columns)
@@ -40,7 +43,6 @@ namespace FormUI
                     }
                 }
 
-                // 4. Si el control tiene otros controles adentro (ej. un Panel), usamos recursividad
                 if (control.HasChildren)
                 {
                     TraducirFormulario(control);

@@ -7,26 +7,24 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Interfaces
 {
+    /// <summary>
+    /// Define el contrato de persistencia para la gestión de productos en el catálogo del sistema.
+    /// </summary>
     public interface IProductoRepository
     {
-        /// <summary>
-        /// Crea un Producto y lo vincula inmediatamente a un Proveedor específico.
-        /// </summary>
-        /// <param name="producto">La entidad Producto a crear.</param>
-        /// <param name="idProveedor">El GUID del proveedor al que se vinculará.</param>
-        /// <returns>El ID (Guid) del Producto creado.</returns>
+        /// <summary>Crea un nuevo producto y lo vincula inmediatamente a un proveedor específico.</summary>
         Guid Create(Producto producto, Guid idProveedor);
 
-        /// <summary>
-        /// Obtiene todos los productos vinculados a un proveedor específico.
-        /// </summary>
-        /// <param name="idProveedor">El GUID del proveedor para filtrar.</param>
-        /// <returns>Una lista de Productos.</returns>
+        /// <summary>Obtiene todos los productos vinculados a un proveedor específico.</summary>
         List<Producto> GetByProveedor(Guid idProveedor);
 
-        // Métodos base
+        /// <summary>Recupera un producto específico a partir de su identificador único.</summary>
         Producto? GetById(Guid id);
+
+        /// <summary>Obtiene el catálogo completo de productos registrados.</summary>
         List<Producto> GetAll();
-        void Delete(Guid id); // Para deshabilitar/eliminar
+
+        /// <summary>Elimina o deshabilita un producto del sistema.</summary>
+        void Delete(Guid id);
     }
 }

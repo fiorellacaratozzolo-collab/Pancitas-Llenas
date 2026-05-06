@@ -16,7 +16,9 @@ namespace FormUI.FormCompra
     public partial class FormGestiónOC : Form
     {
         private readonly OrdenDeCompraService _ocService;
-
+        /// <summary>
+        /// Inicializa el formulario, instancia los servicios necesarios y configura el comportamiento de solo lectura y selección de las grillas.
+        /// </summary>
         public FormGestiónOC()
         {
             InitializeComponent();
@@ -26,63 +28,66 @@ namespace FormUI.FormCompra
             dgvOrdenCompra.ReadOnly = true;
             dgvDetalleOC.ReadOnly = true;
         }
-
+        /// <summary>
+        /// Obtiene todas las órdenes de compra de la base de datos, aplica el filtro de estado seleccionado y actualiza la vista principal.
+        /// </summary>
         private void CargarOrdenes()
         {
-            // Traemos todas las órdenes de la base de datos
             var todas = _ocService.ObtenerTodas();
             List<OrdenDeCompraDTO> filtradas;
 
-            // Filtramos según lo que eligió el usuario
-            if (cmbFiltroEstado.SelectedIndex == 0) // Pendientes
+            if (cmbFiltroEstado.SelectedIndex == 0)
                 filtradas = todas.Where(x => x.IdEstadoOc == 1).ToList();
-            else if (cmbFiltroEstado.SelectedIndex == 1) // Aprobadas
+            else if (cmbFiltroEstado.SelectedIndex == 1)
                 filtradas = todas.Where(x => x.IdEstadoOc == 2).ToList();
-            else if (cmbFiltroEstado.SelectedIndex == 2) // Rechazadas
+            else if (cmbFiltroEstado.SelectedIndex == 2)
                 filtradas = todas.Where(x => x.IdEstadoOc == 3).ToList();
-            else // Todas
+            else
                 filtradas = todas.ToList();
 
-            // Actualizamos la grilla
             dgvOrdenCompra.DataSource = filtradas;
             FormatearGridPrincipal();
-            // Solo habilitamos los botones de Aprobar/Rechazar si estamos viendo las Pendientes
+
             bool sonPendientes = cmbFiltroEstado.SelectedIndex == 0;
             btnAlta.Enabled = sonPendientes;
             btnBaja.Enabled = sonPendientes;
         }
-
+        /// <summary>
+        /// Evento que recarga y refresca la lista de órdenes de compra en pantalla.
+        /// </summary>
         private void btnVer_Click(object sender, EventArgs e)
         {
             CargarOrdenes();
         }
-
+        /// <summary>
+        /// Inicia el proceso de validación y finalización (aprobación) de la orden de compra seleccionada, actualizando su estado.
+        /// </summary>
         private void btnAlta_Click(object sender, EventArgs e)
         {
             if (dgvOrdenCompra.CurrentRow?.DataBoundItem is not OrdenDeCompraDTO oc)
             {
-                MessageBox.Show("Seleccione una orden válida.");
+                MessageBox.Show("Seleccione una orden válida.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (MessageBox.Show($"¿Finalizar OC #{oc.IdOrdenDeCompra}?", "Confirmar",
-                MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(string.Format("¿Finalizar OC #{0}?".Traducir(), oc.IdOrdenDeCompra), "Confirmar".Traducir(),
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {
                     _ocService.FinalizarOrden(oc.IdOrdenDeCompra);
-                    MessageBox.Show("Operación exitosa.");
-
-                    // Refresco seguro sin pasar nulls
+                    MessageBox.Show("Operación exitosa.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnVer_Click(this, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message.Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-
+        /// <summary>
+        /// Inicia el proceso de rechazo (baja) de la orden de compra seleccionada tras la confirmación del usuario.
+        /// </summary>
         private void btnBaja_Click(object sender, EventArgs e)
         {
             if (dgvOrdenCompra.CurrentRow?.DataBoundItem is not OrdenDeCompraDTO oc) return;
@@ -93,18 +98,17 @@ namespace FormUI.FormCompra
                 try
                 {
                     _ocService.RechazarOrden(oc.IdOrdenDeCompra);
-
-                    // Refresco seguro
                     btnVer_Click(this, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
-                    // 2. ex.Message es un string que viene de tu BLL, ¡así que también le podemos pegar el traductor!
                     MessageBox.Show(ex.Message.Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-
+        /// <summary>
+        /// Detecta el cambio de selección en la grilla principal y carga automáticamente los detalles de la orden correspondiente en la grilla inferior.
+        /// </summary>
         private void dgvOrdenCompra_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvOrdenCompra.CurrentRow == null || dgvOrdenCompra.CurrentRow.DataBoundItem == null)
@@ -126,12 +130,13 @@ namespace FormUI.FormCompra
                 Console.WriteLine("Error en vista previa: ".Traducir() + ex.Message);
             }
         }
-
+        /// <summary>
+        /// Oculta columnas técnicas, formatea valores monetarios y renombra los encabezados de la grilla principal de órdenes.
+        /// </summary>
         private void FormatearGridPrincipal()
         {
             if (dgvOrdenCompra.Columns.Count > 0)
             {
-                // Ocultar columnas técnicas y el Id del Proveedor
                 string[] ocultar = { "IdOrdenDeCompra", "IdOrdenDePedido",
                              "IdOrdenDePedidoOrigen", "IdProveedorNavigation",
                              "IdEstadoOcNavigation", "OrdenDeCompraDetalles", "IdProveedor","IdEstadoOc" };
@@ -139,14 +144,17 @@ namespace FormUI.FormCompra
                 foreach (var col in ocultar)
                     if (dgvOrdenCompra.Columns[col] != null) dgvOrdenCompra.Columns[col].Visible = false;
 
-                if (dgvOrdenCompra.Columns["NombreProveedor"] != null) dgvOrdenCompra.Columns["NombreProveedor"].HeaderText = "Proveedor";
-                if (dgvOrdenCompra.Columns["FechaOc"] != null) dgvOrdenCompra.Columns["FechaOc"].HeaderText = "Fecha";
+                if (dgvOrdenCompra.Columns["NombreProveedor"] != null) dgvOrdenCompra.Columns["NombreProveedor"].HeaderText = "Proveedor".Traducir();
+                if (dgvOrdenCompra.Columns["FechaOc"] != null) dgvOrdenCompra.Columns["FechaOc"].HeaderText = "Fecha".Traducir();
                 if (dgvOrdenCompra.Columns["Total"] != null) dgvOrdenCompra.Columns["Total"].DefaultCellStyle.Format = "C2";
-                if (dgvOrdenCompra.Columns["EstadoTexto"] != null) dgvOrdenCompra.Columns["EstadoTexto"].HeaderText = "Estado";
+                if (dgvOrdenCompra.Columns["EstadoTexto"] != null) dgvOrdenCompra.Columns["EstadoTexto"].HeaderText = "Estado".Traducir();
+
                 dgvOrdenCompra.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
         }
-
+        /// <summary>
+        /// Oculta columnas innecesarias, aplica formato de moneda y ajusta el orden visual de los campos en la grilla de detalles de la orden.
+        /// </summary>
         private void FormatearGridDetalle()
         {
             if (dgvDetalleOC.Columns.Count > 0)
@@ -156,8 +164,8 @@ namespace FormUI.FormCompra
                 foreach (var col in ocultar)
                     if (dgvDetalleOC.Columns[col] != null) dgvDetalleOC.Columns[col].Visible = false;
 
-                if (dgvDetalleOC.Columns["NombreProducto"] != null) dgvDetalleOC.Columns["NombreProducto"].HeaderText = "Producto";
-                if (dgvDetalleOC.Columns["PesoNeto"] != null) dgvDetalleOC.Columns["PesoNeto"].HeaderText = "Peso (Kg)";
+                if (dgvDetalleOC.Columns["NombreProducto"] != null) dgvDetalleOC.Columns["NombreProducto"].HeaderText = "Producto".Traducir();
+                if (dgvDetalleOC.Columns["PesoNeto"] != null) dgvDetalleOC.Columns["PesoNeto"].HeaderText = "Peso (Kg)".Traducir();
                 if (dgvDetalleOC.Columns["PrecioUnitario"] != null) dgvDetalleOC.Columns["PrecioUnitario"].DefaultCellStyle.Format = "C2";
                 if (dgvDetalleOC.Columns["Subtotal"] != null) dgvDetalleOC.Columns["Subtotal"].DefaultCellStyle.Format = "C2";
 
@@ -165,57 +173,58 @@ namespace FormUI.FormCompra
 
                 if (dgvDetalleOC.Columns.Contains("NombreProducto"))
                 {
-                    dgvDetalleOC.Columns["NombreProducto"].HeaderText = "Producto";
+                    dgvDetalleOC.Columns["NombreProducto"].HeaderText = "Producto".Traducir();
                     dgvDetalleOC.Columns["NombreProducto"].DisplayIndex = 0;
                 }
                 if (dgvDetalleOC.Columns.Contains("Marca"))
                 {
-                    dgvDetalleOC.Columns["Marca"].HeaderText = "Marca";
+                    dgvDetalleOC.Columns["Marca"].HeaderText = "Marca".Traducir();
                     dgvDetalleOC.Columns["Marca"].DisplayIndex = 1;
                 }
                 if (dgvDetalleOC.Columns.Contains("PesoNeto"))
                 {
-                    dgvDetalleOC.Columns["PesoNeto"].HeaderText = "Peso Neto";
+                    dgvDetalleOC.Columns["PesoNeto"].HeaderText = "Peso Neto".Traducir();
                     dgvDetalleOC.Columns["PesoNeto"].DisplayIndex = 2;
                 }
                 if (dgvDetalleOC.Columns.Contains("Unidad"))
                 {
-                    dgvDetalleOC.Columns["Unidad"].HeaderText = "Unidad";
+                    dgvDetalleOC.Columns["Unidad"].HeaderText = "Unidad".Traducir();
                     dgvDetalleOC.Columns["Unidad"].DisplayIndex = 3;
                 }
                 if (dgvDetalleOC.Columns.Contains("PrecioUnitario"))
                 {
-                    dgvDetalleOC.Columns["PrecioUnitario"].HeaderText = "Precio Unitario";
+                    dgvDetalleOC.Columns["PrecioUnitario"].HeaderText = "Precio Unitario".Traducir();
                     dgvDetalleOC.Columns["PrecioUnitario"].DisplayIndex = 4;
                 }
-                if (dgvDetalleOC.Columns.Contains("Subtotal"))
+                if (dgvDetalleOC.Columns.Contains("Cantidad"))
                 {
-                    dgvDetalleOC.Columns["Cantidad"].HeaderText = "Cantidad";
+                    dgvDetalleOC.Columns["Cantidad"].HeaderText = "Cantidad".Traducir();
                     dgvDetalleOC.Columns["Cantidad"].DisplayIndex = 5;
                 }
                 if (dgvDetalleOC.Columns.Contains("Subtotal"))
                 {
-                    dgvDetalleOC.Columns["Subtotal"].HeaderText = "Subtotal";
+                    dgvDetalleOC.Columns["Subtotal"].HeaderText = "Subtotal".Traducir();
                     dgvDetalleOC.Columns["Subtotal"].DisplayIndex = 6;
                 }
             }
         }
-
+        /// <summary>
+        /// Recarga la grilla principal de órdenes de compra cada vez que el usuario cambia la opción del filtro de estados.
+        /// </summary>
         private void cmbFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
         {
             CargarOrdenes();
         }
-
+        /// <summary>
+        /// Evento de carga inicial del formulario que llena las opciones del filtro de estados, selecciona la opción por defecto y traduce la interfaz.
+        /// </summary>
         private void FormGestiónOC_Load_1(object sender, EventArgs e)
         {
-            // Cargamos las opciones del filtro
-            cmbFiltroEstado.Items.Add("Pendientes"); // Índice 0
-            cmbFiltroEstado.Items.Add("Aprobadas");  // Índice 1
-            cmbFiltroEstado.Items.Add("Rechazadas"); // Índice 2
-            cmbFiltroEstado.Items.Add("Todas");      // Índice 3
+            cmbFiltroEstado.Items.Add("Pendientes".Traducir());
+            cmbFiltroEstado.Items.Add("Aprobadas".Traducir());
+            cmbFiltroEstado.Items.Add("Rechazadas".Traducir());
+            cmbFiltroEstado.Items.Add("Todas".Traducir());
 
-            // Al poner el Index en 0 ("Pendientes"), automáticamente dispara 
-            // el evento de cambio y carga la grilla por primera vez.
             cmbFiltroEstado.SelectedIndex = 0;
             TraductorUI.TraducirFormulario(this);
         }

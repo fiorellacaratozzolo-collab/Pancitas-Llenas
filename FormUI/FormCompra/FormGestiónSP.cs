@@ -18,50 +18,56 @@ namespace FormUI.FormCompra
         private readonly SolicitudDePedidoService _solicitudService;
         private const int ESTADO_PENDIENTE = 1;
 
+        /// <summary>
+        /// Inicializa el formulario, instancia el servicio de solicitudes y configura las columnas de la grilla principal.
+        /// </summary>
         public FormGestiónSP()
         {
             InitializeComponent();
             _solicitudService = new SolicitudDePedidoService();
             ConfigurarDataGridView();
         }
-
+        /// <summary>
+        /// Define manualmente la estructura, visibilidad y los títulos traducidos de las columnas para la grilla de solicitudes.
+        /// </summary>
         private void ConfigurarDataGridView()
         {
             dgvSolicitudDePedido.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            // Esto previene la generación automática de columnas
             dgvSolicitudDePedido.AutoGenerateColumns = false;
 
-            // Aquí defines las columnas que quieres mostrar (ejemplos)
-            dgvSolicitudDePedido.Columns.Add("IdSolicitudDePedido", "ID Solicitud");
+            dgvSolicitudDePedido.Columns.Add("IdSolicitudDePedido", "ID Solicitud".Traducir());
             dgvSolicitudDePedido.Columns["IdSolicitudDePedido"].DataPropertyName = "IdSolicitudDePedido";
             dgvSolicitudDePedido.Columns["IdSolicitudDePedido"].Visible = false;
 
-            dgvSolicitudDePedido.Columns.Add("FechaSp", "Fecha");
+            dgvSolicitudDePedido.Columns.Add("FechaSp", "Fecha".Traducir());
             dgvSolicitudDePedido.Columns["FechaSp"].DataPropertyName = "FechaSp";
 
-            // Muestra el ID del estado (o podrías mapear la descripción del estado)
-            dgvSolicitudDePedido.Columns.Add("EstadoTexto", "Estado");
+            dgvSolicitudDePedido.Columns.Add("EstadoTexto", "Estado".Traducir());
             dgvSolicitudDePedido.Columns["EstadoTexto"].DataPropertyName = "EstadoTexto";
         }
-
+        /// <summary>
+        /// Evento de carga inicial del formulario que llena el filtro de estados, lo selecciona por defecto y traduce toda la interfaz.
+        /// </summary>
         private void FormGestiónSP_Load(object sender, EventArgs e)
         {
-            // Carga las opciones del filtro
-            cmbFiltroEstado.Items.Add("Pendientes"); 
-            cmbFiltroEstado.Items.Add("Aprobadas");  
-            cmbFiltroEstado.Items.Add("Rechazadas"); 
-            cmbFiltroEstado.Items.Add("Todas");     
+            cmbFiltroEstado.Items.Add("Pendientes".Traducir());
+            cmbFiltroEstado.Items.Add("Aprobadas".Traducir());
+            cmbFiltroEstado.Items.Add("Rechazadas".Traducir());
+            cmbFiltroEstado.Items.Add("Todas".Traducir());
 
-            // Al seleccionar el 0, dispara automáticamente el evento y carga la grilla
             cmbFiltroEstado.SelectedIndex = 0;
             TraductorUI.TraducirFormulario(this);
         }
-
+        /// <summary>
+        /// Fuerzala recarga de las solicitudes respetando el filtro de estado actualmente seleccionado.
+        /// </summary>
         private void btnActualizar_Click(object sender, EventArgs e)
         {
             CargarSolicitudes();
         }
-
+        /// <summary>
+        /// Valida y ejecuta la aprobación de la solicitud seleccionada, generando su correspondiente Orden de Pedido en el sistema.
+        /// </summary>
         private void btnGenerarOP_Click(object sender, EventArgs e)
         {
             if (dgvSolicitudDePedido.CurrentRow == null)
@@ -70,7 +76,6 @@ namespace FormUI.FormCompra
                 return;
             }
 
-            // 1. Confirmación
             DialogResult result = MessageBox.Show("¿Está seguro que desea APROBAR esta Solicitud y generar la Orden de Pedido?".Traducir(),
                                                   "Confirmar Aprobación".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -78,24 +83,22 @@ namespace FormUI.FormCompra
             {
                 try
                 {
-                    // 2. Obtener el ID y llamar al método de transición
                     Guid idSeleccionado = (Guid)dgvSolicitudDePedido.CurrentRow.Cells["IdSolicitudDePedido"].Value;
-
                     Guid nuevaOPId = _solicitudService.AprobarYSolicitarOrdenDePedido(idSeleccionado);
 
-                    MessageBox.Show($"¡Orden de Pedido generada con éxito!\nID de la nueva OP: {nuevaOPId}".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(string.Format("¡Orden de Pedido generada con éxito!\nID de la nueva OP: {0}".Traducir(), nuevaOPId), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // 3. Actualizar la lista (la SP debería desaparecer de los "Pendientes")
                     btnActualizar_Click(this, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al generar la Orden de Pedido: {ex.Message}".Traducir(), "Error de Transición".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format("Error al generar la Orden de Pedido: {0}".Traducir(), ex.Message), "Error de Transición".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
         }
-
+        /// <summary>
+        /// Solicita confirmación y ejecuta la baja lógica (rechazo) de la solicitud de pedido seleccionada en la grilla.
+        /// </summary>
         private void btnDardeBaja_Click(object sender, EventArgs e)
         {
             if (dgvSolicitudDePedido.CurrentRow == null)
@@ -104,7 +107,6 @@ namespace FormUI.FormCompra
                 return;
             }
 
-            // 1. Confirmación al usuario
             DialogResult result = MessageBox.Show("¿Está seguro que desea dar de baja (rechazar) la Solicitud de Pedido seleccionada?".Traducir(),
                                                   "Confirmar Baja".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -112,53 +114,47 @@ namespace FormUI.FormCompra
             {
                 try
                 {
-                    // 2. Obtener el ID y llamar al método de lógica
                     Guid idSeleccionado = (Guid)dgvSolicitudDePedido.CurrentRow.Cells["IdSolicitudDePedido"].Value;
                     _solicitudService.RechazarSolicitud(idSeleccionado);
 
                     MessageBox.Show("Solicitud de Pedido dada de baja correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // 3. Actualizar la lista (debería desaparecer de los "Pendientes")
                     btnActualizar_Click(this, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al dar de baja la solicitud: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format("Error al dar de baja la solicitud: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-
+        /// <summary>
+        /// Detecta el cambio de selección en la grilla principal y carga los productos solicitados correspondientes en la grilla de detalles.
+        /// </summary>
         private void dgvSolicitudDePedido_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvSolicitudDePedido.CurrentRow != null)
             {
                 try
                 {
-                    // 1. Obtenemos el ID de la fila seleccionada
                     Guid idSeleccionado = (Guid)dgvSolicitudDePedido.CurrentRow.Cells["IdSolicitudDePedido"].Value;
-
-                    // 2. Buscamos los detalles usando tu servicio 
-                    // (Asegurate de tener este método creado en tu SolicitudDePedidoService/Logic)
                     var detalles = _solicitudService.ObtenerDetallesPorSolicitud(idSeleccionado);
 
-                    // 3. Llenamos la grilla de detalles
                     dgvDetalleSP.DataSource = detalles;
-
-                    // 4. La ponemos linda
                     ConfigurarDataGridViewDetalle();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al cargar el detalle: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format("Error al cargar el detalle: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-
+        /// <summary>
+        /// Oculta identificadores internos y aplica nombres traducidos a las columnas visibles de la grilla de detalles.
+        /// </summary>
         private void ConfigurarDataGridViewDetalle()
         {
             dgvDetalleSP.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            // 1. Ocultar IDs y navegaciones de Entity Framework
             if (dgvDetalleSP.Columns.Contains("IdSolicitudDePedidoDetalle"))
                 dgvDetalleSP.Columns["IdSolicitudDePedidoDetalle"].Visible = false;
 
@@ -174,70 +170,71 @@ namespace FormUI.FormCompra
             if (dgvDetalleSP.Columns.Contains("IdSolicitudDePedidoNavigation"))
                 dgvDetalleSP.Columns["IdSolicitudDePedidoNavigation"].Visible = false;
 
-            // 2. Renombrar las columnas (Asumiendo que tenés estas propiedades en tu DTO)
             if (dgvDetalleSP.Columns.Contains("NombreProducto"))
-                dgvDetalleSP.Columns["NombreProducto"].HeaderText = "Producto";
+                dgvDetalleSP.Columns["NombreProducto"].HeaderText = "Producto".Traducir();
 
             if (dgvDetalleSP.Columns.Contains("PesoNeto"))
-                dgvDetalleSP.Columns["PesoNeto"].HeaderText = "Peso Neto";
+                dgvDetalleSP.Columns["PesoNeto"].HeaderText = "Peso Neto".Traducir();
 
             if (dgvDetalleSP.Columns.Contains("Cantidad"))
-                dgvDetalleSP.Columns["Cantidad"].HeaderText = "Cant. Solicitada";
+                dgvDetalleSP.Columns["Cantidad"].HeaderText = "Cant. Solicitada".Traducir();
 
-            // 3. (Opcional) Ordenar las columnas
             if (dgvDetalleSP.Columns.Contains("NombreProducto"))
                 dgvDetalleSP.Columns["NombreProducto"].DisplayIndex = 0;
 
             if (dgvDetalleSP.Columns.Contains("Marca"))
+            {
+                dgvDetalleSP.Columns["Marca"].HeaderText = "Marca".Traducir();
                 dgvDetalleSP.Columns["Marca"].DisplayIndex = 1;
+            }
 
             if (dgvDetalleSP.Columns.Contains("PesoNeto"))
                 dgvDetalleSP.Columns["PesoNeto"].DisplayIndex = 2;
 
             if (dgvDetalleSP.Columns.Contains("Unidad"))
+            {
+                dgvDetalleSP.Columns["Unidad"].HeaderText = "Unidad".Traducir();
                 dgvDetalleSP.Columns["Unidad"].DisplayIndex = 3;
+            }
 
             if (dgvDetalleSP.Columns.Contains("Cantidad"))
                 dgvDetalleSP.Columns["Cantidad"].DisplayIndex = 4;
         }
-
+        /// <summary>
+        /// Recarga la grilla principal de solicitudes automáticamente cada vez que el usuario cambia la opción del filtro de estados.
+        /// </summary>
         private void cmbFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
         {
             CargarSolicitudes();
         }
-
+        /// <summary>
+        /// Consulta la base de datos para recuperar y filtrar las solicitudes de pedido, actualizando la grilla principal y habilitando/deshabilitando los botones de acción según el estado visualizado.
+        /// </summary>
         private void CargarSolicitudes()
         {
             try
             {
-                // Limpiamos el detalle para que no quede pegada información de la vista anterior
                 dgvDetalleSP.DataSource = null;
 
-                // 1. Obtener todas las solicitudes
                 List<SolicitudDePedidoDTO> todasLasSolicitudes = _solicitudService.ObtenerTodas();
                 List<SolicitudDePedidoDTO> filtradas;
 
-                // 2. Filtramos según lo que eligió el usuario en el ComboBox
-                if (cmbFiltroEstado.SelectedIndex == 0) // Pendientes (Estado 1)
+                if (cmbFiltroEstado.SelectedIndex == 0)
                     filtradas = todasLasSolicitudes.Where(s => s.IdEstadoSp == 1).ToList();
-                else if (cmbFiltroEstado.SelectedIndex == 1) // Aprobadas (Estado 2)
+                else if (cmbFiltroEstado.SelectedIndex == 1)
                     filtradas = todasLasSolicitudes.Where(s => s.IdEstadoSp == 2).ToList();
-                else if (cmbFiltroEstado.SelectedIndex == 2) // Rechazadas (Estado 3)
+                else if (cmbFiltroEstado.SelectedIndex == 2)
                     filtradas = todasLasSolicitudes.Where(s => s.IdEstadoSp == 3).ToList();
-                else // Todas
+                else
                     filtradas = todasLasSolicitudes.ToList();
 
-                // 3. Asignar al DataGridView
                 dgvSolicitudDePedido.DataSource = filtradas;
 
-                // Solo mostramos el cartel de "vacío" si están buscando las pendientes (UX limpia)
                 if (filtradas.Count == 0 && cmbFiltroEstado.SelectedIndex == 0)
                 {
                     MessageBox.Show("No hay Solicitudes de Pedido pendientes para gestionar.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
-                // 🌟 MEDIDA DE SEGURIDAD UX: 
-                // Apagamos los botones de acción si están mirando el historial (Aprobadas/Rechazadas/Todas)
                 bool sonPendientes = (cmbFiltroEstado.SelectedIndex == 0);
 
                 btnGenerarOP.Enabled = sonPendientes;
@@ -245,7 +242,7 @@ namespace FormUI.FormCompra
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar las solicitudes: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar las solicitudes: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

@@ -7,12 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Services.Bll
 {
+    /// <summary>
+    /// Servicio Singleton encargado de gestionar el sistema de internacionalización, traducción dinámica y auto-descubrimiento de términos de la aplicación.
+    /// </summary>
     public sealed class IdiomaService
     {
+        #region Singleton
         private readonly static IdiomaService _instance = new IdiomaService();
 
+        /// <summary>
+        /// Obtiene la instancia única del servicio de idiomas.
+        /// </summary>
         public static IdiomaService Current
         {
             get
@@ -23,10 +31,12 @@ namespace Services.Bll
 
         private IdiomaService()
         {
-            //Implent here the initialization of your singleton
         }
+        #endregion
 
-
+        /// <summary>
+        /// Traduce un texto al idioma configurado en el hilo actual. Si el término no existe, lo registra automáticamente en el repositorio para su futura traducción.
+        /// </summary>
         public static string Traducir(string texto)
         {
             try
@@ -35,33 +45,31 @@ namespace Services.Bll
             }
             catch (PalabraNoEncontradaException ex)
             {
-                // Que podría hacer?
-                // 1) Puedo agregar la clave en el idioma que se solicita actualmente, con valor vacío
-                // 2) Puedo agregar la clave en el idioma padre y/o todos aquellos otros idiomas que no tengan la palabra
-                // 3) Puedo no hacer nada
-                // 4) Puedo llamar a un modelito LLM, buscar la traducción y agregarla como value en l paso 1 o 2
-
-                // En nuestro DEMO tomamos la determinación de ir por la opción 1
                 IdiomaRepository.AgregarPalabra(texto);
 
-                Console.WriteLine($"La palabra que no pudo traducirse fue: {ex.Palabra}. ");
+                Facade.LoggerService.GetLogger().Warning(string.Format("Término no encontrado y auto-registrado en el diccionario: {0}", ex.Palabra));
 
-                return texto; //En nuestro una palabra que no pudo traducirse, retorna la misma palabra
+                return texto;
             }
             catch (Exception ex)
             {
-                //Si estoy acá, es una exception más genérica. Para ver después
-                //Bitácora y relanzamos la excepción
+                BitácoraBll bitacora = new BitácoraBll();
+                bitacora.RegistrarLog(
+                    string.Format("Error crítico en el servicio de traducción: {0}", ex.Message),
+                    DomainModel.Logging.Criticidad.Error
+                );
 
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Obtiene la lista completa de idiomas (culturas) que la aplicación soporta actualmente.
+        /// </summary>
         public static List<CultureInfo> ObtenerIdiomas()
         {
             return IdiomaRepository.ObtenerIdiomas();
         }
     }
-
 }
 

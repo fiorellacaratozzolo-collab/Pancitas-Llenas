@@ -18,39 +18,40 @@ namespace FormUI.FormCompra
     {
         private readonly ProductoService _productoService = new ProductoService();
         private readonly ProveedorService _proveedorService = new ProveedorService();
-
+        /// <summary>
+        /// Inicializa el formulario, instancia los servicios necesarios y ejecuta la carga inicial de productos.
+        /// </summary>
         public FormGestiónProducto()
         {
             InitializeComponent();
             CargarDatosProductos();
         }
-
+        /// <summary>
+        /// Obtiene y muestra los productos en la grilla principal. Permite recibir una lista filtrada o consultar todos los registros por defecto.
+        /// </summary>
         private void CargarDatosProductos(List<ProductoDTO>? productos = null)
         {
             try
             {
-                // Si la lista es null, obtenemos todos los productos (carga inicial/actualizar)
                 productos ??= _productoService.GetAllProductos();
-
                 dgvProducto.DataSource = productos;
                 ConfigurarColumnasDataGridView();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar los productos: {ex.Message}".Traducir(), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar los productos: {0}".Traducir(), ex.Message), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Oculta columnas técnicas, colecciones de navegación y aplica traducciones a los encabezados visibles de la grilla de productos.
+        /// </summary>
         private void ConfigurarColumnasDataGridView()
         {
-            // La asignación del DataSource debe ocurrir antes de este método.
             if (dgvProducto.DataSource == null) return;
 
-            // Ocultar la clave primaria y las colecciones de navegación
             if (dgvProducto.Columns.Contains("IdProducto"))
                 dgvProducto.Columns["IdProducto"].Visible = false;
 
-            // Ocultar las colecciones grandes de Entity Framework
             if (dgvProducto.Columns.Contains("ProveedorProductos"))
                 dgvProducto.Columns["ProveedorProductos"].Visible = false;
             if (dgvProducto.Columns.Contains("InventarioProductos"))
@@ -66,25 +67,27 @@ namespace FormUI.FormCompra
             if (dgvProducto.Columns.Contains("VentaDetalles"))
                 dgvProducto.Columns["VentaDetalles"].Visible = false;
 
-            // Renombrar columnas
             if (dgvProducto.Columns.Contains("NombreProducto"))
-                dgvProducto.Columns["NombreProducto"].HeaderText = "Producto";
+                dgvProducto.Columns["NombreProducto"].HeaderText = "Producto".Traducir();
             if (dgvProducto.Columns.Contains("PesoNeto"))
-                dgvProducto.Columns["PesoNeto"].HeaderText = "Peso Neto";
+                dgvProducto.Columns["PesoNeto"].HeaderText = "Peso Neto".Traducir();
             if (dgvProducto.Columns.Contains("PrecioNeto"))
-                dgvProducto.Columns["PrecioNeto"].HeaderText = "Precio Neto ($)";
+                dgvProducto.Columns["PrecioNeto"].HeaderText = "Precio Neto ($)".Traducir();
 
             dgvProducto.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
-
+        /// <summary>
+        /// Evento de carga del formulario que aplica las traducciones de interfaz al idioma seleccionado.
+        /// </summary>
         private void FormGestiónProducto_Load(object sender, EventArgs e)
         {
             TraductorUI.TraducirFormulario(this);
         }
-
+        /// <summary>
+        /// Valida la información ingresada, busca al proveedor correspondiente por CUIT y registra un nuevo producto en la base de datos.
+        /// </summary>
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            // 1. Validación de entradas
             if (string.IsNullOrWhiteSpace(txtbNombreProd.Text) || string.IsNullOrWhiteSpace(txtbMarca.Text) || string.IsNullOrWhiteSpace(txtbProveedor.Text))
             {
                 MessageBox.Show("Nombre, Marca y CUIT del Proveedor son obligatorios.".Traducir(), "Error de Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -97,35 +100,32 @@ namespace FormUI.FormCompra
                 return;
             }
 
-            // Validar y obtener el CUIT del proveedor
             if (!int.TryParse(txtbProveedor.Text, out int cuitValue))
             {
                 MessageBox.Show("El CUIT del Proveedor debe ser un número entero válido.".Traducir(), "Error de Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // 2. Buscar el Proveedor por CUIT
             ProveedorDTO? proveedorEncontradoDTO = null;
+
             try
             {
                 proveedorEncontradoDTO = _proveedorService.GetByCuit(cuitValue);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al buscar el proveedor: {ex.Message}".Traducir(), "Error de Búsqueda".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al buscar el proveedor: {0}".Traducir(), ex.Message), "Error de Búsqueda".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (proveedorEncontradoDTO == null)
             {
-                MessageBox.Show($"No se encontró un proveedor con el CUIT {cuitValue}. Verifique los datos.".Traducir(), "Proveedor No Encontrado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(string.Format("No se encontró un proveedor con el CUIT {0}. Verifique los datos.".Traducir(), cuitValue), "Proveedor No Encontrado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // El ID del proveedor ya lo tenemos:
             Guid idProveedor = proveedorEncontradoDTO.IdProveedor;
 
-            // 3. Creación del Objeto Modelo
             var nuevoProductoDTO = new ProductoDTO
             {
                 NombreProducto = txtbNombreProd.Text.Trim(),
@@ -136,38 +136,39 @@ namespace FormUI.FormCompra
                 Descripcion = txtbDescripcion.Text.Trim()
             };
 
-            // 4. Llamada al Servicio (Crea Producto y la relación ProveedorProducto)
             try
             {
                 Guid newProdId = _productoService.CrearProductoConProveedor(nuevoProductoDTO, idProveedor);
 
-                MessageBox.Show($"Producto '{nuevoProductoDTO.NombreProducto}' agregado y vinculado al proveedor {proveedorEncontradoDTO.NombreProveedor}.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format("Producto '{0}' agregado y vinculado al proveedor {1}.".Traducir(), nuevoProductoDTO.NombreProducto, proveedorEncontradoDTO.NombreProveedor), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimpiarControles();
                 CargarDatosProductos();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al agregar el producto: {ex.Message}".Traducir(), "Error de Persistencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al agregar el producto: {0}".Traducir(), ex.Message), "Error de Persistencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Restablece la grilla mostrando la totalidad de los productos almacenados en el sistema.
+        /// </summary>
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            CargarDatosProductos(); // Carga todos los productos
+            CargarDatosProductos();
             MessageBox.Show("Lista de productos actualizada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
-
+        /// <summary>
+        /// Solicita un CUIT mediante una ventana emergente y filtra la grilla para mostrar únicamente los productos vinculados a dicho proveedor.
+        /// </summary>
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            // 1. Solicitar el CUIT al usuario
             string input = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el CUIT del Proveedor para filtrar:".Traducir(), "Buscar Productos por Proveedor".Traducir(), "");
 
             if (string.IsNullOrEmpty(input))
             {
-                return; // Usuario canceló o no ingresó nada
+                return;
             }
 
-            // 2. Validar que el input sea un número (CUIT)
             if (!int.TryParse(input, out int cuitBusqueda))
             {
                 MessageBox.Show("Debe ingresar un CUIT numérico válido.".Traducir(), "Error de Entrada".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -176,39 +177,36 @@ namespace FormUI.FormCompra
 
             try
             {
-                // 3. Buscar el Proveedor por CUIT para obtener su ID (GUID)
                 ProveedorDTO? proveedorEncontradoDTO = _proveedorService.GetByCuit(cuitBusqueda);
 
                 if (proveedorEncontradoDTO == null)
                 {
-                    MessageBox.Show($"No se encontró ningún proveedor con el CUIT {cuitBusqueda}.".Traducir(), "Proveedor No Encontrado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(string.Format("No se encontró ningún proveedor con el CUIT {0}.".Traducir(), cuitBusqueda), "Proveedor No Encontrado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
-                // El ID del proveedor ya lo tenemos
                 Guid idProveedorBusqueda = proveedorEncontradoDTO.IdProveedor;
 
-                // 4. Obtener lista filtrada por el ID del Proveedor
                 List<ProductoDTO> listaFiltrada = _productoService.GetByProveedor(idProveedorBusqueda);
 
-                // 5. Reemplazar la fuente de datos
                 CargarDatosProductos(listaFiltrada);
 
-                MessageBox.Show($"Se encontraron {listaFiltrada.Count} productos del proveedor {proveedorEncontradoDTO.NombreProveedor}.".Traducir(), "Búsqueda Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format("Se encontraron {0} productos del proveedor {1}.".Traducir(), listaFiltrada.Count, proveedorEncontradoDTO.NombreProveedor), "Búsqueda Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error durante la búsqueda: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error durante la búsqueda: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Solicita confirmación al usuario y deshabilita (baja lógica) el producto actualmente seleccionado en la grilla.
+        /// </summary>
         private void btnDeshabilitar_Click(object sender, EventArgs e)
         {
             if (dgvProducto.CurrentRow != null)
             {
-                // Se obtiene el GUID de la columna IdProducto (aunque esté oculta)
                 Guid productoId = (Guid)(dgvProducto.CurrentRow.Cells["IdProducto"].Value ?? Guid.Empty);
-                string nombre = dgvProducto.CurrentRow.Cells["NombreProducto"].Value?.ToString() ?? "[Nombre Desconocido]";
+                string nombre = dgvProducto.CurrentRow.Cells["NombreProducto"].Value?.ToString() ?? "[Nombre Desconocido]".Traducir();
 
                 if (productoId == Guid.Empty)
                 {
@@ -216,19 +214,19 @@ namespace FormUI.FormCompra
                     return;
                 }
 
-                DialogResult dialogResult = MessageBox.Show($"¿Está seguro de deshabilitar el producto {nombre}?".Traducir(), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult dialogResult = MessageBox.Show(string.Format("¿Está seguro de deshabilitar el producto {0}?".Traducir(), nombre), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (dialogResult == DialogResult.Yes)
                 {
                     try
                     {
                         _productoService.DeshabilitarProducto(productoId);
-                        CargarDatosProductos(); // Recargar para reflejar el cambio
+                        CargarDatosProductos();
                         MessageBox.Show("Producto deshabilitado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Error al deshabilitar el producto: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(string.Format("Error al deshabilitar el producto: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -237,7 +235,9 @@ namespace FormUI.FormCompra
                 MessageBox.Show("Debe seleccionar una fila para deshabilitar.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
+        /// <summary>
+        /// Vacía todos los campos de texto del formulario dejándolos listos para el ingreso de un nuevo registro.
+        /// </summary>
         private void LimpiarControles()
         {
             txtbNombreProd.Text = string.Empty;
@@ -249,6 +249,5 @@ namespace FormUI.FormCompra
             txtbProveedor.Text = string.Empty;
             txtbNombreProd.Focus();
         }
-
     }
 }

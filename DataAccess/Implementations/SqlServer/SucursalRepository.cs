@@ -10,16 +10,24 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Implementations.SqlServer
 {
+    /// <summary>
+    /// Implementación concreta del repositorio de sucursales para el manejo de persistencia relacional.
+    /// </summary>
     public class SucursalRepository : ISucursalRepository
     {
         private readonly PetShopDbContext _context;
 
+        /// <summary>
+        /// Inicializa una nueva instancia del repositorio inyectando el contexto de base de datos compartido.
+        /// </summary>
         public SucursalRepository(PetShopDbContext context)
         {
             _context = context;
         }
 
-
+        /// <summary>
+        /// Persiste una nueva sucursal en la base de datos y retorna su GUID generado.
+        /// </summary>
         public Guid Create(Sucursal sucursal)
         {
             sucursal.IdSucursal = Guid.NewGuid();
@@ -27,11 +35,17 @@ namespace DataAccess.Implementations.SqlServer
             return sucursal.IdSucursal;
         }
 
+        /// <summary>
+        /// Obtiene el catálogo completo de sucursales disponibles en el sistema.
+        /// </summary>
         public List<Sucursal> GetAll()
         {
             return _context.Sucursals.ToList();
         }
 
+        /// <summary>
+        /// Filtra y recupera las sucursales basándose en su tipo o categoría.
+        /// </summary>
         public List<Sucursal> GetByTipoSucursal(int idTipoSucursal)
         {
             return _context.Sucursals
@@ -39,15 +53,22 @@ namespace DataAccess.Implementations.SqlServer
                            .ToList();
         }
 
+        /// <summary>
+        /// Recupera una sucursal específica a partir de su identificador único.
+        /// </summary>
         public Sucursal? GetById(Guid id)
         {
             return _context.Sucursals.Find(id);
         }
 
+        /// <summary>
+        /// Actualiza los valores de una sucursal existente reemplazando el estado de la entidad desconectada.
+        /// </summary>
         public void Update(Sucursal sucursal)
         {
             if (sucursal == null)
                 throw new ArgumentNullException(nameof(sucursal));
+
             var sucursalDb = _context.Sucursals.Find(sucursal.IdSucursal);
 
             if (sucursalDb != null)
@@ -56,6 +77,9 @@ namespace DataAccess.Implementations.SqlServer
             }
         }
 
+        /// <summary>
+        /// Elimina físicamente una sucursal de la base de datos.
+        /// </summary>
         public void Delete(Guid id)
         {
             var sucursal = _context.Sucursals.Find(id);
@@ -65,6 +89,9 @@ namespace DataAccess.Implementations.SqlServer
             }
         }
 
+        /// <summary>
+        /// Busca sucursales cuya dirección contenga el fragmento de texto proporcionado, ignorando mayúsculas y minúsculas.
+        /// </summary>
         public List<Sucursal> SearchByDireccion(string direccionFragment)
         {
             string search = direccionFragment.ToLower();

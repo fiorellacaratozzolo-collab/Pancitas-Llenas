@@ -281,3 +281,46 @@ El usuario {0} cerró sesión manualmente.:User {0} logged out manually.
 PetShop - Bienvenido Admin:
 📍 Sucursal: Petshop Pancitas Llenas | 🏠 Dir: Villa Adelina, Jorge Washington 4087:
 
+PetShop - Welcome Admin:
+📍 Branch: Petshop Pancitas Llenas | 🏠 Addr: Villa Adelina, Jorge Washington 4087:
+:Name::
+Error al abrir: {0}:
+Tax ID (CUIT):
+:Email::
+Enabled:
+:Branch::
+Mensaje:
+Pendientes:
+Aprobadas:
+Rechazadas:
+Todas:
+Requested Qty.:
+Net Weight:
+Brand:
+Unit:
+Product:
+Request ID:
+Date:
+Status:
+Quantity:
+Unit Price:
+Order ID:
+Peso (Kg):
+:Subtotal::
+Provider:
+Net Price ($):
+Stock to Add:
+Product ID:
+Current Stock:
+Desired Stock:
+Date and Time:
+Movement:
+Origin / Destination:
+Entry Date:
+Added Qty.:
+Unit Weight:
+Branch Name:
+Efectivo:
+Transferencia:
+Tarjeta de Débito:
+Tarjeta de Crédito:

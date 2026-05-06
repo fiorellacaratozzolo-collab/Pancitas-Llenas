@@ -12,9 +12,14 @@ using Services.Dal.Interfaces;
 
 namespace Services.Dal.Implementations
 {
+    /// <summary>
+    /// Repositorio encargado de gestionar las operaciones CRUD y validaciones específicas para la entidad Usuario en la base de datos.
+    /// </summary>
     internal class UsuarioRepository : IUsuarioRepository
     {
-        // Este es el método que usará tu LoginService
+        /// <summary>
+        /// Recupera un usuario de la base de datos utilizando su nombre de usuario, disparando la carga de sus relaciones.
+        /// </summary>
         public Usuario GetByUserName(string username)
         {
             string query = "SELECT * FROM Usuario WHERE Nombre = @Nombre";
@@ -24,14 +29,15 @@ namespace Services.Dal.Implementations
                 {
                     object[] data = new object[reader.FieldCount];
                     reader.GetValues(data);
-                    // Esto dispara toda la carga recursiva (Familias y Patentes)
                     return UsuarioAdapter.Current.Get(data);
                 }
                 return null;
             }
         }
 
-        // El GetById es obligatorio por la interfaz IGenericRepository
+        /// <summary>
+        /// Recupera un usuario específico de la base de datos a partir de su identificador único.
+        /// </summary>
         public Usuario GetById(Guid id)
         {
             string query = "SELECT * FROM Usuario WHERE IdUsuario = @IdUsuario";
@@ -47,6 +53,9 @@ namespace Services.Dal.Implementations
             }
         }
 
+        /// <summary>
+        /// Inserta un nuevo registro de usuario en la base de datos generando un nuevo identificador único.
+        /// </summary>
         public void Add(Usuario obj)
         {
             obj.IdUsuario = Guid.NewGuid();
@@ -63,6 +72,9 @@ namespace Services.Dal.Implementations
             );
         }
 
+        /// <summary>
+        /// Actualiza los datos de un usuario existente en la base de datos.
+        /// </summary>
         public void Update(Usuario obj)
         {
             string query = "UPDATE Usuario SET Nombre = @Nombre, Password = @Password, Email = @Email, Habilitado = @Habilitado, IdSucursal = @IdSucursal, IdiomaPredeterminado = @IdiomaPredeterminado WHERE IdUsuario = @IdUsuario";
@@ -78,12 +90,18 @@ namespace Services.Dal.Implementations
             );
         }
 
+        /// <summary>
+        /// Elimina un registro de usuario de la base de datos utilizando su identificador único.
+        /// </summary>
         public void Remove(Guid id)
         {
             string query = "DELETE FROM Usuario WHERE IdUsuario = @IdUsuario";
             SqlHelper.ExecuteNonQuery(query, CommandType.Text, new SqlParameter("@IdUsuario", id));
         }
 
+        /// <summary>
+        /// Obtiene una colección completa con todos los usuarios registrados en el sistema.
+        /// </summary>
         public IEnumerable<Usuario> GetAll()
         {
             List<Usuario> usuarios = new List<Usuario>();
@@ -101,7 +119,9 @@ namespace Services.Dal.Implementations
             return usuarios;
         }
 
-        // Mantengo tu método original GetByCredentials por si lo prefieres en lugar de GetByUserName
+        /// <summary>
+        /// Valida la existencia de un usuario mediante una coincidencia exacta de su nombre de usuario y su contraseña previamente encriptada.
+        /// </summary>
         public Usuario GetByCredentials(string user, string password)
         {
             string commandText = "SELECT * FROM Usuario WHERE Nombre = @Nombre AND Password = @Password";

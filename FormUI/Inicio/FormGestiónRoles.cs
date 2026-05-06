@@ -13,67 +13,63 @@ namespace FormUI.Inicio
 {
     public partial class FormGestiónRoles : Form
     {
+        /// <summary>
+        /// Inicializa el formulario y sus componentes visuales predeterminados.
+        /// </summary>
         public FormGestiónRoles()
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Evento de carga inicial que obtiene las listas de usuarios, roles (Familias) y permisos individuales (Patentes) para poblar los controles.
+        /// Aplica un cast explícito a IList en los CheckedListBox para prevenir errores de DataBinding.
+        /// </summary>
         private void FormGestiónRoles_Load(object sender, EventArgs e)
         {
             try
             {
-                // 1. Cargar el ComboBox de Usuarios
                 Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
-                cmbUsuarios.DataSource = usuarioBll.ListarTodos(); // Ajusta el nombre de tu método
+                cmbUsuarios.DataSource = usuarioBll.ListarTodos();
                 cmbUsuarios.DisplayMember = "Nombre";
                 cmbUsuarios.ValueMember = "IdUsuario";
 
-                // 2. Instanciamos la BLL de Permisos (Ajusta al nombre real de tu clase)
                 Services.Bll.PermisosBll permisosBll = new Services.Bll.PermisosBll();
 
-                // 3. Cargar el CheckedListBox de Roles (Familias)
-                // OJO: Cast explícito a IList para evitar bugs de DataBinding con el CheckedListBox
                 clbRoles.DataSource = permisosBll.GetAllFamilias().ToList();
                 clbRoles.DisplayMember = "Nombre";
-                clbRoles.ValueMember = "Id"; // O como se llame la propiedad de ID de tu Componente
+                clbRoles.ValueMember = "Id";
 
-                // 4. Cargar el CheckedListBox de Permisos Sueltos (Patentes)
                 clbPermisos.DataSource = permisosBll.GetAllPatentes().ToList();
-                clbPermisos.DisplayMember = "Nombre"; // O "DataKey", el que sea más legible para el admin
+                clbPermisos.DisplayMember = "Nombre";
                 clbPermisos.ValueMember = "Id";
 
-                // Dejamos el ComboBox sin selección inicial para que no dispare eventos por accidente
                 cmbUsuarios.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar los catálogos: ".Traducir() + ex.Message);
+                MessageBox.Show(string.Format("Error al cargar los catálogos: {0}".Traducir(), ex.Message));
             }
             TraductorUI.TraducirFormulario(this);
         }
-
+        /// <summary>
+        /// Detecta la selección de un usuario, limpia los permisos previos y tilda automáticamente los roles y patentes asignados a él en la base de datos.
+        /// </summary>
         private void cmbUsuarios_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Si no hay nada seleccionado, no hacemos nada
             if (cmbUsuarios.SelectedItem == null || cmbUsuarios.SelectedIndex == -1) return;
 
             try
             {
-                // 1. Obtenemos el usuario básico del ComboBox
                 if (cmbUsuarios.SelectedItem is Services.DomainModel.Composite.Usuario usuarioBasico)
                 {
-                    // 2. Limpiamos todos los tildes previos
                     for (int i = 0; i < clbRoles.Items.Count; i++) clbRoles.SetItemChecked(i, false);
                     for (int i = 0; i < clbPermisos.Items.Count; i++) clbPermisos.SetItemChecked(i, false);
 
-                    // 3. ¡AQUÍ USAMOS TU MÉTODO! Traemos al usuario con la mochila llena
                     Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
                     var usuarioCompleto = usuarioBll.GetById(usuarioBasico.IdUsuario);
 
-                    // Si el usuario no tiene permisos, terminamos acá
                     if (usuarioCompleto.Privilegios == null) return;
 
-                    // 4. Recorremos la mochila y tildamos lo que corresponda
                     foreach (var permiso in usuarioCompleto.Privilegios)
                     {
                         if (permiso is Services.DomainModel.Composite.Familia familia)
@@ -89,11 +85,12 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar los permisos del usuario: ".Traducir() + ex.Message);
+                MessageBox.Show(string.Format("Error al cargar los permisos del usuario: {0}".Traducir(), ex.Message));
             }
         }
-
-        // Método auxiliar para buscar por ID en el CheckedListBox y poner el tilde
+        /// <summary>
+        /// Método de asistencia que recorre un CheckedListBox buscando un ID específico para marcar su casilla correspondiente.
+        /// </summary>
         private void MarcarItemEnLista(CheckedListBox lista, Guid idPermisoBuscado)
         {
             for (int i = 0; i < lista.Items.Count; i++)
@@ -106,10 +103,11 @@ namespace FormUI.Inicio
                 }
             }
         }
-
+        /// <summary>
+        /// Recolecta todos los permisos y roles actualmente tildados en la interfaz y ejecuta la actualización para el usuario seleccionado.
+        /// </summary>
         private void btnGuardarRol_Click(object sender, EventArgs e)
         {
-            // 1. Validamos que haya un usuario seleccionado
             if (cmbUsuarios.SelectedItem == null || cmbUsuarios.SelectedIndex == -1)
             {
                 MessageBox.Show("Por favor, seleccione un usuario de la lista superior primero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -118,10 +116,8 @@ namespace FormUI.Inicio
 
             try
             {
-                // 2. Extraemos el usuario seleccionado
                 var usuarioSeleccionado = (Services.DomainModel.Composite.Usuario)cmbUsuarios.SelectedItem;
 
-                // 3. Recopilamos los IDs de todo lo que esté TILDADO en las Familias
                 List<Guid> familiasTildadas = new List<Guid>();
                 foreach (var item in clbRoles.CheckedItems)
                 {
@@ -129,7 +125,6 @@ namespace FormUI.Inicio
                     familiasTildadas.Add(familia.Id);
                 }
 
-                // 4. Recopilamos los IDs de todo lo que esté TILDADO en las Patentes extra
                 List<Guid> patentesTildadas = new List<Guid>();
                 foreach (var item in clbPermisos.CheckedItems)
                 {
@@ -137,7 +132,6 @@ namespace FormUI.Inicio
                     patentesTildadas.Add(patente.Id);
                 }
 
-                // 5. Mandamos todo a la BLL
                 Services.Bll.PermisosBll permisosBll = new Services.Bll.PermisosBll();
                 permisosBll.GuardarPermisosUsuario(usuarioSeleccionado.IdUsuario, familiasTildadas, patentesTildadas);
 
@@ -145,7 +139,7 @@ namespace FormUI.Inicio
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al guardar los permisos: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al guardar los permisos: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

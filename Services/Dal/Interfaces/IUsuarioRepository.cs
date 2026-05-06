@@ -7,12 +7,19 @@ using Services.DomainModel.Composite;
 
 namespace Services.Dal.Interfaces
 {
+    /// <summary>
+    /// Define el contrato para las operaciones de acceso a datos específicas de la entidad Usuario, extendiendo el repositorio genérico.
+    /// </summary>
     public interface IUsuarioRepository : IGenericRepository<Usuario>
     {
-        // Método para buscar solo por nombre (útil para recuperar contraseñas, por ejemplo)
+        /// <summary>
+        /// Recupera un usuario basándose exclusivamente en su nombre de usuario.
+        /// </summary>
         Usuario GetByUserName(string username);
-       
-        // Método para el login comprobando usuario y contraseña hasheada
+
+        /// <summary>
+        /// Valida y recupera un usuario comprobando que coincidan de manera exacta su usuario y contraseña cifrada.
+        /// </summary>
         Usuario GetByCredentials(string user, string password);
     }
 }

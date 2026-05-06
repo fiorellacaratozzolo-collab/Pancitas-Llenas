@@ -16,49 +16,46 @@ namespace FormUI.FormVenta
 {
     public partial class FormGestiónCliente : Form
     {
+        private readonly ClienteService _clienteService = new ClienteService();
+
+        /// <summary>
+        /// Inicializa el formulario y desencadena la carga inicial de los clientes en la grilla.
+        /// </summary>
         public FormGestiónCliente()
         {
             InitializeComponent();
             CargarDatosClientes();
         }
-
+        /// <summary>
+        /// Aplica las traducciones correspondientes a todos los controles visuales del formulario al cargar.
+        /// </summary>
         private void FormGestiónCliente_Load(object sender, EventArgs e)
         {
             TraductorUI.TraducirFormulario(this);
         }
-
-        private readonly ClienteService _clienteService = new ClienteService();
-
         /// <summary>
-        /// Obtiene la lista de clientes y la asigna al DataGridView (dgvClientes).
+        /// Consulta el servicio de clientes para obtener todos los registros y vincula los datos a la grilla principal.
         /// </summary>
         private void CargarDatosClientes()
         {
             try
             {
-                // 1. Obtener la lista de clientes de la capa de servicio/lógica.
-                // Asumiendo que has agregado este método en la capa Logic/Service:
                 List<ClienteDTO> listaClientes = _clienteService.GetAllClientes();
-
-                // 2. Asignar la lista como fuente de datos del DataGridView.
                 dgvCliente.DataSource = listaClientes;
-
-                // 3. Configurar la apariencia de las columnas.
                 ConfigurarColumnasDataGridView();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar los clientes: {ex.Message}".Traducir(), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar los clientes: {0}".Traducir(), ex.Message), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
         /// <summary>
-        /// Ajusta la visibilidad y el encabezado de las columnas generadas.
+        /// Oculta columnas técnicas e IDs, y aplica traducciones a los encabezados visibles en la grilla.
         /// </summary>
         private void ConfigurarColumnasDataGridView()
         {
             dgvCliente.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            // Ocultar las propiedades de navegación y el ID que no son relevantes para el usuario
+
             if (dgvCliente.Columns.Contains("IdCliente"))
             {
                 dgvCliente.Columns["IdCliente"].Visible = false;
@@ -76,28 +73,27 @@ namespace FormUI.FormVenta
                 dgvCliente.Columns["Venta"].Visible = false;
             }
 
-            // Renombrar columnas para la visualización del usuario
             if (dgvCliente.Columns.Contains("NombreCliente"))
             {
-                dgvCliente.Columns["NombreCliente"].HeaderText = "Nombre";
+                dgvCliente.Columns["NombreCliente"].HeaderText = "Nombre".Traducir();
             }
             if (dgvCliente.Columns.Contains("Dni"))
             {
-                dgvCliente.Columns["Dni"].HeaderText = "D.N.I.";
+                dgvCliente.Columns["Dni"].HeaderText = "D.N.I.".Traducir();
             }
             if (dgvCliente.Columns.Contains("IdTipoCliente"))
             {
-                dgvCliente.Columns["IdTipoCliente"].HeaderText = "Tipo Cliente";
+                dgvCliente.Columns["IdTipoCliente"].HeaderText = "Tipo Cliente".Traducir();
             }
 
-            // Ajustar el ancho de las columnas
             dgvCliente.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             dgvCliente.AllowUserToAddRows = false;
         }
-
+        /// <summary>
+        /// Valida los datos de entrada, determina el tipo de cliente y registra un nuevo cliente en la base de datos.
+        /// </summary>
         private void btnAgregarCliente_Click(object sender, EventArgs e)
         {
-            // 1. Obtención y Validación de Datos
             if (string.IsNullOrWhiteSpace(txtbNombreCliente.Text))
             {
                 MessageBox.Show("El campo Nombre es obligatorio.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -124,29 +120,34 @@ namespace FormUI.FormVenta
                 MessageBox.Show("Debe seleccionar un Tipo de Cliente (Mayorista o Minorista).".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+
             var nuevoCliente = new ClienteDTO
             {
                 NombreCliente = txtbNombreCliente.Text.Trim(),
                 Dni = dniValue,
                 IdTipoCliente = idTipoCliente,
             };
+
             try
             {
                 Guid newClientId = _clienteService.CreateCliente(nuevoCliente);
 
-                MessageBox.Show($"Cliente agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Cliente agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimpiarControles();
+                CargarDatosClientes();
             }
             catch (ArgumentNullException ex)
             {
-                MessageBox.Show($"Error de datos: {ex.Message}".Traducir(), "Error de Alta".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(string.Format("Error de datos: {0}".Traducir(), ex.Message), "Error de Alta".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ocurrió un error al intentar agregar el cliente: {ex.Message}".Traducir(), "Error Inesperado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Ocurrió un error al intentar agregar el cliente: {0}".Traducir(), ex.Message), "Error Inesperado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Restablece los campos de texto y botones de selección a su estado predeterminado.
+        /// </summary>
         private void LimpiarControles()
         {
             txtbNombreCliente.Text = string.Empty;
@@ -155,13 +156,13 @@ namespace FormUI.FormVenta
             rbtnMinorista.Checked = false;
             txtbNombreCliente.Focus();
         }
-
+        /// <summary>
+        /// Verifica la selección en la grilla y envía los datos del cliente modificado al servicio para su actualización.
+        /// </summary>
         private void btnActualizar_Click_1(object sender, EventArgs e)
         {
-            // 1. Verificamos que haya fila, que NO sea la fila vacía del final, y que sea un Cliente
             if (dgvCliente.CurrentRow != null && !dgvCliente.CurrentRow.IsNewRow && dgvCliente.CurrentRow.DataBoundItem is ClienteDTO clienteEditado)
             {
-                // 2.Verificamos que no sea un "cliente fantasma" con ID vacío
                 if (clienteEditado.IdCliente == Guid.Empty)
                 {
                     MessageBox.Show("El cliente seleccionado no es válido o está incompleto.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -170,7 +171,6 @@ namespace FormUI.FormVenta
 
                 try
                 {
-                    // Si pasó los dos escudos, guardamos tranquilos
                     _clienteService.UpdateCliente(clienteEditado);
 
                     MessageBox.Show("Los cambios del cliente se guardaron correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -178,40 +178,37 @@ namespace FormUI.FormVenta
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al guardar los cambios: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format("Error al guardar los cambios: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
-                // Si tocó la nada misma o el renglón vacío, le avisamos:
                 MessageBox.Show("Por favor, seleccione un cliente válido de la lista para modificar.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
+        /// <summary>
+        /// Solicita confirmación y ejecuta la baja lógica del cliente seleccionado en el sistema.
+        /// </summary>
         private void btnDeshabilitar_Click(object sender, EventArgs e)
         {
-            if (dgvCliente.CurrentRow != null)
+            if (dgvCliente.CurrentRow != null && !dgvCliente.CurrentRow.IsNewRow)
             {
                 Guid clienteId = (Guid)dgvCliente.CurrentRow.Cells["IdCliente"].Value;
                 string nombre = dgvCliente.CurrentRow.Cells["NombreCliente"].Value?.ToString() ?? string.Empty;
 
-                // 2. Confirmación del usuario.
-                DialogResult dialogResult = MessageBox.Show($"¿Está seguro de deshabilitar a {nombre}?".Traducir(), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult dialogResult = MessageBox.Show(string.Format("¿Está seguro de deshabilitar a {0}?".Traducir(), nombre), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (dialogResult == DialogResult.Yes)
                 {
                     try
                     {
-                        // 3. Llamar al servicio para deshabilitar el cliente.
                         _clienteService.DeshabilitarCliente(clienteId);
-
-                        // 4. Recargar el DataGridView.
                         CargarDatosClientes();
                         MessageBox.Show("Cliente deshabilitado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Error al deshabilitar el cliente: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(string.Format("Error al deshabilitar el cliente: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -220,34 +217,34 @@ namespace FormUI.FormVenta
                 MessageBox.Show("Debe seleccionar una fila para deshabilitar.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
+        /// <summary>
+        /// Abre un cuadro de diálogo para ingresar un ID de tipo de cliente y filtra los resultados mostrados en la grilla.
+        /// </summary>
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-
-            string input = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar:".Traducir());
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar:".Traducir(), "Buscar Cliente".Traducir(), "");
 
             if (int.TryParse(input, out int idTipoCliente))
             {
                 try
                 {
-                    // 1. Llamar al servicio para obtener la lista filtrada.
                     List<ClienteDTO> listaFiltrada = _clienteService.BuscarClientesPorTipo(idTipoCliente);
 
-                    // 2. Asignar la lista filtrada como nueva fuente de datos.
                     dgvCliente.DataSource = listaFiltrada;
                     ConfigurarColumnasDataGridView();
 
-                    MessageBox.Show($"Se encontraron {listaFiltrada.Count} clientes para el ID Tipo {idTipoCliente}.".Traducir(), "Búsqueda Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(string.Format("Se encontraron {0} clientes para el ID Tipo {1}.".Traducir(), listaFiltrada.Count, idTipoCliente), "Búsqueda Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error durante la búsqueda: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format("Error durante la búsqueda: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else if (!string.IsNullOrEmpty(input))
             {
                 MessageBox.Show("El ID del Tipo de Cliente debe ser un número entero válido.".Traducir(), "Error de Entrada".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        
         }
     }
 }

@@ -11,8 +11,14 @@ using Services.DomainModel.Composite;
 
 namespace Services.Dal.Implementations
 {
+    /// <summary>
+    /// Repositorio de unión encargado de recuperar las patentes (permisos individuales) contenidas dentro de una familia (rol).
+    /// </summary>
     internal class FamiliaPatenteRepository : IJoinRepository<Familia>
     {
+        /// <summary>
+        /// Obtiene la lista de componentes tipo Patente asociados a la Familia proporcionada.
+        /// </summary>
         public IList<Component> GetByObject(Familia obj)
         {
             List<Component> patentes = new List<Component>();

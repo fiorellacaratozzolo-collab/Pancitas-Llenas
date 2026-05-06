@@ -13,15 +13,25 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
+    /// <summary>
+    /// Gestiona las reglas de negocio y los flujos de estado para el traspaso de inventario entre distintas sucursales.
+    /// </summary>
     public class TraspasoLogic
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper = MapperConfigInitializer.Mapper;
+
+        /// <summary>
+        /// Inicializa una nueva instancia de la lógica de traspasos.
+        /// </summary>
         public TraspasoLogic()
         {
             _unitOfWork = new UnitOfWork();
         }
 
+        /// <summary>
+        /// Genera una nueva solicitud formal de traspaso de mercadería, validando el destino y la integridad de los productos solicitados.
+        /// </summary>
         public Guid GenerarSolicitud(SolicitudDeTraspasoDeProductoDTO solicitudDTO, List<SolicitudDeTraspasoDeProductosDetalleDTO> detallesDTO)
         {
             if (solicitudDTO.IdSucursalOrigen == solicitudDTO.IdSucursalDestino)
@@ -34,18 +44,15 @@ namespace Logic
                 throw new ArgumentException("La solicitud debe contener al menos un producto.");
             }
 
-            // Revisamos todos los renglones antes de tocar la base de datos
             foreach (var det in detallesDTO)
             {
                 if (det.Cantidad <= 0)
                 {
-                    // Usamos el nombre del producto si viene en el DTO, sino un texto genérico
                     string nombreProd = !string.IsNullOrWhiteSpace(det.NombreProducto) ? det.NombreProducto : "Seleccionado";
                     throw new CantidadInvalidaException(nombreProd, det.Cantidad);
                 }
             }
 
-            // 2. Mapeamos de DTO a Entidades de EF
             var solicitud = _mapper.Map<SolicitudDeTraspasoDeProducto>(solicitudDTO);
             var detalles = _mapper.Map<List<SolicitudDeTraspasoDeProductosDetalle>>(detallesDTO);
 
@@ -81,6 +88,9 @@ namespace Logic
             }
         }
 
+        /// <summary>
+        /// Aprueba una solicitud de traspaso pendiente, orquestando el movimiento real de stock entre el depósito origen y la sucursal destino de manera atómica.
+        /// </summary>
         public void AprobarTraspaso(Guid idSolicitud)
         {
             var solicitud = _unitOfWork.SolicitudesTraspaso.GetById(idSolicitud);
@@ -90,7 +100,6 @@ namespace Logic
             {
                 foreach (var item in detalles)
                 {
-                    // 1. Descontamos stock del Origen (Depósito)
                     var stockOrigen = _unitOfWork.Stocks.GetByProductoYSucursal(item.IdProducto, solicitud.IdSucursalOrigen);
                     if (stockOrigen != null)
                     {
@@ -98,7 +107,6 @@ namespace Logic
                         _unitOfWork.Stocks.Update(stockOrigen);
                     }
 
-                    // 2. Sumamos stock al Destino (Sucursal Venta)
                     var stockDestino = _unitOfWork.Stocks.GetByProductoYSucursal(item.IdProducto, solicitud.IdSucursalDestino);
                     if (stockDestino != null)
                     {
@@ -107,7 +115,6 @@ namespace Logic
                     }
                     else
                     {
-                        // Si la sucursal de destino nunca tuvo este producto, le creamos el registro
                         var nuevoStock = new StockPorSucursal
                         {
                             IdStockSucursal = Guid.NewGuid(),
@@ -121,11 +128,9 @@ namespace Logic
                     }
                 }
 
-                // 3. Cambiamos estado a Aprobado (2)
-                solicitud.IdEstadoStp = 2; 
+                solicitud.IdEstadoStp = 2;
                 _unitOfWork.SolicitudesTraspaso.Update(solicitud);
 
-                // 4. Commiteamos toda la transacción junta
                 _unitOfWork.Complete();
             }
             catch (StockInsuficienteException)
@@ -134,18 +139,27 @@ namespace Logic
             }
         }
 
+        /// <summary>
+        /// Recupera todas las solicitudes de traspaso emitidas por una sucursal origen determinada.
+        /// </summary>
         public List<SolicitudDeTraspasoDeProductoDTO> ObtenerTodasPorSucursal(Guid idSucursalOrigen)
         {
             var solicitudes = _unitOfWork.SolicitudesTraspaso.GetTodasPorSucursalOrigen(idSucursalOrigen);
             return _mapper.Map<List<SolicitudDeTraspasoDeProductoDTO>>(solicitudes);
         }
 
+        /// <summary>
+        /// Obtiene los detalles de los productos involucrados en una solicitud de traspaso específica.
+        /// </summary>
         public List<SolicitudDeTraspasoDeProductosDetalleDTO> ObtenerDetallesPorSolicitud(Guid idSolicitud)
         {
             var detalles = _unitOfWork.SolicitudesTraspasoDetalles.GetByIdSolicitud(idSolicitud);
             return _mapper.Map<List<SolicitudDeTraspasoDeProductosDetalleDTO>>(detalles);
         }
 
+        /// <summary>
+        /// Cancela una solicitud de traspaso en curso, actualizando su estado sin afectar el inventario.
+        /// </summary>
         public void RechazarTraspaso(Guid idSolicitud)
         {
             var solicitud = _unitOfWork.SolicitudesTraspaso.GetById(idSolicitud);
@@ -163,21 +177,21 @@ namespace Logic
             }
         }
 
+        /// <summary>
+        /// Ensambla el historial de movimientos de inventario (ingresos y egresos) aprobados para una sucursal específica.
+        /// </summary>
         public List<HistorialTraspasoDTO> ObtenerHistorialTraspasos(Guid idSucursalActual)
         {
-
-            // 1. Buscamos en tu repositorio (acordate de cambiar el "2" por tu estado de "Aprobado")
             var solicitudesBd = _unitOfWork.SolicitudesTraspaso.GetAll()
                 .Where(t => (t.IdSucursalOrigen == idSucursalActual || t.IdSucursalDestino == idSucursalActual)
                          && t.IdEstadoStp == 2)
-                .OrderByDescending(t => t.FechaStp) // Usamos tu campo FechaStp
+                .OrderByDescending(t => t.FechaStp)
                 .ToList();
 
             var listaHistorial = new List<HistorialTraspasoDTO>();
 
             foreach (var t in solicitudesBd)
             {
-                // 2. Usamos el nombre EXACTO de tu colección de detalles
                 foreach (var detalle in t.SolicitudDeTraspasoDeProductosDetalles)
                 {
                     var dto = new HistorialTraspasoDTO
@@ -190,16 +204,15 @@ namespace Logic
                         Cantidad = detalle.Cantidad
                     };
 
-                    // 3. Definimos si entró o salió mercadería
                     if (t.IdSucursalDestino == idSucursalActual)
                     {
                         dto.TipoMovimiento = "INGRESO";
-                        dto.SucursalInvolucrada = $"Desde: {t.IdSucursalOrigenNavigation?.NombreSucursal}";
+                        dto.SucursalInvolucrada = string.Format("Desde: {0}", t.IdSucursalOrigenNavigation?.NombreSucursal);
                     }
                     else
                     {
                         dto.TipoMovimiento = "EGRESO";
-                        dto.SucursalInvolucrada = $"Hacia: {t.IdSucursalDestinoNavigation?.NombreSucursal}";
+                        dto.SucursalInvolucrada = string.Format("Hacia: {0}", t.IdSucursalDestinoNavigation?.NombreSucursal);
                     }
 
                     listaHistorial.Add(dto);
@@ -208,6 +221,5 @@ namespace Logic
 
             return listaHistorial;
         }
-
     }
 }

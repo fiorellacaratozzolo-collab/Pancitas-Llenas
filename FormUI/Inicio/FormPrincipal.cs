@@ -17,40 +17,38 @@ namespace FormUI.Inicio
 {
     public partial class FormPrincipal : Form
     {
+        private Form? formularioActivo = null;
+
+        /// <summary>
+        /// Inicializa el formulario principal y sus componentes visuales.
+        /// </summary>
         public FormPrincipal()
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Recorre recursivamente los elementos del menú y evalúa los permisos del usuario activo para determinar la visibilidad de cada opción.
+        /// </summary>
         private void EvaluarPermisosMenu(ToolStripItemCollection items)
         {
             foreach (ToolStripItem item in items)
             {
                 if (item is ToolStripMenuItem menuItem)
                 {
-                    // 1. Leemos cómo se llama este botón en el diseñador visual (Ej: "MenuGestiónUsuario")
                     string nombrePermiso = menuItem.Name ?? string.Empty;
-
-                    // 2. POR DEFECTO ESTÁ PROHIBIDO (false)
                     bool tienePermiso = false;
 
-                    // Solo le damos permiso si el SessionManager confirma que lo tiene
                     if (SessionManager.Current.TienePermiso(nombrePermiso))
                     {
                         tienePermiso = true;
                     }
 
-                    // Aplicamos la visibilidad al botón
                     menuItem.Visible = tienePermiso;
 
-                    // 3. RECURSIVIDAD: Revisamos los sub-menús
                     if (menuItem.HasDropDownItems)
                     {
-                        // Evaluamos a los hijos primero
                         EvaluarPermisosMenu(menuItem.DropDownItems);
 
-                        // LÓGICA DE PADRES: Si el menú principal (Ej: "Archivo") no tiene un permiso propio,
-                        // pero adentro tiene un hijo visible (Ej: "Ventas"), entonces mostramos al padre.
                         bool algunHijoVisible = false;
                         foreach (ToolStripItem sub in menuItem.DropDownItems)
                         {
@@ -61,7 +59,6 @@ namespace FormUI.Inicio
                             }
                         }
 
-                        // Si algún hijo es visible, el padre DEBE ser visible para poder llegar al hijo
                         if (algunHijoVisible)
                         {
                             menuItem.Visible = true;
@@ -70,12 +67,13 @@ namespace FormUI.Inicio
                 }
             }
         }
-
+        /// <summary>
+        /// Captura el clic en las opciones del menú, obtiene el nombre del formulario desde el Tag y lo instancia dinámicamente mediante reflexión.
+        /// </summary>
         private void MenuPatente_Click(object sender, EventArgs e)
         {
             if (sender is not ToolStripMenuItem itemClickeado) return;
 
-            // Para abrir el form, seguimos usando el TAG
             string nombreForm = itemClickeado.Tag?.ToString() ?? "";
 
             if (string.IsNullOrEmpty(nombreForm))
@@ -97,21 +95,17 @@ namespace FormUI.Inicio
                 }
                 else
                 {
-                    MessageBox.Show($"No se encontró la clase '{nombreForm}'.".Traducir(), "Error".Traducir());
+                    MessageBox.Show(string.Format("No se encontró la clase '{0}'.".Traducir(), nombreForm), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al abrir: {ex.Message}".Traducir());
+                MessageBox.Show(string.Format("Error al abrir: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-        }
-        private void toolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-        }
+        /// <summary>
+        /// Evento de carga inicial que configura el entorno, valida accesos, registra el inicio de sesión en la bitácora y traduce la interfaz principal.
+        /// </summary>
         private void FormPrincipal_Load(object sender, EventArgs e)
         {
             CargarComboIdiomas();
@@ -119,24 +113,18 @@ namespace FormUI.Inicio
 
             if (usuario != null)
             {
-                // 1. Damos la bienvenida
-                this.Text = $"PetShop - Bienvenido {usuario.Nombre}".Traducir();
+                this.Text = string.Format("PetShop - Bienvenido {0}".Traducir(), usuario.Nombre);
 
-                // --- INICIO: CARGAR DATOS DE LA SUCURSAL ---
                 if (SessionManager.Current.IdSucursalActual != null)
                 {
                     try
                     {
-                        // Instanciamos tu BLL de sucursales (Ajusta el nombre si se llama distinto)
                         Logic.SucursalLogic sucursalBll = new Logic.SucursalLogic();
-
-                        // Buscamos el objeto completo en la base de datos
                         var sucursalActual = sucursalBll.GetById(SessionManager.Current.IdSucursalActual.Value);
 
                         if (sucursalActual != null)
                         {
-                            // Mostramos el nombre y la dirección
-                            lblInfoSucursal.Text = $"📍 Sucursal: {sucursalActual.NombreSucursal} | 🏠 Dir: {sucursalActual.Direccion}".Traducir();
+                            lblInfoSucursal.Text = string.Format("📍 Sucursal: {0} | 🏠 Dir: {1}".Traducir(), sucursalActual.NombreSucursal, sucursalActual.Direccion);
                         }
                         else
                         {
@@ -148,20 +136,22 @@ namespace FormUI.Inicio
                         lblInfoSucursal.Text = "📍 Error al cargar sucursal".Traducir();
                     }
                 }
+
                 EvaluarPermisosMenu(menuStrip.Items);
+
                 Services.Bll.BitácoraBll bitacora = new Services.Bll.BitácoraBll();
                 bitacora.RegistrarLog(
-                    mensaje: $"El usuario {usuario.Nombre} ingresó al sistema.".Traducir(),
+                    mensaje: string.Format("El usuario {0} ingresó al sistema.".Traducir(), usuario.Nombre),
                     criticidad: Services.DomainModel.Logging.Criticidad.Info,
                     idUsuario: usuario.IdUsuario);
             }
             TraductorUI.TraducirFormulario(this);
         }
-
-        private Form? formularioActivo = null;
+        /// <summary>
+        /// Cierra cualquier ventana hija activa y carga un nuevo formulario embebido, asegurando su centrado absoluto dentro del panel contenedor.
+        /// </summary>
         private void AbrirFormularioCentrado(Form formularioHijo)
         {
-            // 1. Si ya hay una pantalla abierta, la cerramos para no encimar cosas
             if (formularioActivo != null)
             {
                 formularioActivo.Close();
@@ -169,73 +159,62 @@ namespace FormUI.Inicio
 
             formularioActivo = formularioHijo;
 
-            // 2. Le quitamos el comportamiento de "ventana independiente"
             formularioHijo.TopLevel = false;
-
-            // 3. Le quitamos los bordes de Windows (la X, maximizar, minimizar)
             formularioHijo.FormBorderStyle = FormBorderStyle.None;
-
-            // 4. Lo agregamos al panel
             panelContenedor.Controls.Add(formularioHijo);
 
-            // 5. ¡LA MAGIA DEL CENTRADO!
-            // Calculamos el centro exacto del panel y ahí ponemos el formulario
             formularioHijo.Location = new Point(
                 (panelContenedor.Width - formularioHijo.Width) / 2,
                 (panelContenedor.Height - formularioHijo.Height) / 2
             );
 
-            // Esto asegura que si maximizas el FormPrincipal, el form hijo se quede en el medio
             formularioHijo.Anchor = AnchorStyles.None;
-
-            // 6. Lo mostramos al frente
             formularioHijo.BringToFront();
             formularioHijo.Show();
         }
-
+        /// <summary>
+        /// Consulta los idiomas instalados en el sistema y selecciona en el menú desplegable el idioma preferido del usuario activo.
+        /// </summary>
         private void CargarComboIdiomas()
         {
             try
             {
-                // 1. Obtenemos la lista de culturas desde los archivos físicos
                 var idiomas = Services.Bll.IdiomaService.ObtenerIdiomas();
 
                 cmbIdioma.DataSource = idiomas;
-                cmbIdioma.DisplayMember = "DisplayName"; // Muestra "español (Argentina)"
-                cmbIdioma.ValueMember = "Name";          // El valor interno será "es-AR"
+                cmbIdioma.DisplayMember = "DisplayName";
+                cmbIdioma.ValueMember = "Name";
 
-                // 2. Seleccionamos el idioma del usuario, protegiéndonos de los nulos
                 if (SessionManager.Current.UsuarioLogueado != null)
                 {
                     string idiomaGuardado = SessionManager.Current.UsuarioLogueado.IdiomaPredeterminado;
 
-                    // Verificamos que no sea nulo ni esté vacío
                     if (!string.IsNullOrEmpty(idiomaGuardado))
                     {
                         cmbIdioma.SelectedValue = idiomaGuardado;
                     }
                     else
                     {
-                        // Si está vacío (usuario nuevo o sin configurar), forzamos español en el combo
                         cmbIdioma.SelectedValue = "es-AR";
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar idiomas: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar idiomas: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Registra la salida en la bitácora de auditoría, destruye la sesión activa y reinicia la aplicación para volver a la pantalla de login.
+        /// </summary>
         private void button1_Click(object sender, EventArgs e)
         {
-            // Registramos en la bitácora que el usuario cerró sesión
             var usuario = SessionManager.Current.UsuarioLogueado;
             if (usuario != null)
             {
                 Services.Bll.BitácoraBll bitacora = new Services.Bll.BitácoraBll();
                 bitacora.RegistrarLog(
-                    mensaje: $"El usuario {usuario.Nombre} cerró sesión manualmente.".Traducir(),
+                    mensaje: string.Format("El usuario {0} cerró sesión manualmente.".Traducir(), usuario.Nombre),
                     criticidad: Services.DomainModel.Logging.Criticidad.Info,
                     idUsuario: usuario.IdUsuario
                 );
@@ -244,30 +223,25 @@ namespace FormUI.Inicio
             SessionManager.Current.Logout();
             Application.Restart();
         }
-
+        /// <summary>
+        /// Detecta el cambio manual de idioma, persiste la nueva preferencia en la base de datos y solicita al usuario reiniciar la sesión.
+        /// </summary>
         private void cmbIdioma_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            // Si por algún motivo se dispara en vacío, cortamos acá
             if (cmbIdioma.SelectedValue == null) return;
 
             string idiomaSeleccionado = cmbIdioma.SelectedValue?.ToString() ?? string.Empty;
             var usuarioActual = SessionManager.Current.UsuarioLogueado;
 
-            // Solo hacemos el viaje a la BD si realmente eligió un idioma distinto al que ya tiene
             if (usuarioActual != null && usuarioActual.IdiomaPredeterminado != idiomaSeleccionado)
             {
                 try
                 {
-                    // 1. Instanciamos la BLL y guardamos en la Base de Datos
                     Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
-
-                    // Pasamos el ID del usuario logueado y la nueva cultura ("es-AR" o "en-US")
                     usuarioBll.ActualizarIdiomaPredeterminado(usuarioActual.IdUsuario, idiomaSeleccionado);
 
-                    // 2. Actualizamos la memoria de la sesión actual para que no quede desfasada
                     usuarioActual.IdiomaPredeterminado = idiomaSeleccionado;
 
-                    // 3. Le avisamos al usuario que el cambio fue exitoso
                     MessageBox.Show(
                         "El idioma predeterminado ha sido actualizado. Por favor, reinicie sesión para aplicar los cambios en todo el sistema.".Traducir(),
                         "Configuración de Idioma".Traducir(),
@@ -276,7 +250,7 @@ namespace FormUI.Inicio
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al guardar la preferencia en la base de datos: {ex.Message}".Traducir(), "Error de Sistema".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format("Error al guardar la preferencia en la base de datos: {0}".Traducir(), ex.Message), "Error de Sistema".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

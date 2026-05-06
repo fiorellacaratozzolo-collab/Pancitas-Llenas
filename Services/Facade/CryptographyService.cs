@@ -8,8 +8,14 @@ using System.Threading.Tasks;
 
 namespace Services.Facade
 {
+    /// <summary>
+    /// Servicio estático utilitario que provee métodos para la generación de hashes y operaciones de cifrado/descifrado simétrico.
+    /// </summary>
     public static class CryptographyService
     {
+        /// <summary>
+        /// Genera un hash MD5 a partir de una cadena de texto plano. Retorna una cadena vacía si el texto original es nulo o vacío.
+        /// </summary>
         public static string HashMd5(string textPlain)
         {
             if (string.IsNullOrEmpty(textPlain)) return "";
@@ -29,6 +35,9 @@ namespace Services.Facade
 
         private static string encryptionKey = "su_propia_clave";
 
+        /// <summary>
+        /// Cifra una cadena de texto plano utilizando el algoritmo AES y una clave simétrica interna, devolviendo el resultado en formato Base64.
+        /// </summary>
         public static string Encrypt(string clearText)
         {
             byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
@@ -50,6 +59,9 @@ namespace Services.Facade
             return clearText;
         }
 
+        /// <summary>
+        /// Descifra una cadena de texto previamente cifrada en Base64 utilizando el algoritmo AES, restaurándola a su formato original en texto plano.
+        /// </summary>
         public static string Decrypt(string cipherText)
         {
             cipherText = cipherText.Replace(" ", "+");

@@ -12,8 +12,14 @@ using Services.Dal.Interfaces;
 
 namespace Services.Dal.Implementations
 {
+    /// <summary>
+    /// Repositorio de unión encargado de recuperar las familias (roles) directamente asignadas a un usuario específico.
+    /// </summary>
     internal class UsuarioFamiliaRepository : IJoinRepository<Usuario>
     {
+        /// <summary>
+        /// Obtiene una lista de componentes tipo Familia asociados al usuario proporcionado.
+        /// </summary>
         public IList<Component> GetByObject(Usuario obj)
         {
             List<Component> familias = new List<Component>();

@@ -10,16 +10,24 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Implementations.SqlServer
 {
-    public class ProveedorRepository: IProveedorRepository
+    /// <summary>
+    /// Implementación concreta del repositorio de proveedores utilizando Entity Framework.
+    /// </summary>
+    public class ProveedorRepository : IProveedorRepository
     {
-
         private readonly PetShopDbContext _context;
 
+        /// <summary>
+        /// Inicializa una nueva instancia del repositorio.
+        /// </summary>
         public ProveedorRepository(PetShopDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Inserta un nuevo proveedor en la base de datos previa validación de nulidad.
+        /// </summary>
         public Guid Create(Proveedor proveedor)
         {
             if (proveedor == null)
@@ -29,44 +37,44 @@ namespace DataAccess.Implementations.SqlServer
 
             proveedor.IdProveedor = Guid.NewGuid();
             _context.Proveedors.Add(proveedor);
-            
-            // La persistencia se hará a través del UoW.Complete()
+
             return proveedor.IdProveedor;
         }
 
+        /// <summary>
+        /// Obtiene el catálogo materializado de todos los proveedores registrados.
+        /// </summary>
         public List<Proveedor> GetAll()
         {
-            // Usa ToList() para ejecutar la consulta de Entity Framework
             return _context.Proveedors.ToList();
         }
 
+        /// <summary>
+        /// Elimina físicamente el registro de un proveedor de la base de datos.
+        /// </summary>
         public void Delete(Guid id)
         {
             var proveedor = _context.Proveedors.Find(id);
             if (proveedor != null)
             {
                 _context.Proveedors.Remove(proveedor);
-
-                // LÓGICA DE BORRADO LÓGICO (Ideal):
-                // cliente.Activo = false; // Se necesita agregar 'public bool Activo { get; set; }' al modelo Cliente
-                // _context.Entry(cliente).State = EntityState.Modified; 
-
-                _context.SaveChanges();
             }
         }
 
+        /// <summary>
+        /// Busca la primera coincidencia de un proveedor en base a su número de CUIT.
+        /// </summary>
         public Proveedor? GetByCuit(int cuit)
         {
-            // Usamos FirstOrDefault() que devolverá la primera coincidencia o null.
             return _context.Proveedors.FirstOrDefault(p => p.Cuit == cuit);
         }
 
+        /// <summary>
+        /// Recupera un proveedor específico por su clave primaria.
+        /// </summary>
         public Proveedor? GetById(Guid id)
         {
-            // DbSet<Proveedor>.Find(id) busca por clave primaria y devuelve null si no existe.
             return _context.Proveedors.Find(id);
         }
-
     }
-
 }

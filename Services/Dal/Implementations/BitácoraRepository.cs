@@ -10,39 +10,42 @@ using System.Threading.Tasks;
 
 namespace Services.Dal.Implementations
 {
+    /// <summary>
+    /// Repositorio encargado de gestionar la persistencia y lectura de los eventos de auditoría en la base de datos relacional.
+    /// </summary>
     public class BitácoraRepository
     {
+        /// <summary>
+        /// Registra un nuevo evento en la bitácora gestionando correctamente la asociación opcional con un usuario.
+        /// </summary>
         public void Insertar(Bitácora log)
         {
-            // No insertamos la Fecha ni el IdBitacora porque SQL lo hace solo (IDENTITY y GETDATE)
             string query = @"INSERT INTO Bitacora (IdUsuario, Mensaje, Criticidad) 
                              VALUES (@IdUsuario, @Mensaje, @Criticidad)";
 
             SqlParameter[] parametros = new SqlParameter[]
             {
-                // Si el IdUsuario viene vacío (null), mandamos DBNull a SQL
                 new SqlParameter("@IdUsuario", log.IdUsuario.HasValue ? (object)log.IdUsuario.Value : DBNull.Value),
                 new SqlParameter("@Mensaje", log.Mensaje),
-                // Guardamos la criticidad como texto (ej: "Info", "Error")
                 new SqlParameter("@Criticidad", log.Criticidad.ToString())
             };
 
-            // Llamamos a tu SqlHelper mágico
             SqlHelper.ExecuteNonQuery(query, CommandType.Text, parametros);
         }
 
+        /// <summary>
+        /// Recupera el historial completo de auditoría del sistema ordenado descendentemente por fecha e incluye los datos del usuario responsable si existe.
+        /// </summary>
         public List<Bitácora> ListarTodos()
         {
             List<Bitácora> lista = new List<Bitácora>();
 
-            // Hacemos un LEFT JOIN por si hay logs del sistema que no tienen usuario
             string query = @"SELECT b.IdBitacora, b.Fecha, b.IdUsuario, u.Nombre AS NombreUsuario, b.Mensaje, b.Criticidad 
-                     FROM Bitacora b
-                     LEFT JOIN Usuario u ON b.IdUsuario = u.IdUsuario
-                     ORDER BY b.Fecha DESC"; //--Ordenamos para ver lo más reciente primero
+                             FROM Bitacora b
+                             LEFT JOIN Usuario u ON b.IdUsuario = u.IdUsuario
+                             ORDER BY b.Fecha DESC";
 
-    // Asumiendo que tu SqlHelper tiene un método ExecuteReader que devuelve un SqlDataReader
-    using (SqlDataReader reader = SqlHelper.ExecuteReader(query, CommandType.Text))
+            using (SqlDataReader reader = SqlHelper.ExecuteReader(query, CommandType.Text))
             {
                 while (reader.Read())
                 {
@@ -51,10 +54,8 @@ namespace Services.Dal.Implementations
                     log.Fecha = Convert.ToDateTime(reader["Fecha"]);
                     log.Mensaje = reader["Mensaje"].ToString();
 
-                    // Parseamos el Enum de criticidad
                     log.Criticidad = (Criticidad)Enum.Parse(typeof(Criticidad), reader["Criticidad"].ToString());
 
-                    // Validamos si el IdUsuario y el Nombre vienen nulos desde SQL
                     if (reader["IdUsuario"] != DBNull.Value)
                     {
                         log.IdUsuario = Guid.Parse(reader["IdUsuario"].ToString());
@@ -62,7 +63,7 @@ namespace Services.Dal.Implementations
                     }
                     else
                     {
-                        log.NombreUsuario = "Sistema"; // Si no hay usuario, fue el sistema
+                        log.NombreUsuario = "Sistema";
                     }
 
                     lista.Add(log);
@@ -73,4 +74,3 @@ namespace Services.Dal.Implementations
         }
     }
 }
-

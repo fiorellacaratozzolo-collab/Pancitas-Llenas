@@ -17,13 +17,19 @@ namespace FormUI.FormSucursal
     public partial class FormGestiónSucursal : Form
     {
         private readonly SucursalService _sucursalService = new SucursalService();
+
+        /// <summary>
+        /// Inicializa el formulario, instancia el servicio necesario y carga los datos iniciales de las grillas y combos.
+        /// </summary>
         public FormGestiónSucursal()
         {
             InitializeComponent();
             CargarDatosSucursales();
             CargarDireccionesEnComboBox();
         }
-
+        /// <summary>
+        /// Consulta la base de datos o recibe una lista filtrada para poblar la grilla principal de sucursales.
+        /// </summary>
         private void CargarDatosSucursales(List<SucursalDTO>? sucursales = null)
         {
             try
@@ -37,10 +43,12 @@ namespace FormUI.FormSucursal
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar las sucursales: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar las sucursales: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Oculta columnas técnicas e IDs de la grilla de sucursales y aplica traducciones a los encabezados visibles.
+        /// </summary>
         private void ConfigurarColumnasDataGridView()
         {
             dgvSucursal.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -55,54 +63,47 @@ namespace FormUI.FormSucursal
             if (dgvSucursal.Columns.Contains("StockPorSucursals"))
                 dgvSucursal.Columns["StockPorSucursals"].Visible = false;
             if (dgvSucursal.Columns.Contains("NombreSucursal"))
-                dgvSucursal.Columns["NombreSucursal"].HeaderText = "Nombre de Sucursal";
+                dgvSucursal.Columns["NombreSucursal"].HeaderText = "Nombre de Sucursal".Traducir();
         }
-
+        /// <summary>
+        /// Obtiene todas las sucursales y formatea su información para poblar el menú desplegable de selección rápida.
+        /// </summary>
         private void CargarDireccionesEnComboBox()
         {
             try
             {
-                // 1. Obtener todas las sucursales
                 var sucursales = _sucursalService.GetAllSucursales();
 
-                // 2. Crear una lista o DataTable para vincular al ComboBox
-                // Usamos la lista de Sucursales directamente o un tipo anónimo si solo queremos Nombre/Direccion.
-
-                // Creamos una lista de objetos que solo contengan los datos relevantes
                 var dataSource = sucursales
                     .Select(s => new {
                         IdSucursal = s.IdSucursal,
-                        DireccionCompleta = s.Direccion + " - " + s.NombreSucursal // Formato amigable para el usuario
+                        DireccionCompleta = s.Direccion + " - " + s.NombreSucursal
                     })
                     .ToList();
 
-                // Agregar una opción para "Mostrar Todas"
                 dataSource.Insert(0, new { IdSucursal = Guid.Empty, DireccionCompleta = "--- Mostrar Todas las Sucursales ---".Traducir() });
 
                 cmbSeleccionSucursal.DataSource = dataSource;
-                cmbSeleccionSucursal.DisplayMember = "DireccionCompleta"; // Lo que se ve
-                cmbSeleccionSucursal.ValueMember = "IdSucursal";         // El valor asociado
-
+                cmbSeleccionSucursal.DisplayMember = "DireccionCompleta";
+                cmbSeleccionSucursal.ValueMember = "IdSucursal";
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar el selector de direcciones: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar el selector de direcciones: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void FormGestiónSucursal_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        /// <summary>
+        /// Evento de carga del formulario que aplica las traducciones de interfaz según el idioma del usuario.
+        /// </summary>
         private void FormGestiónSucursal_Load_1(object sender, EventArgs e)
         {
             TraductorUI.TraducirFormulario(this);
         }
-
+        /// <summary>
+        /// Valida los datos ingresados en el formulario y registra una nueva sucursal en el sistema.
+        /// </summary>
         private void btnAltaSucursal_Click(object sender, EventArgs e)
         {
-            // 1. Validación y obtención de datos
             if (string.IsNullOrWhiteSpace(txtbNombreSucursal.Text) || string.IsNullOrWhiteSpace(txtbDireccionSucursal.Text))
             {
                 MessageBox.Show("Nombre y Dirección son obligatorios.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -111,14 +112,12 @@ namespace FormUI.FormSucursal
 
             if (!int.TryParse(txtbTelefonoSucursal.Text, out int telefonoValue))
             {
-                // Si el teléfono es opcional (int?), puedes omitir esta validación si el campo está vacío.
                 MessageBox.Show("Teléfono debe ser un número válido.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            // Determinar el IdTipoSucursal basado en los RadioButtons
             int idTipoSucursal = 0;
-            // ASUMIMOS: 1 = Venta, 2 = Deposito-Venta
+
             if (rbtnVenta.Checked)
             {
                 idTipoSucursal = 1;
@@ -133,7 +132,6 @@ namespace FormUI.FormSucursal
                 return;
             }
 
-            // 2. Creación del objeto
             var nuevaSucursalDTO = new SucursalDTO
             {
                 NombreSucursal = txtbNombreSucursal.Text.Trim(),
@@ -142,27 +140,25 @@ namespace FormUI.FormSucursal
                 IdTipoSucursal = idTipoSucursal
             };
 
-            // 3. Llamada al servicio
             try
             {
                 _sucursalService.CreateSucursal(nuevaSucursalDTO);
 
                 MessageBox.Show("Sucursal creada exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LimpiarControles();
-
-                // Recargar la lista para mostrar el nuevo registro
                 CargarDatosSucursales();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al crear la sucursal: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al crear la sucursal: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-
+        /// <summary>
+        /// Aplica y guarda en la base de datos las modificaciones realizadas a la sucursal actualmente seleccionada en la grilla.
+        /// </summary>
         private void btnModificar_Click(object sender, EventArgs e)
         {
-            if (dgvSucursal.CurrentRow != null && dgvSucursal.CurrentRow.DataBoundItem is SucursalDTO sucursalEditada)
+            if (dgvSucursal.CurrentRow != null && !dgvSucursal.CurrentRow.IsNewRow && dgvSucursal.CurrentRow.DataBoundItem is SucursalDTO sucursalEditada)
             {
                 try
                 {
@@ -173,7 +169,7 @@ namespace FormUI.FormSucursal
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al guardar los cambios: {ex.Message}".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format("Error al guardar los cambios: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
@@ -181,15 +177,17 @@ namespace FormUI.FormSucursal
                 MessageBox.Show("Por favor, seleccione la sucursal que desea modificar de la lista.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
-
+        /// <summary>
+        /// Solicita confirmación y ejecuta la baja lógica de la sucursal seleccionada en el sistema.
+        /// </summary>
         private void btnDeshabilitar_Click(object sender, EventArgs e)
         {
-            if (dgvSucursal.CurrentRow != null)
+            if (dgvSucursal.CurrentRow != null && !dgvSucursal.CurrentRow.IsNewRow)
             {
                 Guid sucursalId = (Guid)(dgvSucursal.CurrentRow.Cells["IdSucursal"].Value ?? Guid.Empty);
-                string nombre = dgvSucursal.CurrentRow.Cells["NombreSucursal"].Value?.ToString() ?? "[Desconocido]";
+                string nombre = dgvSucursal.CurrentRow.Cells["NombreSucursal"].Value?.ToString() ?? "[Desconocido]".Traducir();
 
-                if (sucursalId == Guid.Empty || MessageBox.Show($"¿Desea deshabilitar {nombre}?".Traducir(), "Confirmar".Traducir(), MessageBoxButtons.YesNo) == DialogResult.No)
+                if (sucursalId == Guid.Empty || MessageBox.Show(string.Format("¿Desea deshabilitar {0}?".Traducir(), nombre), "Confirmar".Traducir(), MessageBoxButtons.YesNo) == DialogResult.No)
                     return;
 
                 try
@@ -200,58 +198,54 @@ namespace FormUI.FormSucursal
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error: {ex.Message}".Traducir(), "Error".Traducir());
+                    MessageBox.Show(string.Format("Error: {0}".Traducir(), ex.Message), "Error".Traducir());
                 }
             }
         }
-
+        /// <summary>
+        /// Restablece los campos de texto y botones de opción del formulario a su estado original vacío.
+        /// </summary>
         private void LimpiarControles()
         {
-            // Campos de Sucursal
             txtbNombreSucursal.Text = string.Empty;
             txtbDireccionSucursal.Text = string.Empty;
             txtbTelefonoSucursal.Text = string.Empty;
 
-            // Controles de Tipo (RadioButton)
             rbtnVenta.Checked = false;
             rbtnDepositoVenta.Checked = false;
 
-            // Foco en el primer campo
             txtbNombreSucursal.Focus();
         }
-
+        /// <summary>
+        /// Captura la selección del menú desplegable y filtra la grilla para mostrar la información de una sucursal específica o todas.
+        /// </summary>
         private void cmbSeleccionSucursal_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Obtener el ID de la sucursal seleccionada
             if (cmbSeleccionSucursal.SelectedValue is Guid idSucursal)
             {
                 try
                 {
                     if (idSucursal == Guid.Empty)
                     {
-                        // Opción "Mostrar Todas" seleccionada
                         CargarDatosSucursales(_sucursalService.GetAllSucursales());
                     }
                     else
                     {
-                        // Opción de una Sucursal específica: cargamos solo esa sucursal
                         SucursalDTO? sucursalUnicaDTO = _sucursalService.GetById(idSucursal);
 
                         if (sucursalUnicaDTO != null)
                         {
-                            // Convertimos la sucursal única en una lista para el DataGridView
                             CargarDatosSucursales(new List<SucursalDTO> { sucursalUnicaDTO });
                         }
                         else
                         {
-                            // Si por alguna razón el ID es válido pero el objeto no existe.
                             CargarDatosSucursales(new List<SucursalDTO>());
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Error al filtrar por dirección: {ex.Message}".Traducir(), "Error de Filtrado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format("Error al filtrar por dirección: {0}".Traducir(), ex.Message), "Error de Filtrado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

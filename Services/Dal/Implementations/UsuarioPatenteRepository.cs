@@ -12,8 +12,14 @@ using Services.Dal.Interfaces;
 
 namespace Services.Dal.Implementations
 {
+    /// <summary>
+    /// Repositorio de unión encargado de recuperar las patentes (permisos individuales) directamente asignadas a un usuario específico.
+    /// </summary>
     internal class UsuarioPatenteRepository : IJoinRepository<Usuario>
     {
+        /// <summary>
+        /// Obtiene una lista de componentes tipo Patente asociados al usuario proporcionado.
+        /// </summary>
         public IList<Component> GetByObject(Usuario obj)
         {
             List<Component> patentes = new List<Component>();

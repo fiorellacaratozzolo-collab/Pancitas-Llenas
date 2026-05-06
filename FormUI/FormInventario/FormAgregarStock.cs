@@ -22,28 +22,34 @@ namespace FormUI.FormInventario
         private readonly InventarioService _inventarioService = new InventarioService();
         private readonly Guid ID_SUCURSAL_ACTUAL;
 
+        /// <summary>
+        /// Inicializa el formulario, valida la sesión activa de la sucursal y carga los datos iniciales.
+        /// </summary>
         public FormAgregarStock()
         {
-            // Validamos que haya una sesión activa por seguridad
             if (SessionManager.Current.IdSucursalActual == null)
             {
                 MessageBox.Show("Error crítico: No se detectó una sucursal logueada.".Traducir(), "Error de Sesión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 this.Enabled = false;
                 return;
             }
+
             ID_SUCURSAL_ACTUAL = SessionManager.Current.IdSucursalActual.Value;
             InitializeComponent();
             CargarProveedores();
             CargarProductosEnDGV(null);
         }
-
+        /// <summary>
+        /// Evento de carga inicial que previene la autogeneración de columnas en la grilla y aplica las traducciones de UI.
+        /// </summary>
         private void FormAgregarStock_Load(object sender, EventArgs e)
         {
-            // Asegurar que el DGV no genere columnas automáticas
             dgvAgregarStock.AutoGenerateColumns = false;
             TraductorUI.TraducirFormulario(this);
         }
-
+        /// <summary>
+        /// Define manualmente la estructura, comportamiento, formato y traducciones de las columnas de la grilla de stock.
+        /// </summary>
         private void ConfigurarDGV()
         {
             dgvAgregarStock.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -52,87 +58,81 @@ namespace FormUI.FormInventario
             if (dgvAgregarStock.Columns.Contains("IdProducto"))
                 dgvAgregarStock.Columns["IdProducto"].Visible = false;
 
-            // === COLUMNA: IdProducto (oculta) ===
             var colId = new DataGridViewTextBoxColumn
             {
                 Name = "IdProducto",
-                HeaderText = "IdProducto",
-                DataPropertyName = "IdProducto",  // <-- MAPEAR
+                HeaderText = "IdProducto".Traducir(),
+                DataPropertyName = "IdProducto",
                 Visible = false,
                 ReadOnly = true
             };
             dgvAgregarStock.Columns.Add(colId);
 
-            // === COLUMNA: Producto ===
             var colProducto = new DataGridViewTextBoxColumn
             {
                 Name = "NombreProducto",
-                HeaderText = "Producto",
-                DataPropertyName = "NombreProducto",  // <-- MAPEAR
+                HeaderText = "Producto".Traducir(),
+                DataPropertyName = "NombreProducto",
                 ReadOnly = true
             };
             dgvAgregarStock.Columns.Add(colProducto);
 
-            // === COLUMNA: Peso Neto ===
             dgvAgregarStock.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "PesoNeto",
-                HeaderText = "Peso Neto",
+                HeaderText = "Peso Neto".Traducir(),
                 DataPropertyName = "PesoNeto",
                 ReadOnly = true,
                 DefaultCellStyle = {
-            Format = "N2",  // 2 decimales
-            Alignment = DataGridViewContentAlignment.MiddleRight
-        },
+                    Format = "N2",
+                    Alignment = DataGridViewContentAlignment.MiddleRight
+                },
                 Width = 90
             });
-            // === COLUMNA: Marca ===
+
             var colMarca = new DataGridViewTextBoxColumn
             {
                 Name = "Marca",
-                HeaderText = "Marca",
-                DataPropertyName = "Marca",  // <-- MAPEAR a la propiedad que vamos a enviar
+                HeaderText = "Marca".Traducir(),
+                DataPropertyName = "Marca",
                 ReadOnly = true
             };
             dgvAgregarStock.Columns.Add(colMarca);
-            // === COLUMNA: Proveedor ===
+
             var colProveedor = new DataGridViewTextBoxColumn
             {
                 Name = "NombreProveedor",
-                HeaderText = "Proveedor",
+                HeaderText = "Proveedor".Traducir(),
                 DataPropertyName = "NombreProveedor",
                 ReadOnly = true
             };
             dgvAgregarStock.Columns.Add(colProveedor);
 
-            // === COLUMNA: Stock Actual ===
             var colActual = new DataGridViewTextBoxColumn
             {
                 Name = "StockActual",
-                HeaderText = "Stock Actual",
-                DataPropertyName = "StockActual",  
+                HeaderText = "Stock Actual".Traducir(),
+                DataPropertyName = "StockActual",
                 ReadOnly = true,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
             };
             dgvAgregarStock.Columns.Add(colActual);
 
-            // === COLUMNA: Stock Deseado ===
             var colDeseado = new DataGridViewTextBoxColumn
             {
                 Name = "StockDeseado",
-                HeaderText = "Stock Deseado",
-                DataPropertyName = "StockDeseado", 
+                HeaderText = "Stock Deseado".Traducir(),
+                DataPropertyName = "StockDeseado",
                 ReadOnly = true,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
             };
             dgvAgregarStock.Columns.Add(colDeseado);
 
-            // === COLUMNA: Stock a Añadir (editable) ===
             var colAgregar = new DataGridViewTextBoxColumn
             {
                 Name = "StockAAgregar",
-                HeaderText = "Stock a Añadir",
-                DataPropertyName = "StockAAgregar", 
+                HeaderText = "Stock a Añadir".Traducir(),
+                DataPropertyName = "StockAAgregar",
                 ReadOnly = false,
                 DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight }
             };
@@ -141,7 +141,9 @@ namespace FormUI.FormInventario
             dgvAgregarStock.EditMode = DataGridViewEditMode.EditOnEnter;
             dgvAgregarStock.ReadOnly = false;
         }
-
+        /// <summary>
+        /// Obtiene la lista de proveedores registrados y los asigna al menú desplegable para su uso como filtro.
+        /// </summary>
         private void CargarProveedores()
         {
             try
@@ -158,7 +160,9 @@ namespace FormUI.FormInventario
                 MessageBox.Show("Error al cargar proveedores: ".Traducir() + ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Consulta la base de datos para obtener los productos y sus existencias actuales, aplicando opcionalmente un filtro por proveedor.
+        /// </summary>
         private void CargarProductosEnDGV(Guid? idProveedor)
         {
             try
@@ -190,7 +194,6 @@ namespace FormUI.FormInventario
                 ConfigurarDGV();
                 dgvAgregarStock.DataSource = dataSource;
 
-                //Resaltar productos con stock bajo
                 ResaltarStockBajo();
             }
             catch (Exception ex)
@@ -198,7 +201,9 @@ namespace FormUI.FormInventario
                 MessageBox.Show("Error al cargar productos: ".Traducir() + ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Evalúa fila por fila y aplica un formato visual de alerta a los productos cuyo stock actual es menor al deseado.
+        /// </summary>
         private void ResaltarStockBajo()
         {
             foreach (DataGridViewRow row in dgvAgregarStock.Rows)
@@ -220,7 +225,9 @@ namespace FormUI.FormInventario
                 }
             }
         }
-
+        /// <summary>
+        /// Recolecta las cantidades a añadir de la grilla, solicita confirmación y procesa la actualización masiva de stock en la base de datos.
+        /// </summary>
         private void btnActualizar_Click(object sender, EventArgs e)
         {
             int cambiosPendientes = 0;
@@ -240,14 +247,14 @@ namespace FormUI.FormInventario
                 return;
             }
 
-            // Confirmación antes de guardar
             var confirmacion = MessageBox.Show(
-                $"Se actualizarán {cambiosPendientes} producto(s). ¿Continuar?".Traducir(),
+                string.Format("Se actualizarán {0} producto(s). ¿Continuar?".Traducir(), cambiosPendientes),
                 "Confirmar actualización".Traducir(),
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
             if (confirmacion != DialogResult.Yes) return;
+
             Guid? idProv = cmbProveedor.SelectedValue is Guid id && id != Guid.Empty ? id : (Guid?)null;
 
             int cambiosAplicados = 0;
@@ -282,18 +289,19 @@ namespace FormUI.FormInventario
                 }
             }
 
-            // Reporte detallado de resultados
-            string mensaje = $"Stock actualizado.\n".Traducir() +
-                            $"Cambios aplicados: {cambiosAplicados}\n".Traducir() +
-                            (errores > 0 ? $"Errores: {errores}\n".Traducir() : "") +
-                            "La tabla se ha actualizado.".Traducir();
+            string mensaje = "Stock actualizado.\n".Traducir() +
+                             string.Format("Cambios aplicados: {0}\n".Traducir(), cambiosAplicados) +
+                             (errores > 0 ? string.Format("Errores: {0}\n".Traducir(), errores) : "") +
+                             "La tabla se ha actualizado.".Traducir();
 
             MessageBox.Show(mensaje, "Resultado".Traducir(), MessageBoxButtons.OK,
                 errores > 0 ? MessageBoxIcon.Warning : MessageBoxIcon.Information);
 
             CargarProductosEnDGV(cmbProveedor.SelectedValue is Guid idCombo ? (Guid?)idCombo : null);
         }
-
+        /// <summary>
+        /// Captura el evento de cambio en la lista desplegable de proveedores y filtra la grilla de productos en consecuencia.
+        /// </summary>
         private void cmbProveedor_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbProveedor.SelectedValue is Guid idProveedor)

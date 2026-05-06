@@ -8,19 +8,26 @@ using System.Threading.Tasks;
 
 namespace Services.Bll
 {
+    /// <summary>
+    /// Gestiona la recuperación de jerarquías de permisos y roles (Familias) disponibles en el sistema.
+    /// </summary>
     public class FamiliaBll
     {
-        // Instanciamos el repositorio que me pasaste
         private readonly FamiliaRepository _familiaRepo;
 
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase de negocio de Familia y su repositorio asociado.
+        /// </summary>
         public FamiliaBll()
         {
             _familiaRepo = new FamiliaRepository();
         }
 
+        /// <summary>
+        /// Obtiene una lista materializada de todas las familias (roles) registradas.
+        /// </summary>
         public List<Familia> ObtenerTodas()
         {
-            // Traemos el IEnumerable y lo convertimos a List para que la grilla lo lea mejor
             return _familiaRepo.GetAll().ToList();
         }
     }

@@ -13,43 +13,46 @@ namespace FormUI.Inicio
 {
     public partial class FormBitácora : Form
     {
+        /// <summary>
+        /// Inicializa el formulario y sus componentes visuales base.
+        /// </summary>
         public FormBitácora()
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// Consulta los registros de auditoría del sistema y los muestra en la grilla principal, ocultando las columnas de identificadores internos.
+        /// </summary>
         private void btnVer_Click(object sender, EventArgs e)
         {
             try
             {
-                // 1. Instanciamos la BLL
                 Services.Bll.BitácoraBll bitacoraBll = new Services.Bll.BitácoraBll();
-
-                // 2. Le asignamos la lista a la grilla
                 dgvBitácora.DataSource = bitacoraBll.ListarBitacora();
 
-                // 3. (Opcional pero recomendado) Emprolijar la grilla
                 if (dgvBitácora.Columns.Count > 0)
                 {
-                    // Ocultamos el ID de la Bitácora
                     if (dgvBitácora.Columns["IdBitacora"] != null)
                         dgvBitácora.Columns["IdBitacora"].Visible = false;
 
-                    // Ocultamos la columna del ID del usuario porque al Admin no le sirve ver un GUID
                     if (dgvBitácora.Columns["IdUsuario"] != null)
                         dgvBitácora.Columns["IdUsuario"].Visible = false;
 
-                    // Ajustamos el tamaño de la columna del mensaje para que se lea bien
                     if (dgvBitácora.Columns["Mensaje"] != null)
+                    {
+                        dgvBitácora.Columns["Mensaje"].HeaderText = "Mensaje".Traducir();
                         dgvBitácora.Columns["Mensaje"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar la bitácora: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        /// <summary>
+        /// Evento de carga inicial del formulario que aplica las traducciones al idioma seleccionado por el usuario.
+        /// </summary>
         private void FormBitácora_Load(object sender, EventArgs e)
         {
             TraductorUI.TraducirFormulario(this);

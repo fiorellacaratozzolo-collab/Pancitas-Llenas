@@ -9,11 +9,17 @@ using Services.DomainModel.Composite;
 
 namespace Services.Dal.Implementations.Adapters
 {
+    /// <summary>
+    /// Adaptador responsable de convertir los arreglos de datos provenientes de la base de datos en instancias completas de la entidad Usuario, incluyendo sus relaciones.
+    /// </summary>
     internal class UsuarioAdapter : IAdapter<Usuario>
     {
         #region Singleton
         private readonly static UsuarioAdapter _instance = new UsuarioAdapter();
 
+        /// <summary>
+        /// Obtiene la instancia única del adaptador.
+        /// </summary>
         public static UsuarioAdapter Current
         {
             get { return _instance; }
@@ -22,16 +28,17 @@ namespace Services.Dal.Implementations.Adapters
         private UsuarioAdapter() { }
         #endregion
 
+        /// <summary>
+        /// Convierte un arreglo de valores genéricos en un objeto Usuario, resolviendo relaciones nulas, asignando idiomas predeterminados y construyendo su árbol de privilegios.
+        /// </summary>
         public Usuario Get(object[] values)
         {
-            // 1. Lógica para la Sucursal (se mantiene igual, es la posición 5)
             Guid? idSucursal = null;
             if (values.Length > 5 && values[5] != DBNull.Value)
             {
                 idSucursal = Guid.Parse(values[5].ToString());
             }
 
-            // 2. Instanciamos el Usuario (con el constructor que ya tenés)
             Usuario usuario = new Usuario(
                 Guid.Parse(values[0].ToString()),
                 values[1].ToString(),
@@ -41,8 +48,6 @@ namespace Services.Dal.Implementations.Adapters
                 idSucursal
             );
 
-            // 3. NUEVO: Asignamos el idioma predeterminado (Posición 6)
-            // Usamos un salvavidas: si en la BD es NULL, le asignamos "es-AR" por defecto
             if (values.Length > 6 && values[6] != DBNull.Value)
             {
                 usuario.IdiomaPredeterminado = values[6].ToString();
@@ -52,7 +57,6 @@ namespace Services.Dal.Implementations.Adapters
                 usuario.IdiomaPredeterminado = "es-AR";
             }
 
-            // 4. Cargamos privilegios (se mantiene igual)
             usuario.Privilegios.AddRange(new UsuarioFamiliaRepository().GetByObject(usuario));
             usuario.Privilegios.AddRange(new UsuarioPatenteRepository().GetByObject(usuario));
 

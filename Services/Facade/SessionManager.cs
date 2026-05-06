@@ -8,11 +8,16 @@ using System.Threading.Tasks;
 
 namespace Services.Facade
 {
+    /// <summary>
+    /// Gestiona la sesión activa del usuario en el sistema, permitiendo el acceso global al perfil autenticado y la validación de permisos mediante el patrón Singleton.
+    /// </summary>
     public class SessionManager
     {
         private static SessionManager _instance;
 
-        // Singleton
+        /// <summary>
+        /// Proporciona el acceso a la instancia única de la sesión actual.
+        /// </summary>
         public static SessionManager Current
         {
             get
@@ -26,6 +31,10 @@ namespace Services.Facade
         private SessionManager() { }
 
         private Usuario _usuarioLogueado;
+
+        /// <summary>
+        /// Retorna el usuario que ha iniciado sesión. Lanza una excepción de sesión expirada si no hay un usuario autenticado.
+        /// </summary>
         public Usuario UsuarioLogueado
         {
             get
@@ -42,30 +51,40 @@ namespace Services.Facade
             }
         }
 
+        /// <summary>
+        /// Obtiene o establece el identificador único de la sucursal donde el usuario está operando actualmente.
+        /// </summary>
         public Guid? IdSucursalActual { get; set; }
+
+        /// <summary>
+        /// Obtiene o establece el nombre de la sucursal activa.
+        /// </summary>
         public string NombreSucursalActual { get; set; }
 
+        /// <summary>
+        /// Establece el usuario autenticado en la sesión actual y asigna su sucursal fija si la posee.
+        /// </summary>
         public void Login(Usuario usuario)
         {
             UsuarioLogueado = usuario;
-            // Si el usuario tiene una sucursal fija (empleado), la cargamos de una vez.
-            // Si es Admin (null), esto quedará en null hasta que él elija en el siguiente form.
             IdSucursalActual = usuario?.IdSucursal;
         }
 
+        /// <summary>
+        /// Cierra la sesión activa eliminando los datos del usuario y la sucursal de la memoria de la aplicación.
+        /// </summary>
         public void Logout()
         {
-            UsuarioLogueado = null; // Esto "mata" la sesión a propósito
+            _usuarioLogueado = null;
             IdSucursalActual = null;
             NombreSucursalActual = null;
         }
 
-        // Método clave para que los Forms validen permisos rápidamente
+        /// <summary>
+        /// Verifica si el usuario actual posee un permiso específico (patente o familia) basándose en su clave de acceso.
+        /// </summary>
         public bool TienePermiso(string dataKeyPermiso)
         {
-            // Al intentar leer "UsuarioLogueado", si es null, automáticamente 
-            // saltará la SesionExpiradaException y cortará la ejecución, 
-            // lo cual está perfecto por seguridad.
             foreach (var privilegio in UsuarioLogueado.Privilegios)
             {
                 if (ValidarPermisoRecursivo(privilegio, dataKeyPermiso))
@@ -74,6 +93,9 @@ namespace Services.Facade
             return false;
         }
 
+        /// <summary>
+        /// Realiza una búsqueda recursiva en la jerarquía de componentes para determinar si una clave de permiso existe dentro de las patentes o familias.
+        /// </summary>
         private bool ValidarPermisoRecursivo(Component componente, string dataKey)
         {
             if (componente is Patente patente)
@@ -82,7 +104,6 @@ namespace Services.Facade
             }
             else if (componente is Familia familia)
             {
-                // Protegemos contra nulos por si la familia viene sin hijos
                 if (familia.Hijos != null)
                 {
                     foreach (var hijo in familia.Hijos)

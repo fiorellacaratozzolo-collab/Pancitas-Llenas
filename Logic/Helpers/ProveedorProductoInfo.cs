@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Logic.Helpers
 {
+    /// <summary>
+    /// Estructura de transferencia interna que encapsula el identificador del proveedor y el precio neto asociado a un producto específico.
+    /// </summary>
     public class ProveedorProductoInfo
     {
         public Guid IdProveedor { get; set; }
-
-        // Es decimal (no acepta nulos) porque manejamos el posible nulo del origen
         public decimal PrecioNeto { get; set; }
     }
-
 }

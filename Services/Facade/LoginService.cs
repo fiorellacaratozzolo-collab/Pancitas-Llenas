@@ -8,29 +8,28 @@ using Services.DomainModel.Composite;
 
 namespace Services.Facade
 {
-
+    /// <summary>
+    /// Servicio estático que centraliza las operaciones de autenticación y control de acceso al sistema.
+    /// </summary>
     public static class LoginService
     {
+        /// <summary>
+        /// Valida las credenciales proporcionadas contra la base de datos y, de ser correctas, inicializa la sesión global del usuario.
+        /// </summary>
         public static void Login(string username, string passwordClara)
         {
             UsuarioBll usuarioBll = new UsuarioBll();
-
-            // 1. Validamos que el usuario exista, no esté bloqueado y la clave sea correcta
             Usuario usuarioValido = usuarioBll.ValidarCredenciales(username, passwordClara);
 
-            // 2. Si pasa la validación, lo guardamos en la sesión global de la aplicación
             SessionManager.Current.Login(usuarioValido);
-
-            // 3. (Opcional) Podemos registrar el login aquí en lugar de hacerlo en el FormPrincipal_Load
-            // BitácoraBll bitacora = new BitácoraBll();
-            // bitacora.RegistrarLog($"El usuario {usuarioValido.Nombre} inició sesión en el sistema.", Criticidad.Info, usuarioValido.IdUsuario);
         }
 
+        /// <summary>
+        /// Cierra la sesión activa actual y destruye los datos de autenticación del usuario en memoria.
+        /// </summary>
         public static void Logout()
         {
-            // Cerramos la sesión actual
             SessionManager.Current.Logout();
         }
     }
 }
-

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Services.DomainModel.Composite
 {
+    /// <summary>
+    /// Representa a un usuario del sistema, incluyendo sus credenciales, estado y su árbol de privilegios (roles y permisos individuales).
+    /// </summary>
     public class Usuario
     {
         public Guid IdUsuario { get; set; }
@@ -14,6 +17,9 @@ namespace Services.DomainModel.Composite
         public Guid? IdSucursal { get; set; }
         public List<Component> Privilegios { get; set; }
 
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase Usuario con los datos básicos y prepara su colección de privilegios.
+        /// </summary>
         public Usuario(Guid id, string nombre, string email, string password, bool habilitado, Guid? idSucursal = null)
         {
             IdUsuario = id;

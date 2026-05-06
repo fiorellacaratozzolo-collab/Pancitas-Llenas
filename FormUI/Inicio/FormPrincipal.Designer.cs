@@ -86,7 +86,6 @@
             menuStrip.TabIndex = 1;
             menuStrip.Tag = "MenuStrip";
             menuStrip.Text = "menuStrip1";
-            menuStrip.ItemClicked += menuStrip1_ItemClicked;
             // 
             // tsmAdministrador
             // 
@@ -301,7 +300,6 @@
             toolStripMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem2 });
             toolStripMenuItem1.Name = "toolStripMenuItem1";
             toolStripMenuItem1.Size = new Size(12, 20);
-            toolStripMenuItem1.Click += toolStripMenuItem1_Click;
             // 
             // toolStripMenuItem2
             // 

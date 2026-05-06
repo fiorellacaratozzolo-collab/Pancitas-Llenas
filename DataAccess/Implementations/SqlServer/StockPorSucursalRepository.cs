@@ -10,16 +10,24 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Implementations.SqlServer
 {
+    /// <summary>
+    /// Implementación concreta del repositorio encargado de gestionar el nivel de abastecimiento e inventario físico de las sucursales.
+    /// </summary>
     public class StockPorSucursalRepository : IStockPorSucursalRepository
     {
         private readonly PetShopDbContext _context;
 
-        // El constructor recibe el DbContext, no lo crea.
+        /// <summary>
+        /// Inicializa una nueva instancia del repositorio con el contexto de Entity Framework provisto por el Unit of Work.
+        /// </summary>
         public StockPorSucursalRepository(PetShopDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Persiste un nuevo registro de inventario para un producto en una sucursal.
+        /// </summary>
         public Guid Create(StockPorSucursal stock)
         {
             if (stock == null)
@@ -30,22 +38,29 @@ namespace DataAccess.Implementations.SqlServer
             return stock.IdStockSucursal;
         }
 
+        /// <summary>
+        /// Marca un registro de inventario existente como modificado para su posterior actualización en la base de datos.
+        /// </summary>
         public void Update(StockPorSucursal stock)
         {
             if (stock == null)
                 throw new ArgumentNullException(nameof(stock));
 
-            // Adjuntar y marcar el estado como modificado
             _context.StockPorSucursals.Update(stock);
         }
 
+        /// <summary>
+        /// Obtiene el registro de stock único que cruza un producto con una sucursal dada.
+        /// </summary>
         public StockPorSucursal? GetBySucursalAndProducto(Guid idSucursal, Guid idProducto)
         {
-            // Busca el stock único para esa combinación de producto y sucursal
             return _context.StockPorSucursals
                            .FirstOrDefault(s => s.IdSucursal == idSucursal && s.IdProducto == idProducto);
         }
 
+        /// <summary>
+        /// Obtiene todo el inventario perteneciente a una sucursal específica incluyendo los datos relacionales del producto.
+        /// </summary>
         public List<StockPorSucursal> GetBySucursal(Guid idSucursal)
         {
             return _context.StockPorSucursals
@@ -54,23 +69,31 @@ namespace DataAccess.Implementations.SqlServer
                            .ToList();
         }
 
+        /// <summary>
+        /// Recupera todo el inventario a nivel global incluyendo las propiedades de navegación principales.
+        /// </summary>
         public List<StockPorSucursal> GetAll()
         {
             return _context.StockPorSucursals
-                           .Include(s => s.IdProductoNavigation) // Carga el producto
-                           .Include(s => s.IdSucursalNavigation) // Carga la sucursal
-                           .Include(s => s.IdEstadoStockNavigation) // Carga la descripción del estado
+                           .Include(s => s.IdProductoNavigation)
+                           .Include(s => s.IdSucursalNavigation)
+                           .Include(s => s.IdEstadoStockNavigation)
                            .ToList();
         }
 
+        /// <summary>
+        /// Suma la cantidad física total disponible de un producto a lo largo de todas las sucursales registradas.
+        /// </summary>
         public int GetTotalStockByProducto(Guid idProducto)
         {
-            // Calcula el stock total de un producto sumando el StockActual en todas las sucursales
             return _context.StockPorSucursals
                            .Where(s => s.IdProducto == idProducto)
                            .Sum(s => s.StockActual);
         }
 
+        /// <summary>
+        /// Método de compatibilidad funcional para obtener el stock por producto y sucursal.
+        /// </summary>
         public StockPorSucursal GetByProductoYSucursal(Guid idProducto, Guid idSucursal)
         {
             return _context.StockPorSucursals
