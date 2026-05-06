@@ -54,6 +54,7 @@ namespace FormUI.FormCompra
         /// </summary>
         private void ConfigurarColumnasDataGridView()
         {
+            dgvProducto.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             if (dgvProducto.DataSource == null) return;
 
             string[] columnasOcultas = { "IdProducto", "ProveedorProductos", "InventarioProductos",
@@ -72,8 +73,6 @@ namespace FormUI.FormCompra
                 dgvProducto.Columns["PesoNeto"].HeaderText = "Peso Neto".Traducir();
             if (dgvProducto.Columns.Contains("PrecioNeto"))
                 dgvProducto.Columns["PrecioNeto"].HeaderText = "Precio Neto ($)".Traducir();
-
-            dgvProducto.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
 
         /// <summary>
@@ -230,7 +229,11 @@ namespace FormUI.FormCompra
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(string.Format("Error al eliminar el producto: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        string errorReal = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
+                        string mensajeAmigable = string.Format("No se puede eliminar el producto porque ya posee historial asociado (Ventas, Pedidos, etc.) que no puede ser borrado.\n\nDetalle técnico: {0}", errorReal);
+
+                        MessageBox.Show(mensajeAmigable.Traducir(), "Restricción de Integridad".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }

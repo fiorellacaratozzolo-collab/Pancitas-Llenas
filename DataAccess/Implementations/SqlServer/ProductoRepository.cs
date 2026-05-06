@@ -48,18 +48,24 @@ namespace DataAccess.Implementations.SqlServer
         }
 
         /// <summary>
-        /// Elimina físicamente un producto de la base de datos a partir de su identificador.
+        /// Elimina físicamente un producto de la base de datos, limpiando primero sus vínculos con proveedores y sus registros de stock para evitar violaciones de clave foránea.
         /// </summary>
         public void Delete(Guid id)
         {
             var producto = _context.Productos
                                    .Include(p => p.ProveedorProductos)
+                                   .Include(p => p.StockPorSucursals)
                                    .FirstOrDefault(p => p.IdProducto == id);
             if (producto != null)
             {
                 if (producto.ProveedorProductos.Any())
                 {
                     _context.ProveedorProductos.RemoveRange(producto.ProveedorProductos);
+                }
+
+                if (producto.StockPorSucursals.Any())
+                {
+                    _context.StockPorSucursals.RemoveRange(producto.StockPorSucursals);
                 }
                 _context.Productos.Remove(producto);
             }

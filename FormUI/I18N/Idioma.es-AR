@@ -58,7 +58,7 @@ Gestionar Proveedor:Gestionar Proveedor
 Deshabilitar:Deshabilitar
 IdProveedor:IdProveedor
 CUIT:CUIT
-Telefóno:Telefóno
+Telefóno:Teléfono
 Teléfono:Teléfono
 Dirección:Dirección
 ProveedorProductos:ProveedorProductos
@@ -75,7 +75,7 @@ Marca:Marca
 Peso Neto:Peso Neto
 Unidad:Unidad
 Precio Neto ($):Precio Neto ($)
-Descripcion:Descripcion
+Descripcion:Descripción
 NombreConPeso:NombreConPeso
 SolicitudDePedidoDetalles:SolicitudDePedidoDetalles
 SolicitudDeTraspasoDeProductosDetalles:SolicitudDeTraspasoDeProductosDetalles
@@ -85,7 +85,7 @@ Precio Neto::Precio Neto:
 Unidad::Unidad:
 Peso Neto::Peso Neto:
 CUIT Proveedor::CUIT Proveedor:
-Argregar:Argregar
+Argregar:Agregar
 Descripción::Descripción:
 Marca::Marca:
 Solicitar Orden de Pedido:Solicitar Orden de Pedido
@@ -105,20 +105,20 @@ Traspaso de Productos:Traspaso de Productos
 Entrega de Productos:Entrega de Productos
 Ver Stock Disponible:Ver Stock Disponible
 Stock disponible:Stock disponible
-Gestion de Sucursal:Gestion de Sucursal
+Gestion de Sucursal:Gestión de Sucursal
 Agregar una Sucursal:Agregar una Sucursal
 Teléfono de la Sucursal::Teléfono de la Sucursal:
 Ingrese los siguientes datos de la Sucursal::Ingrese los siguientes datos de la Sucursal:
 Dirección de la Sucursal::Dirección de la Sucursal:
 Venta:Venta
-Deposito-Venta:Deposito-Venta
+Deposito-Venta:Depósito-Venta
 Tipo de Sucursal::Tipo de Sucursal:
 Nombre de la Sucursal::Nombre de la Sucursal:
 Modificar Sucursal:Modificar Sucursal
 IdSucursal:IdSucursal
-Direccion:Direccion
+Direccion:Dirección
 Nombre de Sucursal:Nombre de Sucursal
-Telefono:Telefono
+Telefono:Teléfono
 IdTipoSucursal:IdTipoSucursal
 IdTipoSucursalNavigation:IdTipoSucursalNavigation
 Seleccione una Sucursal::Seleccione una Sucursal:
@@ -152,7 +152,7 @@ Tipo de Cliente::Tipo de Cliente:
 Minorista:Minorista
 Mayorista:Mayorista
 DNI::DNI:
-Gestiona de Ventas:Gestiona de Ventas
+Gestiona de Ventas:Gestión de Ventas
 Gestionar Ventas:Gestionar Ventas
 Seleccionar Fecha::Seleccionar Fecha:
 Eliminar:Eliminar
@@ -183,9 +183,9 @@ OrdenDeCompraDetalles:OrdenDeCompraDetalles
 Fecha y Hora:Fecha y Hora
 Movimiento:Movimiento
 Origen / Destino:Origen / Destino
-UsuarioResponsable:UsuarioResponsable
+UsuarioResponsable:Usuario Responsable
 Fecha de Ingreso:Fecha de Ingreso
-NombreProveedor:NombreProveedor
+NombreProveedor:Nombre de Proveedor
 Cant. Agregada:Cant. Agregada
 Peso Unit.:Peso Unit.
 IdStockSucursal:IdStockSucursal
@@ -208,7 +208,7 @@ NombreProducto:NombreProducto
 IdVentaNavigation:IdVentaNavigation
 NumeroVenta:NumeroVenta
 Hora:Hora
-MetodoPago:MetodoPago
+MetodoPago:Método de Pago
 MontoDescuento:MontoDescuento
 NombreCliente:NombreCliente
 EsMayorista:EsMayorista
@@ -231,7 +231,7 @@ Confirmar Aprobación:Confirmar Aprobación
 Cuidado:Cuidado
 El campo Nombre es obligatorio.:El campo Nombre es obligatorio.
 Error:Error
-Lista de proveedoes actualizada.:Lista de proveedoes actualizada.
+Lista de proveedoes actualizada.:Lista de proveedores actualizada.
 Información:Información
 Confirmar Acción:Confirmar Acción
 Nombre, Marca y CUIT del Proveedor son obligatorios.:Nombre, Marca y CUIT del Proveedor son obligatorios.
@@ -267,7 +267,78 @@ Confirmar Cancelación:Confirmar Cancelación
 Seleccione un producto primero.:Seleccione un producto primero.
 Ingrese el nombre (o parte del nombre) del producto a buscar::Ingrese el nombre (o parte del nombre) del producto a buscar:
 Buscar Producto:Buscar Producto
-Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar::Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar:
+Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar::Ingrese el ID del Tipo de Cliente (0=Minorista, 1=Mayorista) a buscar:
 Seleccione una venta de la lista para anular.:Seleccione una venta de la lista para anular.
 Lista actualizada.:Lista actualizada.
 PetShop - Bienvenido {0}:PetShop - Bienvenido {0}
+📍 Sucursal: {0} | 🏠 Dir: {1}:📍 Sucursal: {0} | 🏠 Dir: {1}
+El usuario {0} ingresó al sistema.:El usuario {0} ingresó al sistema.
+¿Está seguro de deshabilitar a {0}?:¿Está seguro de deshabilitar a {0}?
+¿Está seguro de deshabilitar el producto {0}?:¿Está seguro de deshabilitar el producto {0}?
+¿Desea deshabilitar {0}?:¿Desea deshabilitar {0}?
+¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de $ {0:N2}?\n\nLos productos regresarán al stock de la sucursal.:¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de $ {0:N2}?\n\nLos productos regresarán al stock de la sucursal.
+El usuario {0} cerró sesión manualmente.:El usuario {0} cerró sesión manualmente.
+PetShop - Bienvenido Admin:PetShop - Bienvenido Admin
+📍 Sucursal: Petshop Pancitas Llenas | 🏠 Dir: Villa Adelina, Jorge Washington 4087:📍 Sucursal: Petshop Pancitas Llenas | 🏠 Dir: Villa Adelina, Jorge Washington 4087
+Error al abrir: {0}:Error al abrir: {0}
+Mensaje:Mensaje
+Pendientes:Pendientes
+Aprobadas:Aprobadas
+Rechazadas:Rechazadas
+Todas:Todas
+Peso (Kg):Peso (Kg)
+Efectivo:Efectivo
+Transferencia:Transferencia
+Tarjeta de Débito:Tarjeta de Débito
+Tarjeta de Crédito:Tarjeta de Crédito
+Subtotal: $ {0:N2}:Subtotal: $ {0:N2}
+Descuento: $ {0:N2}:Descuento: $ {0:N2}
+TOTAL: $ {0:N2}:TOTAL: $ {0:N2}
+¡Venta registrada con éxito! Se descontó el stock correctamente. N° de Ticket: {0}:¡Venta registrada con éxito! Se descontó el stock correctamente. N° de Ticket: {0}
+Venta Exitosa:Venta Exitosa
+Cliente agregado exitosamente.:Cliente agregado exitosamente.
+Buscar Cliente:Buscar Cliente
+Se encontraron {0} clientes para el ID Tipo {1}.:Se encontraron {0} clientes para el ID Tipo {1}.
+Búsqueda Exitosa:Búsqueda Exitosa
+El cliente seleccionado no es válido o está incompleto.:El cliente seleccionado no es válido o está incompleto.
+Error al guardar los cambios: {0}:Error al guardar los cambios: {0}
+Cliente deshabilitado exitosamente.:Cliente deshabilitado exitosamente.
+¿Crear solicitud de pedido con {0} producto(s)?:¿Crear solicitud de pedido con {0} producto(s)?
+Solicitud de Pedido creada exitosamente. ID: {0}:Solicitud de Pedido creada exitosamente. ID: {0}
+Solicitud de Pedido dada de baja correctamente.:Solicitud de Pedido dada de baja correctamente.
+¡Orden de Pedido generada con éxito! ID de la nueva OP: {0}:¡Orden de Pedido generada con éxito! ID de la nueva OP: {0}
+¡Proceso completado con éxito! Se generaron 1 Orden(es) de Compra para 1 proveedor(es).:¡Proceso completado con éxito! Se generaron 1 Orden(es) de Compra para 1 proveedor(es).
+Generación Exitosa:Generación Exitosa
+¿Finalizar OC #{0}?:¿Finalizar OC #{0}?
+Operación exitosa.:Operación exitosa.
+Proveedor agregado exitosamente.:Proveedor agregado exitosamente.
+Proveedor deshabilitado exitosamente.:Proveedor deshabilitado exitosamente.
+Lista de proveedores actualizada.:Lista de proveedores actualizada.
+Producto '{0}' agregado y vinculado al proveedor {1}.:Producto '{0}' agregado y vinculado al proveedor {1}.
+Error al deshabilitar el producto: {0}:Error al deshabilitar el producto: {0}
+Se actualizarán {0} producto(s). ¿Continuar?:Se actualizarán {0} producto(s). ¿Continuar?
+Confirmar actualización:Confirmar actualización
+Stock actualizado.:Stock actualizado.
+Cambios aplicados: {0}:Cambios aplicados: {0}
+La tabla se ha actualizado.:La tabla se ha actualizado.
+Resultado:Resultado
+Sucursal deshabilitada.:Sucursal deshabilitada.
+Sucursal creada exitosamente.:Sucursal creada exitosamente.
+IdEstadoStp:IdEstadoStp
+IdSucursalOrigen:IdSucursalOrigen
+IdSucursalDestino:IdSucursalDestino
+NombreSucursalOrigen:NombreSucursalOrigen
+IdEstadoStpNavigation:IdEstadoStpNavigation
+¡Éxito!:¡Éxito!
+No hay Solicitudes de Traspaso pendientes.:No hay Solicitudes de Traspaso pendientes.
+Seleccione una solicitud para rechazar.:Seleccione una solicitud para rechazar.
+Seleccione una solicitud para aprobar.:Seleccione una solicitud para aprobar.
+Confirmar Anulación de Venta:Confirmar Anulación de Venta
+Error al anular la venta: {0}:Error al anular la venta: {0}
+La Orden de Compra ha sido exportada a:\n{0}:La Orden de Compra ha sido exportada a:\n{0}
+Impresión Exitosa:Impresión Exitosa
+¿Está seguro de eliminar el producto {0}? Esta acción borrará sus vínculos con proveedores.:¿Está seguro de eliminar el producto {0}? Esta acción borrará sus vínculos con proveedores.
+Error al eliminar el producto: {0}:Error al eliminar el producto: {0}
+Venta anulada correctamente. El stock ha sido devuelto.:Venta anulada correctamente. El stock ha sido devuelto.
+No se puede eliminar el producto porque ya posee historial asociado (Ventas, Pedidos, etc.) que no puede ser borrado.\n\nDetalle técnico: {0}:No se puede eliminar el producto porque ya posee historial asociado (Ventas, Pedidos, etc.) que no puede ser borrado.\n\nDetalle técnico: {0}
+Restricción de Integridad:Restricción de Integridad
