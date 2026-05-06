@@ -19,13 +19,15 @@ namespace FormUI.FormVenta
         private readonly ClienteService _clienteService = new ClienteService();
 
         /// <summary>
-        /// Inicializa el formulario y desencadena la carga inicial de los clientes en la grilla.
+        /// Inicializa el formulario, suscribe los eventos de formato visual y desencadena la carga inicial de los clientes en la grilla.
         /// </summary>
         public FormGestiónCliente()
         {
             InitializeComponent();
+            dgvCliente.CellFormatting += dgvCliente_CellFormatting;
             CargarDatosClientes();
         }
+
         /// <summary>
         /// Aplica las traducciones correspondientes a todos los controles visuales del formulario al cargar.
         /// </summary>
@@ -33,6 +35,7 @@ namespace FormUI.FormVenta
         {
             TraductorUI.TraducirFormulario(this);
         }
+
         /// <summary>
         /// Consulta el servicio de clientes para obtener todos los registros y vincula los datos a la grilla principal.
         /// </summary>
@@ -41,6 +44,7 @@ namespace FormUI.FormVenta
             try
             {
                 List<ClienteDTO> listaClientes = _clienteService.GetAllClientes();
+                dgvCliente.DataSource = null;
                 dgvCliente.DataSource = listaClientes;
                 ConfigurarColumnasDataGridView();
             }
@@ -49,11 +53,14 @@ namespace FormUI.FormVenta
                 MessageBox.Show(string.Format("Error al cargar los clientes: {0}".Traducir(), ex.Message), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         /// <summary>
         /// Oculta columnas técnicas e IDs, y aplica traducciones a los encabezados visibles en la grilla.
         /// </summary>
         private void ConfigurarColumnasDataGridView()
         {
+            if (dgvCliente.DataSource == null) return;
+
             dgvCliente.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
             if (dgvCliente.Columns.Contains("IdCliente"))
@@ -89,6 +96,7 @@ namespace FormUI.FormVenta
             dgvCliente.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             dgvCliente.AllowUserToAddRows = false;
         }
+
         /// <summary>
         /// Valida los datos de entrada, determina el tipo de cliente y registra un nuevo cliente en la base de datos.
         /// </summary>
@@ -145,6 +153,7 @@ namespace FormUI.FormVenta
                 MessageBox.Show(string.Format("Ocurrió un error al intentar agregar el cliente: {0}".Traducir(), ex.Message), "Error Inesperado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         /// <summary>
         /// Restablece los campos de texto y botones de selección a su estado predeterminado.
         /// </summary>
@@ -156,6 +165,7 @@ namespace FormUI.FormVenta
             rbtnMinorista.Checked = false;
             txtbNombreCliente.Focus();
         }
+
         /// <summary>
         /// Verifica la selección en la grilla y envía los datos del cliente modificado al servicio para su actualización.
         /// </summary>
@@ -186,6 +196,7 @@ namespace FormUI.FormVenta
                 MessageBox.Show("Por favor, seleccione un cliente válido de la lista para modificar.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
         /// <summary>
         /// Solicita confirmación y ejecuta la baja lógica del cliente seleccionado en el sistema.
         /// </summary>
@@ -217,6 +228,7 @@ namespace FormUI.FormVenta
                 MessageBox.Show("Debe seleccionar una fila para deshabilitar.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
         /// <summary>
         /// Abre un cuadro de diálogo para ingresar un ID de tipo de cliente y filtra los resultados mostrados en la grilla.
         /// </summary>
@@ -230,6 +242,7 @@ namespace FormUI.FormVenta
                 {
                     List<ClienteDTO> listaFiltrada = _clienteService.BuscarClientesPorTipo(idTipoCliente);
 
+                    dgvCliente.DataSource = null;
                     dgvCliente.DataSource = listaFiltrada;
                     ConfigurarColumnasDataGridView();
 
@@ -244,8 +257,21 @@ namespace FormUI.FormVenta
             {
                 MessageBox.Show("El ID del Tipo de Cliente debe ser un número entero válido.".Traducir(), "Error de Entrada".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        
+        }
+
+        /// <summary>
+        /// Intercepta el dibujado de las celdas para transformar el valor numérico del Tipo de Cliente en una etiqueta legible para el usuario.
+        /// </summary>
+        private void dgvCliente_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgvCliente.Columns[e.ColumnIndex].Name == "IdTipoCliente" && e.Value != null)
+            {
+                if (e.Value is int idTipo)
+                {
+                    e.Value = idTipo == 1 ? "Mayorista".Traducir() : "Minorista".Traducir();
+                    e.FormattingApplied = true;
+                }
+            }
         }
     }
 }
-

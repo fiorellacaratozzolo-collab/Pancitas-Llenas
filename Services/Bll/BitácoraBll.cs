@@ -48,7 +48,7 @@ namespace Services.Bll
         /// <summary>
         /// Consulta y retorna el registro histórico completo de la bitácora del sistema.
         /// </summary>
-        public List<DomainModel.Logging.Bitácora> ListarBitacora()
+        public List<Bitácora> ListarBitacora()
         {
             try
             {

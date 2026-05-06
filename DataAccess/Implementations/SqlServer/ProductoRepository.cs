@@ -1,6 +1,7 @@
 ﻿using DataAccess.Contexts;
 using DataAccess.Interfaces;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,9 +52,15 @@ namespace DataAccess.Implementations.SqlServer
         /// </summary>
         public void Delete(Guid id)
         {
-            var producto = _context.Productos.Find(id);
+            var producto = _context.Productos
+                                   .Include(p => p.ProveedorProductos)
+                                   .FirstOrDefault(p => p.IdProducto == id);
             if (producto != null)
             {
+                if (producto.ProveedorProductos.Any())
+                {
+                    _context.ProveedorProductos.RemoveRange(producto.ProveedorProductos);
+                }
                 _context.Productos.Remove(producto);
             }
         }

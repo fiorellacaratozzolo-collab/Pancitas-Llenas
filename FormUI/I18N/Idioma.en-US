@@ -324,3 +324,59 @@ Efectivo:
 Transferencia:
 Tarjeta de Débito:
 Tarjeta de Crédito:
+Phone:
+Address:
+Subtotal: $ {0:N2}:
+Descuento: $ {0:N2}:
+TOTAL: $ {0:N2}:
+¡Venta registrada con éxito! Se descontó el stock correctamente. N° de Ticket: {0}:
+Venta Exitosa:
+ID Number:
+Customer Type:
+Cliente agregado exitosamente.:
+Buscar Cliente:
+Se encontraron {0} clientes para el ID Tipo {1}.:
+Búsqueda Exitosa:
+El cliente seleccionado no es válido o está incompleto.:
+Error al guardar los cambios: {0}:
+Cliente deshabilitado exitosamente.:
+¿Crear solicitud de pedido con {0} producto(s)?:
+Solicitud de Pedido creada exitosamente. ID: {0}:
+Solicitud de Pedido dada de baja correctamente.:
+¡Orden de Pedido generada con éxito! ID de la nueva OP: {0}:
+¡Proceso completado con éxito! Se generaron 1 Orden(es) de Compra para 1 proveedor(es).:
+Generación Exitosa:
+¿Finalizar OC #{0}?:
+Operación exitosa.:
+Proveedor agregado exitosamente.:
+Proveedor deshabilitado exitosamente.:
+Lista de proveedores actualizada.:
+Producto '{0}' agregado y vinculado al proveedor {1}.:
+Error al deshabilitar el producto: {0}:
+Se actualizarán {0} producto(s). ¿Continuar?:
+Confirmar actualización:
+Stock actualizado.:
+Cambios aplicados: {0}:
+La tabla se ha actualizado.:
+Resultado:
+Sucursal deshabilitada.:
+Sucursal creada exitosamente.:
+IdEstadoStp:
+IdSucursalOrigen:
+IdSucursalDestino:
+NombreSucursalOrigen:
+:Destination Branch::
+Destination Address:
+IdEstadoStpNavigation:
+¡Éxito!:
+No hay Solicitudes de Traspaso pendientes.:
+Seleccione una solicitud para rechazar.:
+Seleccione una solicitud para aprobar.:
+PesoNeto:
+PrecioUnitario:
+Time:
+¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de $ {0:N2}?  Los productos regresarán al stock de la sucursal.:
+Confirmar Anulación de Venta:
+Error al anular la venta: {0}:
+Customer:
+:Price::

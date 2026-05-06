@@ -18,6 +18,7 @@ namespace FormUI.FormCompra
     {
         private readonly ProductoService _productoService = new ProductoService();
         private readonly ProveedorService _proveedorService = new ProveedorService();
+
         /// <summary>
         /// Inicializa el formulario, instancia los servicios necesarios y ejecuta la carga inicial de productos.
         /// </summary>
@@ -26,6 +27,7 @@ namespace FormUI.FormCompra
             InitializeComponent();
             CargarDatosProductos();
         }
+
         /// <summary>
         /// Obtiene y muestra los productos en la grilla principal. Permite recibir una lista filtrada o consultar todos los registros por defecto.
         /// </summary>
@@ -34,7 +36,11 @@ namespace FormUI.FormCompra
             try
             {
                 productos ??= _productoService.GetAllProductos();
+
+                // Forzamos el refresco visual de la grilla vaciándola primero (Solución Punto 4)
+                dgvProducto.DataSource = null;
                 dgvProducto.DataSource = productos;
+
                 ConfigurarColumnasDataGridView();
             }
             catch (Exception ex)
@@ -42,6 +48,7 @@ namespace FormUI.FormCompra
                 MessageBox.Show(string.Format("Error al cargar los productos: {0}".Traducir(), ex.Message), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         /// <summary>
         /// Oculta columnas técnicas, colecciones de navegación y aplica traducciones a los encabezados visibles de la grilla de productos.
         /// </summary>
@@ -49,23 +56,15 @@ namespace FormUI.FormCompra
         {
             if (dgvProducto.DataSource == null) return;
 
-            if (dgvProducto.Columns.Contains("IdProducto"))
-                dgvProducto.Columns["IdProducto"].Visible = false;
+            string[] columnasOcultas = { "IdProducto", "ProveedorProductos", "InventarioProductos",
+                                         "SolicitudDePedidoDetalles", "SolicitudDeTraspasoDeProductosDetalles",
+                                         "NombreConPeso", "StockPorSucursals", "VentaDetalles" };
 
-            if (dgvProducto.Columns.Contains("ProveedorProductos"))
-                dgvProducto.Columns["ProveedorProductos"].Visible = false;
-            if (dgvProducto.Columns.Contains("InventarioProductos"))
-                dgvProducto.Columns["InventarioProductos"].Visible = false;
-            if (dgvProducto.Columns.Contains("SolicitudDePedidoDetalles"))
-                dgvProducto.Columns["SolicitudDePedidoDetalles"].Visible = false;
-            if (dgvProducto.Columns.Contains("SolicitudDeTraspasoDeProductosDetalles"))
-                dgvProducto.Columns["SolicitudDeTraspasoDeProductosDetalles"].Visible = false;
-            if (dgvProducto.Columns.Contains("NombreConPeso"))
-                dgvProducto.Columns["NombreConPeso"].Visible = false;
-            if (dgvProducto.Columns.Contains("StockPorSucursals"))
-                dgvProducto.Columns["StockPorSucursals"].Visible = false;
-            if (dgvProducto.Columns.Contains("VentaDetalles"))
-                dgvProducto.Columns["VentaDetalles"].Visible = false;
+            foreach (var col in columnasOcultas)
+            {
+                if (dgvProducto.Columns.Contains(col))
+                    dgvProducto.Columns[col].Visible = false;
+            }
 
             if (dgvProducto.Columns.Contains("NombreProducto"))
                 dgvProducto.Columns["NombreProducto"].HeaderText = "Producto".Traducir();
@@ -76,6 +75,7 @@ namespace FormUI.FormCompra
 
             dgvProducto.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
+
         /// <summary>
         /// Evento de carga del formulario que aplica las traducciones de interfaz al idioma seleccionado.
         /// </summary>
@@ -83,6 +83,7 @@ namespace FormUI.FormCompra
         {
             TraductorUI.TraducirFormulario(this);
         }
+
         /// <summary>
         /// Valida la información ingresada, busca al proveedor correspondiente por CUIT y registra un nuevo producto en la base de datos.
         /// </summary>
@@ -149,6 +150,7 @@ namespace FormUI.FormCompra
                 MessageBox.Show(string.Format("Error al agregar el producto: {0}".Traducir(), ex.Message), "Error de Persistencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         /// <summary>
         /// Restablece la grilla mostrando la totalidad de los productos almacenados en el sistema.
         /// </summary>
@@ -157,6 +159,7 @@ namespace FormUI.FormCompra
             CargarDatosProductos();
             MessageBox.Show("Lista de productos actualizada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
         /// <summary>
         /// Solicita un CUIT mediante una ventana emergente y filtra la grilla para mostrar únicamente los productos vinculados a dicho proveedor.
         /// </summary>
@@ -198,8 +201,9 @@ namespace FormUI.FormCompra
                 MessageBox.Show(string.Format("Error durante la búsqueda: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         /// <summary>
-        /// Solicita confirmación al usuario y deshabilita (baja lógica) el producto actualmente seleccionado en la grilla.
+        /// Solicita confirmación al usuario y deshabilita (baja física controlada) el producto actualmente seleccionado en la grilla.
         /// </summary>
         private void btnDeshabilitar_Click(object sender, EventArgs e)
         {
@@ -214,7 +218,7 @@ namespace FormUI.FormCompra
                     return;
                 }
 
-                DialogResult dialogResult = MessageBox.Show(string.Format("¿Está seguro de deshabilitar el producto {0}?".Traducir(), nombre), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                DialogResult dialogResult = MessageBox.Show(string.Format("¿Está seguro de eliminar el producto {0}? Esta acción borrará sus vínculos con proveedores.".Traducir(), nombre), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (dialogResult == DialogResult.Yes)
                 {
@@ -222,19 +226,20 @@ namespace FormUI.FormCompra
                     {
                         _productoService.DeshabilitarProducto(productoId);
                         CargarDatosProductos();
-                        MessageBox.Show("Producto deshabilitado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Producto eliminado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(string.Format("Error al deshabilitar el producto: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(string.Format("Error al eliminar el producto: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
             else
             {
-                MessageBox.Show("Debe seleccionar una fila para deshabilitar.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Debe seleccionar una fila para eliminar.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
+
         /// <summary>
         /// Vacía todos los campos de texto del formulario dejándolos listos para el ingreso de un nuevo registro.
         /// </summary>

@@ -33,11 +33,14 @@ namespace FormUI.FormVenta
         {
             Guid? idSucursal = SessionManager.Current.IdSucursalActual;
             if (idSucursal == null) return;
+
             List<VentumDTO> listaVentas = _ventaService.GetVentasPorSucursalYFecha(idSucursal.Value, fecha);
 
+            dgvVentasRealizadas.DataSource = null;
             dgvVentasRealizadas.DataSource = listaVentas;
             ConfigurarColumnasGrilla();
         }
+
         /// <summary>
         /// Oculta identificadores internos, aplica formatos monetarios y traducciones a los encabezados de la grilla de detalles de la venta.
         /// </summary>
@@ -69,6 +72,7 @@ namespace FormUI.FormVenta
                 dgvDetallesVenta.Columns["Subtotal"].DefaultCellStyle.Format = "C2";
             }
         }
+
         /// <summary>
         /// Oculta datos técnicos, da formato de hora a la fecha de venta y aplica traducciones a la grilla principal de historial.
         /// </summary>
@@ -97,6 +101,7 @@ namespace FormUI.FormVenta
             dgvVentasRealizadas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvVentasRealizadas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
+
         /// <summary>
         /// Detecta el cambio en el selector de fechas y dispara automáticamente la recarga del historial filtrado.
         /// </summary>
@@ -104,6 +109,7 @@ namespace FormUI.FormVenta
         {
             CargarVentasFiltradas(dateTimePickerVenta.Value.Date);
         }
+
         /// <summary>
         /// Fuerza una actualización manual de la grilla de ventas ejecutando nuevamente la consulta a la base de datos.
         /// </summary>
@@ -112,6 +118,7 @@ namespace FormUI.FormVenta
             CargarVentasFiltradas(dateTimePickerVenta.Value.Date);
             MessageBox.Show("Lista actualizada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
         /// <summary>
         /// Detecta cuando el usuario selecciona una venta y recupera sus detalles de productos para mostrarlos en la grilla inferior.
         /// </summary>
@@ -121,10 +128,12 @@ namespace FormUI.FormVenta
             {
                 var detalles = _ventaService.GetDetallesDeVenta(ventaElegida.IdVenta);
 
+                dgvDetallesVenta.DataSource = null;
                 dgvDetallesVenta.DataSource = detalles;
                 ConfigurarGrillaDetalles();
             }
         }
+
         /// <summary>
         /// Solicita confirmación de extrema seguridad y ejecuta la anulación de la venta seleccionada, restaurando el stock a la sucursal.
         /// </summary>
@@ -164,6 +173,7 @@ namespace FormUI.FormVenta
                 }
             }
         }
+
         /// <summary>
         /// Evento de carga inicial del formulario que valida permisos dinámicos, establece la fecha actual, carga los datos y traduce la interfaz.
         /// </summary>
@@ -181,5 +191,5 @@ namespace FormUI.FormVenta
             }
             TraductorUI.TraducirFormulario(this);
         }
-    }   
+    }
 }

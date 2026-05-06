@@ -38,9 +38,13 @@ namespace Services.Bll
 
             _repo.GuardarPermisosUsuario(idUsuario, familiasIds, patentesIds);
 
+            Dal.Implementations.UsuarioRepository usuarioRepo = new Dal.Implementations.UsuarioRepository();
+            var usuario = usuarioRepo.GetById(idUsuario);
+            string nombreUsuario = usuario != null ? usuario.Nombre : "Desconocido";
+
             Services.Bll.BitácoraBll bitacora = new Services.Bll.BitácoraBll();
             bitacora.RegistrarLog(
-                string.Format("Se actualizaron los roles y permisos del usuario ID: {0}", idUsuario),
+                string.Format("Se actualizaron los roles y permisos del usuario: {0}", nombreUsuario),
                 Services.DomainModel.Logging.Criticidad.Warning);
         }
     }

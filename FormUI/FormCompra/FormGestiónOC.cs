@@ -11,11 +11,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Services.Facade.Extensions;
 
+using System.IO;
+
 namespace FormUI.FormCompra
 {
     public partial class FormGestiónOC : Form
     {
         private readonly OrdenDeCompraService _ocService;
+
         /// <summary>
         /// Inicializa el formulario, instancia los servicios necesarios y configura el comportamiento de solo lectura y selección de las grillas.
         /// </summary>
@@ -28,6 +31,7 @@ namespace FormUI.FormCompra
             dgvOrdenCompra.ReadOnly = true;
             dgvDetalleOC.ReadOnly = true;
         }
+
         /// <summary>
         /// Obtiene todas las órdenes de compra de la base de datos, aplica el filtro de estado seleccionado y actualiza la vista principal.
         /// </summary>
@@ -52,6 +56,7 @@ namespace FormUI.FormCompra
             btnAlta.Enabled = sonPendientes;
             btnBaja.Enabled = sonPendientes;
         }
+
         /// <summary>
         /// Evento que recarga y refresca la lista de órdenes de compra en pantalla.
         /// </summary>
@@ -59,8 +64,67 @@ namespace FormUI.FormCompra
         {
             CargarOrdenes();
         }
+
         /// <summary>
-        /// Inicia el proceso de validación y finalización (aprobación) de la orden de compra seleccionada, actualizando su estado.
+        /// Genera un archivo de texto físico en el Escritorio del usuario con el detalle formal de la Orden de Compra aprobada.
+        /// </summary>
+        private void ImprimirOrdenDeCompraTXT(OrdenDeCompraDTO oc)
+        {
+            try
+            {
+                // Detalles de la orden para armar la factura
+                var detalles = _ocService.ObtenerDetallesPorOrden(oc.IdOrdenDeCompra);
+
+                // Ruta de guardado en el Escritorio del usuario
+                string escritorio = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string nombreArchivo = string.Format("OrdenDeCompra_{0}.txt", oc.IdOrdenDeCompra.ToString().Substring(0, 8));
+                string rutaCompleta = Path.Combine(escritorio, nombreArchivo);
+
+                using (StreamWriter writer = new StreamWriter(rutaCompleta, false))
+                {
+                    writer.WriteLine("==================================================");
+                    writer.WriteLine("              PANCITAS LLENAS PETSHOP             ");
+                    writer.WriteLine("==================================================");
+                    writer.WriteLine("DOCUMENTO: ORDEN DE COMPRA");
+                    writer.WriteLine(string.Format("NRO DE ORDEN: {0}", oc.IdOrdenDeCompra));
+                    writer.WriteLine(string.Format("FECHA:        {0}", oc.FechaOc.ToString("dd/MM/yyyy")));
+                    writer.WriteLine(string.Format("PROVEEDOR:    {0}", oc.NombreProveedor));
+                    writer.WriteLine("ESTADO:       APROBADA");
+                    writer.WriteLine("==================================================");
+                    writer.WriteLine("DETALLE DE MERCADERIA SOLICITADA:");
+                    writer.WriteLine("--------------------------------------------------");
+
+                    writer.WriteLine(string.Format("{0,-25} | {1,-5} | {2,-10} | {3,-10}", "PRODUCTO", "CANT.", "P. UNIT", "SUBTOTAL"));
+                    writer.WriteLine("--------------------------------------------------");
+
+                    foreach (var det in detalles)
+                    {
+                        string nombreReal = det.NombreProducto ?? "Sin Nombre";
+                        string nombreProd = nombreReal.Length > 24 ? nombreReal.Substring(0, 24) : nombreReal;
+
+                        writer.WriteLine(string.Format("{0,-25} | {1,-5} | {2,-10:C2} | {3,-10:C2}",
+                            nombreProd,
+                            det.Cantidad,
+                            det.PrecioUnitario,
+                            det.Subtotal));
+                    }
+
+                    writer.WriteLine("--------------------------------------------------");
+                    writer.WriteLine(string.Format("TOTAL A ABONAR: {0:C2}", oc.Total));
+                    writer.WriteLine("==================================================");
+                    writer.WriteLine("Firma Autorizada: ___________________________");
+                }
+
+                MessageBox.Show(string.Format("La Orden de Compra ha sido exportada a:\n{0}", rutaCompleta).Traducir(), "Impresión Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error al generar el documento impreso: {0}", ex.Message).Traducir(), "Error de Impresión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Inicia el proceso de validación y finalización (aprobación) de la orden de compra seleccionada, actualizando su estado e imprimiendo el documento.
         /// </summary>
         private void btnAlta_Click(object sender, EventArgs e)
         {
@@ -76,6 +140,10 @@ namespace FormUI.FormCompra
                 try
                 {
                     _ocService.FinalizarOrden(oc.IdOrdenDeCompra);
+
+                    // Disparamos la impresión física al aprobar
+                    ImprimirOrdenDeCompraTXT(oc);
+
                     MessageBox.Show("Operación exitosa.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnVer_Click(this, EventArgs.Empty);
                 }
@@ -85,6 +153,7 @@ namespace FormUI.FormCompra
                 }
             }
         }
+
         /// <summary>
         /// Inicia el proceso de rechazo (baja) de la orden de compra seleccionada tras la confirmación del usuario.
         /// </summary>
@@ -106,6 +175,7 @@ namespace FormUI.FormCompra
                 }
             }
         }
+
         /// <summary>
         /// Detecta el cambio de selección en la grilla principal y carga automáticamente los detalles de la orden correspondiente en la grilla inferior.
         /// </summary>
@@ -130,6 +200,7 @@ namespace FormUI.FormCompra
                 Console.WriteLine("Error en vista previa: ".Traducir() + ex.Message);
             }
         }
+
         /// <summary>
         /// Oculta columnas técnicas, formatea valores monetarios y renombra los encabezados de la grilla principal de órdenes.
         /// </summary>
@@ -152,6 +223,7 @@ namespace FormUI.FormCompra
                 dgvOrdenCompra.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             }
         }
+
         /// <summary>
         /// Oculta columnas innecesarias, aplica formato de moneda y ajusta el orden visual de los campos en la grilla de detalles de la orden.
         /// </summary>
@@ -208,6 +280,7 @@ namespace FormUI.FormCompra
                 }
             }
         }
+
         /// <summary>
         /// Recarga la grilla principal de órdenes de compra cada vez que el usuario cambia la opción del filtro de estados.
         /// </summary>
@@ -215,6 +288,7 @@ namespace FormUI.FormCompra
         {
             CargarOrdenes();
         }
+
         /// <summary>
         /// Evento de carga inicial del formulario que llena las opciones del filtro de estados, selecciona la opción por defecto y traduce la interfaz.
         /// </summary>

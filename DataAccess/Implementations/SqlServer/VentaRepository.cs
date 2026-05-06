@@ -50,9 +50,15 @@ namespace DataAccess.Implementations.SqlServer
         /// </summary>
         public void Delete(Guid id)
         {
-            var ventaAEliminar = _context.Venta.Find(id);
+            var ventaAEliminar = _context.Venta
+                                         .Include(v => v.VentaDetalles)
+                                         .FirstOrDefault(v => v.IdVenta == id);
             if (ventaAEliminar != null)
             {
+                if (ventaAEliminar.VentaDetalles.Any())
+                {
+                    _context.VentaDetalles.RemoveRange(ventaAEliminar.VentaDetalles);
+                }
                 _context.Venta.Remove(ventaAEliminar);
             }
         }

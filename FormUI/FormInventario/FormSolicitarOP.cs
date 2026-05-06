@@ -28,6 +28,7 @@ namespace FormUI.FormInventario
             ConfigurarFecha();
             ConfigurarDGV();
         }
+
         /// <summary>
         /// Asigna la fecha actual al selector de fechas y lo bloquea para evitar modificaciones.
         /// </summary>
@@ -36,6 +37,7 @@ namespace FormUI.FormInventario
             dtpFecha.Value = DateTime.Today;
             dtpFecha.Enabled = false;
         }
+
         /// <summary>
         /// Define y estructura las columnas de la grilla de productos solicitados, aplicando traducciones y formatos.
         /// </summary>
@@ -93,6 +95,7 @@ namespace FormUI.FormInventario
             };
             dgvSolicitarOP.Columns.Add(colEliminar);
         }
+
         /// <summary>
         /// Carga la lista completa de productos disponibles en el menú desplegable.
         /// </summary>
@@ -103,6 +106,7 @@ namespace FormUI.FormInventario
             cmbProducto.ValueMember = "IdProducto";
             cmbProducto.SelectedIndex = -1;
         }
+
         /// <summary>
         /// Refresca la grilla para mostrar los elementos actualmente cargados en la lista de detalles temporal.
         /// </summary>
@@ -111,6 +115,7 @@ namespace FormUI.FormInventario
             dgvSolicitarOP.DataSource = null;
             dgvSolicitarOP.DataSource = _detalles;
         }
+
         /// <summary>
         /// Muestra un cuadro de diálogo estandarizado para notificar errores al usuario.
         /// </summary>
@@ -118,6 +123,7 @@ namespace FormUI.FormInventario
         {
             MessageBox.Show(mensaje, "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
         /// <summary>
         /// Vacía los campos de texto del formulario y devuelve el foco al selector de productos.
         /// </summary>
@@ -127,6 +133,7 @@ namespace FormUI.FormInventario
             txtbCantidad.Clear();
             cmbProducto.Focus();
         }
+
         /// <summary>
         /// Valida los datos ingresados y añade el producto a la lista temporal de la solicitud de pedido.
         /// </summary>
@@ -163,6 +170,7 @@ namespace FormUI.FormInventario
 
             ActualizarDGV();
         }
+
         /// <summary>
         /// Solicita confirmación, ensambla la solicitud final generándole nuevos identificadores únicos y la guarda en la base de datos.
         /// </summary>
@@ -211,12 +219,18 @@ namespace FormUI.FormInventario
                     "Éxito".Traducir(),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
+
+                // Limpieza post-guardado exitoso
+                _detalles.Clear();
+                ActualizarDGV();
+                LimpiarCampos();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("Error al guardar: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
         /// <summary>
         /// Restablece manualmente los controles de ingreso de datos llamando a la función de limpieza.
         /// </summary>
@@ -224,6 +238,7 @@ namespace FormUI.FormInventario
         {
             LimpiarCampos();
         }
+
         /// <summary>
         /// Detecta clics dentro de la grilla y procesa la eliminación de productos si el usuario presiona el botón de eliminar.
         /// </summary>
@@ -246,6 +261,7 @@ namespace FormUI.FormInventario
                 }
             }
         }
+
         /// <summary>
         /// Evento de carga inicial del formulario que pobla el menú de productos y aplica traducciones a toda la vista.
         /// </summary>
@@ -254,6 +270,7 @@ namespace FormUI.FormInventario
             CargarProductos();
             TraductorUI.TraducirFormulario(this);
         }
+
         /// <summary>
         /// Autocompleta automáticamente los campos de peso neto y marca de acuerdo al producto seleccionado en el menú desplegable.
         /// </summary>
@@ -263,7 +280,7 @@ namespace FormUI.FormInventario
             {
                 var productoSeleccionado = (ProductoDTO)cmbProducto.SelectedItem;
 
-                txtbPesoNeto.Text = $"{productoSeleccionado.PesoNeto:N2} {productoSeleccionado.Unidad ?? "kg"}";
+                txtbPesoNeto.Text = string.Format("{0:N2} {1}", productoSeleccionado.PesoNeto, productoSeleccionado.Unidad ?? "kg");
                 txtbMarca.Text = productoSeleccionado.Marca;
             }
             else
