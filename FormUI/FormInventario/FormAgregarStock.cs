@@ -162,15 +162,15 @@ namespace FormUI.FormInventario
         }
 
         /// <summary>
-        /// Consulta la base de datos para obtener los productos y sus existencias actuales, aplicando opcionalmente un filtro por proveedor.
+        /// Consulta la base de datos para obtener los productos ACTIVOS y sus existencias actuales, aplicando opcionalmente un filtro por proveedor.
         /// </summary>
         private void CargarProductosEnDGV(Guid? idProveedor)
         {
             try
             {
                 List<ProductoDTO> productos = idProveedor.HasValue && idProveedor.Value != Guid.Empty
-                    ? _productoService.GetProductosByProveedor(idProveedor.Value)
-                    : _productoService.GetAllProductos();
+                    ? _productoService.GetProductosByProveedor(idProveedor.Value).Where(p => p.Activo).ToList()
+                    : _productoService.ObtenerActivos();
 
                 List<StockPorSucursalDTO> stocks = _inventarioService.ObtenerStockPorSucursal(ID_SUCURSAL_ACTUAL);
                 var todosLosVinculos = _productoService.GetTodosLosVinculosProveedorProducto();
@@ -196,6 +196,11 @@ namespace FormUI.FormInventario
 
                 dgvAgregarStock.DataSource = null;
                 dgvAgregarStock.DataSource = dataSource;
+
+                if (dgvAgregarStock.Columns.Contains("IdProducto"))
+                {
+                    dgvAgregarStock.Columns["IdProducto"].Visible = false;
+                }
 
                 ResaltarStockBajo();
             }

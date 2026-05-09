@@ -39,7 +39,7 @@
             txtbPesoNeto = new TextBox();
             label1 = new Label();
             btnSolicitarTraspaso = new Button();
-            dtpFechaSolicitud = new DateTimePicker();
+            dtpFecha = new DateTimePicker();
             dgvProductos = new DataGridView();
             label3 = new Label();
             txtbCantidad = new TextBox();
@@ -61,7 +61,7 @@
             groupBox1.Controls.Add(txtbPesoNeto);
             groupBox1.Controls.Add(label1);
             groupBox1.Controls.Add(btnSolicitarTraspaso);
-            groupBox1.Controls.Add(dtpFechaSolicitud);
+            groupBox1.Controls.Add(dtpFecha);
             groupBox1.Controls.Add(dgvProductos);
             groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(txtbCantidad);
@@ -79,7 +79,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(71, 71);
+            label6.Location = new Point(37, 71);
             label6.Name = "label6";
             label6.Size = new Size(97, 15);
             label6.TabIndex = 24;
@@ -97,6 +97,7 @@
             // 
             txtbMarca.Location = new Point(179, 204);
             txtbMarca.Name = "txtbMarca";
+            txtbMarca.ReadOnly = true;
             txtbMarca.Size = new Size(102, 23);
             txtbMarca.TabIndex = 22;
             // 
@@ -111,6 +112,7 @@
             // 
             // cmbProducto
             // 
+            cmbProducto.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProducto.FormattingEnabled = true;
             cmbProducto.Location = new Point(176, 169);
             cmbProducto.Name = "cmbProducto";
@@ -120,6 +122,7 @@
             // 
             // cmbSucursalOrigen
             // 
+            cmbSucursalOrigen.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbSucursalOrigen.FormattingEnabled = true;
             cmbSucursalOrigen.Location = new Point(174, 107);
             cmbSucursalOrigen.Margin = new Padding(4, 3, 4, 3);
@@ -130,7 +133,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(73, 110);
+            label2.Location = new Point(41, 110);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(93, 15);
@@ -142,6 +145,7 @@
             txtbPesoNeto.Location = new Point(179, 236);
             txtbPesoNeto.Margin = new Padding(4, 3, 4, 3);
             txtbPesoNeto.Name = "txtbPesoNeto";
+            txtbPesoNeto.ReadOnly = true;
             txtbPesoNeto.Size = new Size(102, 23);
             txtbPesoNeto.TabIndex = 15;
             // 
@@ -166,13 +170,13 @@
             btnSolicitarTraspaso.UseVisualStyleBackColor = true;
             btnSolicitarTraspaso.Click += btnSolicitarTraspaso_Click;
             // 
-            // dtpFechaSolicitud
+            // dtpFecha
             // 
-            dtpFechaSolicitud.Location = new Point(328, 22);
-            dtpFechaSolicitud.Margin = new Padding(4, 3, 4, 3);
-            dtpFechaSolicitud.Name = "dtpFechaSolicitud";
-            dtpFechaSolicitud.Size = new Size(256, 23);
-            dtpFechaSolicitud.TabIndex = 4;
+            dtpFecha.Location = new Point(328, 22);
+            dtpFecha.Margin = new Padding(4, 3, 4, 3);
+            dtpFecha.Name = "dtpFecha";
+            dtpFecha.Size = new Size(256, 23);
+            dtpFecha.TabIndex = 4;
             // 
             // dgvProductos
             // 
@@ -246,7 +250,7 @@
         private System.Windows.Forms.TextBox txtbPesoNeto;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSolicitarTraspaso;
-        private System.Windows.Forms.DateTimePicker dtpFechaSolicitud;
+        private System.Windows.Forms.DateTimePicker dtpFecha;
         private System.Windows.Forms.DataGridView dgvProductos;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtbCantidad;

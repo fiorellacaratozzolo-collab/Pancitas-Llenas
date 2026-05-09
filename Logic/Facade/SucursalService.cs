@@ -28,7 +28,23 @@ namespace Logic.Facade
         /// </summary>
         public List<SucursalDTO> GetAllSucursales()
         {
-            return _sucursalLogic.ObtenerTodasLasSucursales();
+            return _sucursalLogic.ObtenerActivas();
+        }
+
+        /// <summary>
+        /// Recupera el catálogo completo de sucursales HABILITADAS.
+        /// </summary>
+        public List<SucursalDTO> ObtenerActivas()
+        {
+            return _sucursalLogic.ObtenerActivas();
+        }
+
+        /// <summary>
+        /// Recupera el catálogo completo de sucursales DESHABILITADAS.
+        /// </summary>
+        public List<SucursalDTO> ObtenerDeshabilitadas()
+        {
+            return _sucursalLogic.ObtenerDeshabilitadas();
         }
 
         /// <summary>
@@ -40,11 +56,19 @@ namespace Logic.Facade
         }
 
         /// <summary>
-        /// Da de baja o elimina lógicamente una sucursal del sistema.
+        /// Da de baja lógicamente una sucursal del sistema.
         /// </summary>
         public void DisableSucursal(Guid id)
         {
             _sucursalLogic.DeshabilitarSucursal(id);
+        }
+
+        /// <summary>
+        /// Da de alta lógicamente una sucursal del sistema.
+        /// </summary>
+        public void HabilitarSucursal(Guid id)
+        {
+            _sucursalLogic.HabilitarSucursal(id);
         }
 
         /// <summary>

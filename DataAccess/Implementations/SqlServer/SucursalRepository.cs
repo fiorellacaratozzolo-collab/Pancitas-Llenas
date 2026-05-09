@@ -30,7 +30,13 @@ namespace DataAccess.Implementations.SqlServer
         /// </summary>
         public Guid Create(Sucursal sucursal)
         {
-            sucursal.IdSucursal = Guid.NewGuid();
+            if (sucursal == null) throw new ArgumentNullException(nameof(sucursal));
+
+            if (sucursal.IdSucursal == Guid.Empty)
+            {
+                sucursal.IdSucursal = Guid.NewGuid();
+            }
+
             _context.Sucursals.Add(sucursal);
             return sucursal.IdSucursal;
         }
@@ -48,9 +54,7 @@ namespace DataAccess.Implementations.SqlServer
         /// </summary>
         public List<Sucursal> GetByTipoSucursal(int idTipoSucursal)
         {
-            return _context.Sucursals
-                           .Where(s => s.IdTipoSucursal == idTipoSucursal)
-                           .ToList();
+            return _context.Sucursals.Where(s => s.IdTipoSucursal == idTipoSucursal).ToList();
         }
 
         /// <summary>
@@ -66,8 +70,7 @@ namespace DataAccess.Implementations.SqlServer
         /// </summary>
         public void Update(Sucursal sucursal)
         {
-            if (sucursal == null)
-                throw new ArgumentNullException(nameof(sucursal));
+            if (sucursal == null) throw new ArgumentNullException(nameof(sucursal));
 
             var sucursalDb = _context.Sucursals.Find(sucursal.IdSucursal);
 
@@ -78,14 +81,28 @@ namespace DataAccess.Implementations.SqlServer
         }
 
         /// <summary>
-        /// Elimina físicamente una sucursal de la base de datos.
+        /// Realiza un Borrado Lógico de la sucursal (Activo = false).
         /// </summary>
         public void Delete(Guid id)
         {
             var sucursal = _context.Sucursals.Find(id);
             if (sucursal != null)
             {
-                _context.Sucursals.Remove(sucursal);
+                sucursal.Activo = false;
+                _context.Sucursals.Update(sucursal);
+            }
+        }
+
+        /// <summary>
+        /// Reactiva una sucursal previamente deshabilitada (Activo = true).
+        /// </summary>
+        public void Habilitar(Guid id)
+        {
+            var sucursal = _context.Sucursals.Find(id);
+            if (sucursal != null)
+            {
+                sucursal.Activo = true;
+                _context.Sucursals.Update(sucursal);
             }
         }
 
@@ -95,10 +112,7 @@ namespace DataAccess.Implementations.SqlServer
         public List<Sucursal> SearchByDireccion(string direccionFragment)
         {
             string search = direccionFragment.ToLower();
-
-            return _context.Sucursals
-                           .Where(s => s.Direccion.ToLower().Contains(search))
-                           .ToList();
+            return _context.Sucursals.Where(s => s.Direccion.ToLower().Contains(search)).ToList();
         }
     }
 }

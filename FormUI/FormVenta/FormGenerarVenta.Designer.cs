@@ -31,13 +31,14 @@
             datetimeVenta = new DateTimePicker();
             dgvVentas = new DataGridView();
             groupBox1 = new GroupBox();
-            chkMayorista = new CheckBox();
             lblTotal = new Label();
             lblDescuento = new Label();
             btnDeshacer = new Button();
             txtbDescuento = new TextBox();
             btnCancelar = new Button();
             groupBox2 = new GroupBox();
+            txtbMarca = new TextBox();
+            label2 = new Label();
             txtbPesoNeto = new TextBox();
             label1 = new Label();
             cmbProducto = new ComboBox();
@@ -49,13 +50,13 @@
             label8 = new Label();
             label7 = new Label();
             groupBox3 = new GroupBox();
+            chkMayorista = new CheckBox();
             cmbCliente = new ComboBox();
             cmbPago = new ComboBox();
             label10 = new Label();
             btnAceptar = new Button();
             lblSubtotal = new Label();
             label5 = new Label();
-            label6 = new Label();
             ((System.ComponentModel.ISupportInitialize)dgvVentas).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -64,7 +65,7 @@
             // 
             // datetimeVenta
             // 
-            datetimeVenta.Location = new Point(172, 22);
+            datetimeVenta.Location = new Point(339, 22);
             datetimeVenta.Margin = new Padding(4, 3, 4, 3);
             datetimeVenta.Name = "datetimeVenta";
             datetimeVenta.Size = new Size(259, 23);
@@ -73,15 +74,14 @@
             // dgvVentas
             // 
             dgvVentas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvVentas.Location = new Point(15, 346);
+            dgvVentas.Location = new Point(8, 346);
             dgvVentas.Margin = new Padding(4, 3, 4, 3);
             dgvVentas.Name = "dgvVentas";
-            dgvVentas.Size = new Size(572, 246);
+            dgvVentas.Size = new Size(604, 246);
             dgvVentas.TabIndex = 5;
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(chkMayorista);
             groupBox1.Controls.Add(lblTotal);
             groupBox1.Controls.Add(lblDescuento);
             groupBox1.Controls.Add(btnDeshacer);
@@ -94,28 +94,16 @@
             groupBox1.Controls.Add(btnAceptar);
             groupBox1.Controls.Add(lblSubtotal);
             groupBox1.Controls.Add(label5);
-            groupBox1.Controls.Add(label6);
             groupBox1.Controls.Add(datetimeVenta);
             groupBox1.Controls.Add(dgvVentas);
-            groupBox1.Location = new Point(19, 25);
+            groupBox1.Location = new Point(9, 2);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(610, 686);
+            groupBox1.Size = new Size(620, 717);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
             groupBox1.Text = "Ventas";
-            // 
-            // chkMayorista
-            // 
-            chkMayorista.AutoSize = true;
-            chkMayorista.Location = new Point(334, 87);
-            chkMayorista.Name = "chkMayorista";
-            chkMayorista.Size = new Size(110, 19);
-            chkMayorista.TabIndex = 26;
-            chkMayorista.Text = "Venta Mayorista";
-            chkMayorista.UseVisualStyleBackColor = true;
-            chkMayorista.CheckedChanged += chkMayorista_CheckedChanged;
             // 
             // lblTotal
             // 
@@ -137,18 +125,18 @@
             // 
             // btnDeshacer
             // 
-            btnDeshacer.Location = new Point(425, 307);
+            btnDeshacer.Location = new Point(401, 598);
             btnDeshacer.Margin = new Padding(4, 3, 4, 3);
             btnDeshacer.Name = "btnDeshacer";
-            btnDeshacer.Size = new Size(128, 33);
+            btnDeshacer.Size = new Size(211, 33);
             btnDeshacer.TabIndex = 17;
-            btnDeshacer.Text = "Deshacer";
+            btnDeshacer.Text = "Retirar producto";
             btnDeshacer.UseVisualStyleBackColor = true;
             btnDeshacer.Click += btnDeshacer_Click;
             // 
             // txtbDescuento
             // 
-            txtbDescuento.Location = new Point(405, 164);
+            txtbDescuento.Location = new Point(453, 255);
             txtbDescuento.Margin = new Padding(4, 3, 4, 3);
             txtbDescuento.Name = "txtbDescuento";
             txtbDescuento.Size = new Size(116, 23);
@@ -156,7 +144,7 @@
             // 
             // btnCancelar
             // 
-            btnCancelar.Location = new Point(476, 610);
+            btnCancelar.Location = new Point(491, 666);
             btnCancelar.Margin = new Padding(4, 3, 4, 3);
             btnCancelar.Name = "btnCancelar";
             btnCancelar.Size = new Size(111, 37);
@@ -167,6 +155,8 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(txtbMarca);
+            groupBox2.Controls.Add(label2);
             groupBox2.Controls.Add(txtbPesoNeto);
             groupBox2.Controls.Add(label1);
             groupBox2.Controls.Add(cmbProducto);
@@ -177,26 +167,44 @@
             groupBox2.Controls.Add(txtbCantidadProd);
             groupBox2.Controls.Add(label8);
             groupBox2.Controls.Add(label7);
-            groupBox2.Location = new Point(16, 146);
+            groupBox2.Location = new Point(16, 121);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
-            groupBox2.Size = new Size(350, 190);
+            groupBox2.Size = new Size(415, 215);
             groupBox2.TabIndex = 8;
             groupBox2.TabStop = false;
             groupBox2.Text = "Producto";
             // 
+            // txtbMarca
+            // 
+            txtbMarca.Location = new Point(77, 57);
+            txtbMarca.Name = "txtbMarca";
+            txtbMarca.ReadOnly = true;
+            txtbMarca.Size = new Size(116, 23);
+            txtbMarca.TabIndex = 23;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(23, 60);
+            label2.Name = "label2";
+            label2.Size = new Size(43, 15);
+            label2.TabIndex = 22;
+            label2.Text = "Marca:";
+            // 
             // txtbPesoNeto
             // 
-            txtbPesoNeto.Location = new Point(79, 59);
+            txtbPesoNeto.Location = new Point(77, 85);
             txtbPesoNeto.Name = "txtbPesoNeto";
+            txtbPesoNeto.ReadOnly = true;
             txtbPesoNeto.Size = new Size(116, 23);
             txtbPesoNeto.TabIndex = 21;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(9, 62);
+            label1.Location = new Point(7, 88);
             label1.Name = "label1";
             label1.Size = new Size(64, 15);
             label1.TabIndex = 20;
@@ -204,7 +212,7 @@
             // 
             // cmbProducto
             // 
-            cmbProducto.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+            cmbProducto.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProducto.FormattingEnabled = true;
             cmbProducto.Location = new Point(75, 25);
             cmbProducto.Name = "cmbProducto";
@@ -214,15 +222,16 @@
             // 
             // txtbPrecioProd
             // 
-            txtbPrecioProd.Location = new Point(78, 117);
+            txtbPrecioProd.Location = new Point(77, 114);
             txtbPrecioProd.Margin = new Padding(4, 3, 4, 3);
             txtbPrecioProd.Name = "txtbPrecioProd";
+            txtbPrecioProd.ReadOnly = true;
             txtbPrecioProd.Size = new Size(116, 23);
             txtbPrecioProd.TabIndex = 18;
             // 
             // btnAgregar
             // 
-            btnAgregar.Location = new Point(38, 151);
+            btnAgregar.Location = new Point(75, 176);
             btnAgregar.Margin = new Padding(4, 3, 4, 3);
             btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(280, 33);
@@ -233,10 +242,10 @@
             // 
             // btnBuscarProd
             // 
-            btnBuscarProd.Location = new Point(306, 22);
+            btnBuscarProd.Location = new Point(323, 21);
             btnBuscarProd.Margin = new Padding(4, 3, 4, 3);
             btnBuscarProd.Name = "btnBuscarProd";
-            btnBuscarProd.Size = new Size(36, 27);
+            btnBuscarProd.Size = new Size(60, 27);
             btnBuscarProd.TabIndex = 9;
             btnBuscarProd.Text = "Buscar";
             btnBuscarProd.UseVisualStyleBackColor = true;
@@ -245,7 +254,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(27, 120);
+            label9.Location = new Point(26, 117);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
             label9.Size = new Size(43, 15);
@@ -254,7 +263,7 @@
             // 
             // txtbCantidadProd
             // 
-            txtbCantidadProd.Location = new Point(79, 88);
+            txtbCantidadProd.Location = new Point(77, 143);
             txtbCantidadProd.Margin = new Padding(4, 3, 4, 3);
             txtbCantidadProd.Name = "txtbCantidadProd";
             txtbCantidadProd.Size = new Size(116, 23);
@@ -263,7 +272,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(15, 91);
+            label8.Location = new Point(13, 146);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
             label8.Size = new Size(58, 15);
@@ -282,30 +291,45 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(chkMayorista);
             groupBox3.Controls.Add(cmbCliente);
-            groupBox3.Location = new Point(20, 87);
+            groupBox3.Location = new Point(15, 62);
             groupBox3.Margin = new Padding(4, 3, 4, 3);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(4, 3, 4, 3);
-            groupBox3.Size = new Size(277, 53);
+            groupBox3.Size = new Size(411, 53);
             groupBox3.TabIndex = 22;
             groupBox3.TabStop = false;
             groupBox3.Text = "Cliente";
+            // 
+            // chkMayorista
+            // 
+            chkMayorista.AutoSize = true;
+            chkMayorista.Location = new Point(294, 22);
+            chkMayorista.Name = "chkMayorista";
+            chkMayorista.Size = new Size(110, 19);
+            chkMayorista.TabIndex = 26;
+            chkMayorista.Text = "Venta Mayorista";
+            chkMayorista.UseVisualStyleBackColor = true;
+            chkMayorista.CheckedChanged += chkMayorista_CheckedChanged;
             // 
             // cmbCliente
             // 
             cmbCliente.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             cmbCliente.AutoCompleteSource = AutoCompleteSource.ListItems;
+            cmbCliente.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbCliente.FormattingEnabled = true;
             cmbCliente.Location = new Point(16, 22);
             cmbCliente.Name = "cmbCliente";
             cmbCliente.Size = new Size(254, 23);
             cmbCliente.TabIndex = 0;
+            cmbCliente.SelectedIndexChanged += cmbCliente_SelectedIndexChanged;
             // 
             // cmbPago
             // 
+            cmbPago.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbPago.FormattingEnabled = true;
-            cmbPago.Location = new Point(402, 217);
+            cmbPago.Location = new Point(450, 308);
             cmbPago.Margin = new Padding(4, 3, 4, 3);
             cmbPago.Name = "cmbPago";
             cmbPago.Size = new Size(119, 23);
@@ -314,7 +338,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(402, 146);
+            label10.Location = new Point(450, 237);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
             label10.Size = new Size(66, 15);
@@ -323,7 +347,7 @@
             // 
             // btnAceptar
             // 
-            btnAceptar.Location = new Point(299, 610);
+            btnAceptar.Location = new Point(314, 666);
             btnAceptar.Margin = new Padding(4, 3, 4, 3);
             btnAceptar.Name = "btnAceptar";
             btnAceptar.Size = new Size(169, 37);
@@ -345,22 +369,12 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(402, 199);
+            label5.Location = new Point(450, 290);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
             label5.Size = new Size(90, 15);
             label5.TabIndex = 9;
             label5.Text = "Medio de Pago:";
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new Point(116, 29);
-            label6.Margin = new Padding(4, 0, 4, 0);
-            label6.Name = "label6";
-            label6.Size = new Size(41, 15);
-            label6.TabIndex = 9;
-            label6.Text = "Fecha:";
             // 
             // FormGenerarVenta
             // 
@@ -378,6 +392,7 @@
             groupBox2.ResumeLayout(false);
             groupBox2.PerformLayout();
             groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
             ResumeLayout(false);
 
         }
@@ -395,7 +410,6 @@
         private System.Windows.Forms.TextBox txtbCantidadProd;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button btnCancelar;
         private System.Windows.Forms.Button btnAceptar;
@@ -411,5 +425,7 @@
         private CheckBox chkMayorista;
         private TextBox txtbPesoNeto;
         private Label label1;
+        private TextBox txtbMarca;
+        private Label label2;
     }
 }

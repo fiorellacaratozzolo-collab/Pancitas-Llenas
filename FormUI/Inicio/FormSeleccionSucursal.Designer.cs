@@ -67,6 +67,7 @@
             // 
             // cmbSucursales
             // 
+            cmbSucursales.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbSucursales.FormattingEnabled = true;
             cmbSucursales.Items.AddRange(new object[] { "Villa Adellina, Jorge Washington 4087", "San Isidro, Av. Centenario 820", "Martínez, Corrientes 1672" });
             cmbSucursales.Location = new Point(36, 298);

@@ -30,19 +30,44 @@ namespace Logic
         }
 
         /// <summary>
-        /// Valida los campos obligatorios, mapea el DTO y registra una nueva sucursal en el sistema.
+        /// Valida los campos, reactiva una sucursal si ya existía inactiva (mismo nombre y dirección), o registra una nueva.
         /// </summary>
         public Guid CrearSucursal(SucursalDTO sucursalDTO)
         {
-            Sucursal sucursalEntity = _mapper.Map<Sucursal>(sucursalDTO);
-
-            if (string.IsNullOrWhiteSpace(sucursalEntity.NombreSucursal) || string.IsNullOrWhiteSpace(sucursalEntity.Direccion))
+            if (string.IsNullOrWhiteSpace(sucursalDTO.NombreSucursal) || string.IsNullOrWhiteSpace(sucursalDTO.Direccion))
             {
                 throw new ArgumentException("Nombre y Dirección de la sucursal son obligatorios.");
             }
 
-            Guid idSucursal = _unitOfWork.Sucursales.Create(sucursalEntity);
+            // Reactivación Inteligente: Buscamos si existe una sucursal exactamente igual
+            var sucursalExistente = _unitOfWork.Sucursales.GetAll().FirstOrDefault(s =>
+                s.NombreSucursal.Trim().Equals(sucursalDTO.NombreSucursal.Trim(), StringComparison.OrdinalIgnoreCase) &&
+                s.Direccion.Trim().Equals(sucursalDTO.Direccion.Trim(), StringComparison.OrdinalIgnoreCase));
 
+            if (sucursalExistente != null)
+            {
+                if (sucursalExistente.Activo == false)
+                {
+                    sucursalExistente.Activo = true;
+                    sucursalExistente.Telefono = sucursalDTO.Telefono;
+                    sucursalExistente.IdTipoSucursal = sucursalDTO.IdTipoSucursal;
+
+                    _unitOfWork.Sucursales.Update(sucursalExistente);
+                    _unitOfWork.Complete();
+
+                    return sucursalExistente.IdSucursal;
+                }
+                else
+                {
+                    throw new InvalidOperationException(string.Format("Ya existe una sucursal ACTIVA con el nombre '{0}' en la dirección '{1}'.", sucursalDTO.NombreSucursal, sucursalDTO.Direccion));
+                }
+            }
+
+            // Alta Normal
+            Sucursal sucursalEntity = _mapper.Map<Sucursal>(sucursalDTO);
+            sucursalEntity.Activo = true;
+
+            Guid idSucursal = _unitOfWork.Sucursales.Create(sucursalEntity);
             _unitOfWork.Complete();
 
             return idSucursal;
@@ -59,12 +84,39 @@ namespace Logic
         }
 
         /// <summary>
-        /// Elimina o deshabilita una sucursal del sistema basándose en su identificador único.
+        /// Deshabilita una sucursal del sistema basándose en su identificador único.
         /// </summary>
         public void DeshabilitarSucursal(Guid id)
         {
             _unitOfWork.Sucursales.Delete(id);
             _unitOfWork.Complete();
+        }
+
+        /// <summary>
+        /// Habilita una sucursal del sistema basándose en su identificador único.
+        /// </summary>
+        public void HabilitarSucursal(Guid id)
+        {
+            _unitOfWork.Sucursales.Habilitar(id);
+            _unitOfWork.Complete();
+        }
+
+        /// <summary>
+        /// Obtiene solo las sucursales que están actualmente ACTIVAS.
+        /// </summary>
+        public List<SucursalDTO> ObtenerActivas()
+        {
+            List<Sucursal> sucursales = _unitOfWork.Sucursales.GetAll().Where(s => s.Activo == true).ToList();
+            return _mapper.Map<List<SucursalDTO>>(sucursales);
+        }
+
+        /// <summary>
+        /// Obtiene solo las sucursales que están actualmente DESHABILITADAS.
+        /// </summary>
+        public List<SucursalDTO> ObtenerDeshabilitadas()
+        {
+            List<Sucursal> sucursales = _unitOfWork.Sucursales.GetAll().Where(s => s.Activo == false).ToList();
+            return _mapper.Map<List<SucursalDTO>>(sucursales);
         }
 
         /// <summary>
@@ -101,8 +153,8 @@ namespace Logic
             if (id == Guid.Empty) return null;
 
             Sucursal? sucursal = _unitOfWork.Sucursales.GetById(id);
-
             if (sucursal == null) return null;
+
             return _mapper.Map<SucursalDTO>(sucursal);
         }
 

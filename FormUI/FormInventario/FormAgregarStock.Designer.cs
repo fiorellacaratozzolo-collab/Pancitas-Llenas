@@ -52,7 +52,7 @@
             // 
             // btnActualizar
             // 
-            btnActualizar.Location = new Point(300, 441);
+            btnActualizar.Location = new Point(300, 452);
             btnActualizar.Margin = new Padding(4, 3, 4, 3);
             btnActualizar.Name = "btnActualizar";
             btnActualizar.Size = new Size(115, 40);
@@ -64,14 +64,15 @@
             // dgvAgregarStock
             // 
             dgvAgregarStock.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvAgregarStock.Location = new Point(8, 33);
+            dgvAgregarStock.Location = new Point(8, 22);
             dgvAgregarStock.Margin = new Padding(4, 3, 4, 3);
             dgvAgregarStock.Name = "dgvAgregarStock";
-            dgvAgregarStock.Size = new Size(721, 400);
+            dgvAgregarStock.Size = new Size(721, 424);
             dgvAgregarStock.TabIndex = 0;
             // 
             // cmbProveedor
             // 
+            cmbProveedor.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProveedor.FormattingEnabled = true;
             cmbProveedor.Location = new Point(313, 6);
             cmbProveedor.Margin = new Padding(4, 3, 4, 3);

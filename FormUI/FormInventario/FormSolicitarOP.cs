@@ -97,11 +97,11 @@ namespace FormUI.FormInventario
         }
 
         /// <summary>
-        /// Carga la lista completa de productos disponibles en el menú desplegable.
+        /// Carga la lista de productos ACTIVOS disponibles en el menú desplegable.
         /// </summary>
         private void CargarProductos()
         {
-            cmbProducto.DataSource = _productoService.GetAllProductos();
+            cmbProducto.DataSource = _productoService.ObtenerActivos();
             cmbProducto.DisplayMember = "NombreConPeso";
             cmbProducto.ValueMember = "IdProducto";
             cmbProducto.SelectedIndex = -1;
@@ -229,14 +229,6 @@ namespace FormUI.FormInventario
             {
                 MessageBox.Show(string.Format("Error al guardar: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        /// <summary>
-        /// Restablece manualmente los controles de ingreso de datos llamando a la función de limpieza.
-        /// </summary>
-        private void btnLimpiar_Click(object sender, EventArgs e)
-        {
-            LimpiarCampos();
         }
 
         /// <summary>

@@ -15,9 +15,6 @@ namespace Logic.Facade
     {
         private readonly ProveedorLogic _proveedorLogic;
 
-        /// <summary>
-        /// Inicializa una nueva instancia del servicio de proveedores.
-        /// </summary>
         public ProveedorService()
         {
             _proveedorLogic = new ProveedorLogic();
@@ -32,19 +29,51 @@ namespace Logic.Facade
         }
 
         /// <summary>
-        /// Obtiene la lista completa de proveedores registrados.
+        /// Actualiza a un proveedor en el sistema.
         /// </summary>
-        public List<ProveedorDTO> GetAllProveedores()
+        public void UpdateProveedor(ProveedorDTO proveedorDTO)
         {
-            return _proveedorLogic.ObtenerTodosLosProveedores();
+            _proveedorLogic.UpdateProveedor(proveedorDTO);
         }
 
         /// <summary>
-        /// Deshabilita o elimina lógicamente un proveedor del directorio.
+        /// Obtiene el catálogo de proveedores ACTIVOS (mantiene la compatibilidad con otros módulos).
+        /// </summary>
+        public List<ProveedorDTO> GetAllProveedores()
+        {
+            return _proveedorLogic.ObtenerActivos();
+        }
+
+        /// <summary>
+        /// Obtiene el catálogo de únicamente proveedores ACTIVOS.
+        /// </summary>
+        public List<ProveedorDTO> ObtenerActivos()
+        {
+            return _proveedorLogic.ObtenerActivos();
+        }
+
+        /// <summary>
+        /// Obtiene el catálogo de únicamente proveedores DESHABILITADOS.
+        /// </summary>
+        public List<ProveedorDTO> ObtenerDeshabilitados()
+        {
+            return _proveedorLogic.ObtenerDeshabilitados();
+        }
+
+        /// <summary>
+        /// Deshabilita lógicamente un proveedor del directorio.
         /// </summary>
         public void DeshabilitarProveedor(Guid id)
         {
             _proveedorLogic.DeshabilitarProveedor(id);
+        }
+
+        /// <summary>
+        /// Habilita a un proveedor deshabilitado.
+        /// </summary>
+        public void HabilitarProveedor(Guid id)
+        {
+            _proveedorLogic.HabilitarProveedor(id);
         }
 
         /// <summary>

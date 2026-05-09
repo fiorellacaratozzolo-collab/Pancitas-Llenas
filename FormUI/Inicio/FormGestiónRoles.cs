@@ -20,16 +20,16 @@ namespace FormUI.Inicio
         {
             InitializeComponent();
         }
+
         /// <summary>
-        /// Evento de carga inicial que obtiene las listas de usuarios, roles (Familias) y permisos individuales (Patentes) para poblar los controles.
-        /// Aplica un cast explícito a IList en los CheckedListBox para prevenir errores de DataBinding.
+        /// Evento de carga inicial que obtiene las listas de usuarios y roles (Familias) para poblar los controles.
         /// </summary>
         private void FormGestiónRoles_Load(object sender, EventArgs e)
         {
             try
             {
                 Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
-                cmbUsuarios.DataSource = usuarioBll.ListarTodos();
+                cmbUsuarios.DataSource = usuarioBll.ListarTodos().ToList();
                 cmbUsuarios.DisplayMember = "Nombre";
                 cmbUsuarios.ValueMember = "IdUsuario";
 
@@ -39,10 +39,6 @@ namespace FormUI.Inicio
                 clbRoles.DisplayMember = "Nombre";
                 clbRoles.ValueMember = "Id";
 
-                clbPermisos.DataSource = permisosBll.GetAllPatentes().ToList();
-                clbPermisos.DisplayMember = "Nombre";
-                clbPermisos.ValueMember = "Id";
-
                 cmbUsuarios.SelectedIndex = -1;
             }
             catch (Exception ex)
@@ -51,8 +47,9 @@ namespace FormUI.Inicio
             }
             TraductorUI.TraducirFormulario(this);
         }
+
         /// <summary>
-        /// Detecta la selección de un usuario, limpia los permisos previos y tilda automáticamente los roles y patentes asignados a él en la base de datos.
+        /// Detecta la selección de un usuario, limpia los roles previos y tilda automáticamente los roles asignados a él en la base de datos.
         /// </summary>
         private void cmbUsuarios_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -62,8 +59,8 @@ namespace FormUI.Inicio
             {
                 if (cmbUsuarios.SelectedItem is Services.DomainModel.Composite.Usuario usuarioBasico)
                 {
+                    // Limpiamos la lista de roles antes de cargar los nuevos
                     for (int i = 0; i < clbRoles.Items.Count; i++) clbRoles.SetItemChecked(i, false);
-                    for (int i = 0; i < clbPermisos.Items.Count; i++) clbPermisos.SetItemChecked(i, false);
 
                     Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
                     var usuarioCompleto = usuarioBll.GetById(usuarioBasico.IdUsuario);
@@ -76,10 +73,6 @@ namespace FormUI.Inicio
                         {
                             MarcarItemEnLista(clbRoles, familia.Id);
                         }
-                        else if (permiso is Services.DomainModel.Composite.Patente patente)
-                        {
-                            MarcarItemEnLista(clbPermisos, patente.Id);
-                        }
                     }
                 }
             }
@@ -88,8 +81,9 @@ namespace FormUI.Inicio
                 MessageBox.Show(string.Format("Error al cargar los permisos del usuario: {0}".Traducir(), ex.Message));
             }
         }
+
         /// <summary>
-        /// Método de asistencia que recorre un CheckedListBox buscando un ID específico para marcar su casilla correspondiente.
+        /// Método de asistencia que recorre el CheckedListBox buscando un ID específico para marcar su casilla correspondiente.
         /// </summary>
         private void MarcarItemEnLista(CheckedListBox lista, Guid idPermisoBuscado)
         {
@@ -103,8 +97,9 @@ namespace FormUI.Inicio
                 }
             }
         }
+
         /// <summary>
-        /// Recolecta todos los permisos y roles actualmente tildados en la interfaz y ejecuta la actualización para el usuario seleccionado.
+        /// Recolecta todos los roles actualmente tildados en la interfaz y ejecuta la actualización para el usuario seleccionado.
         /// </summary>
         private void btnGuardarRol_Click(object sender, EventArgs e)
         {
@@ -125,15 +120,8 @@ namespace FormUI.Inicio
                     familiasTildadas.Add(familia.Id);
                 }
 
-                List<Guid> patentesTildadas = new List<Guid>();
-                foreach (var item in clbPermisos.CheckedItems)
-                {
-                    var patente = (Services.DomainModel.Composite.Patente)item;
-                    patentesTildadas.Add(patente.Id);
-                }
-
                 Services.Bll.PermisosBll permisosBll = new Services.Bll.PermisosBll();
-                permisosBll.GuardarPermisosUsuario(usuarioSeleccionado.IdUsuario, familiasTildadas, patentesTildadas);
+                permisosBll.GuardarPermisosUsuario(usuarioSeleccionado.IdUsuario, familiasTildadas, new List<Guid>());
 
                 MessageBox.Show("¡Los permisos se han guardado exitosamente!".Traducir(), "Operación Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

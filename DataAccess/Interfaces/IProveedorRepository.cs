@@ -16,13 +16,19 @@ namespace DataAccess.Interfaces
         /// <summary>Inserta un nuevo proveedor y retorna su identificador único generado.</summary>
         Guid Create(Proveedor proveedor);
 
-        /// <summary>Elimina o deshabilita un registro de proveedor existente.</summary>
+        /// <summary>Realiza un borrado lógico del proveedor cambiando su estado a inactivo.</summary>
         void Delete(Guid id);
 
-        /// <summary>Recupera el listado completo de proveedores en el sistema.</summary>
+        /// <summary>Reactiva un proveedor previamente deshabilitado.</summary>
+        void Habilitar(Guid id);
+
+        /// <summary>Actualiza los valores de un proveedor existente.</summary>
+        void Update(Proveedor proveedor);
+
+        /// <summary>Recupera el listado completo de proveedores en el sistema (sin filtrar por estado).</summary>
         List<Proveedor> GetAll();
 
-        /// <summary>Obtiene un proveedor específico utilizando su número de CUIT, retornando nulo si no se encuentra.</summary>
+        /// <summary>Obtiene un proveedor específico utilizando su número de CUIT.</summary>
         Proveedor? GetByCuit(int cuit);
 
         /// <summary>Obtiene un proveedor específico utilizando su identificador único.</summary>

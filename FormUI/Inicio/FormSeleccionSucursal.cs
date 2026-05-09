@@ -1,4 +1,5 @@
 ﻿using FormUI.Inicio;
+using Logic.Facade;
 using ModelsDTO;
 using Services.Facade;
 using Services.Facade.Extensions;
@@ -23,15 +24,18 @@ namespace FormUI
         {
             InitializeComponent();
         }
+
         /// <summary>
-        /// Evento de carga inicial que obtiene las sucursales de la base de datos, configura el menú desplegable con una opción por defecto y traduce la interfaz.
+        /// Evento de carga inicial que obtiene únicamente las sucursales ACTIVAS de la base de datos, 
+        /// configura el menú desplegable con una opción por defecto y traduce la interfaz.
         /// </summary>
         private void FormSeleccionSucursal_Load(object sender, EventArgs e)
         {
             try
             {
                 Logic.SucursalLogic sucursalLogic = new Logic.SucursalLogic();
-                var listaSucursales = sucursalLogic.ObtenerTodasLasSucursales().ToList();
+                var listaSucursales = sucursalLogic.ObtenerActivas().ToList();
+
                 var sucursalPlaceholder = new SucursalDTO
                 {
                     IdSucursal = Guid.Empty,
@@ -39,6 +43,7 @@ namespace FormUI
                 };
 
                 listaSucursales.Insert(0, sucursalPlaceholder);
+
                 cmbSucursales.DataSource = listaSucursales;
                 cmbSucursales.DisplayMember = "Direccion";
                 cmbSucursales.ValueMember = "IdSucursal";
@@ -51,6 +56,7 @@ namespace FormUI
 
             TraductorUI.TraducirFormulario(this);
         }
+
         /// <summary>
         /// Valida la sucursal elegida, la asigna a la sesión activa del usuario y cierra el formulario devolviendo un resultado exitoso para continuar al menú principal.
         /// </summary>

@@ -1,4 +1,9 @@
-﻿using DataAccess.Models;
+﻿using AutoMapper;
+using DataAccess.Implementations.SqlServer;
+using DataAccess.Implementations.UnitOfWork;
+using DataAccess.Models;
+using Logic;
+using Logic.MappingProfiles;
 using ModelsDTO;
 using System;
 using System.Collections.Generic;
@@ -24,7 +29,15 @@ namespace Logic.Facade
         }
 
         /// <summary>
-        /// Obtiene el catálogo de productos filtrado por un proveedor en particular.
+        /// Actualiza los datos escalares de un producto existente y reasigna su proveedor.
+        /// </summary>
+        public void UpdateProducto(ProductoDTO productoDTO, Guid idProveedor)
+        {
+            _productoLogic.UpdateProducto(productoDTO, idProveedor);
+        }
+
+        /// <summary>
+        /// Obtiene la lista de productos ACTIVOS suministrados por un proveedor específico.
         /// </summary>
         public List<ProductoDTO> GetByProveedor(Guid idProveedor)
         {
@@ -32,19 +45,35 @@ namespace Logic.Facade
         }
 
         /// <summary>
-        /// Recupera todos los productos registrados en el sistema.
+        /// Recupera el catálogo de productos registrados que estén ACTIVOS en el sistema.
         /// </summary>
-        public List<ProductoDTO> GetAllProductos()
+        public List<ProductoDTO> ObtenerActivos()
         {
-            return _productoLogic.ObtenerTodos();
+            return _productoLogic.ObtenerActivos();
         }
 
         /// <summary>
-        /// Deshabilita o elimina un producto del catálogo.
+        /// Recupera el catálogo de productos registrados que estén INACTIVOS/DESHABILITADOS en el sistema.
+        /// </summary>
+        public List<ProductoDTO> ObtenerDeshabilitados()
+        {
+            return _productoLogic.ObtenerDeshabilitados();
+        }
+
+        /// <summary>
+        /// Deshabilita un producto del catálogo (Borrado Lógico).
         /// </summary>
         public void DeshabilitarProducto(Guid id)
         {
             _productoLogic.DeshabilitarProducto(id);
+        }
+
+        /// <summary>
+        /// Rehabilita un producto previamente dado de baja, devolviéndolo al catálogo activo.
+        /// </summary>
+        public void HabilitarProducto(Guid id)
+        {
+            _productoLogic.HabilitarProducto(id);
         }
 
         /// <summary>

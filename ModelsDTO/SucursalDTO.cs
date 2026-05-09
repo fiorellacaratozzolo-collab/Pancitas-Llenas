@@ -17,6 +17,7 @@ namespace ModelsDTO
         public int? Telefono { get; set; }
 
         public int IdTipoSucursal { get; set; }
+        public bool Activo { get; set; }
 
         public virtual TipoSucursalEnumDTO IdTipoSucursalNavigation { get; set; } = null!;
 

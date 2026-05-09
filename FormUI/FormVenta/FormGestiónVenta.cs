@@ -24,6 +24,7 @@ namespace FormUI.FormVenta
         public FormGestiónVenta()
         {
             InitializeComponent();
+            dgvVentasRealizadas.CellFormatting += dgvVentasRealizadas_CellFormatting;
         }
 
         /// <summary>
@@ -97,6 +98,14 @@ namespace FormUI.FormVenta
                 dgvVentasRealizadas.Columns["Total"].DefaultCellStyle.Format = "N2";
             }
 
+            if (dgvVentasRealizadas.Columns.Contains("NumeroVenta"))
+            {
+                dgvVentasRealizadas.Columns["NumeroVenta"].HeaderText = "N°".Traducir();
+                dgvVentasRealizadas.Columns["NumeroVenta"].DisplayIndex = 0;
+                dgvVentasRealizadas.Columns["NumeroVenta"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                dgvVentasRealizadas.Columns["NumeroVenta"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                dgvVentasRealizadas.Columns["NumeroVenta"].Width = 50;
+            }
             dgvVentasRealizadas.ReadOnly = true;
             dgvVentasRealizadas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvVentasRealizadas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -190,6 +199,19 @@ namespace FormUI.FormVenta
                 MessageBox.Show(string.Format("Error al cargar la pantalla: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             TraductorUI.TraducirFormulario(this);
+        }
+
+        /// <summary>
+        /// Intercepta el dibujado de las celdas para generar un número autoincremental visual (1, 2, 3...) 
+        /// en la columna NumeroVenta, basándose en la posición de la fila.
+        /// </summary>
+        private void dgvVentasRealizadas_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgvVentasRealizadas.Columns[e.ColumnIndex].Name == "NumeroVenta")
+            {
+                e.Value = (e.RowIndex + 1).ToString();
+                e.FormattingApplied = true;
+            }
         }
     }
 }

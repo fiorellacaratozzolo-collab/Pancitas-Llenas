@@ -34,10 +34,10 @@
             btnActualizar = new Button();
             label1 = new Label();
             groupBox1 = new GroupBox();
+            label2 = new Label();
+            cmbFiltroEstado = new ComboBox();
             groupBox2 = new GroupBox();
             dgvDetalleSP = new DataGridView();
-            cmbFiltroEstado = new ComboBox();
-            label2 = new Label();
             ((System.ComponentModel.ISupportInitialize)dgvSolicitudDePedido).BeginInit();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
@@ -56,10 +56,10 @@
             // 
             // btnDardeBaja
             // 
-            btnDardeBaja.Location = new Point(284, 453);
+            btnDardeBaja.Location = new Point(284, 457);
             btnDardeBaja.Margin = new Padding(4, 3, 4, 3);
             btnDardeBaja.Name = "btnDardeBaja";
-            btnDardeBaja.Size = new Size(106, 44);
+            btnDardeBaja.Size = new Size(106, 40);
             btnDardeBaja.TabIndex = 3;
             btnDardeBaja.Text = "Dar de Baja";
             btnDardeBaja.UseVisualStyleBackColor = true;
@@ -113,6 +113,25 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Solicitud de Pedido";
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(284, 25);
+            label2.Name = "label2";
+            label2.Size = new Size(99, 15);
+            label2.TabIndex = 10;
+            label2.Text = "Filtrar por Estado:";
+            // 
+            // cmbFiltroEstado
+            // 
+            cmbFiltroEstado.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbFiltroEstado.FormattingEnabled = true;
+            cmbFiltroEstado.Location = new Point(284, 43);
+            cmbFiltroEstado.Name = "cmbFiltroEstado";
+            cmbFiltroEstado.Size = new Size(105, 23);
+            cmbFiltroEstado.TabIndex = 9;
+            cmbFiltroEstado.SelectedIndexChanged += cmbFiltroEstado_SelectedIndexChanged;
+            // 
             // groupBox2
             // 
             groupBox2.Controls.Add(dgvDetalleSP);
@@ -130,25 +149,6 @@
             dgvDetalleSP.Name = "dgvDetalleSP";
             dgvDetalleSP.Size = new Size(605, 491);
             dgvDetalleSP.TabIndex = 0;
-            // 
-            // cmbFiltroEstado
-            // 
-            cmbFiltroEstado.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbFiltroEstado.FormattingEnabled = true;
-            cmbFiltroEstado.Location = new Point(284, 43);
-            cmbFiltroEstado.Name = "cmbFiltroEstado";
-            cmbFiltroEstado.Size = new Size(105, 23);
-            cmbFiltroEstado.TabIndex = 9;
-            cmbFiltroEstado.SelectedIndexChanged += cmbFiltroEstado_SelectedIndexChanged;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(284, 25);
-            label2.Name = "label2";
-            label2.Size = new Size(99, 15);
-            label2.TabIndex = 10;
-            label2.Text = "Filtrar por Estado:";
             // 
             // FormGestiónSP
             // 

@@ -76,6 +76,7 @@ public partial class PetShopDbContext : DbContext
             entity.ToTable("Cliente");
 
             entity.Property(e => e.IdCliente).ValueGeneratedNever();
+            entity.Property(e => e.Activo).HasDefaultValue(true);
             entity.Property(e => e.Dni).HasColumnName("DNI");
             entity.Property(e => e.NombreCliente)
                 .HasMaxLength(50)
@@ -172,7 +173,6 @@ public partial class PetShopDbContext : DbContext
 
             entity.HasOne(d => d.IdProveedorNavigation).WithMany(p => p.HistorialIngresoStocks)
                 .HasForeignKey(d => d.IdProveedor)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_HistorialIngresoStock_Proveedor");
 
             entity.HasOne(d => d.IdSucursalNavigation).WithMany(p => p.HistorialIngresoStocks)
@@ -281,6 +281,7 @@ public partial class PetShopDbContext : DbContext
             entity.ToTable("Producto");
 
             entity.Property(e => e.IdProducto).ValueGeneratedNever();
+            entity.Property(e => e.Activo).HasDefaultValue(true);
             entity.Property(e => e.Descripcion).IsUnicode(false);
             entity.Property(e => e.Marca)
                 .HasMaxLength(50)
@@ -302,6 +303,7 @@ public partial class PetShopDbContext : DbContext
             entity.ToTable("Proveedor");
 
             entity.Property(e => e.IdProveedor).ValueGeneratedNever();
+            entity.Property(e => e.Activo).HasDefaultValue(true);
             entity.Property(e => e.Cuit).HasColumnName("CUIT");
             entity.Property(e => e.Direccion)
                 .HasMaxLength(100)
@@ -457,6 +459,7 @@ public partial class PetShopDbContext : DbContext
             entity.ToTable("Sucursal");
 
             entity.Property(e => e.IdSucursal).ValueGeneratedNever();
+            entity.Property(e => e.Activo).HasDefaultValue(true);
             entity.Property(e => e.Direccion)
                 .HasMaxLength(100)
                 .IsUnicode(false);

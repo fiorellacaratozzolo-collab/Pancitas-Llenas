@@ -80,18 +80,19 @@ namespace FormUI.FormSucursal
                 .Where(s => s.IdTipoSucursal == 2)
                 .ToList();
 
+            cmbSucursalOrigen.DataSource = sucursalService.ObtenerActivas();
             cmbSucursalOrigen.DataSource = sucursalesOrigen;
             cmbSucursalOrigen.DisplayMember = "Direccion";
             cmbSucursalOrigen.ValueMember = "IdSucursal";
             cmbSucursalOrigen.SelectedIndex = -1;
         }
         /// <summary>
-        /// Obtiene el catálogo completo de productos y lo vincula al menú desplegable de selección.
+        /// Obtiene el catálogo de productos ACTIVOS y lo vincula al menú desplegable de selección.
         /// </summary>
         private void CargarProductos()
         {
-            Logic.Facade.ProductoService productoService = new Logic.Facade.ProductoService();
-            cmbProducto.DataSource = productoService.GetAllProductos();
+            ProductoService productoService = new ProductoService();
+            cmbProducto.DataSource = productoService.ObtenerActivos();
             cmbProducto.DisplayMember = "NombreConPeso";
             cmbProducto.ValueMember = "IdProducto";
             cmbProducto.SelectedIndex = -1;
@@ -168,7 +169,7 @@ namespace FormUI.FormSucursal
 
                 var nuevaSolicitud = new SolicitudDeTraspasoDeProductoDTO
                 {
-                    FechaStp = dtpFechaSolicitud.Value.Date,
+                    FechaStp = dtpFecha.Value.Date,
                     IdSucursalOrigen = idSucursalOrigen,
                     IdSucursalDestino = idSucursalDestino
                 };
@@ -181,7 +182,7 @@ namespace FormUI.FormSucursal
 
                 _listaProductos.Clear();
                 cmbSucursalOrigen.SelectedIndex = -1;
-                dtpFechaSolicitud.Value = DateTime.Today;
+                dtpFecha.Value = DateTime.Today;
             }
             catch (SesionExpiradaException ex)
             {
@@ -214,13 +215,22 @@ namespace FormUI.FormSucursal
                 ConfigurarColumnasGrilla();
                 CargarSucursales();
                 CargarProductos();
-                dtpFechaSolicitud.Value = DateTime.Today;
+                ConfigurarFecha();
+                dtpFecha.Value = DateTime.Today;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("Error al cargar la pantalla: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             TraductorUI.TraducirFormulario(this);
+        }
+        /// <summary>
+        /// Asigna la fecha actual al selector de fechas y lo bloquea para evitar modificaciones.
+        /// </summary>
+        private void ConfigurarFecha()
+        {
+            dtpFecha.Value = DateTime.Today;
+            dtpFecha.Enabled = false;
         }
         /// <summary>
         /// Detecta la selección de un producto en el menú desplegable y rellena automáticamente los campos visuales vinculados.

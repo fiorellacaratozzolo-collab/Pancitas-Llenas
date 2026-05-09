@@ -45,7 +45,7 @@ namespace FormUI.FormVenta
         /// </summary>
         private void CargarListaPrecios()
         {
-            _todosLosProductos = _productoService.GetAllProductos();
+            _todosLosProductos = _productoService.ObtenerActivos();
             dgvProductoPrecio.DataSource = _todosLosProductos;
             ConfigurarGrilla();
         }
@@ -63,6 +63,7 @@ namespace FormUI.FormVenta
             if (dgvProductoPrecio.Columns.Contains("SolicitudDeTraspasoDeProductosDetalles")) dgvProductoPrecio.Columns["SolicitudDeTraspasoDeProductosDetalles"].Visible = false;
             if (dgvProductoPrecio.Columns.Contains("StockPorSucursals")) dgvProductoPrecio.Columns["StockPorSucursals"].Visible = false;
             if (dgvProductoPrecio.Columns.Contains("VentaDetalles")) dgvProductoPrecio.Columns["VentaDetalles"].Visible = false;
+            if (dgvProductoPrecio.Columns.Contains("Activo")) dgvProductoPrecio.Columns["Activo"].Visible = false;
 
             if (dgvProductoPrecio.Columns.Contains("NombreProducto"))
             {

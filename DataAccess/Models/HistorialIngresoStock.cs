@@ -19,7 +19,7 @@ public partial class HistorialIngresoStock
 
     public virtual Producto IdProductoNavigation { get; set; } = null!;
 
-    public virtual Proveedor IdProveedorNavigation { get; set; } = null!;
+    public virtual Proveedor? IdProveedorNavigation { get; set; }
 
     public virtual Sucursal IdSucursalNavigation { get; set; } = null!;
 }

@@ -89,12 +89,14 @@ namespace FormUI.FormInventario
                 Guid miSucursal = SessionManager.Current.IdSucursalActual.Value;
 
                 var miStock = _stockService.ObtenerStockPorSucursal(miSucursal);
-                dgvStock.DataSource = null;
-                dgvStock.DataSource = miStock;
+                var stockFiltrado = miStock.Where(s => s.Activo == true).ToList();
 
-                if (miStock.Count == 0)
+                dgvStock.DataSource = null;
+                dgvStock.DataSource = stockFiltrado;
+
+                if (stockFiltrado.Count == 0)
                 {
-                    MessageBox.Show("No hay stock registrado para esta sucursal.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("No hay stock activo registrado para esta sucursal.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 ConfigurarGrillaStock();

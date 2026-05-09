@@ -29,19 +29,23 @@
         private void InitializeComponent()
         {
             groupBox1 = new GroupBox();
+            btnHabilitar = new Button();
+            btnVerDeshabilitados = new Button();
             btnDeshabilitar = new Button();
             btnActualizar = new Button();
             btnBuscar = new Button();
             dgvProducto = new DataGridView();
             btnAgregar = new Button();
             groupBox2 = new GroupBox();
+            label6 = new Label();
+            btnLimpiar = new Button();
+            cmbProveedor = new ComboBox();
             txtbDescripcion = new TextBox();
             txtbPrecioNeto = new TextBox();
             txtbUnidad = new TextBox();
             label5 = new Label();
             label4 = new Label();
             label1 = new Label();
-            txtbProveedor = new TextBox();
             label3 = new Label();
             txtbPesoNeto = new TextBox();
             txtbMarca = new TextBox();
@@ -56,25 +60,47 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(btnHabilitar);
+            groupBox1.Controls.Add(btnVerDeshabilitados);
             groupBox1.Controls.Add(btnDeshabilitar);
             groupBox1.Controls.Add(btnActualizar);
             groupBox1.Controls.Add(btnBuscar);
             groupBox1.Controls.Add(dgvProducto);
-            groupBox1.Location = new Point(473, 24);
+            groupBox1.Location = new Point(473, 12);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(707, 359);
+            groupBox1.Size = new Size(683, 437);
             groupBox1.TabIndex = 15;
             groupBox1.TabStop = false;
             groupBox1.Text = "Gestionar Producto";
             // 
+            // btnHabilitar
+            // 
+            btnHabilitar.Location = new Point(564, 402);
+            btnHabilitar.Name = "btnHabilitar";
+            btnHabilitar.Size = new Size(93, 29);
+            btnHabilitar.TabIndex = 5;
+            btnHabilitar.Text = "Habilitar";
+            btnHabilitar.UseVisualStyleBackColor = true;
+            btnHabilitar.Click += btnHabilitar_Click;
+            // 
+            // btnVerDeshabilitados
+            // 
+            btnVerDeshabilitados.Location = new Point(414, 402);
+            btnVerDeshabilitados.Name = "btnVerDeshabilitados";
+            btnVerDeshabilitados.Size = new Size(121, 29);
+            btnVerDeshabilitados.TabIndex = 4;
+            btnVerDeshabilitados.Text = "Ver Deshabilitados";
+            btnVerDeshabilitados.UseVisualStyleBackColor = true;
+            btnVerDeshabilitados.Click += btnVerDeshabilitados_Click;
+            // 
             // btnDeshabilitar
             // 
-            btnDeshabilitar.Location = new Point(454, 299);
+            btnDeshabilitar.Location = new Point(297, 402);
             btnDeshabilitar.Margin = new Padding(4, 3, 4, 3);
             btnDeshabilitar.Name = "btnDeshabilitar";
-            btnDeshabilitar.Size = new Size(115, 40);
+            btnDeshabilitar.Size = new Size(91, 29);
             btnDeshabilitar.TabIndex = 3;
             btnDeshabilitar.Text = "Deshabilitar";
             btnDeshabilitar.UseVisualStyleBackColor = true;
@@ -82,10 +108,10 @@
             // 
             // btnActualizar
             // 
-            btnActualizar.Location = new Point(306, 299);
+            btnActualizar.Location = new Point(177, 402);
             btnActualizar.Margin = new Padding(4, 3, 4, 3);
             btnActualizar.Name = "btnActualizar";
-            btnActualizar.Size = new Size(115, 40);
+            btnActualizar.Size = new Size(91, 29);
             btnActualizar.TabIndex = 2;
             btnActualizar.Text = "Actualizar";
             btnActualizar.UseVisualStyleBackColor = true;
@@ -93,10 +119,10 @@
             // 
             // btnBuscar
             // 
-            btnBuscar.Location = new Point(160, 299);
+            btnBuscar.Location = new Point(52, 402);
             btnBuscar.Margin = new Padding(4, 3, 4, 3);
             btnBuscar.Name = "btnBuscar";
-            btnBuscar.Size = new Size(115, 40);
+            btnBuscar.Size = new Size(91, 29);
             btnBuscar.TabIndex = 1;
             btnBuscar.Text = "Buscar";
             btnBuscar.UseVisualStyleBackColor = true;
@@ -108,12 +134,12 @@
             dgvProducto.Location = new Point(7, 22);
             dgvProducto.Margin = new Padding(4, 3, 4, 3);
             dgvProducto.Name = "dgvProducto";
-            dgvProducto.Size = new Size(693, 270);
+            dgvProducto.Size = new Size(668, 374);
             dgvProducto.TabIndex = 0;
             // 
             // btnAgregar
             // 
-            btnAgregar.Location = new Point(93, 281);
+            btnAgregar.Location = new Point(105, 308);
             btnAgregar.Margin = new Padding(4, 3, 4, 3);
             btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(284, 28);
@@ -124,13 +150,15 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(label6);
+            groupBox2.Controls.Add(btnLimpiar);
+            groupBox2.Controls.Add(cmbProveedor);
             groupBox2.Controls.Add(txtbDescripcion);
             groupBox2.Controls.Add(txtbPrecioNeto);
             groupBox2.Controls.Add(txtbUnidad);
             groupBox2.Controls.Add(label5);
             groupBox2.Controls.Add(label4);
             groupBox2.Controls.Add(label1);
-            groupBox2.Controls.Add(txtbProveedor);
             groupBox2.Controls.Add(label3);
             groupBox2.Controls.Add(btnAgregar);
             groupBox2.Controls.Add(txtbPesoNeto);
@@ -139,18 +167,46 @@
             groupBox2.Controls.Add(label2);
             groupBox2.Controls.Add(label9);
             groupBox2.Controls.Add(label8);
-            groupBox2.Location = new Point(13, 46);
+            groupBox2.Location = new Point(13, 34);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
-            groupBox2.Size = new Size(437, 315);
+            groupBox2.Size = new Size(438, 388);
             groupBox2.TabIndex = 12;
             groupBox2.TabStop = false;
-            groupBox2.Text = "Producto";
+            groupBox2.Text = "Agregar un Producto";
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(116, 31);
+            label6.Name = "label6";
+            label6.Size = new Size(234, 15);
+            label6.TabIndex = 21;
+            label6.Text = "Ingrese los siguientes datos de el Producto:";
+            // 
+            // btnLimpiar
+            // 
+            btnLimpiar.Location = new Point(356, 357);
+            btnLimpiar.Name = "btnLimpiar";
+            btnLimpiar.Size = new Size(75, 23);
+            btnLimpiar.TabIndex = 16;
+            btnLimpiar.Text = "Limpiar";
+            btnLimpiar.UseVisualStyleBackColor = true;
+            btnLimpiar.Click += btnLimpiar_Click;
+            // 
+            // cmbProveedor
+            // 
+            cmbProveedor.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbProveedor.FormattingEnabled = true;
+            cmbProveedor.Location = new Point(116, 258);
+            cmbProveedor.Name = "cmbProveedor";
+            cmbProveedor.Size = new Size(298, 23);
+            cmbProveedor.TabIndex = 20;
             // 
             // txtbDescripcion
             // 
-            txtbDescripcion.Location = new Point(116, 189);
+            txtbDescripcion.Location = new Point(116, 221);
             txtbDescripcion.Margin = new Padding(4, 3, 4, 3);
             txtbDescripcion.Name = "txtbDescripcion";
             txtbDescripcion.Size = new Size(298, 23);
@@ -158,7 +214,7 @@
             // 
             // txtbPrecioNeto
             // 
-            txtbPrecioNeto.Location = new Point(116, 158);
+            txtbPrecioNeto.Location = new Point(116, 190);
             txtbPrecioNeto.Margin = new Padding(4, 3, 4, 3);
             txtbPrecioNeto.Name = "txtbPrecioNeto";
             txtbPrecioNeto.Size = new Size(298, 23);
@@ -166,16 +222,16 @@
             // 
             // txtbUnidad
             // 
-            txtbUnidad.Location = new Point(116, 127);
+            txtbUnidad.Location = new Point(116, 159);
             txtbUnidad.Margin = new Padding(4, 3, 4, 3);
             txtbUnidad.Name = "txtbUnidad";
-            txtbUnidad.Size = new Size(298, 23);
+            txtbUnidad.Size = new Size(100, 23);
             txtbUnidad.TabIndex = 17;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(35, 167);
+            label5.Location = new Point(35, 199);
             label5.Name = "label5";
             label5.Size = new Size(72, 15);
             label5.TabIndex = 16;
@@ -184,7 +240,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(59, 136);
+            label4.Location = new Point(59, 168);
             label4.Name = "label4";
             label4.Size = new Size(48, 15);
             label4.TabIndex = 15;
@@ -193,24 +249,16 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(44, 105);
+            label1.Location = new Point(44, 137);
             label1.Name = "label1";
             label1.Size = new Size(64, 15);
             label1.TabIndex = 14;
             label1.Text = "Peso Neto:";
             // 
-            // txtbProveedor
-            // 
-            txtbProveedor.Location = new Point(116, 226);
-            txtbProveedor.Margin = new Padding(4, 3, 4, 3);
-            txtbProveedor.Name = "txtbProveedor";
-            txtbProveedor.Size = new Size(176, 23);
-            txtbProveedor.TabIndex = 7;
-            // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(14, 234);
+            label3.Location = new Point(14, 266);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new Size(93, 15);
@@ -219,15 +267,15 @@
             // 
             // txtbPesoNeto
             // 
-            txtbPesoNeto.Location = new Point(116, 96);
+            txtbPesoNeto.Location = new Point(116, 128);
             txtbPesoNeto.Margin = new Padding(4, 3, 4, 3);
             txtbPesoNeto.Name = "txtbPesoNeto";
-            txtbPesoNeto.Size = new Size(298, 23);
+            txtbPesoNeto.Size = new Size(100, 23);
             txtbPesoNeto.TabIndex = 5;
             // 
             // txtbMarca
             // 
-            txtbMarca.Location = new Point(116, 66);
+            txtbMarca.Location = new Point(116, 98);
             txtbMarca.Margin = new Padding(4, 3, 4, 3);
             txtbMarca.Name = "txtbMarca";
             txtbMarca.Size = new Size(298, 23);
@@ -235,7 +283,7 @@
             // 
             // txtbNombreProd
             // 
-            txtbNombreProd.Location = new Point(116, 33);
+            txtbNombreProd.Location = new Point(116, 65);
             txtbNombreProd.Margin = new Padding(4, 3, 4, 3);
             txtbNombreProd.Name = "txtbNombreProd";
             txtbNombreProd.Size = new Size(298, 23);
@@ -244,7 +292,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(35, 198);
+            label2.Location = new Point(35, 230);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(72, 15);
@@ -254,7 +302,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(64, 75);
+            label9.Location = new Point(64, 107);
             label9.Margin = new Padding(4, 0, 4, 0);
             label9.Name = "label9";
             label9.Size = new Size(43, 15);
@@ -264,7 +312,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(53, 42);
+            label8.Location = new Point(53, 74);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
             label8.Size = new Size(54, 15);
@@ -275,7 +323,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1203, 390);
+            ClientSize = new Size(1169, 461);
             Controls.Add(groupBox1);
             Controls.Add(groupBox2);
             Margin = new Padding(4, 3, 4, 3);
@@ -299,7 +347,6 @@
         private System.Windows.Forms.DataGridView dgvProducto;
         private System.Windows.Forms.Button btnAgregar;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.TextBox txtbProveedor;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtbPesoNeto;
         private System.Windows.Forms.TextBox txtbMarca;
@@ -313,5 +360,10 @@
         private TextBox txtbDescripcion;
         private TextBox txtbPrecioNeto;
         private TextBox txtbUnidad;
+        private ComboBox cmbProveedor;
+        private Button btnLimpiar;
+        private Label label6;
+        private Button btnHabilitar;
+        private Button btnVerDeshabilitados;
     }
 }

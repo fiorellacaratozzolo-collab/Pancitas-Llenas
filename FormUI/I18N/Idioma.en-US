@@ -4,37 +4,36 @@ Contraseña:Password
 Usuario:User
 Seleccionar Sucursal:Select Branch
 Siguiente:Next
-Seleccione la Sucursal donde desea ingresar::Select the branch you want to log into:
+Seleccione la Sucursal donde desea ingresar:Select the branch you want to log into
 Menú:Menu
-Seleccione el Idioma Predeterminado::Select Default Language:
+Seleccione el Idioma Predeterminado:Select Default Language
 Cargando sucursal...:Loading branch...
 Cerrar Sesión:Log Out
 Gestión de Roles:Role Management
 3.Control Total,"Puede hacer todo lo anterior, además de eliminar registros o realizar acciones críticas.":3.Full Control,"Can do all of the above, plus delete records or perform critical actions."
 2. Escritura,"Puede ver, crear nuevos registros y editar los existentes.":2. Write,"Can view, create new records, and edit existing ones."
 1. Lectura,"El usuario puede abrir el Form y ver los datos, pero los botones de ""Guardar"" o ""Eliminar"" están deshabilitados.":1. Read,"User can open the Form and view data, but 'Save' and 'Delete' buttons are disabled."
-Referencias::References:
-Permisos Extras / Excepciones::Extra Permissions / Exceptions:
+Referencias:References
+Permisos Extras / Excepciones:Extra Permissions / Exceptions
 Guardar:Save
-Rol de Usuario::User Role:
-Seleccione un Usuario::Select a User:
+Rol de Usuario:User Role
+Seleccione un Usuario:Select a User
 Gestión de Usuario:User Management
 Dar de Alta a un Nuevo Usuario:Register New User
 Gestionar Usuario:Manage User
 Modificar Contraseña:Change Password
 Actualizar:Update
-Sucursal::Branch:
-Contraseña::Password:
-Email::Email:
+Sucursal:Branch
+Email:Email
 Agregar:Add
-Nombre::Name:
+Nombre:Name
 Bitácora:Audit Log
 Ver Bitácora:View Audit Log
 Gestión de Solicitud de Pedido:Order Request Management
 Detalle:Details
 Solicitud de Pedido:Order Request
-Filtrar por Estado::Filter by Status:
-Ver Solicitudes de Pedidos::View Order Requests:
+Filtrar por Estado:Filter by Status
+Ver Solicitudes de Pedidos:View Order Requests
 ID Solicitud:Request ID
 Fecha:Date
 Estado:Status
@@ -53,7 +52,7 @@ Dar de Alta:Register
 Ver:View
 Ver Ordenes de Compra:View Purchase Orders
 Gestión de Proveedores:Provider Management
-Agregar un Nuevo Proveedor::Add a New Provider:
+Agregar un Nuevo Proveedor:Add a New Provider
 Gestionar Proveedor:Manage Provider
 Deshabilitar:Disable
 IdProveedor:Provider ID
@@ -63,9 +62,6 @@ Teléfono:Phone
 Dirección:Address
 ProveedorProductos:Provider Products
 Proveedor:Provider
-Dirección::Address:
-Teléfono::Phone:
-CUIT::Tax ID:
 Gestión de Productos:Product Management
 Gestionar Producto:Manage Product
 Buscar:Search
@@ -81,21 +77,17 @@ SolicitudDePedidoDetalles:Order Request Details
 SolicitudDeTraspasoDeProductosDetalles:Product Transfer Request Details
 StockPorSucursals:Stock By Branch
 VentaDetalles:Sale Details
-Precio Neto::Net Price:
-Unidad::Unit:
-Peso Neto::Net Weight:
-CUIT Proveedor::Provider Tax ID:
+Precio Neto:Net Price
+CUIT Proveedor:Provider Tax ID
 Argregar:Add
-Descripción::Description:
-Marca::Brand:
+Descripción:Description
 Solicitar Orden de Pedido:Request Order
 Productos a Solicitar:Products to Request
 Limpiar:Clear
 Cantidad:Quantity
-Nombre Producto::Product Name:
-Cantidad::Quantity:
+Nombre Producto:Product Name
 Agregar Stock:Add Stock
-Seleccionar Proveedor::Select Provider:
+Seleccionar Proveedor:Select Provider
 Actualizar Stock:Update Stock
 Stock a Añadir:Stock to Add
 Stock Actual:Current Stock
@@ -107,13 +99,13 @@ Ver Stock Disponible:View Available Stock
 Stock disponible:Available stock
 Gestion de Sucursal:Branch Management
 Agregar una Sucursal:Add a Branch
-Teléfono de la Sucursal::Branch Phone:
-Ingrese los siguientes datos de la Sucursal::Enter the following Branch data:
-Dirección de la Sucursal::Branch Address:
+Teléfono de la Sucursal:Branch Phone
+Ingrese los siguientes datos de la Sucursal:Enter the following Branch data
+Dirección de la Sucursal:Branch Address
 Venta:Sales
 Deposito-Venta:Warehouse-Sales
-Tipo de Sucursal::Branch Type:
-Nombre de la Sucursal::Branch Name:
+Tipo de Sucursal:Branch Type
+Nombre de la Sucursal:Branch Name
 Modificar Sucursal:Modify Branch
 IdSucursal:Branch ID
 Direccion:Address
@@ -121,7 +113,7 @@ Nombre de Sucursal:Branch Name
 Telefono:Phone
 IdTipoSucursal:Branch Type ID
 IdTipoSucursalNavigation:Branch Type Navigation
-Seleccione una Sucursal::Select a Branch:
+Seleccione una Sucursal:Select a Branch
 FormGestiónTraspaso:Transfer Management
 Detalle de Solicitud:Request Details
 Solicitudes de Traspaso:Transfer Requests
@@ -131,16 +123,14 @@ Rechazar:Reject
 Registrar una nueva Venta:Register a New Sale
 Ventas:Sales
 Venta Mayorista:Wholesale
-Total::Total:
-Descuento::Discount:
+Descuento:Discount
 Deshacer:Undo
 Cancelar:Cancel
-Precio::Price:
+Precio:Price
 Cliente:Customer
 Aceptar:Accept
-Subtotal::Subtotal:
-Medio de Pago::Payment Method:
-Fecha::Date:
+Subtotal:Subtotal
+Medio de Pago:Payment Method
 Gestión de Cliente:Customer Management
 Dar de Alta a un Nuevo Cliente:Register New Customer
 Gestionar Cliente:Manage Customer
@@ -148,19 +138,18 @@ IdCliente:Customer ID
 D.N.I.:ID Number
 Tipo Cliente:Customer Type
 IdTipoClienteNavigation:Customer Type Navigation
-Tipo de Cliente::Customer Type:
+Tipo de Cliente:Customer Type
 Minorista:Retail
 Mayorista:Wholesale
-DNI::ID Number:
+DNI:ID Number
 Gestiona de Ventas:Sales Management
 Gestionar Ventas:Manage Sales
-Seleccionar Fecha::Select Date:
+Seleccionar Fecha:Select Date
 Eliminar:Delete
 Historial de Ventas:Sales History
 Ver Todas:View All
 Lista de Precios:Price List
-Lista de precios::Price list:
-Buscar::Search:
+Lista de precios:Price list
 Habilitado:Enabled
 IdUsuario:User ID
 IdSolicitudDePedidoDetalle:Order Request Detail ID
@@ -196,8 +185,8 @@ IdEstadoStockNavigation:Stock Status Navigation
 IdProductoNavigation:Product Navigation
 IdSucursalNavigation:Branch Navigation
 Solicitar el Traspaso de Productos a otra Sucursal:Request Product Transfer to Another Branch
-Sucursal Destino::Destination Branch:
-Sucursal Origen::Origin Branch:
+Sucursal Destino:Destination Branch
+Sucursal Origen:Origin Branch
 Solicitar Traspaso de Productos:Request Product Transfer
 IdSolicitudDeTraspasoDeProductosDetalle:Transfer Request Detail ID
 IdSolicitudDeTraspasoDeProductos:Transfer Request ID
@@ -236,7 +225,7 @@ Información:Information
 Confirmar Acción:Confirm Action
 Nombre, Marca y CUIT del Proveedor son obligatorios.:Name, Brand, and Provider Tax ID are required.
 Error de Validación:Validation Error
-Ingrese el CUIT del Proveedor para filtrar::Enter the Provider's Tax ID to filter:
+Ingrese el CUIT del Proveedor para filtrar:Enter the Provider's Tax ID to filter
 Buscar Productos por Proveedor:Search Products by Provider
 Lista de productos actualizada.:Product list updated.
 Seleccione un producto de la lista.:Select a product from the list.
@@ -265,9 +254,9 @@ El carrito está vacío. Agregue productos antes de cobrar.:The cart is empty. A
 ¿Está seguro que desea cancelar la venta en curso? Se vaciará el carrito.:Are you sure you want to cancel the current sale? The cart will be emptied.
 Confirmar Cancelación:Confirm Cancellation
 Seleccione un producto primero.:Select a product first.
-Ingrese el nombre (o parte del nombre) del producto a buscar::Enter the name (or part of the name) of the product to search:
+Ingrese el nombre (o parte del nombre) del producto a buscar:Enter the name (or part of the name) of the product to search
 Buscar Producto:Search Product
-Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar::Enter the Customer Type ID (0=Retail, 1=Wholesale) to search:
+Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar:Enter the Customer Type ID (0=Retail, 1=Wholesale) to search
 Seleccione una venta de la lista para anular.:Select a sale from the list to void.
 Lista actualizada.:List updated.
 PetShop - Bienvenido {0}:PetShop - Welcome {0}
@@ -279,4 +268,209 @@ El usuario {0} ingresó al sistema.:User {0} logged into the system.
 ¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de $ {0:N2}?\n\nLos productos regresarán al stock de la sucursal.:Are you ABSOLUTELY SURE you want to void this sale for a total of $ {0:N2}?\n\nThe products will return to the branch stock.
 El usuario {0} cerró sesión manualmente.:User {0} logged out manually.
 PetShop - Bienvenido Admin:PetShop - Welcome Admin
-📍 Sucursal: Petshop Pancitas Llenas | 🏠 Dir: Villa Adelina, Jorge Washington 40
+📍 Sucursal: Petshop Pancitas Llenas | 🏠 Dir: Villa Adelina, Jorge Washington 4087:📍 Branch: Petshop Pancitas Llenas | 🏠 Addr: Villa Adelina, Jorge Washington 4087
+Error al abrir: {0}:Error opening: {0}
+Mensaje:Message
+Pendientes:Pending
+Aprobadas:Approved
+Rechazadas:Rejected
+Todas:All
+Peso (Kg):Weight (Kg)
+Efectivo:Cash
+Transferencia:Bank Transfer
+Tarjeta de Débito:Debit Card
+Tarjeta de Crédito:Credit Card
+Subtotal: $ {0:N2}:Subtotal: $ {0:N2}
+Descuento: $ {0:N2}:Discount: $ {0:N2}
+TOTAL: $ {0:N2}:TOTAL: $ {0:N2}
+¡Venta registrada con éxito! Se descontó el stock correctamente. N° de Ticket: {0}:Sale registered successfully! Stock was correctly deducted. Ticket No.: {0}
+Venta Exitosa:Successful Sale
+Cliente agregado exitosamente.:Customer added successfully.
+Buscar Cliente:Search Customer
+Se encontraron {0} clientes para el ID Tipo {1}.:{0} customers found for Type ID {1}.
+Búsqueda Exitosa:Successful Search
+El cliente seleccionado no es válido o está incompleto.:The selected customer is invalid or incomplete.
+Error al guardar los cambios: {0}:Error saving changes: {0}
+Cliente deshabilitado exitosamente.:Customer disabled successfully.
+¿Crear solicitud de pedido con {0} producto(s)?:Create order request with {0} product(s)?
+Solicitud de Pedido creada exitosamente. ID: {0}:Order Request created successfully. ID: {0}
+Solicitud de Pedido dada de baja correctamente.:Order Request deactivated successfully.
+¡Orden de Pedido generada con éxito! ID de la nueva OP: {0}:Order successfully generated! New Order ID: {0}
+¡Proceso completado con éxito! Se generaron 1 Orden(es) de Compra para 1 proveedor(es).:Process completed successfully! Generated 1 Purchase Order(s) for 1 provider(s).
+Generación Exitosa:Successful Generation
+¿Finalizar OC #{0}?:Finalize PO #{0}?
+Operación exitosa.:Successful operation.
+Proveedor agregado exitosamente.:Provider added successfully.
+Proveedor deshabilitado exitosamente.:Provider disabled successfully.
+Lista de proveedores actualizada.:Provider list updated.
+Producto '{0}' agregado y vinculado al proveedor {1}.:Product '{0}' added and linked to provider {1}.
+Error al deshabilitar el producto: {0}:Error disabling product: {0}
+Se actualizarán {0} producto(s). ¿Continuar?:{0} product(s) will be updated. Continue?
+Confirmar actualización:Confirm Update
+Stock actualizado.:Stock updated.
+Cambios aplicados: {0}:Applied changes: {0}
+La tabla se ha actualizado.:The table has been updated.
+Resultado:Result
+Sucursal deshabilitada.:Branch disabled.
+Sucursal creada exitosamente.:Branch created successfully.
+IdEstadoStp:Transfer Status ID
+IdSucursalOrigen:Origin Branch ID
+IdSucursalDestino:Destination Branch ID
+NombreSucursalOrigen:Origin Branch Name
+IdEstadoStpNavigation:Transfer Status Navigation
+¡Éxito!:Success!
+No hay Solicitudes de Traspaso pendientes.:No pending Transfer Requests.
+Seleccione una solicitud para rechazar.:Select a request to reject.
+Seleccione una solicitud para aprobar.:Select a request to approve.
+Confirmar Anulación de Venta:Confirm Sale Void
+Error al anular la venta: {0}:Error voiding the sale: {0}
+La Orden de Compra ha sido exportada a:\n{0}:The Purchase Order has been exported to:\n{0}
+Impresión Exitosa:Successful Print
+¿Está seguro de eliminar el producto {0}? Esta acción borrará sus vínculos con proveedores.:Are you sure you want to delete the product {0}? This action will delete its links with providers.
+Error al eliminar el producto: {0}:Error deleting the product: {0}
+Venta anulada correctamente. El stock ha sido devuelto.:Sale successfully voided. Stock has been returned.
+No se puede eliminar el producto porque ya posee historial asociado (Ventas, Pedidos, etc.) que no puede ser borrado.\n\nDetalle técnico: {0}:Cannot delete the product because it already has associated history (Sales, Orders, etc.) that cannot be deleted.\n\nTechnical detail: {0}
+Restricción de Integridad:Integrity Constraint
+Seleccione la Sucursal donde desea ingresar::
+PetShop - Welcome Admin:
+Seleccione el Idioma Predeterminado::
+📍 Branch: Petshop Pancitas Llenas | 🏠 Addr: Villa Adelina, Jorge Washington 4087:
+Rol de Usuario::
+Seleccione un Usuario::
+Name:
+Enabled:
+Branch:
+Sucursal::
+Contraseña::
+Email::
+Nombre::
+Requested Qty.:
+Net Weight:
+Brand:
+Unit:
+Product:
+Filtrar por Estado::
+Ver Solicitudes de Pedidos::
+Request ID:
+Date:
+Status:
+Quantity:
+Unit Price:
+Order ID:
+Provider:
+Agregar un Nuevo Proveedor::
+Tax ID (CUIT):
+Phone:
+Address:
+Dirección::
+Teléfono::
+CUIT::
+Net Price ($):
+Precio Neto::
+Unidad::
+Peso Neto::
+CUIT Proveedor::
+Descripción::
+Marca::
+No se puede eliminar el producto porque ya posee historial asociado (Ventas, Pedidos, etc.) que no puede ser borrado.  Detalle técnico: The DELETE statement conflicted with the REFERENCE constraint "FK_HistorialIngresoStock_Producto". The conflict occurred in database "PetShopDB", table "dbo.HistorialIngresoStock", column 'IdProducto'.:
+Proveedor Asociado:
+Seleccione un proveedor de la lista desplegable antes de buscar.:
+Se encontraron {0} productos asociados a este proveedor.:
+Seleccione un producto de la lista haciendo clic sobre él para modificarlo.:
+Error al agregar el producto: {0}:
+Error de Persistencia:
+Producto '{0}' agregado correctamente.:
+Los datos del producto han sido actualizados correctamente.:
+¿Está seguro de quitar el producto {0} del catálogo? No podrá utilizarse en nuevas ventas ni pedidos.:
+Error al procesar la solicitud: {0}:
+El producto ha sido quitado del catálogo exitosamente.:
+Teléfono de la Sucursal::
+Ingrese los siguientes datos de la Sucursal::
+Dirección de la Sucursal::
+Tipo de Sucursal::
+Nombre de la Sucursal::
+Habilitar:
+Ver Deshabilitados:
+Branch Name:
+Seleccione una Sucursal::
+Agregar un Producto:
+Ingrese los siguientes datos de el Producto::
+Ver Activos:
+¿Desea reactivar este producto y devolverlo al catálogo?:
+¿Está seguro de deshabilitar este producto?:
+Lista de precios::
+Price:
+Activo:
+Buscar::
+Nombre Producto::
+Cantidad::
+La Orden de Compra ha sido exportada a: C:\Users\fiore\OneDrive\Desktop\OrdenDeCompra_d0afaa2d.txt:
+Date and Time:
+Movement:
+Origin / Destination:
+Entry Date:
+Added Qty.:
+Unit Weight:
+Agregar a un Proveedor:
+Ingrese los siguientes datos de el Proveedor::
+¿Está seguro de deshabilitar a {0}?  ATENCIÓN: Esto también deshabilitará automáticamente todos los productos exclusivos de este proveedor del catálogo.:
+Proveedor y sus productos asociados fueron deshabilitados exitosamente.:
+¿Desea reactivar este proveedor?:
+Error al habilitar: {0}:
+Seleccione un proveedor para buscar.:
+ID Number:
+Customer Type:
+Agregar a un Cliente:
+Ingrese los siguientes datos de el Cliente::
+Tipo de Cliente::
+DNI::
+Los cambios del cliente se guardaron correctamente.:
+¿Desea reactivar este cliente?:
+Cliente habilitado exitosamente.:
+Ver Deshabilitadas:
+Branch Type:
+Depósito-Venta:
+¿Desea deshabilitar la sucursal {0}?:
+Ver Activas:
+¿Desea reactivar esta sucursal?:
+Sucursal habilitada exitosamente.:
+Sucursal Destino::
+Sucursal Origen::
+Agregar un Usuario:
+Ingrese los siguientes datos de el Usuario::
+Error al cargar los catálogos: {0}:
+¿Desea deshabilitar al usuario {0}?:
+Usuario deshabilitado correctamente.:
+¿Desea reactivar al usuario {0}?:
+Usuario rehabilitado correctamente.:
+--- Seleccione Sucursal ---:
+Ingrese la nueva contraseña::
+Ingrese una cantidad válida mayor a 0.:
+¿Eliminar este producto?:
+Los datos del proveedor han sido actualizados correctamente.:
+Seleccionar Proveedor::
+Product ID:
+Current Stock:
+Desired Stock:
+Stock to Add:
+Destination Branch:
+Destination Address:
+Total::
+Descuento::
+Precio::
+Subtotal::
+Medio de Pago::
+Fecha::
+Ingrese el nombre (o parte del nombre) del producto a buscar::
+Seleccionar Fecha::
+Customer:
+PesoNeto:
+PrecioUnitario:
+Time:
+Tipo de Venta:
+Retirar producto:
+CUIT y Teléfono deben ser números válidos.:
+Sucursal actualizada correctamente.:
+Por favor, seleccione un Cliente válido de la lista antes de registrar la venta.:
+Cliente Faltante:
+N°:

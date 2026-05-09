@@ -18,7 +18,7 @@ namespace FormUI.FormVenta
     {
         //private ProductoDTO? _productoSeleccionado = null;
         private BindingList<VentaDetalleDTO> _carrito = new BindingList<VentaDetalleDTO>();
-       
+
         /// <summary>
         /// Inicializa el formulario y sus componentes visuales base.
         /// </summary>
@@ -88,7 +88,7 @@ namespace FormUI.FormVenta
         private void CargarProductosEnCombo()
         {
             Logic.Facade.ProductoService productoService = new Logic.Facade.ProductoService();
-            cmbProducto.DataSource = productoService.GetAllProductos();
+            cmbProducto.DataSource = productoService.ObtenerActivos();
             cmbProducto.DisplayMember = "NombreConPeso";
             cmbProducto.ValueMember = "IdProducto";
             cmbProducto.SelectedIndex = -1;
@@ -157,6 +157,7 @@ namespace FormUI.FormVenta
                         chkMayorista.Checked = false;
                     }
                 }
+                cmbCliente.SelectedIndexChanged += cmbCliente_SelectedIndexChanged;
             }
             catch (Exception ex)
             {
@@ -165,7 +166,7 @@ namespace FormUI.FormVenta
             TraductorUI.TraducirFormulario(this);
         }
         /// <summary>
-        /// Detecta la selección de un producto y autocompleta los campos visuales de precio y peso neto.
+        /// Detecta la selección de un producto y autocompleta los campos visuales de precio, peso neto y marca.
         /// </summary>
         private void cmbProducto_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -173,17 +174,21 @@ namespace FormUI.FormVenta
             {
                 decimal precioSeguro = (decimal)(productoElegido.PrecioNeto ?? 0);
                 txtbPrecioProd.Text = precioSeguro.ToString("N2");
+
                 decimal pesoSeguro = (decimal)(productoElegido.PesoNeto ?? 0);
-                txtbPesoNeto.Text = $"{pesoSeguro} kg";
+                txtbPesoNeto.Text = string.Format("{0} {1}", pesoSeguro, productoElegido.Unidad ?? "kg");
+
+                txtbMarca.Text = productoElegido.Marca ?? ""; 
             }
             else
             {
                 txtbPrecioProd.Clear();
                 txtbPesoNeto.Clear();
+                txtbMarca.Clear();
             }
         }
         /// <summary>
-        /// Solicita al usuario un texto de búsqueda, filtra el catálogo en memoria y actualiza el menú desplegable con las coincidencias.
+        /// Solicita al usuario un texto de búsqueda, filtra el catálogo de productos ACTIVOS en memoria y actualiza el menú desplegable.
         /// </summary>
         private void btnBuscarProd_Click(object sender, EventArgs e)
         {
@@ -197,15 +202,15 @@ namespace FormUI.FormVenta
             try
             {
                 Logic.Facade.ProductoService productoService = new Logic.Facade.ProductoService();
-                List<ProductoDTO> todosLosProductos = productoService.GetAllProductos();
+                List<ProductoDTO> productosActivos = productoService.ObtenerActivos();
 
-                List<ProductoDTO> listaFiltrada = todosLosProductos
+                List<ProductoDTO> listaFiltrada = productosActivos
                     .Where(p => p.NombreProducto.ToLower().Contains(input.ToLower()))
                     .ToList();
 
                 if (listaFiltrada.Count == 0)
                 {
-                    MessageBox.Show(string.Format("No se encontró ningún producto que contenga '{0}'.".Traducir(), input), "Sin resultados".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(string.Format("No se encontró ningún producto activo que contenga '{0}'.".Traducir(), input), "Sin resultados".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -215,7 +220,6 @@ namespace FormUI.FormVenta
                 cmbProducto.ValueMember = "IdProducto";
                 cmbProducto.SelectedIndex = -1;
                 cmbProducto.DroppedDown = true;
-
             }
             catch (Exception ex)
             {
@@ -383,5 +387,30 @@ namespace FormUI.FormVenta
                 LimpiarPantalla();
             }
         }
-    }   
+        /// <summary>
+        /// Detecta cuando se selecciona un cliente y marca automáticamente la casilla de Mayorista 
+        /// si el cliente tiene esa categoría y la sucursal permite este tipo de ventas.
+        /// </summary>
+        private void cmbCliente_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (cmbCliente.SelectedItem != null && cmbCliente.SelectedIndex != -1)
+            {
+                var clienteSeleccionado = cmbCliente.SelectedItem as ClienteDTO;
+
+                if (clienteSeleccionado != null)
+                {
+                    bool esClienteMayorista = (clienteSeleccionado.IdTipoCliente == 1);
+
+                    if (esClienteMayorista && chkMayorista.Visible)
+                    {
+                        chkMayorista.Checked = true;
+                    }
+                    else
+                    {
+                        chkMayorista.Checked = false;
+                    }
+                }
+            }
+        }
+    }
 }

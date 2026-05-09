@@ -17,6 +17,7 @@ namespace ModelsDTO
         public int? Telefono { get; set; }
 
         public string? Direccion { get; set; }
+        public bool Activo { get; set; }
 
         public virtual ICollection<ProveedorProductoDTO> ProveedorProductos { get; set; } = new List<ProveedorProductoDTO>();
     }

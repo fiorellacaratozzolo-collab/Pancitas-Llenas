@@ -13,6 +13,8 @@ public partial class Cliente
 
     public int IdTipoCliente { get; set; }
 
+    public bool Activo { get; set; }
+
     public virtual TipoClienteEnum IdTipoClienteNavigation { get; set; } = null!;
 
     public virtual ICollection<Ventum> Venta { get; set; } = new List<Ventum>();

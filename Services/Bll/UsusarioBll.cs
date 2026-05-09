@@ -28,7 +28,7 @@ namespace Services.Bll
         }
 
         /// <summary>
-        /// Valida las reglas de negocio (campos obligatorios y unicidad de datos), encripta la contraseña y registra un nuevo usuario en el sistema.
+        /// Valida las reglas de negocio, encripta la contraseña y registra un nuevo usuario.
         /// </summary>
         public void RegistrarUsuario(string nombre, string email, string contraseñaClara, Guid? idSucursal)
         {
@@ -37,16 +37,24 @@ namespace Services.Bll
                 throw new Exception("Todos los campos (Nombre, Email y Contraseña) son obligatorios.");
             }
 
-            Usuario usuarioExistente = _usuarioRepo.GetByUserName(nombre);
+            var usuarioExistente = _usuarioRepo.GetByUserName(nombre);
             if (usuarioExistente != null)
             {
-                throw new Exception(string.Format("El nombre de usuario '{0}' ya está en uso. Por favor, elija otro.", nombre));
+                if (!usuarioExistente.Habilitado)
+                    throw new Exception(string.Format("El nombre de usuario '{0}' pertenece a una cuenta deshabilitada.\nVaya a la vista de Deshabilitados para reactivarla.", nombre));
+                else
+                    throw new Exception(string.Format("El nombre de usuario '{0}' ya está en uso. Por favor, elija otro.", nombre));
             }
 
             var todosLosUsuarios = _usuarioRepo.GetAll();
-            if (todosLosUsuarios.Any(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
+            var emailExistente = todosLosUsuarios.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+            if (emailExistente != null)
             {
-                throw new Exception(string.Format("El email '{0}' ya se encuentra registrado en el sistema.", email));
+                if (!emailExistente.Habilitado)
+                    throw new Exception(string.Format("El email '{0}' pertenece a un usuario deshabilitado.\nVaya a la vista de Deshabilitados para reactivarlo.", email));
+                else
+                    throw new Exception(string.Format("El email '{0}' ya se encuentra registrado en el sistema.", email));
             }
 
             string contraseñaHasheada = Services.Facade.CryptographyService.HashMd5(contraseñaClara);
@@ -63,18 +71,34 @@ namespace Services.Bll
             _usuarioRepo.Add(nuevoUsuario);
 
             BitácoraBll bitacora = new BitácoraBll();
-            bitacora.RegistrarLog(string.Format("Se dio de alta al nuevo usuario: {0} ({1})", nombre, email), Criticidad.Info);
+            bitacora.RegistrarLog(string.Format("Se dio de alta al nuevo usuario: {0} ({1})", nombre, email), DomainModel.Logging.Criticidad.Info);
         }
 
         /// <summary>
-        /// Valida las credenciales de inicio de sesión, verifica el estado de habilitación del usuario y ensambla su árbol de privilegios.
+        /// Obtiene solo los usuarios que están actualmente HABILITADOS.
+        /// </summary>
+        public IEnumerable<Usuario> ObtenerActivos()
+        {
+            return _usuarioRepo.GetAll().Where(u => u.Habilitado == true);
+        }
+
+        /// <summary>
+        /// Obtiene solo los usuarios que están actualmente DESHABILITADOS.
+        /// </summary>
+        public IEnumerable<Usuario> ObtenerDeshabilitados()
+        {
+            return _usuarioRepo.GetAll().Where(u => u.Habilitado == false);
+        }
+
+        /// <summary>
+        /// Valida las credenciales de inicio de sesión y ensambla su árbol de privilegios.
         /// </summary>
         public Usuario ValidarCredenciales(string username, string passwordClara)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(passwordClara))
                 throw new Exception("Debe ingresar usuario y contraseña.");
 
-            string passwordHasheada = CryptographyService.HashMd5(passwordClara);
+            string passwordHasheada = Facade.CryptographyService.HashMd5(passwordClara);
             Usuario usuarioLogueado = _usuarioRepo.GetByCredentials(username, passwordHasheada);
 
             if (usuarioLogueado == null)
@@ -85,22 +109,22 @@ namespace Services.Bll
                 throw new UsuarioBloqueadoException(username, "El usuario fue deshabilitado por el administrador.");
             }
 
-            Services.Dal.Implementations.PermisosRepository permisosRepo = new Services.Dal.Implementations.PermisosRepository();
+            Dal.Implementations.PermisosRepository permisosRepo = new Dal.Implementations.PermisosRepository();
             permisosRepo.CargarPrivilegios(usuarioLogueado);
 
             return usuarioLogueado;
         }
 
         /// <summary>
-        /// Obtiene la colección completa de usuarios registrados en el sistema.
+        /// Obtiene la colección de usuarios HABILITADOS (Mantiene compatibilidad con módulos antiguos).
         /// </summary>
         public IEnumerable<Usuario> ListarTodos()
         {
-            return _usuarioRepo.GetAll();
+            return ObtenerActivos();
         }
 
         /// <summary>
-        /// Recupera un usuario específico mediante su identificador, incluyendo la carga de sus permisos asociados.
+        /// Recupera un usuario específico mediante su identificador, incluyendo sus permisos.
         /// </summary>
         public Usuario GetById(Guid idUsuario)
         {
@@ -110,7 +134,7 @@ namespace Services.Bll
 
             if (usuarioEncontrado != null)
             {
-                Services.Dal.Implementations.PermisosRepository permisosRepo = new Services.Dal.Implementations.PermisosRepository();
+                Dal.Implementations.PermisosRepository permisosRepo = new Dal.Implementations.PermisosRepository();
                 permisosRepo.CargarPrivilegios(usuarioEncontrado);
             }
 
@@ -118,7 +142,7 @@ namespace Services.Bll
         }
 
         /// <summary>
-        /// Valida y actualiza la información básica de perfil de un usuario, garantizando que no se generen nombres o correos duplicados.
+        /// Valida y actualiza la información básica de perfil de un usuario garantizando que no haya duplicados.
         /// </summary>
         public void ActualizarUsuario(Guid idUsuario, string nombre, string email, Guid? idSucursal)
         {
@@ -137,18 +161,14 @@ namespace Services.Bll
                 u.IdUsuario != idUsuario);
 
             if (nombreDuplicado)
-            {
                 throw new Exception(string.Format("El nombre de usuario '{0}' ya está en uso por otra persona.", nombre));
-            }
 
             bool emailDuplicado = todosLosUsuarios.Any(u =>
                 u.Email.Equals(email, StringComparison.OrdinalIgnoreCase) &&
                 u.IdUsuario != idUsuario);
 
             if (emailDuplicado)
-            {
                 throw new Exception(string.Format("El email '{0}' ya se encuentra registrado por otra persona.", email));
-            }
 
             Usuario usuarioExistente = _usuarioRepo.GetById(idUsuario);
             if (usuarioExistente == null) throw new Exception("El usuario no existe en la base de datos.");
@@ -160,11 +180,11 @@ namespace Services.Bll
             _usuarioRepo.Update(usuarioExistente);
 
             BitácoraBll bitacora = new BitácoraBll();
-            bitacora.RegistrarLog(string.Format("Se actualizó el usuario: {0}", nombre), Services.DomainModel.Logging.Criticidad.Info);
+            bitacora.RegistrarLog(string.Format("Se actualizó el usuario: {0}", nombre), DomainModel.Logging.Criticidad.Info);
         }
 
         /// <summary>
-        /// Ejecuta una baja lógica del usuario en el sistema impidiendo su acceso, dejando constancia en la auditoría.
+        /// Ejecuta una baja lógica del usuario en el sistema impidiendo su acceso, dejando constancia en auditoría.
         /// </summary>
         public void DeshabilitarUsuario(Guid idUsuario)
         {
@@ -174,11 +194,10 @@ namespace Services.Bll
             if (usuarioExistente == null) throw new Exception("El usuario no existe en la base de datos.");
 
             usuarioExistente.Habilitado = false;
-
             _usuarioRepo.Update(usuarioExistente);
 
             BitácoraBll bitacora = new BitácoraBll();
-            bitacora.RegistrarLog(string.Format("Se deshabilitó al usuario: {0}", usuarioExistente.Nombre), Criticidad.Warning);
+            bitacora.RegistrarLog(string.Format("Se deshabilitó al usuario: {0}", usuarioExistente.Nombre), DomainModel.Logging.Criticidad.Warning);
         }
 
         /// <summary>
@@ -192,26 +211,25 @@ namespace Services.Bll
             if (usuarioExistente == null) throw new Exception("El usuario no existe en la base de datos.");
 
             usuarioExistente.Habilitado = true;
-
             _usuarioRepo.Update(usuarioExistente);
 
             BitácoraBll bitacora = new BitácoraBll();
-            bitacora.RegistrarLog(string.Format("Se habilitó al usuario: {0}", usuarioExistente.Nombre), Criticidad.Info);
+            bitacora.RegistrarLog(string.Format("Se habilitó al usuario: {0}", usuarioExistente.Nombre), DomainModel.Logging.Criticidad.Info);
         }
 
         /// <summary>
-        /// Filtra la lista de usuarios en memoria buscando coincidencias ignorando mayúsculas y minúsculas por nombre o correo electrónico.
+        /// Filtra la lista de usuarios ACTIVOS en memoria buscando coincidencias ignorando mayúsculas.
         /// </summary>
         public IEnumerable<Usuario> BuscarUsuarios(string criterio)
         {
-            var todosLosUsuarios = _usuarioRepo.GetAll();
+            var usuariosActivos = ObtenerActivos();
 
             if (string.IsNullOrWhiteSpace(criterio))
-                return todosLosUsuarios;
+                return usuariosActivos;
 
             criterio = criterio.ToLower();
 
-            return todosLosUsuarios.Where(u =>
+            return usuariosActivos.Where(u =>
                 u.Nombre.ToLower().Contains(criterio) ||
                 u.Email.ToLower().Contains(criterio)
             ).ToList();
@@ -228,32 +246,28 @@ namespace Services.Bll
             Usuario usuarioExistente = _usuarioRepo.GetById(idUsuario);
             if (usuarioExistente == null) throw new Exception("El usuario no existe.");
 
-            usuarioExistente.Password = Services.Facade.CryptographyService.HashMd5(nuevaContraseñaClara);
-
+            usuarioExistente.Password = Facade.CryptographyService.HashMd5(nuevaContraseñaClara);
             _usuarioRepo.Update(usuarioExistente);
 
             BitácoraBll bitacora = new BitácoraBll();
-            bitacora.RegistrarLog(string.Format("Se modificó la contraseña del usuario: {0}", usuarioExistente.Nombre), Criticidad.Warning);
+            bitacora.RegistrarLog(string.Format("Se modificó la contraseña del usuario: {0}", usuarioExistente.Nombre), DomainModel.Logging.Criticidad.Warning);
         }
 
         /// <summary>
-        /// Actualiza la preferencia de idioma de un usuario y registra el evento en la auditoría del sistema.
+        /// Actualiza la preferencia de idioma de un usuario y registra el evento en la auditoría.
         /// </summary>
         public void ActualizarIdiomaPredeterminado(Guid idUsuario, string nuevoIdioma)
         {
             if (idUsuario == Guid.Empty) throw new Exception("ID de usuario inválido.");
 
             Usuario usuarioExistente = _usuarioRepo.GetById(idUsuario);
-
             if (usuarioExistente == null) throw new Exception("El usuario no existe en la base de datos.");
 
             usuarioExistente.IdiomaPredeterminado = nuevoIdioma;
-
             _usuarioRepo.Update(usuarioExistente);
 
             BitácoraBll bitacora = new BitácoraBll();
-            bitacora.RegistrarLog(string.Format("Se modificó el idioma predeterminado ({0}) del usuario: {1}", nuevoIdioma, usuarioExistente.Nombre), Criticidad.Info);
+            bitacora.RegistrarLog(string.Format("Se modificó el idioma predeterminado ({0}) del usuario: {1}", nuevoIdioma, usuarioExistente.Nombre), DomainModel.Logging.Criticidad.Info);
         }
     }
 }
-

@@ -17,15 +17,19 @@ namespace FormUI.FormVenta
     public partial class FormGestiónCliente : Form
     {
         private readonly ClienteService _clienteService = new ClienteService();
+        private Guid? _clienteSeleccionadoId = null;
+        private bool _viendoActivos = true;
 
         /// <summary>
-        /// Inicializa el formulario, suscribe los eventos de formato visual y desencadena la carga inicial de los clientes en la grilla.
+        /// Inicializa el formulario, suscribe los eventos visuales y desencadena la carga inicial.
         /// </summary>
         public FormGestiónCliente()
         {
             InitializeComponent();
             dgvCliente.CellFormatting += dgvCliente_CellFormatting;
-            CargarDatosClientes();
+            dgvCliente.SelectionChanged += dgvCliente_SelectionChanged;
+
+            ConfigurarEstadoInicial();
         }
 
         /// <summary>
@@ -34,19 +38,42 @@ namespace FormUI.FormVenta
         private void FormGestiónCliente_Load(object sender, EventArgs e)
         {
             TraductorUI.TraducirFormulario(this);
+            LimpiarControles();
         }
 
         /// <summary>
-        /// Consulta el servicio de clientes para obtener todos los registros y vincula los datos a la grilla principal.
+        /// Establece la interfaz visual por defecto mostrando los clientes activos.
         /// </summary>
-        private void CargarDatosClientes()
+        private void ConfigurarEstadoInicial()
+        {
+            _viendoActivos = true;
+            btnHabilitar.Visible = false;
+            btnDeshabilitar.Visible = true;
+            btnVerDeshabilitados.Text = "Ver Deshabilitados".Traducir();
+
+            CargarDatosClientes();
+        }
+
+        /// <summary>
+        /// Consulta el servicio para obtener los registros (Activos o Inactivos) y vincula los datos a la grilla.
+        /// Acepta una lista opcional para cuando se usa el botón de búsqueda.
+        /// </summary>
+        private void CargarDatosClientes(List<ClienteDTO>? clientes = null)
         {
             try
             {
-                List<ClienteDTO> listaClientes = _clienteService.GetAllClientes();
+                if (clientes == null)
+                {
+                    clientes = _viendoActivos
+                        ? _clienteService.ObtenerActivos()
+                        : _clienteService.ObtenerDeshabilitados();
+                }
+
                 dgvCliente.DataSource = null;
-                dgvCliente.DataSource = listaClientes;
+                dgvCliente.DataSource = clientes;
+
                 ConfigurarColumnasDataGridView();
+                LimpiarControles();
             }
             catch (Exception ex)
             {
@@ -62,91 +89,39 @@ namespace FormUI.FormVenta
             if (dgvCliente.DataSource == null) return;
 
             dgvCliente.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvCliente.AllowUserToAddRows = false;
+            dgvCliente.ReadOnly = true;
+            dgvCliente.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            if (dgvCliente.Columns.Contains("IdCliente"))
+            string[] columnasOcultas = { "IdCliente", "VentaDetalles", "IdTipoClienteNavigation", "Venta", "Activo" };
+
+            foreach (var col in columnasOcultas)
             {
-                dgvCliente.Columns["IdCliente"].Visible = false;
-            }
-            if (dgvCliente.Columns.Contains("VentaDetalles"))
-            {
-                dgvCliente.Columns["VentaDetalles"].Visible = false;
-            }
-            if (dgvCliente.Columns.Contains("IdTipoClienteNavigation"))
-            {
-                dgvCliente.Columns["IdTipoClienteNavigation"].Visible = false;
-            }
-            if (dgvCliente.Columns.Contains("Venta"))
-            {
-                dgvCliente.Columns["Venta"].Visible = false;
+                if (dgvCliente.Columns.Contains(col)) dgvCliente.Columns[col].Visible = false;
             }
 
-            if (dgvCliente.Columns.Contains("NombreCliente"))
-            {
-                dgvCliente.Columns["NombreCliente"].HeaderText = "Nombre".Traducir();
-            }
-            if (dgvCliente.Columns.Contains("Dni"))
-            {
-                dgvCliente.Columns["Dni"].HeaderText = "D.N.I.".Traducir();
-            }
-            if (dgvCliente.Columns.Contains("IdTipoCliente"))
-            {
-                dgvCliente.Columns["IdTipoCliente"].HeaderText = "Tipo Cliente".Traducir();
-            }
+            if (dgvCliente.Columns.Contains("NombreCliente")) dgvCliente.Columns["NombreCliente"].HeaderText = "Nombre".Traducir();
+            if (dgvCliente.Columns.Contains("Dni")) dgvCliente.Columns["Dni"].HeaderText = "D.N.I.".Traducir();
+            if (dgvCliente.Columns.Contains("IdTipoCliente")) dgvCliente.Columns["IdTipoCliente"].HeaderText = "Tipo Cliente".Traducir();
 
             dgvCliente.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
-            dgvCliente.AllowUserToAddRows = false;
         }
 
         /// <summary>
-        /// Valida los datos de entrada, determina el tipo de cliente y registra un nuevo cliente en la base de datos.
+        /// Valida los datos de entrada, determina el tipo de cliente y registra un nuevo cliente.
         /// </summary>
         private void btnAgregarCliente_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtbNombreCliente.Text))
-            {
-                MessageBox.Show("El campo Nombre es obligatorio.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            if (!ValidarCampos()) return;
 
-            if (!int.TryParse(txtbDNI.Text, out int dniValue))
-            {
-                MessageBox.Show("El DNI debe ser un número válido.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            int idTipoCliente;
-            if (rbtnMayorista.Checked)
-            {
-                idTipoCliente = 1;
-            }
-            else if (rbtnMinorista.Checked)
-            {
-                idTipoCliente = 0;
-            }
-            else
-            {
-                MessageBox.Show("Debe seleccionar un Tipo de Cliente (Mayorista o Minorista).".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            var nuevoCliente = new ClienteDTO
-            {
-                NombreCliente = txtbNombreCliente.Text.Trim(),
-                Dni = dniValue,
-                IdTipoCliente = idTipoCliente,
-            };
+            var nuevoCliente = CrearDTO();
 
             try
             {
-                Guid newClientId = _clienteService.CreateCliente(nuevoCliente);
+                _clienteService.CreateCliente(nuevoCliente);
 
                 MessageBox.Show("Cliente agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LimpiarControles();
                 CargarDatosClientes();
-            }
-            catch (ArgumentNullException ex)
-            {
-                MessageBox.Show(string.Format("Error de datos: {0}".Traducir(), ex.Message), "Error de Alta".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -155,77 +130,57 @@ namespace FormUI.FormVenta
         }
 
         /// <summary>
-        /// Restablece los campos de texto y botones de selección a su estado predeterminado.
-        /// </summary>
-        private void LimpiarControles()
-        {
-            txtbNombreCliente.Text = string.Empty;
-            txtbDNI.Text = string.Empty;
-            rbtnMayorista.Checked = false;
-            rbtnMinorista.Checked = false;
-            txtbNombreCliente.Focus();
-        }
-
-        /// <summary>
-        /// Verifica la selección en la grilla y envía los datos del cliente modificado al servicio para su actualización.
+        /// Captura los datos de los controles y actualiza el cliente seleccionado en la base de datos.
         /// </summary>
         private void btnActualizar_Click_1(object sender, EventArgs e)
         {
-            if (dgvCliente.CurrentRow != null && !dgvCliente.CurrentRow.IsNewRow && dgvCliente.CurrentRow.DataBoundItem is ClienteDTO clienteEditado)
+            if (_clienteSeleccionadoId == null)
             {
-                if (clienteEditado.IdCliente == Guid.Empty)
-                {
-                    MessageBox.Show("El cliente seleccionado no es válido o está incompleto.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+                MessageBox.Show("Por favor, seleccione un cliente válido de la lista para modificar.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            if (!ValidarCampos()) return;
+
+            var clienteEditado = CrearDTO();
+            clienteEditado.IdCliente = _clienteSeleccionadoId.Value;
+
+            try
+            {
+                _clienteService.UpdateCliente(clienteEditado);
+
+                MessageBox.Show("Los cambios del cliente se guardaron correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CargarDatosClientes();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error al guardar los cambios: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Solicita confirmación y ejecuta la baja lógica del cliente seleccionado.
+        /// </summary>
+        private void btnDeshabilitar_Click(object sender, EventArgs e)
+        {
+            if (_clienteSeleccionadoId == null) return;
+
+            string nombre = txtbNombreCliente.Text;
+
+            DialogResult dialogResult = MessageBox.Show(string.Format("¿Está seguro de deshabilitar a {0}?".Traducir(), nombre), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (dialogResult == DialogResult.Yes)
+            {
                 try
                 {
-                    _clienteService.UpdateCliente(clienteEditado);
-
-                    MessageBox.Show("Los cambios del cliente se guardaron correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _clienteService.DeshabilitarCliente(_clienteSeleccionadoId.Value);
+                    MessageBox.Show("Cliente deshabilitado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     CargarDatosClientes();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(string.Format("Error al guardar los cambios: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(string.Format("Error al deshabilitar el cliente: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
-            else
-            {
-                MessageBox.Show("Por favor, seleccione un cliente válido de la lista para modificar.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        /// <summary>
-        /// Solicita confirmación y ejecuta la baja lógica del cliente seleccionado en el sistema.
-        /// </summary>
-        private void btnDeshabilitar_Click(object sender, EventArgs e)
-        {
-            if (dgvCliente.CurrentRow != null && !dgvCliente.CurrentRow.IsNewRow)
-            {
-                Guid clienteId = (Guid)dgvCliente.CurrentRow.Cells["IdCliente"].Value;
-                string nombre = dgvCliente.CurrentRow.Cells["NombreCliente"].Value?.ToString() ?? string.Empty;
-
-                DialogResult dialogResult = MessageBox.Show(string.Format("¿Está seguro de deshabilitar a {0}?".Traducir(), nombre), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (dialogResult == DialogResult.Yes)
-                {
-                    try
-                    {
-                        _clienteService.DeshabilitarCliente(clienteId);
-                        CargarDatosClientes();
-                        MessageBox.Show("Cliente deshabilitado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(string.Format("Error al deshabilitar el cliente: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show("Debe seleccionar una fila para deshabilitar.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
@@ -240,12 +195,10 @@ namespace FormUI.FormVenta
             {
                 try
                 {
-                    List<ClienteDTO> listaFiltrada = _clienteService.BuscarClientesPorTipo(idTipoCliente);
+                    List<ClienteDTO> listaFiltrada = _clienteService.BuscarClientesPorTipo(idTipoCliente)
+                                                                    .Where(c => c.Activo == _viendoActivos).ToList();
 
-                    dgvCliente.DataSource = null;
-                    dgvCliente.DataSource = listaFiltrada;
-                    ConfigurarColumnasDataGridView();
-
+                    CargarDatosClientes(listaFiltrada);
                     MessageBox.Show(string.Format("Se encontraron {0} clientes para el ID Tipo {1}.".Traducir(), listaFiltrada.Count, idTipoCliente), "Búsqueda Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
@@ -260,7 +213,7 @@ namespace FormUI.FormVenta
         }
 
         /// <summary>
-        /// Intercepta el dibujado de las celdas para transformar el valor numérico del Tipo de Cliente en una etiqueta legible para el usuario.
+        /// Intercepta el dibujado de las celdas para transformar el valor numérico del Tipo de Cliente en una etiqueta legible.
         /// </summary>
         private void dgvCliente_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
@@ -272,6 +225,136 @@ namespace FormUI.FormVenta
                     e.FormattingApplied = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Escucha el clic en la grilla, carga los datos en TextBoxes/RadioButtons y maneja los botones.
+        /// </summary>
+        private void dgvCliente_SelectionChanged(object? sender, EventArgs e)
+        {
+            if (dgvCliente.CurrentRow != null && dgvCliente.CurrentRow.Selected && dgvCliente.DataSource != null)
+            {
+                _clienteSeleccionadoId = (Guid?)dgvCliente.CurrentRow.Cells["IdCliente"].Value;
+
+                txtbNombreCliente.Text = dgvCliente.CurrentRow.Cells["NombreCliente"].Value?.ToString();
+                txtbDNI.Text = dgvCliente.CurrentRow.Cells["Dni"].Value?.ToString();
+
+                if (dgvCliente.CurrentRow.Cells["IdTipoCliente"].Value is int idTipo)
+                {
+                    if (idTipo == 1) rbtnMayorista.Checked = true;
+                    else if (idTipo == 0) rbtnMinorista.Checked = true;
+                }
+
+                btnAgregarCliente.Enabled = false;
+                btnActualizar.Enabled = true;
+                btnDeshabilitar.Enabled = _viendoActivos;
+                btnHabilitar.Enabled = !_viendoActivos;
+            }
+        }
+
+        /// <summary>
+        /// Solicita confirmación y vuelve a habilitar un cliente inactivo.
+        /// </summary>
+        private void btnHabilitar_Click(object sender, EventArgs e)
+        {
+            if (_clienteSeleccionadoId == null) return;
+
+            if (MessageBox.Show("¿Desea reactivar este cliente?".Traducir(), "Confirmar".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try
+                {
+                    _clienteService.HabilitarCliente(_clienteSeleccionadoId.Value);
+                    MessageBox.Show("Cliente habilitado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CargarDatosClientes();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("Error al habilitar: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Alterna la vista de la grilla entre clientes Activos e Inactivos.
+        /// </summary>
+        private void btnVerDeshabilitados_Click(object sender, EventArgs e)
+        {
+            _viendoActivos = !_viendoActivos;
+
+            btnVerDeshabilitados.Text = _viendoActivos ? "Ver Deshabilitados".Traducir() : "Ver Activos".Traducir();
+            btnHabilitar.Visible = !_viendoActivos;
+            btnDeshabilitar.Visible = _viendoActivos;
+
+            CargarDatosClientes();
+        }
+
+        /// <summary>
+        /// Limpia los campos llamando al método centralizado.
+        /// </summary>
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            LimpiarControles();
+        }
+
+        /// <summary>
+        /// Restablece los campos de texto, radio buttons y el estado de los botones a su valor predeterminado.
+        /// </summary>
+        private void LimpiarControles()
+        {
+            _clienteSeleccionadoId = null;
+            txtbNombreCliente.Text = string.Empty;
+            txtbDNI.Text = string.Empty;
+            rbtnMayorista.Checked = false;
+            rbtnMinorista.Checked = false;
+
+            if (dgvCliente.DataSource != null) dgvCliente.ClearSelection();
+
+            btnAgregarCliente.Enabled = _viendoActivos;
+            btnActualizar.Enabled = false;
+            btnDeshabilitar.Enabled = false;
+            btnHabilitar.Enabled = false;
+
+            txtbNombreCliente.Focus();
+        }
+
+        /// <summary>
+        /// Valida que los datos ingresados en el formulario sean correctos.
+        /// </summary>
+        private bool ValidarCampos()
+        {
+            if (string.IsNullOrWhiteSpace(txtbNombreCliente.Text))
+            {
+                MessageBox.Show("El campo Nombre es obligatorio.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (!int.TryParse(txtbDNI.Text, out _))
+            {
+                MessageBox.Show("El DNI debe ser un número válido.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            if (!rbtnMayorista.Checked && !rbtnMinorista.Checked)
+            {
+                MessageBox.Show("Debe seleccionar un Tipo de Cliente (Mayorista o Minorista).".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Crea un ClienteDTO leyendo los controles del formulario.
+        /// </summary>
+        private ClienteDTO CrearDTO()
+        {
+            return new ClienteDTO
+            {
+                NombreCliente = txtbNombreCliente.Text.Trim(),
+                Dni = int.Parse(txtbDNI.Text),
+                IdTipoCliente = rbtnMayorista.Checked ? 1 : 0,
+                Activo = _viendoActivos
+            };
         }
     }
 }

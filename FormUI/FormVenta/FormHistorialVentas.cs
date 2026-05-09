@@ -25,6 +25,7 @@ namespace FormUI.FormVenta
         public FormHistorialVentas()
         {
             InitializeComponent();
+            dgvHistorialVentas.CellFormatting += dgvHistorialVentas_CellFormatting;
             _ventaService = new VentaService();
         }
         /// <summary>
@@ -96,7 +97,6 @@ namespace FormUI.FormVenta
             if (dgvHistorialVentas.Columns.Contains("VentaDetalles")) dgvHistorialVentas.Columns["VentaDetalles"].Visible = false;
             if (dgvHistorialVentas.Columns.Contains("NumeroVenta")) dgvHistorialVentas.Columns["NumeroVenta"].Visible = false;
             if (dgvHistorialVentas.Columns.Contains("MontoDescuento")) dgvHistorialVentas.Columns["MontoDescuento"].Visible = false;
-            if (dgvHistorialVentas.Columns.Contains("EsMayorista")) dgvHistorialVentas.Columns["EsMayorista"].Visible = false;
 
             if (dgvHistorialVentas.Columns.Contains("FechaVenta"))
             {
@@ -111,12 +111,42 @@ namespace FormUI.FormVenta
                 dgvHistorialVentas.Columns["NombreCliente"].DisplayIndex = 1;
             }
 
+            if (dgvHistorialVentas.Columns.Contains("EsMayorista"))
+            {
+                if (dgvHistorialVentas.Columns["EsMayorista"] is DataGridViewCheckBoxColumn)
+                {
+                    int indiceAnterior = dgvHistorialVentas.Columns["EsMayorista"].Index;
+                    dgvHistorialVentas.Columns.Remove("EsMayorista");
+                    DataGridViewTextBoxColumn colTexto = new DataGridViewTextBoxColumn();
+                    colTexto.Name = "EsMayorista";
+                    colTexto.DataPropertyName = "EsMayorista";
+                    dgvHistorialVentas.Columns.Insert(indiceAnterior, colTexto);
+                }
+                dgvHistorialVentas.Columns["EsMayorista"].HeaderText = "Tipo de Venta".Traducir();
+                dgvHistorialVentas.Columns["EsMayorista"].DisplayIndex = 2;
+                dgvHistorialVentas.Columns["EsMayorista"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
+
             if (dgvHistorialVentas.Columns.Contains("Total"))
             {
                 dgvHistorialVentas.Columns["Total"].HeaderText = "Total ($)".Traducir();
                 dgvHistorialVentas.Columns["Total"].DefaultCellStyle.Format = "C2";
                 dgvHistorialVentas.Columns["Total"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dgvHistorialVentas.Columns["Total"].DisplayIndex = 2;
+                dgvHistorialVentas.Columns["Total"].DisplayIndex = 3;
+            }
+        }        
+        /// <summary>
+        /// Intercepta el dibujado de las celdas para transformar el valor booleano 'EsMayorista' en una etiqueta legible.
+        /// </summary>
+        private void dgvHistorialVentas_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (dgvHistorialVentas.Columns[e.ColumnIndex].Name == "EsMayorista" && e.Value != null)
+            {
+                if (e.Value is bool esMayorista)
+                {
+                    e.Value = esMayorista ? "Mayorista".Traducir() : "Minorista".Traducir();
+                    e.FormattingApplied = true;
+                }
             }
         }
         /// <summary>

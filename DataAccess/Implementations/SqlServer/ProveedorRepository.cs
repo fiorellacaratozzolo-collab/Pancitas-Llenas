@@ -17,28 +17,60 @@ namespace DataAccess.Implementations.SqlServer
     {
         private readonly PetShopDbContext _context;
 
-        /// <summary>
-        /// Inicializa una nueva instancia del repositorio.
-        /// </summary>
         public ProveedorRepository(PetShopDbContext context)
         {
             _context = context;
         }
 
-        /// <summary>
-        /// Inserta un nuevo proveedor en la base de datos previa validación de nulidad.
-        /// </summary>
         public Guid Create(Proveedor proveedor)
         {
-            if (proveedor == null)
+            if (proveedor == null) throw new ArgumentNullException(nameof(proveedor), "El proveedor no puede ser nulo.");
+
+            if (proveedor.IdProveedor == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(proveedor), "El proveedor no puede ser nulo.");
+                proveedor.IdProveedor = Guid.NewGuid();
             }
 
-            proveedor.IdProveedor = Guid.NewGuid();
             _context.Proveedors.Add(proveedor);
-
             return proveedor.IdProveedor;
+        }
+
+        /// <summary>
+        /// Realiza un Borrado Lógico del proveedor (Activo = false).
+        /// </summary>
+        public void Delete(Guid id)
+        {
+            var proveedor = _context.Proveedors.Find(id);
+            if (proveedor != null)
+            {
+                proveedor.Activo = false;
+                _context.Proveedors.Update(proveedor);
+            }
+        }
+
+        /// <summary>
+        /// Reactiva un proveedor previamente deshabilitado (Activo = true).
+        /// </summary>
+        public void Habilitar(Guid id)
+        {
+            var proveedor = _context.Proveedors.Find(id);
+            if (proveedor != null)
+            {
+                proveedor.Activo = true;
+                _context.Proveedors.Update(proveedor);
+            }
+        }
+
+        /// <summary>
+        /// Actualiza los campos escalares de un proveedor existente.
+        /// </summary>
+        public void Update(Proveedor proveedor)
+        {
+            var proveedorDb = _context.Proveedors.Find(proveedor.IdProveedor);
+            if (proveedorDb != null)
+            {
+                _context.Entry(proveedorDb).CurrentValues.SetValues(proveedor);
+            }
         }
 
         /// <summary>
@@ -47,18 +79,6 @@ namespace DataAccess.Implementations.SqlServer
         public List<Proveedor> GetAll()
         {
             return _context.Proveedors.ToList();
-        }
-
-        /// <summary>
-        /// Elimina físicamente el registro de un proveedor de la base de datos.
-        /// </summary>
-        public void Delete(Guid id)
-        {
-            var proveedor = _context.Proveedors.Find(id);
-            if (proveedor != null)
-            {
-                _context.Proveedors.Remove(proveedor);
-            }
         }
 
         /// <summary>

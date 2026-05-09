@@ -18,182 +18,236 @@ namespace FormUI.FormCompra
     {
         private readonly ProductoService _productoService = new ProductoService();
         private readonly ProveedorService _proveedorService = new ProveedorService();
+        private Guid? _productoSeleccionadoId = null;
+        private bool _viendoActivos = true;
 
         /// <summary>
-        /// Inicializa el formulario, instancia los servicios necesarios y ejecuta la carga inicial de productos.
+        /// Inicializa el formulario, bloquea el campo de unidad por defecto en "Kg" y ejecuta la carga inicial.
         /// </summary>
         public FormGestiónProducto()
         {
             InitializeComponent();
+
+            txtbUnidad.Text = "Kg";
+            txtbUnidad.ReadOnly = true;
+
+            dgvProducto.SelectionChanged += dgvProducto_SelectionChanged;
+
+            CargarProveedores();
+            ConfigurarEstadoInicial();
+        }
+
+        /// <summary>
+        /// Establece la interfaz visual por defecto mostrando los productos activos.
+        /// </summary>
+        private void ConfigurarEstadoInicial()
+        {
+            _viendoActivos = true;
+            btnHabilitar.Visible = false;
+            btnDeshabilitar.Visible = true;
+            btnVerDeshabilitados.Text = "Ver Deshabilitados".Traducir();
+
             CargarDatosProductos();
         }
 
         /// <summary>
-        /// Obtiene y muestra los productos en la grilla principal. Permite recibir una lista filtrada o consultar todos los registros por defecto.
+        /// Carga la lista de proveedores en el ComboBox formateando el texto para mostrar Nombre y CUIT.
+        /// </summary>
+        private void CargarProveedores()
+        {
+            try
+            {
+                var proveedores = _proveedorService.GetAllProveedores();
+                var listaCombo = proveedores.Select(p => new
+                {
+                    IdProveedor = p.IdProveedor,
+                    DisplayInfo = string.Format("{0} (CUIT: {1})", p.NombreProveedor, p.Cuit)
+                }).ToList();
+
+                cmbProveedor.DataSource = listaCombo;
+                cmbProveedor.DisplayMember = "DisplayInfo";
+                cmbProveedor.ValueMember = "IdProveedor";
+                cmbProveedor.SelectedIndex = -1;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error al cargar proveedores: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene y muestra los productos filtrando por el estado actual de la vista (_viendoActivos).
         /// </summary>
         private void CargarDatosProductos(List<ProductoDTO>? productos = null)
         {
             try
             {
-                productos ??= _productoService.GetAllProductos();
+                if (productos == null)
+                {
+                    productos = _viendoActivos
+                        ? _productoService.ObtenerActivos()
+                        : _productoService.ObtenerDeshabilitados();
+                }
 
-                // Forzamos el refresco visual de la grilla vaciándola primero (Solución Punto 4)
+                var vinculos = _productoService.GetTodosLosVinculosProveedorProducto();
+
+                var dataSource = productos.Select(p =>
+                {
+                    var vinculoAsociado = vinculos.FirstOrDefault(v => v.IdProducto == p.IdProducto);
+                    return new
+                    {
+                        IdProducto = p.IdProducto,
+                        NombreProducto = p.NombreProducto,
+                        Marca = p.Marca,
+                        PesoNeto = p.PesoNeto,
+                        Unidad = p.Unidad ?? "Kg",
+                        PrecioNeto = p.PrecioNeto,
+                        Descripcion = p.Descripcion,
+                        IdProveedor = vinculoAsociado?.IdProveedor,
+                        ProveedorAsociado = vinculoAsociado?.IdProveedorNavigation?.NombreProveedor ?? "Sin Proveedor".Traducir()
+                    };
+                }).ToList();
+
                 dgvProducto.DataSource = null;
-                dgvProducto.DataSource = productos;
+                dgvProducto.DataSource = dataSource;
 
                 ConfigurarColumnasDataGridView();
+                LimpiarControles();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Error al cargar los productos: {0}".Traducir(), ex.Message), "Error de Conexión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al cargar los productos: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         /// <summary>
-        /// Oculta columnas técnicas, colecciones de navegación y aplica traducciones a los encabezados visibles de la grilla de productos.
+        /// Oculta columnas técnicas, aplica traducciones y bloquea la grilla de productos.
         /// </summary>
         private void ConfigurarColumnasDataGridView()
         {
             dgvProducto.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             if (dgvProducto.DataSource == null) return;
 
-            string[] columnasOcultas = { "IdProducto", "ProveedorProductos", "InventarioProductos",
-                                         "SolicitudDePedidoDetalles", "SolicitudDeTraspasoDeProductosDetalles",
-                                         "NombreConPeso", "StockPorSucursals", "VentaDetalles" };
+            dgvProducto.ReadOnly = true;
+            dgvProducto.AllowUserToAddRows = false;
+            dgvProducto.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+            string[] columnasOcultas = { "IdProducto", "IdProveedor", "ProveedorProductos", "InventarioProductos", "SolicitudDePedidoDetalles", "SolicitudDeTraspasoDeProductosDetalles", "NombreConPeso", "StockPorSucursals", "VentaDetalles", "Descripcion" };
 
             foreach (var col in columnasOcultas)
             {
-                if (dgvProducto.Columns.Contains(col))
-                    dgvProducto.Columns[col].Visible = false;
+                if (dgvProducto.Columns.Contains(col)) dgvProducto.Columns[col].Visible = false;
             }
 
-            if (dgvProducto.Columns.Contains("NombreProducto"))
-                dgvProducto.Columns["NombreProducto"].HeaderText = "Producto".Traducir();
-            if (dgvProducto.Columns.Contains("PesoNeto"))
-                dgvProducto.Columns["PesoNeto"].HeaderText = "Peso Neto".Traducir();
-            if (dgvProducto.Columns.Contains("PrecioNeto"))
-                dgvProducto.Columns["PrecioNeto"].HeaderText = "Precio Neto ($)".Traducir();
+            if (dgvProducto.Columns.Contains("NombreProducto")) dgvProducto.Columns["NombreProducto"].HeaderText = "Producto".Traducir();
+            if (dgvProducto.Columns.Contains("PesoNeto")) dgvProducto.Columns["PesoNeto"].HeaderText = "Peso Neto".Traducir();
+            if (dgvProducto.Columns.Contains("Unidad")) dgvProducto.Columns["Unidad"].HeaderText = "Unidad".Traducir();
+            if (dgvProducto.Columns.Contains("PrecioNeto")) dgvProducto.Columns["PrecioNeto"].HeaderText = "Precio Neto ($)".Traducir();
+            if (dgvProducto.Columns.Contains("ProveedorAsociado")) dgvProducto.Columns["ProveedorAsociado"].HeaderText = "Proveedor Asociado".Traducir();
         }
 
         /// <summary>
-        /// Evento de carga del formulario que aplica las traducciones de interfaz al idioma seleccionado.
+        /// Escucha el clic en la grilla y maneja la Máquina de Estados de los botones.
+        /// </summary>
+        private void dgvProducto_SelectionChanged(object? sender, EventArgs e)
+        {
+            if (dgvProducto.CurrentRow != null && dgvProducto.CurrentRow.Selected && dgvProducto.DataSource != null)
+            {
+                _productoSeleccionadoId = (Guid?)dgvProducto.CurrentRow.Cells["IdProducto"].Value;
+
+                txtbNombreProd.Text = dgvProducto.CurrentRow.Cells["NombreProducto"].Value?.ToString();
+                txtbMarca.Text = dgvProducto.CurrentRow.Cells["Marca"].Value?.ToString();
+                txtbPesoNeto.Text = dgvProducto.CurrentRow.Cells["PesoNeto"].Value?.ToString();
+                txtbPrecioNeto.Text = dgvProducto.CurrentRow.Cells["PrecioNeto"].Value?.ToString();
+                txtbDescripcion.Text = dgvProducto.CurrentRow.Cells["Descripcion"].Value?.ToString();
+
+                var idProv = dgvProducto.CurrentRow.Cells["IdProveedor"].Value as Guid?;
+                if (idProv.HasValue && idProv.Value != Guid.Empty) cmbProveedor.SelectedValue = idProv.Value;
+                else cmbProveedor.SelectedIndex = -1;
+
+                // MÁQUINA DE ESTADOS
+                btnAgregar.Enabled = false;
+                btnActualizar.Enabled = true;
+                btnDeshabilitar.Enabled = _viendoActivos;
+                btnHabilitar.Enabled = !_viendoActivos;
+            }
+        }
+
+        /// <summary>
+        /// Evento de carga del formulario que aplica las traducciones de interfaz.
         /// </summary>
         private void FormGestiónProducto_Load(object sender, EventArgs e)
         {
             TraductorUI.TraducirFormulario(this);
+            LimpiarControles();
         }
 
         /// <summary>
-        /// Valida la información ingresada, busca al proveedor correspondiente por CUIT y registra un nuevo producto en la base de datos.
+        /// Valida la información e inserta un nuevo producto en la base de datos.
         /// </summary>
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtbNombreProd.Text) || string.IsNullOrWhiteSpace(txtbMarca.Text) || string.IsNullOrWhiteSpace(txtbProveedor.Text))
-            {
-                MessageBox.Show("Nombre, Marca y CUIT del Proveedor son obligatorios.".Traducir(), "Error de Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            if (!ValidarCampos()) return;
 
-            if (!decimal.TryParse(txtbPesoNeto.Text, out decimal pesoNetoValue) || !decimal.TryParse(txtbPrecioNeto.Text, out decimal precioNetoValue))
-            {
-                MessageBox.Show("Peso Neto y Precio Neto deben ser valores numéricos válidos.".Traducir(), "Error de Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (!int.TryParse(txtbProveedor.Text, out int cuitValue))
-            {
-                MessageBox.Show("El CUIT del Proveedor debe ser un número entero válido.".Traducir(), "Error de Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            ProveedorDTO? proveedorEncontradoDTO = null;
+            var nuevoProducto = CrearDTO();
 
             try
             {
-                proveedorEncontradoDTO = _proveedorService.GetByCuit(cuitValue);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(string.Format("Error al buscar el proveedor: {0}".Traducir(), ex.Message), "Error de Búsqueda".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (proveedorEncontradoDTO == null)
-            {
-                MessageBox.Show(string.Format("No se encontró un proveedor con el CUIT {0}. Verifique los datos.".Traducir(), cuitValue), "Proveedor No Encontrado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            Guid idProveedor = proveedorEncontradoDTO.IdProveedor;
-
-            var nuevoProductoDTO = new ProductoDTO
-            {
-                NombreProducto = txtbNombreProd.Text.Trim(),
-                Marca = txtbMarca.Text.Trim(),
-                PesoNeto = pesoNetoValue,
-                Unidad = txtbUnidad.Text.Trim(),
-                PrecioNeto = precioNetoValue,
-                Descripcion = txtbDescripcion.Text.Trim()
-            };
-
-            try
-            {
-                Guid newProdId = _productoService.CrearProductoConProveedor(nuevoProductoDTO, idProveedor);
-
-                MessageBox.Show(string.Format("Producto '{0}' agregado y vinculado al proveedor {1}.".Traducir(), nuevoProductoDTO.NombreProducto, proveedorEncontradoDTO.NombreProveedor), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LimpiarControles();
+                _productoService.CrearProductoConProveedor(nuevoProducto, (Guid)cmbProveedor.SelectedValue);
+                MessageBox.Show("Producto agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosProductos();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Error al agregar el producto: {0}".Traducir(), ex.Message), "Error de Persistencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message.Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         /// <summary>
-        /// Restablece la grilla mostrando la totalidad de los productos almacenados en el sistema.
+        /// Restablece la grilla mostrando la totalidad de los productos almacenados en el sistema y limpia la selección.
         /// </summary>
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            CargarDatosProductos();
-            MessageBox.Show("Lista de productos actualizada.".Traducir(), "Información".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        /// <summary>
-        /// Solicita un CUIT mediante una ventana emergente y filtra la grilla para mostrar únicamente los productos vinculados a dicho proveedor.
-        /// </summary>
-        private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            string input = Microsoft.VisualBasic.Interaction.InputBox("Ingrese el CUIT del Proveedor para filtrar:".Traducir(), "Buscar Productos por Proveedor".Traducir(), "");
-
-            if (string.IsNullOrEmpty(input))
+            if (_productoSeleccionadoId == null)
             {
+                MessageBox.Show("Seleccione un producto de la lista haciendo clic sobre él para modificarlo.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (!int.TryParse(input, out int cuitBusqueda))
+            if (!ValidarCampos()) return;
+
+            var productoActualizadoDTO = CrearDTO();
+            productoActualizadoDTO.IdProducto = _productoSeleccionadoId.Value;
+
+            try
             {
-                MessageBox.Show("Debe ingresar un CUIT numérico válido.".Traducir(), "Error de Entrada".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _productoService.UpdateProducto(productoActualizadoDTO, (Guid)cmbProveedor.SelectedValue);
+                MessageBox.Show("Los datos del producto han sido actualizados correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CargarDatosProductos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error al actualizar el producto: {0}".Traducir(), ex.Message), "Error de Persistencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Busca productos de un proveedor específico respetando la vista actual (Activos/Inactivos).
+        /// </summary>
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            if (cmbProveedor.SelectedValue == null)
+            {
+                MessageBox.Show("Seleccione un proveedor para buscar.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             try
             {
-                ProveedorDTO? proveedorEncontradoDTO = _proveedorService.GetByCuit(cuitBusqueda);
+                var lista = _productoService.GetProductosByProveedor((Guid)cmbProveedor.SelectedValue)
+                                            .Where(p => p.Activo == _viendoActivos).ToList();
 
-                if (proveedorEncontradoDTO == null)
-                {
-                    MessageBox.Show(string.Format("No se encontró ningún proveedor con el CUIT {0}.".Traducir(), cuitBusqueda), "Proveedor No Encontrado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                Guid idProveedorBusqueda = proveedorEncontradoDTO.IdProveedor;
-
-                List<ProductoDTO> listaFiltrada = _productoService.GetByProveedor(idProveedorBusqueda);
-
-                CargarDatosProductos(listaFiltrada);
-
-                MessageBox.Show(string.Format("Se encontraron {0} productos del proveedor {1}.".Traducir(), listaFiltrada.Count, proveedorEncontradoDTO.NombreProveedor), "Búsqueda Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CargarDatosProductos(lista);
             }
             catch (Exception ex)
             {
@@ -202,60 +256,130 @@ namespace FormUI.FormCompra
         }
 
         /// <summary>
-        /// Solicita confirmación al usuario y deshabilita (baja física controlada) el producto actualmente seleccionado en la grilla.
+        /// Solicita confirmación y deshabilita (Borrado Lógico) el producto seleccionado.
         /// </summary>
         private void btnDeshabilitar_Click(object sender, EventArgs e)
         {
-            if (dgvProducto.CurrentRow != null)
+            if (_productoSeleccionadoId == null) return;
+
+            if (MessageBox.Show("¿Está seguro de deshabilitar este producto?".Traducir(), "Confirmar".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                Guid productoId = (Guid)(dgvProducto.CurrentRow.Cells["IdProducto"].Value ?? Guid.Empty);
-                string nombre = dgvProducto.CurrentRow.Cells["NombreProducto"].Value?.ToString() ?? "[Nombre Desconocido]".Traducir();
-
-                if (productoId == Guid.Empty)
+                try
                 {
-                    MessageBox.Show("Error: No se pudo obtener el ID del producto seleccionado.".Traducir(), "Error de Datos".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    _productoService.DeshabilitarProducto(_productoSeleccionadoId.Value);
+                    CargarDatosProductos();
                 }
-
-                DialogResult dialogResult = MessageBox.Show(string.Format("¿Está seguro de eliminar el producto {0}? Esta acción borrará sus vínculos con proveedores.".Traducir(), nombre), "Confirmar Acción".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (dialogResult == DialogResult.Yes)
+                catch (Exception ex)
                 {
-                    try
-                    {
-                        _productoService.DeshabilitarProducto(productoId);
-                        CargarDatosProductos();
-                        MessageBox.Show("Producto eliminado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        string errorReal = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
-
-                        string mensajeAmigable = string.Format("No se puede eliminar el producto porque ya posee historial asociado (Ventas, Pedidos, etc.) que no puede ser borrado.\n\nDetalle técnico: {0}", errorReal);
-
-                        MessageBox.Show(mensajeAmigable.Traducir(), "Restricción de Integridad".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
+                    MessageBox.Show(string.Format("Error al deshabilitar: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
-            else
-            {
-                MessageBox.Show("Debe seleccionar una fila para eliminar.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         /// <summary>
-        /// Vacía todos los campos de texto del formulario dejándolos listos para el ingreso de un nuevo registro.
+        /// Vacía los campos y resetea los botones al estado inicial de seguridad.
         /// </summary>
         private void LimpiarControles()
         {
+            _productoSeleccionadoId = null;
             txtbNombreProd.Text = string.Empty;
             txtbMarca.Text = string.Empty;
             txtbPesoNeto.Text = string.Empty;
-            txtbUnidad.Text = string.Empty;
             txtbPrecioNeto.Text = string.Empty;
             txtbDescripcion.Text = string.Empty;
-            txtbProveedor.Text = string.Empty;
+            txtbUnidad.Text = "Kg";
+            cmbProveedor.SelectedIndex = -1;
+
+            if (dgvProducto.DataSource != null) dgvProducto.ClearSelection();
+            btnAgregar.Enabled = _viendoActivos;
+            btnActualizar.Enabled = false;
+            btnDeshabilitar.Enabled = false;
+            btnHabilitar.Enabled = false;
+
             txtbNombreProd.Focus();
+        }
+
+        /// <summary>
+        /// Botón que restablece manualmente los campos para preparar un alta nueva.
+        /// </summary>
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            LimpiarControles();
+        }
+
+        /// <summary>
+        /// Solicita confirmación y vuelve a activar un producto deshabilitado.
+        /// </summary>
+        private void btnHabilitar_Click(object sender, EventArgs e)
+        {
+            if (_productoSeleccionadoId == null) return;
+
+            if (MessageBox.Show("¿Desea reactivar este producto y devolverlo al catálogo?".Traducir(), "Confirmar".Traducir(), MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try
+                {
+                    _productoService.HabilitarProducto(_productoSeleccionadoId.Value);
+                    CargarDatosProductos();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(string.Format("Error al habilitar: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Alterna la vista de la grilla entre productos Activos e Inactivos.
+        /// </summary>
+        private void btnVerDeshabilitados_Click(object sender, EventArgs e)
+        {
+            _viendoActivos = !_viendoActivos;
+
+            btnVerDeshabilitados.Text = _viendoActivos ? "Ver Deshabilitados".Traducir() : "Ver Activos".Traducir();
+            btnHabilitar.Visible = !_viendoActivos;
+            btnDeshabilitar.Visible = _viendoActivos;
+
+            CargarDatosProductos();
+        }
+
+        /// <summary>
+        /// Valida que los campos requeridos y formatos numéricos sean correctos.
+        /// </summary>
+        private bool ValidarCampos()
+        {
+            if (string.IsNullOrWhiteSpace(txtbNombreProd.Text) || string.IsNullOrWhiteSpace(txtbMarca.Text))
+            {
+                MessageBox.Show("Nombre y Marca son obligatorios.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (!decimal.TryParse(txtbPesoNeto.Text, out _) || !decimal.TryParse(txtbPrecioNeto.Text, out _))
+            {
+                MessageBox.Show("Peso Neto y Precio Neto deben ser numéricos válidos.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (cmbProveedor.SelectedValue == null)
+            {
+                MessageBox.Show("Debe seleccionar un proveedor de la lista.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Genera un objeto ProductoDTO con los valores actuales del formulario.
+        /// </summary>
+        private ProductoDTO CrearDTO()
+        {
+            return new ProductoDTO
+            {
+                NombreProducto = txtbNombreProd.Text.Trim(),
+                Marca = txtbMarca.Text.Trim(),
+                PesoNeto = decimal.Parse(txtbPesoNeto.Text),
+                Unidad = "Kg",
+                PrecioNeto = decimal.Parse(txtbPrecioNeto.Text),
+                Descripcion = txtbDescripcion.Text.Trim(),
+                Activo = _viendoActivos
+            };
         }
     }
 }

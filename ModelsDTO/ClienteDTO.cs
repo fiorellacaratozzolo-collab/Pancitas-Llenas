@@ -15,6 +15,7 @@ namespace ModelsDTO
         public int? Dni { get; set; }
 
         public int IdTipoCliente { get; set; }
+        public bool Activo { get; set; }
 
         public virtual TipoClienteEnumDTO IdTipoClienteNavigation { get; set; } = null!;
 

@@ -15,6 +15,8 @@ public partial class Sucursal
 
     public int IdTipoSucursal { get; set; }
 
+    public bool Activo { get; set; }
+
     public virtual ICollection<HistorialIngresoStock> HistorialIngresoStocks { get; set; } = new List<HistorialIngresoStock>();
 
     public virtual TipoSucursalEnum IdTipoSucursalNavigation { get; set; } = null!;

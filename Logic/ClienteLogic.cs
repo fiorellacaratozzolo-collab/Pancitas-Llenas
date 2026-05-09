@@ -29,32 +29,61 @@ namespace Logic
         }
 
         /// <summary>
-        /// Crea un nuevo registro de cliente validando la integridad de sus datos y garantizando que su documento de identidad sea único en la base de datos.
+        /// Crea un nuevo cliente o reactiva uno inactivo si coincide su DNI.
         /// </summary>
         public Guid CreateCliente(ClienteDTO clienteDTO)
         {
-            var cliente = _mapper.Map<Cliente>(clienteDTO);
+            if (string.IsNullOrWhiteSpace(clienteDTO.NombreCliente)) throw new ArgumentException("El nombre del cliente es obligatorio.");
+            if (clienteDTO.Dni == 0) throw new ArgumentException("El DNI/Identificador del cliente es obligatorio.");
 
-            if (string.IsNullOrWhiteSpace(cliente.NombreCliente))
-            {
-                throw new ArgumentException("El nombre del cliente es obligatorio.");
-            }
-            if (cliente.Dni == 0)
-            {
-                throw new ArgumentException("El DNI/Identificador del cliente es obligatorio.");
-            }
-
-            Cliente? clienteExistente = _unitOfWork.Clientes.GetByDni(cliente.Dni);
+            Cliente? clienteExistente = _unitOfWork.Clientes.GetByDni(clienteDTO.Dni);
 
             if (clienteExistente != null)
             {
-                throw new InvalidOperationException(string.Format("No se puede crear el cliente: Ya existe un cliente con el DNI/Identificador {0}.", cliente.Dni));
+                if (clienteExistente.Activo == false)
+                {
+                    // Si el cliente existe pero estaba "borrado", lo reactivamos y actualizamos sus datos
+                    clienteExistente.Activo = true;
+                    clienteExistente.NombreCliente = clienteDTO.NombreCliente;
+                    clienteExistente.IdTipoCliente = clienteDTO.IdTipoCliente;
+
+                    _unitOfWork.Clientes.Update(clienteExistente);
+                    _unitOfWork.Complete();
+
+                    return clienteExistente.IdCliente;
+                }
+                else
+                {
+                    throw new InvalidOperationException(string.Format("Ya existe un cliente ACTIVO con el DNI/Identificador {0}.", clienteDTO.Dni));
+                }
             }
+
+            // Si no existe, procedemos con el alta normal
+            var cliente = _mapper.Map<Cliente>(clienteDTO);
+            cliente.Activo = true;
 
             Guid idCliente = _unitOfWork.Clientes.Create(cliente);
             _unitOfWork.Complete();
 
             return idCliente;
+        }
+
+        /// <summary>
+        /// Obtiene solo los clientes que están actualmente ACTIVOS.
+        /// </summary>
+        public List<ClienteDTO> ObtenerActivos()
+        {
+            List<Cliente> clientes = _unitOfWork.Clientes.GetAll().Where(c => c.Activo == true).ToList();
+            return _mapper.Map<List<ClienteDTO>>(clientes);
+        }
+
+        /// <summary>
+        /// Obtiene solo los clientes que están actualmente DESHABILITADOS.
+        /// </summary>
+        public List<ClienteDTO> ObtenerDeshabilitados()
+        {
+            List<Cliente> clientes = _unitOfWork.Clientes.GetAll().Where(c => c.Activo == false).ToList();
+            return _mapper.Map<List<ClienteDTO>>(clientes);
         }
 
         /// <summary>
@@ -85,12 +114,20 @@ namespace Logic
         }
 
         /// <summary>
+        /// Habilita lógicamente un registro de cliente del sistema.
+        /// </summary>
+        public void HabilitarCliente(Guid id)
+        {
+            _unitOfWork.Clientes.Habilitar(id);
+            _unitOfWork.Complete();
+        }
+
+        /// <summary>
         /// Aplica y confirma las modificaciones realizadas sobre el perfil de un cliente existente.
         /// </summary>
         public void UpdateCliente(ClienteDTO clienteDTO)
         {
-            if (clienteDTO == null)
-                throw new ArgumentNullException(nameof(clienteDTO));
+            if (clienteDTO == null) throw new ArgumentNullException(nameof(clienteDTO));
 
             Cliente cliente = _mapper.Map<Cliente>(clienteDTO);
             _unitOfWork.Clientes.Update(cliente);

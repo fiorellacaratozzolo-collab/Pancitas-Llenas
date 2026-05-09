@@ -35,9 +35,9 @@
             // 
             // btnVer
             // 
-            btnVer.Location = new Point(236, 12);
+            btnVer.Location = new Point(415, 12);
             btnVer.Name = "btnVer";
-            btnVer.Size = new Size(93, 35);
+            btnVer.Size = new Size(133, 39);
             btnVer.TabIndex = 0;
             btnVer.Text = "Ver Bitácora";
             btnVer.UseVisualStyleBackColor = true;
@@ -46,16 +46,16 @@
             // dgvBitácora
             // 
             dgvBitácora.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvBitácora.Location = new Point(37, 73);
+            dgvBitácora.Location = new Point(12, 57);
             dgvBitácora.Name = "dgvBitácora";
-            dgvBitácora.Size = new Size(509, 474);
+            dgvBitácora.Size = new Size(927, 492);
             dgvBitácora.TabIndex = 2;
             // 
             // FormBitácora
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(581, 576);
+            ClientSize = new Size(951, 561);
             Controls.Add(dgvBitácora);
             Controls.Add(btnVer);
             Name = "FormBitácora";

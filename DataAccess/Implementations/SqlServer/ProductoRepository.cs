@@ -26,7 +26,7 @@ namespace DataAccess.Implementations.SqlServer
         }
 
         /// <summary>
-        /// Inserta un nuevo producto en el catálogo y crea automáticamente su vínculo inicial en la tabla intermedia con el proveedor especificado.
+        /// Inserta un nuevo producto en el catálogo y crea automáticamente su vínculo inicial en la tabla intermedia.
         /// </summary>
         public Guid Create(Producto producto, Guid idProveedor)
         {
@@ -48,26 +48,28 @@ namespace DataAccess.Implementations.SqlServer
         }
 
         /// <summary>
-        /// Elimina físicamente un producto de la base de datos, limpiando primero sus vínculos con proveedores y sus registros de stock para evitar violaciones de clave foránea.
+        /// Realiza un Borrado Lógico del producto cambiando su estado a inactivo (Activo = false).
         /// </summary>
         public void Delete(Guid id)
         {
-            var producto = _context.Productos
-                                   .Include(p => p.ProveedorProductos)
-                                   .Include(p => p.StockPorSucursals)
-                                   .FirstOrDefault(p => p.IdProducto == id);
-            if (producto != null)
+            var prod = _context.Productos.Find(id);
+            if (prod != null)
             {
-                if (producto.ProveedorProductos.Any())
-                {
-                    _context.ProveedorProductos.RemoveRange(producto.ProveedorProductos);
-                }
+                prod.Activo = false;
+                _context.Productos.Update(prod);
+            }
+        }
 
-                if (producto.StockPorSucursals.Any())
-                {
-                    _context.StockPorSucursals.RemoveRange(producto.StockPorSucursals);
-                }
-                _context.Productos.Remove(producto);
+        /// <summary>
+        /// Reactiva un producto previamente deshabilitado (Activo = true).
+        /// </summary>
+        public void Habilitar(Guid id)
+        {
+            var prod = _context.Productos.Find(id);
+            if (prod != null)
+            {
+                prod.Activo = true;
+                _context.Productos.Update(prod);
             }
         }
 
@@ -98,6 +100,43 @@ namespace DataAccess.Implementations.SqlServer
         public List<Producto> GetAll()
         {
             return _context.Productos.ToList();
+        }
+
+        /// <summary>
+        /// Actualiza los valores de un producto existente y actualiza su relación en la tabla intermedia de proveedores.
+        /// </summary>
+        public void Update(Producto producto, Guid idNuevoProveedor)
+        {
+            var productoDb = _context.Productos.Find(producto.IdProducto);
+            if (productoDb != null)
+            {
+                _context.Entry(productoDb).CurrentValues.SetValues(producto);
+                var vinculoAnterior = _context.ProveedorProductos.FirstOrDefault(pp => pp.IdProducto == producto.IdProducto);
+
+                if (vinculoAnterior != null)
+                {
+                    if (vinculoAnterior.IdProveedor != idNuevoProveedor)
+                    {
+                        _context.ProveedorProductos.Remove(vinculoAnterior);
+
+                        _context.ProveedorProductos.Add(new ProveedorProducto
+                        {
+                            IdProveedorProducto = Guid.NewGuid(),
+                            IdProducto = producto.IdProducto,
+                            IdProveedor = idNuevoProveedor
+                        });
+                    }
+                }
+                else
+                {
+                    _context.ProveedorProductos.Add(new ProveedorProducto
+                    {
+                        IdProveedorProducto = Guid.NewGuid(),
+                        IdProducto = producto.IdProducto,
+                        IdProveedor = idNuevoProveedor
+                    });
+                }
+            }
         }
     }
 }

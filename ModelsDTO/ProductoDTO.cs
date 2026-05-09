@@ -21,7 +21,7 @@ namespace ModelsDTO
         public decimal? PrecioNeto { get; set; }
 
         public string? Descripcion { get; set; }
-
+        public bool Activo { get; set; }
         public string NombreConPeso => $"{NombreProducto} - {PesoNeto} kg";
 
         public virtual ICollection<ProveedorProductoDTO> ProveedorProductos { get; set; } = new List<ProveedorProductoDTO>();

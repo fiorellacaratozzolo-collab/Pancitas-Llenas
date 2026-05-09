@@ -32,11 +32,12 @@ namespace Logic.Facade
         }
 
         /// <summary>
-        /// Recupera el listado completo de todos los clientes activos.
+        /// Mantiene la compatibilidad con otros formularios (ej. Ventas).
+        /// Recupera solo los clientes que estén ACTIVOS.
         /// </summary>
         public List<ClienteDTO> GetAllClientes()
         {
-            return _clienteLogic.ObtenerTodosLosClientes();
+            return _clienteLogic.ObtenerActivos();
         }
 
         /// <summary>
@@ -45,6 +46,14 @@ namespace Logic.Facade
         public List<ClienteDTO> BuscarClientesPorTipo(int idTipoCliente)
         {
             return _clienteLogic.BuscarClientesPorTipo(idTipoCliente);
+        }
+
+        /// <summary>
+        /// Habilita el perfil de un cliente existente.
+        /// </summary>
+        public void HabilitarCliente(Guid id)
+        {
+            _clienteLogic.HabilitarCliente(id);
         }
 
         /// <summary>
@@ -61,6 +70,22 @@ namespace Logic.Facade
         public void UpdateCliente(ClienteDTO clienteDTO)
         {
             _clienteLogic.UpdateCliente(clienteDTO);
+        }
+
+        /// <summary>
+        /// Filtra una lista de clientes DESHABILITADOS.
+        /// </summary>
+        public List<ClienteDTO> ObtenerDeshabilitados()
+        {
+            return _clienteLogic.ObtenerDeshabilitados();
+        }
+
+        /// <summary>
+        /// Filtra una lista de clientes HABILITADOS.
+        /// </summary>
+        public List<ClienteDTO> ObtenerActivos()
+        {
+            return _clienteLogic.ObtenerActivos();
         }
     }
 }

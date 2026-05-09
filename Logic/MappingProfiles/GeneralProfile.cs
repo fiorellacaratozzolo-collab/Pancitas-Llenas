@@ -40,6 +40,7 @@ namespace Logic.MappingProfiles
                 .ForMember(dest => dest.Marca, opt => opt.MapFrom(src => src.IdProductoNavigation.Marca))
                 .ForMember(dest => dest.PesoNeto, opt => opt.MapFrom(src => src.IdProductoNavigation.PesoNeto))
                 .ForMember(dest => dest.Unidad, opt => opt.MapFrom(src => src.IdProductoNavigation.Unidad))
+                .ForMember(dest => dest.Activo, opt => opt.MapFrom(src => src.IdProductoNavigation.Activo))
                 .ReverseMap();
 
             CreateMap<SolicitudDePedido, SolicitudDePedidoDTO>()

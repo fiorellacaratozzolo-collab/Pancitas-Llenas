@@ -16,10 +16,13 @@ namespace DataAccess.Interfaces
         /// <summary>Registra un nuevo cliente y retorna su identificador único.</summary>
         Guid Create(Cliente cliente);
 
-        /// <summary>Elimina o deshabilita el registro de un cliente existente.</summary>
+        /// <summary>Realiza un borrado lógico del cliente cambiando su estado a inactivo.</summary>
         void Delete(Guid id);
 
-        /// <summary>Obtiene la lista completa de clientes registrados.</summary>
+        /// <summary>Reactiva un cliente previamente deshabilitado.</summary>
+        void Habilitar(Guid id);
+
+        /// <summary>Obtiene la lista completa de clientes registrados (sin filtrar por estado).</summary>
         List<Cliente> GetAll();
 
         /// <summary>Filtra y obtiene los clientes según su tipo o condición fiscal.</summary>
@@ -27,6 +30,9 @@ namespace DataAccess.Interfaces
 
         /// <summary>Busca un cliente específico utilizando su número de DNI o documento.</summary>
         Cliente? GetByDni(int? dni);
+
+        /// <summary>Recupera un cliente específico por su clave primaria.</summary>
+        Cliente? GetById(Guid id);
 
         /// <summary>Actualiza los datos del perfil de un cliente en la base de datos.</summary>
         void Update(Cliente cliente);

@@ -32,7 +32,6 @@
             cmbProducto = new ComboBox();
             txtbMarca = new TextBox();
             label1 = new Label();
-            btnLimpiar = new Button();
             btnGuadar = new Button();
             dtpFecha = new DateTimePicker();
             txtbPesoNeto = new TextBox();
@@ -51,7 +50,6 @@
             groupBox1.Controls.Add(cmbProducto);
             groupBox1.Controls.Add(txtbMarca);
             groupBox1.Controls.Add(label1);
-            groupBox1.Controls.Add(btnLimpiar);
             groupBox1.Controls.Add(btnGuadar);
             groupBox1.Controls.Add(dtpFecha);
             groupBox1.Controls.Add(txtbPesoNeto);
@@ -61,54 +59,45 @@
             groupBox1.Controls.Add(txtbCantidad);
             groupBox1.Controls.Add(btnAgregar);
             groupBox1.Controls.Add(label4);
-            groupBox1.Location = new Point(13, 12);
+            groupBox1.Location = new Point(13, 5);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(731, 547);
+            groupBox1.Size = new Size(731, 591);
             groupBox1.TabIndex = 17;
             groupBox1.TabStop = false;
             groupBox1.Text = "Productos a Solicitar";
             // 
             // cmbProducto
             // 
+            cmbProducto.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProducto.FormattingEnabled = true;
-            cmbProducto.Location = new Point(276, 97);
+            cmbProducto.Location = new Point(268, 77);
             cmbProducto.Name = "cmbProducto";
-            cmbProducto.Size = new Size(266, 23);
+            cmbProducto.Size = new Size(262, 23);
             cmbProducto.TabIndex = 16;
             cmbProducto.SelectedIndexChanged += cmbProducto_SelectedIndexChanged;
             // 
             // txtbMarca
             // 
-            txtbMarca.Location = new Point(275, 128);
+            txtbMarca.Location = new Point(267, 108);
             txtbMarca.Name = "txtbMarca";
+            txtbMarca.ReadOnly = true;
             txtbMarca.Size = new Size(100, 23);
             txtbMarca.TabIndex = 15;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(217, 131);
+            label1.Location = new Point(209, 111);
             label1.Name = "label1";
             label1.Size = new Size(43, 15);
             label1.TabIndex = 14;
             label1.Text = "Marca:";
             // 
-            // btnLimpiar
-            // 
-            btnLimpiar.Location = new Point(661, 174);
-            btnLimpiar.Margin = new Padding(4, 3, 4, 3);
-            btnLimpiar.Name = "btnLimpiar";
-            btnLimpiar.Size = new Size(62, 36);
-            btnLimpiar.TabIndex = 10;
-            btnLimpiar.Text = "Limpiar";
-            btnLimpiar.UseVisualStyleBackColor = true;
-            btnLimpiar.Click += btnLimpiar_Click;
-            // 
             // btnGuadar
             // 
-            btnGuadar.Location = new Point(113, 497);
+            btnGuadar.Location = new Point(111, 541);
             btnGuadar.Margin = new Padding(4, 3, 4, 3);
             btnGuadar.Name = "btnGuadar";
             btnGuadar.Size = new Size(495, 44);
@@ -119,7 +108,7 @@
             // 
             // dtpFecha
             // 
-            dtpFecha.Location = new Point(166, 48);
+            dtpFecha.Location = new Point(490, 22);
             dtpFecha.Margin = new Padding(4, 3, 4, 3);
             dtpFecha.Name = "dtpFecha";
             dtpFecha.Size = new Size(233, 23);
@@ -127,26 +116,27 @@
             // 
             // txtbPesoNeto
             // 
-            txtbPesoNeto.Location = new Point(275, 154);
+            txtbPesoNeto.Location = new Point(267, 134);
             txtbPesoNeto.Margin = new Padding(4, 3, 4, 3);
             txtbPesoNeto.Name = "txtbPesoNeto";
+            txtbPesoNeto.ReadOnly = true;
             txtbPesoNeto.Size = new Size(102, 23);
             txtbPesoNeto.TabIndex = 2;
             // 
             // dgvSolicitarOP
             // 
             dgvSolicitarOP.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvSolicitarOP.Location = new Point(7, 224);
+            dgvSolicitarOP.Location = new Point(7, 253);
             dgvSolicitarOP.Margin = new Padding(4, 3, 4, 3);
             dgvSolicitarOP.Name = "dgvSolicitarOP";
-            dgvSolicitarOP.Size = new Size(716, 267);
+            dgvSolicitarOP.Size = new Size(716, 282);
             dgvSolicitarOP.TabIndex = 10;
             dgvSolicitarOP.CellContentClick += dgvSolicitarOP_CellContentClick;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(202, 157);
+            label2.Location = new Point(194, 137);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(64, 15);
@@ -156,7 +146,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(163, 100);
+            label3.Location = new Point(155, 80);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new Size(106, 15);
@@ -165,7 +155,7 @@
             // 
             // txtbCantidad
             // 
-            txtbCantidad.Location = new Point(275, 181);
+            txtbCantidad.Location = new Point(267, 161);
             txtbCantidad.Margin = new Padding(4, 3, 4, 3);
             txtbCantidad.Name = "txtbCantidad";
             txtbCantidad.Size = new Size(102, 23);
@@ -173,10 +163,10 @@
             // 
             // btnAgregar
             // 
-            btnAgregar.Location = new Point(416, 162);
+            btnAgregar.Location = new Point(172, 201);
             btnAgregar.Margin = new Padding(4, 3, 4, 3);
             btnAgregar.Name = "btnAgregar";
-            btnAgregar.Size = new Size(100, 36);
+            btnAgregar.Size = new Size(314, 29);
             btnAgregar.TabIndex = 7;
             btnAgregar.Text = "Agregar";
             btnAgregar.UseVisualStyleBackColor = true;
@@ -185,7 +175,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(202, 185);
+            label4.Location = new Point(194, 165);
             label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
             label4.Size = new Size(58, 15);
@@ -212,7 +202,6 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnLimpiar;
         private System.Windows.Forms.Button btnGuadar;
         private System.Windows.Forms.DateTimePicker dtpFecha;
         private System.Windows.Forms.TextBox txtbPesoNeto;

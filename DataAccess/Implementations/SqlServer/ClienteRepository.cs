@@ -30,14 +30,14 @@ namespace DataAccess.Implementations.SqlServer
         /// </summary>
         public Guid Create(Cliente cliente)
         {
-            if (cliente == null)
+            if (cliente == null) throw new ArgumentNullException(nameof(cliente), "El cliente no puede ser nulo.");
+
+            if (cliente.IdCliente == Guid.Empty)
             {
-                throw new ArgumentNullException(nameof(cliente), "El cliente no puede ser nulo.");
+                cliente.IdCliente = Guid.NewGuid();
             }
 
-            cliente.IdCliente = Guid.NewGuid();
             _context.Clientes.Add(cliente);
-
             return cliente.IdCliente;
         }
 
@@ -54,20 +54,32 @@ namespace DataAccess.Implementations.SqlServer
         /// </summary>
         public List<Cliente> GetByTipoCliente(int IdTipoCliente)
         {
-            return _context.Clientes
-                           .Where(c => c.IdTipoCliente == IdTipoCliente)
-                           .ToList();
+            return _context.Clientes.Where(c => c.IdTipoCliente == IdTipoCliente).ToList();
         }
 
         /// <summary>
-        /// Elimina físicamente un registro de cliente del sistema basándose en su ID.
+        /// Realiza un Borrado Lógico del cliente (Activo = false).
         /// </summary>
         public void Delete(Guid id)
         {
             var cliente = _context.Clientes.Find(id);
             if (cliente != null)
             {
-                _context.Clientes.Remove(cliente);
+                cliente.Activo = false;
+                _context.Clientes.Update(cliente);
+            }
+        }
+
+        /// <summary>
+        /// Reactiva un cliente previamente deshabilitado (Activo = true).
+        /// </summary>
+        public void Habilitar(Guid id)
+        {
+            var cliente = _context.Clientes.Find(id);
+            if (cliente != null)
+            {
+                cliente.Activo = true;
+                _context.Clientes.Update(cliente);
             }
         }
 
@@ -84,10 +96,21 @@ namespace DataAccess.Implementations.SqlServer
         /// </summary>
         public void Update(Cliente cliente)
         {
-            if (cliente == null)
-                throw new ArgumentNullException(nameof(cliente));
+            if (cliente == null) throw new ArgumentNullException(nameof(cliente));
 
-            _context.Clientes.Update(cliente);
+            var clienteDb = _context.Clientes.Find(cliente.IdCliente);
+            if (clienteDb != null)
+            {
+                _context.Entry(clienteDb).CurrentValues.SetValues(cliente);
+            }
+        }
+
+        /// <summary>
+        /// Realiza una búsqueda exacta de un cliente utilizando su número de ID.
+        /// </summary>
+        public Cliente? GetById(Guid id)
+        {
+            return _context.Clientes.Find(id);
         }
     }
 }

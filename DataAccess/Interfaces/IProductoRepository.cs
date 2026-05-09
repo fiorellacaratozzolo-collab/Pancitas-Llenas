@@ -21,10 +21,16 @@ namespace DataAccess.Interfaces
         /// <summary>Recupera un producto específico a partir de su identificador único.</summary>
         Producto? GetById(Guid id);
 
-        /// <summary>Obtiene el catálogo completo de productos registrados.</summary>
+        /// <summary>Obtiene el catálogo completo de productos registrados (sin filtrar por estado).</summary>
         List<Producto> GetAll();
 
-        /// <summary>Elimina o deshabilita un producto del sistema.</summary>
+        /// <summary>Realiza un Borrado Lógico del producto cambiando su estado a inactivo (Activo = false).</summary>
         void Delete(Guid id);
+
+        /// <summary>Reactiva un producto previamente deshabilitado (Activo = true).</summary>
+        void Habilitar(Guid id);
+
+        /// <summary>Actualiza los valores de un producto existente y su relación en la tabla intermedia de proveedores.</summary>
+        void Update(Producto producto, Guid idNuevoProveedor);
     }
 }
