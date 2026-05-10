@@ -12,23 +12,32 @@ namespace FormUI
     /// </summary>
     public static class TraductorUI
     {
-        /// <summary>
-        /// Recorre recursivamente un control contenedor (como un Formulario o Panel) y traduce dinámicamente el texto visible de sus elementos de interfaz gráfica y encabezados.
-        /// </summary>
         public static void TraducirFormulario(Control controlPadre)
         {
             if (controlPadre is Form form && !string.IsNullOrWhiteSpace(form.Text))
             {
                 form.Text = form.Text.Traducir();
             }
+            TraducirControlesRecursivo(controlPadre.Controls);
+        }
 
-            foreach (Control control in controlPadre.Controls)
+        /// <summary>
+        /// Recorre absolutamente todos los controles, entrando en paneles, pestañas y menús.
+        /// </summary>
+        private static void TraducirControlesRecursivo(Control.ControlCollection controles)
+        {
+            foreach (Control control in controles)
             {
                 if (control is Label || control is Button || control is CheckBox || control is RadioButton || control is GroupBox)
                 {
                     if (!string.IsNullOrWhiteSpace(control.Text))
                     {
-                        control.Text = control.Text.Traducir();
+                        string textoOriginal = control.Text;
+                        bool terminaConDosPuntos = textoOriginal.EndsWith(":");
+                        string textoLimpio = terminaConDosPuntos ? textoOriginal.TrimEnd(':').Trim() : textoOriginal;
+
+                        string textoTraducido = textoLimpio.Traducir();
+                        control.Text = terminaConDosPuntos ? textoTraducido + ":" : textoTraducido;
                     }
                 }
 
@@ -43,9 +52,36 @@ namespace FormUI
                     }
                 }
 
+                if (control is MenuStrip menuStrip)
+                {
+                    foreach (ToolStripItem item in menuStrip.Items)
+                    {
+                        TraducirMenuRecursivo(item);
+                    }
+                }
+
                 if (control.HasChildren)
                 {
-                    TraducirFormulario(control);
+                    TraducirControlesRecursivo(control.Controls);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Recorre de forma recursiva un botón del menú y todos sus sub-botones desplegables.
+        /// </summary>
+        private static void TraducirMenuRecursivo(ToolStripItem item)
+        {
+            if (!string.IsNullOrWhiteSpace(item.Text))
+            {
+                item.Text = item.Text.Traducir();
+            }
+
+            if (item is ToolStripMenuItem menuItem && menuItem.HasDropDownItems)
+            {
+                foreach (ToolStripItem subItem in menuItem.DropDownItems)
+                {
+                    TraducirMenuRecursivo(subItem);
                 }
             }
         }

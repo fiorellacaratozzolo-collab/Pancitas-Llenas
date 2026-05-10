@@ -145,7 +145,7 @@ namespace FormUI.FormCompra
 
                     if (resultado.Exito)
                     {
-                        MessageBox.Show(resultado.Mensaje.Traducir(), "Generación Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("¡La Orden de Compra ha sido generada exitosamente!".Traducir(), "Generación Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
@@ -202,7 +202,7 @@ namespace FormUI.FormCompra
             if (dgvDetalleOP.Columns.Contains("IdProductoNavigation")) dgvDetalleOP.Columns["IdProductoNavigation"].Visible = false;
             if (dgvDetalleOP.Columns.Contains("PrecioNeto")) dgvDetalleOP.Columns["PrecioNeto"].Visible = false;
 
-            if (dgvDetalleOP.Columns["Subtotal"] != null) dgvDetalleOP.Columns["Subtotal"].DefaultCellStyle.Format = "C2";
+            if (dgvDetalleOP.Columns["Subtotal"] != null) dgvDetalleOP.Columns["Subtotal"].DefaultCellStyle.Format = "N2";
 
             if (dgvDetalleOP.Columns.Contains("NombreProducto"))
             {

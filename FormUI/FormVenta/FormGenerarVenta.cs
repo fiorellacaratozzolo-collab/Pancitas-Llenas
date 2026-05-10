@@ -16,7 +16,6 @@ namespace FormUI.FormVenta
 {
     public partial class FormGenerarVenta : Form
     {
-        //private ProductoDTO? _productoSeleccionado = null;
         private BindingList<VentaDetalleDTO> _carrito = new BindingList<VentaDetalleDTO>();
 
         /// <summary>
@@ -298,10 +297,9 @@ namespace FormUI.FormVenta
             }
 
             decimal totalFinal = subtotalVenta - descuento;
-
-            lblSubtotal.Text = string.Format("Subtotal: $ {0:N2}".Traducir(), subtotalVenta);
-            lblDescuento.Text = string.Format("Descuento: $ {0:N2}".Traducir(), descuento);
-            lblTotal.Text = string.Format("TOTAL: $ {0:N2}".Traducir(), totalFinal);
+            lblSubtotal.Text = $"{"Subtotal".Traducir()}: $ {subtotalVenta:N2}";
+            lblDescuento.Text = $"{"Descuento".Traducir()}: $ {descuento:N2}";
+            lblTotal.Text = $"{"Total".Traducir()}: $ {totalFinal:N2}";
         }
         /// <summary>
         /// Realiza las validaciones finales de la venta, registra la operación en la base de datos y genera el ticket.
@@ -356,8 +354,13 @@ namespace FormUI.FormVenta
 
                 Logic.Facade.VentaService ventaService = new Logic.Facade.VentaService();
                 Guid idVentaGenerada = ventaService.RegistrarVenta(nuevaVenta, listaDetalles, idSucursalActual);
+                string ticketCorto = idVentaGenerada.ToString().Substring(0, 8).ToUpper();
 
-                MessageBox.Show(string.Format("¡Venta registrada con éxito!\nSe descontó el stock correctamente.\nN° de Ticket: {0}".Traducir(), idVentaGenerada), "Venta Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(
+                    string.Format("¡Venta registrada con éxito!\nSe descontó el stock correctamente.\nN° de Ticket: {0}".Traducir(), ticketCorto),
+                    "Venta Exitosa".Traducir(),
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
 
                 LimpiarPantalla();
             }

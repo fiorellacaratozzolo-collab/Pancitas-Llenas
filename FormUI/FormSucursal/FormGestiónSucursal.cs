@@ -212,7 +212,7 @@ namespace FormUI.FormSucursal
         /// <summary>
         /// Captura la selección del menú desplegable y filtra la grilla para mostrar una sucursal específica.
         /// </summary>
-        private void cmbSeleccionSucursal_SelectedIndexChanged(object sender, EventArgs e)
+        private void cmbSeleccionSucursal_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (cmbSeleccionSucursal.SelectedValue is Guid idSucursal)
             {
@@ -271,7 +271,7 @@ namespace FormUI.FormSucursal
         /// <summary>
         /// Intercepta el dibujado de celdas para que el Tipo de Sucursal (1 o 2) se muestre con un texto legible.
         /// </summary>
-        private void dgvSucursal_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        private void dgvSucursal_CellFormatting(object? sender, DataGridViewCellFormattingEventArgs e)
         {
             if (dgvSucursal.Columns[e.ColumnIndex].Name == "IdTipoSucursal" && e.Value != null)
             {
@@ -286,7 +286,7 @@ namespace FormUI.FormSucursal
         /// <summary>
         /// Escucha el clic en la grilla, carga los datos en TextBoxes/RadioButtons y maneja los botones.
         /// </summary>
-        private void dgvSucursal_SelectionChanged(object sender, EventArgs e)
+        private void dgvSucursal_SelectionChanged(object? sender, EventArgs e)
         {
             if (dgvSucursal.CurrentRow != null && dgvSucursal.CurrentRow.Selected && dgvSucursal.DataSource != null)
             {

@@ -213,14 +213,14 @@ namespace FormUI.FormInventario
                 };
 
                 Guid id = _solicitudService.CrearSolicitud(solicitudDTO);
+                string codigoCorto = id.ToString().Substring(0, 8).ToUpper();
 
                 MessageBox.Show(
-                    string.Format("Solicitud de Pedido creada exitosamente.\nID: {0}".Traducir(), id),
+                    string.Format("Solicitud de Pedido creada exitosamente.\nN° de Referencia: {0}".Traducir(), codigoCorto),
                     "Éxito".Traducir(),
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 
-                // Limpieza post-guardado exitoso
                 _detalles.Clear();
                 ActualizarDGV();
                 LimpiarCampos();

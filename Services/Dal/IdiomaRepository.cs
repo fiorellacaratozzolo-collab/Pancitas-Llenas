@@ -40,44 +40,35 @@ namespace Services.Dal
                 path = Path.Combine(folder, fileName);
             }
 
-            public static string Traducir(string texto)
+        public static string Traducir(string texto)
+        {
+            if (string.IsNullOrWhiteSpace(texto)) return texto;
+
+            texto = texto.Trim();
+
+            string fileNameIdioma = Path.Combine(folder, fileName + "." + Thread.CurrentThread.CurrentCulture.Name);
+
+            if (File.Exists(fileNameIdioma))
             {
-                // Si nos mandan un texto vacío, no hacemos nada
-                if (string.IsNullOrWhiteSpace(texto)) return texto;
-
-                // Limpiamos espacios en blanco al principio y al final por las dudas
-                texto = texto.Trim();
-
-                string fileNameIdioma = Path.Combine(folder, fileName + "." + Thread.CurrentThread.CurrentCulture.Name);
-
-                if (File.Exists(fileNameIdioma))
+                using (StreamReader sr = new StreamReader(fileNameIdioma))
                 {
-                    using (StreamReader sr = new StreamReader(fileNameIdioma))
+                    string line;
+                    string claveBuscada = texto + ":";
+
+                    while ((line = sr.ReadLine()) != null)
                     {
-                        string line;
-                        // Armamos la clave exacta que vamos a buscar (Ej: "Nombre:")
-                        string claveBuscada = texto + ":";
-
-                        while ((line = sr.ReadLine()) != null)
+                        if (line.StartsWith(claveBuscada, StringComparison.OrdinalIgnoreCase))
                         {
-                            // Buscamos si la línea EMPIEZA con nuestra clave exacta
-                            if (line.StartsWith(claveBuscada, StringComparison.OrdinalIgnoreCase))
-                            {
-                                // Recortamos la clave y devolvemos solo la traducción
-                                string traduccion = line.Substring(claveBuscada.Length).Trim();
-
-                                // Si la traducción está vacía en el archivo, devolvemos el texto original
-                                return string.IsNullOrWhiteSpace(traduccion) ? texto : traduccion;
-                            }
+                            string traduccion = line.Substring(claveBuscada.Length).Trim();
+                            return string.IsNullOrWhiteSpace(traduccion) ? texto : traduccion;
                         }
                     }
                 }
-
-                // Si recorrió todo el archivo y no lo encontró, lanza la excepción
-                throw new PalabraNoEncontradaException(texto);
             }
+            return texto;
+        }
 
-            public static List<CultureInfo> ObtenerIdiomas()
+        public static List<CultureInfo> ObtenerIdiomas()
             {
                 try
                 {
@@ -96,47 +87,6 @@ namespace Services.Dal
                 {
                     throw ex;
                 }
-            }
-
-            public static void AgregarPalabra(string palabra, string traduccion = "")
-            {
-                if (string.IsNullOrWhiteSpace(palabra)) return;
-
-                // Limpiamos la palabra y le quitamos saltos de línea (Enters) que rompen el archivo de texto
-                palabra = palabra.Trim().Replace("\r", "").Replace("\n", " ");
-
-                string fileNameIdioma = Path.Combine(folder, fileName + "." + Thread.CurrentThread.CurrentCulture.Name);
-
-                // ---> EL FRENO: Verificamos si YA existe antes de agregarla <---
-                bool yaExiste = false;
-
-                if (File.Exists(fileNameIdioma))
-                {
-                    using (StreamReader sr = new StreamReader(fileNameIdioma))
-                    {
-                        string line;
-                        string claveBuscada = palabra + ":";
-
-                        while ((line = sr.ReadLine()) != null)
-                        {
-                            if (line.StartsWith(claveBuscada, StringComparison.OrdinalIgnoreCase))
-                            {
-                                yaExiste = true;
-                                break; // Cortamos la búsqueda, ya sabemos que está
-                            }
-                        }
-                    }
-                }
-
-                // Si NO existe, recién ahí abrimos el archivo para escribir
-                if (!yaExiste)
-                {
-                    using (StreamWriter sw = new StreamWriter(fileNameIdioma, true)) // true = Append
-                    {
-                        sw.WriteLine($"{palabra}:{traduccion}");
-                    }
-                }
-            }
+            }            
         }
 }
-

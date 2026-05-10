@@ -72,21 +72,20 @@ namespace FormUI.FormCompra
         {
             try
             {
-                // Detalles de la orden para armar la factura
                 var detalles = _ocService.ObtenerDetallesPorOrden(oc.IdOrdenDeCompra);
+                string codigoCorto = oc.IdOrdenDeCompra.ToString().Substring(0, 8).ToUpper();
 
-                // Ruta de guardado en el Escritorio del usuario
                 string escritorio = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                string nombreArchivo = string.Format("OrdenDeCompra_{0}.txt", oc.IdOrdenDeCompra.ToString().Substring(0, 8));
+                string nombreArchivo = string.Format("OrdenDeCompra_{0}.txt", codigoCorto);
                 string rutaCompleta = Path.Combine(escritorio, nombreArchivo);
 
                 using (StreamWriter writer = new StreamWriter(rutaCompleta, false))
                 {
                     writer.WriteLine("==================================================");
-                    writer.WriteLine("              PANCITAS LLENAS PETSHOP             ");
+                    writer.WriteLine("             PANCITAS LLENAS PETSHOP              ");
                     writer.WriteLine("==================================================");
                     writer.WriteLine("DOCUMENTO: ORDEN DE COMPRA");
-                    writer.WriteLine(string.Format("NRO DE ORDEN: {0}", oc.IdOrdenDeCompra));
+                    writer.WriteLine(string.Format("NRO DE ORDEN: {0}", codigoCorto));
                     writer.WriteLine(string.Format("FECHA:        {0}", oc.FechaOc.ToString("dd/MM/yyyy")));
                     writer.WriteLine(string.Format("PROVEEDOR:    {0}", oc.NombreProveedor));
                     writer.WriteLine("ESTADO:       APROBADA");
@@ -133,15 +132,13 @@ namespace FormUI.FormCompra
                 MessageBox.Show("Seleccione una orden válida.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            if (MessageBox.Show(string.Format("¿Finalizar OC #{0}?".Traducir(), oc.IdOrdenDeCompra), "Confirmar".Traducir(),
+            string codigoCorto = oc.IdOrdenDeCompra.ToString().Substring(0, 8).ToUpper();
+            if (MessageBox.Show(string.Format("¿Finalizar OC #{0}?".Traducir(), codigoCorto), "Confirmar".Traducir(),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 try
                 {
                     _ocService.FinalizarOrden(oc.IdOrdenDeCompra);
-
-                    // Disparamos la impresión física al aprobar
                     ImprimirOrdenDeCompraTXT(oc);
 
                     MessageBox.Show("Operación exitosa.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -217,7 +214,7 @@ namespace FormUI.FormCompra
 
                 if (dgvOrdenCompra.Columns["NombreProveedor"] != null) dgvOrdenCompra.Columns["NombreProveedor"].HeaderText = "Proveedor".Traducir();
                 if (dgvOrdenCompra.Columns["FechaOc"] != null) dgvOrdenCompra.Columns["FechaOc"].HeaderText = "Fecha".Traducir();
-                if (dgvOrdenCompra.Columns["Total"] != null) dgvOrdenCompra.Columns["Total"].DefaultCellStyle.Format = "C2";
+                if (dgvOrdenCompra.Columns["Total"] != null) dgvOrdenCompra.Columns["Total"].DefaultCellStyle.Format = "N2";
                 if (dgvOrdenCompra.Columns["EstadoTexto"] != null) dgvOrdenCompra.Columns["EstadoTexto"].HeaderText = "Estado".Traducir();
 
                 dgvOrdenCompra.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -238,8 +235,8 @@ namespace FormUI.FormCompra
 
                 if (dgvDetalleOC.Columns["NombreProducto"] != null) dgvDetalleOC.Columns["NombreProducto"].HeaderText = "Producto".Traducir();
                 if (dgvDetalleOC.Columns["PesoNeto"] != null) dgvDetalleOC.Columns["PesoNeto"].HeaderText = "Peso (Kg)".Traducir();
-                if (dgvDetalleOC.Columns["PrecioUnitario"] != null) dgvDetalleOC.Columns["PrecioUnitario"].DefaultCellStyle.Format = "C2";
-                if (dgvDetalleOC.Columns["Subtotal"] != null) dgvDetalleOC.Columns["Subtotal"].DefaultCellStyle.Format = "C2";
+                if (dgvDetalleOC.Columns["PrecioUnitario"] != null) dgvDetalleOC.Columns["PrecioUnitario"].DefaultCellStyle.Format = "N2";
+                if (dgvDetalleOC.Columns["Subtotal"] != null) dgvDetalleOC.Columns["Subtotal"].DefaultCellStyle.Format = "N2";
 
                 dgvDetalleOC.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 

@@ -85,8 +85,8 @@ namespace FormUI.FormCompra
                 {
                     Guid idSeleccionado = (Guid)dgvSolicitudDePedido.CurrentRow.Cells["IdSolicitudDePedido"].Value;
                     Guid nuevaOPId = _solicitudService.AprobarYSolicitarOrdenDePedido(idSeleccionado);
-
-                    MessageBox.Show(string.Format("¡Orden de Pedido generada con éxito!\nID de la nueva OP: {0}".Traducir(), nuevaOPId), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    string codigoCorto = nuevaOPId.ToString().Substring(0, 8).ToUpper();
+                    MessageBox.Show(string.Format("¡Orden de Pedido generada con éxito!\nN° de Referencia: {0}".Traducir(), codigoCorto), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     btnActualizar_Click(this, EventArgs.Empty);
                 }

@@ -113,6 +113,7 @@ namespace FormUI.FormInventario
         private void ConfigurarGrillaStock()
         {
             dgvStock.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvStock.ReadOnly = true;
 
             if (dgvStock.Columns.Contains("IdStockPorSucursal")) dgvStock.Columns["IdStockPorSucursal"].Visible = false;
             if (dgvStock.Columns.Contains("IdSucursal")) dgvStock.Columns["IdSucursal"].Visible = false;
@@ -122,6 +123,7 @@ namespace FormUI.FormInventario
             if (dgvStock.Columns.Contains("IdEstadoStockNavigation")) dgvStock.Columns["IdEstadoStockNavigation"].Visible = false;
             if (dgvStock.Columns.Contains("IdStockSucursal")) dgvStock.Columns["IdStockSucursal"].Visible = false;
             if (dgvStock.Columns.Contains("IdEstadoStock")) dgvStock.Columns["IdEstadoStock"].Visible = false;
+            if (dgvStock.Columns.Contains("Activo")) dgvStock.Columns["Activo"].Visible = false;
 
             if (dgvStock.Columns.Contains("NombreProducto"))
             {

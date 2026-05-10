@@ -36,7 +36,9 @@ namespace Logic.Helpers
 
             if (vinculo == null || vinculo.IdProductoNavigation == null)
             {
-                throw new KeyNotFoundException(string.Format("No se pudo generar la OC: El Producto con ID '{0}' no tiene un proveedor asignado o los datos de producto están incompletos.", idProducto));
+                string idCorto = idProducto.ToString().Substring(0, 8).ToUpper();
+
+                throw new KeyNotFoundException(string.Format("No se pudo generar la OC: El Producto seleccionado (Ref: {0}) no tiene un proveedor asignado o sus datos están incompletos.", idCorto));
             }
 
             decimal costoUnitario = vinculo.IdProductoNavigation.PrecioNeto ?? 0M;

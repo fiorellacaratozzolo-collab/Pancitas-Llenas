@@ -38,6 +38,21 @@ namespace FormUI.Inicio
                     if (dgvBitácora.Columns["IdUsuario"] != null)
                         dgvBitácora.Columns["IdUsuario"].Visible = false;
 
+                    if (dgvBitácora.Columns["NombreUsuario"] != null)
+                    {
+                        dgvBitácora.Columns["NombreUsuario"].HeaderText = "Usuario".Traducir();
+                    }
+
+                    if (dgvBitácora.Columns["Fecha"] != null)
+                    {
+                        dgvBitácora.Columns["Fecha"].HeaderText = "Fecha".Traducir();
+                    }
+
+                    if (dgvBitácora.Columns["Criticidad"] != null)
+                    {
+                        dgvBitácora.Columns["Criticidad"].HeaderText = "Criticidad".Traducir();
+                    }
+
                     if (dgvBitácora.Columns["Mensaje"] != null)
                     {
                         dgvBitácora.Columns["Mensaje"].HeaderText = "Mensaje".Traducir();

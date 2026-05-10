@@ -207,7 +207,7 @@ namespace FormUI.FormCompra
         /// <summary>
         /// Escucha el clic explícito en la grilla, carga los datos en los TextBoxes y maneja la Máquina de Estados de los botones.
         /// </summary>
-        private void dgvProveedor_SelectionChanged(object sender, EventArgs e)
+        private void dgvProveedor_SelectionChanged(object? sender, EventArgs e)
         {
             if (dgvProveedor.CurrentRow != null && dgvProveedor.CurrentRow.Selected && dgvProveedor.DataSource != null)
             {

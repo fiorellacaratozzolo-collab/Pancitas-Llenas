@@ -1,333 +1,433 @@
-﻿Login:Login
-Iniciar Sesión:Iniciar Sesión
-Contraseña:Contraseña
-Usuario:Usuario
-Seleccionar Sucursal:Seleccionar Sucursal
-Siguiente:Siguiente
-Seleccione la Sucursal donde desea ingresar:Seleccione la Sucursal donde desea ingresar
-Menú:Menú
-Seleccione el Idioma Predeterminado:Seleccione el Idioma Predeterminado
+﻿--- Mostrar Todas las Sucursales ---:--- Mostrar Todas las Sucursales ---
+--- Mostrar Todos ---:--- Mostrar Todos ---
+--- Seleccione Sucursal ---:--- Seleccione Sucursal ---
+--- Seleccione una sucursal ---:--- Seleccione una sucursal ---
+1. Lectura,"El usuario puede abrir el Form y ver los datos, pero los botones de ""Guardar"" o ""Eliminar"" están deshabilitados.":1. Lectura,"El usuario puede abrir el Form y ver los datos, pero los botones de ""Guardar"" o ""Eliminar"" están deshabilitados."
+2. Escritura,"Puede ver, crear nuevos registros y editar los existentes.":2. Escritura,"Puede ver, crear nuevos registros y editar los existentes."
+3.Control Total,"Puede hacer todo lo anterior, además de eliminar registros o realizar acciones críticas.":3.Control Total,"Puede hacer todo lo anterior, además de eliminar registros o realizar acciones críticas."
+Aceptar:Aceptar
+Activo:Activo
+Actualizar Stock:Actualizar Stock
+Actualizar:Actualizar
+Added Qty.:Cant. Agregada
+Address:Dirección
+Administrador:Administrador
+ADMINISTRADOR (Sin Sucursal Fija):ADMINISTRADOR (Sin Sucursal Fija)
+Advertencia:Advertencia
+Agregar a un Cliente:Agregar a un Cliente
+Agregar a un Proveedor:Agregar a un Proveedor
+Agregar Stock:Agregar Stock
+Agregar un Nuevo Proveedor:Agregar un Nuevo Proveedor
+Agregar un Producto:Agregar un Producto
+Agregar un Usuario:Agregar un Usuario
+Agregar una Sucursal:Agregar una Sucursal
+Agregar:Agregar
+Agregue al menos un producto a la solicitud.:Agregue al menos un producto a la solicitud.
+Agregue al menos un producto.:Agregue al menos un producto.
+Aprobar:Aprobar
+Argregar:Agregar
+Associated Provider:Proveedor Asociado
+Aviso:Aviso
+Bitácora:Bitácora
+Branch Name:Nombre de Sucursal
+Branch Type:Tipo de Sucursal
+Branch:Sucursal
+Brand:Marca
+Buscar Cliente:Buscar Cliente
+Buscar Producto:Buscar Producto
+Buscar Productos por Proveedor:Buscar Productos por Proveedor
+Buscar:Buscar
+Cambios aplicados: {0}:Cambios aplicados: {0}
+Cancelar:Cancelar
+Cant. Agregada:Cant. Agregada
+Cant. Solicitada:Cant. Solicitada
+Cantidad:Cantidad
 Cargando sucursal...:Cargando sucursal...
 Cerrar Sesión:Cerrar Sesión
-Gestión de Roles:Gestión de Roles
-3.Control Total,"Puede hacer todo lo anterior, además de eliminar registros o realizar acciones críticas.":3.Control Total,"Puede hacer todo lo anterior, además de eliminar registros o realizar acciones críticas."
-2. Escritura,"Puede ver, crear nuevos registros y editar los existentes.":2. Escritura,"Puede ver, crear nuevos registros y editar los existentes."
-1. Lectura,"El usuario puede abrir el Form y ver los datos, pero los botones de ""Guardar"" o ""Eliminar"" están deshabilitados.":1. Lectura,"El usuario puede abrir el Form y ver los datos, pero los botones de ""Guardar"" o ""Eliminar"" están deshabilitados."
-Referencias:Referencias
-Permisos Extras / Excepciones:Permisos Extras / Excepciones
-Guardar:Guardar
-Rol de Usuario:Rol de Usuario
-Seleccione un Usuario:Seleccione un Usuario
-Gestión de Usuario:Gestión de Usuario
-Dar de Alta a un Nuevo Usuario:Dar de Alta a un Nuevo Usuario
-Gestionar Usuario:Gestionar Usuario
-Modificar Contraseña:Modificar Contraseña
-Actualizar:Actualizar
-Sucursal:Sucursal
-Email:Email
-Agregar:Agregar
-Nombre:Nombre
-Bitácora:Bitácora
-Ver Bitácora:Ver Bitácora
-Gestión de Solicitud de Pedido:Gestión de Solicitud de Pedido
-Detalle:Detalle
-Solicitud de Pedido:Solicitud de Pedido
-Filtrar por Estado:Filtrar por Estado
-Ver Solicitudes de Pedidos:Ver Solicitudes de Pedidos
-ID Solicitud:ID Solicitud
-Fecha:Fecha
-Estado:Estado
-Dar de Baja:Dar de Baja
-Generar Orden de Pedido:Generar Orden de Pedido
-Gestión de Orden de Pedido:Gestión de Orden de Pedido
-Orden de Pedido:Orden de Pedido
-Generar Orden de Compra:Generar Orden de Compra
-ID Orden:ID Orden
-Total:Total
-Ver Ordenes de Pedidos:Ver Ordenes de Pedidos
-Gestión de Orden de Compra:Gestión de Orden de Compra
-Detalles de Orden de Compra:Detalles de Orden de Compra
-Orden de Compra:Orden de Compra
-Dar de Alta:Dar de Alta
-Ver:Ver
-Ver Ordenes de Compra:Ver Ordenes de Compra
-Gestión de Proveedores:Gestión de Proveedores
-Agregar un Nuevo Proveedor:Agregar un Nuevo Proveedor
-Gestionar Proveedor:Gestionar Proveedor
-Deshabilitar:Deshabilitar
-IdProveedor:IdProveedor
+Cliente agregado exitosamente.:Cliente agregado exitosamente.
+Cliente deshabilitado exitosamente.:Cliente deshabilitado exitosamente.
+Cliente Faltante:Cliente Faltante
+Cliente habilitado exitosamente.:Cliente habilitado exitosamente.
+Cliente:Cliente
+Compras:Compras
+Confirmar Acción:Confirmar Acción
+Confirmar Anulación de Venta:Confirmar Anulación de Venta
+Confirmar Aprobación:Confirmar Aprobación
+Confirmar Baja:Confirmar Baja
+Confirmar Cancelación:Confirmar Cancelación
+Confirmar Generación de Orden de Compra:Confirmar Generación de Orden de Compra
+Confirmar Rechazo:Confirmar Rechazo
+Confirmar actualización:Confirmar actualización
+Confirmar:Confirmar
+Contraseña:Contraseña
+Cuidado:Cuidado
+CUIT Proveedor:CUIT Proveedor
+CUIT y Teléfono deben ser números válidos.:CUIT y Teléfono deben ser números válidos.
 CUIT:CUIT
-Telefóno:Teléfono
-Teléfono:Teléfono
+Current Stock:Stock Actual
+Customer Type:Tipo Cliente
+Customer:Cliente
+D.N.I.:D.N.I.
+Dar de Alta a un Nuevo Cliente:Dar de Alta a un Nuevo Cliente
+Dar de Alta a un Nuevo Usuario:Dar de Alta a un Nuevo Usuario
+Dar de Alta:Dar de Alta
+Dar de Baja:Dar de Baja
+Date and Time:Fecha y Hora
+Date:Fecha
+Deposito-Venta:Depósito-Venta
+Depósito-Venta:Depósito-Venta
+Descuento:Descuento
+Deshacer:Deshacer
+Deshabilitar:Deshabilitar
+Desired Stock:Stock Deseado
+Destination Address:Dirección Destino
+Destination Branch:Sucursal Destino
+Detalle de Solicitud:Detalle de Solicitud
+Detalle:Detalle
+Detalles de Orden de Compra:Detalles de Orden de Compra
+Direccion:Dirección
+Dirección de la Sucursal:Dirección de la Sucursal
+Dirección Destino:Dirección Destino
 Dirección:Dirección
-ProveedorProductos:ProveedorProductos
-Proveedor:Proveedor
-Gestión de Productos:Gestión de Productos
+DNI:DNI
+El campo Nombre es obligatorio.:El campo Nombre es obligatorio.
+El carrito está vacío. Agregue productos antes de cobrar.:El carrito está vacío. Agregue productos antes de cobrar.
+El cliente seleccionado no es válido o está incompleto.:El cliente seleccionado no es válido o está incompleto.
+El producto ha sido quitado del catálogo exitosamente.:El producto ha sido quitado del catálogo exitosamente.
+El usuario {0} cerró sesión manualmente.:El usuario {0} cerró sesión manualmente.
+El usuario {0} ingresó al sistema.:El usuario {0} ingresó al sistema.
+Eliminar:Eliminar
+Email:Email
+Entrega de Productos:Entrega de Productos
+Entry Date:Fecha de Ingreso
+Error al agregar el producto: {0}:Error al agregar el producto: {0}
+Error al anular la venta: {0}:Error al anular la venta: {0}
+Error al abrir: {0}:Error al abrir: {0}
+Error al cargar los catálogos: {0}:Error al cargar los catálogos: {0}
+Error al deshabilitar el producto: {0}:Error al deshabilitar el producto: {0}
+Error al eliminar el producto: {0}:Error al eliminar el producto: {0}
+Error al guardar los cambios: {0}:Error al guardar los cambios: {0}
+Error al habilitar: {0}:Error al habilitar: {0}
+Error al procesar la solicitud: {0}:Error al procesar la solicitud: {0}
+Error de Destino:Error de Destino
+Error de Persistencia:Error de Persistencia
+Error de Validación:Error de Validación
+Error:Error
+EsMayorista:EsMayorista
+Estado:Estado
+Fecha de Ingreso:Fecha de Ingreso
+Fecha y Hora:Fecha y Hora
+Fecha:Fecha
+Filtrar por Estado:Filtrar por Estado
+FormGestiónTraspaso:FormGestiónTraspaso
+Generación Exitosa:Generación Exitosa
+Generar Orden de Compra:Generar Orden de Compra
+Generar Orden de Pedido:Generar Orden de Pedido
+Generar una Venta:Generar una Venta
+Gestion de Sucursal:Gestión de Sucursal
+Gestiona de Ventas:Gestión de Ventas
+Gestionar Cliente:Gestionar Cliente
 Gestionar Producto:Gestionar Producto
-Buscar:Buscar
+Gestionar Proveedor:Gestionar Proveedor
+Gestionar Usuario:Gestionar Usuario
+Gestionar Ventas:Gestionar Ventas
+Gestión Orden de Compra:Gestión Orden de Compra
+Gestión Orden de Pedido:Gestión Orden de Pedido
+Gestión Solicitud de Pedido:Gestión Solicitud de Pedido
+Gestión de Cliente:Gestión de Cliente
+Gestión de Orden de Compra:Gestión de Orden de Compra
+Gestión de Orden de Pedido:Gestión de Orden de Pedido
+Gestión de Producto:Gestión de Producto
+Gestión de Productos:Gestión de Productos
+Gestión de Proveedores:Gestión de Proveedores
+Gestión de Roles:Gestión de Roles
+Gestión de Solicitud de Pedido:Gestión de Solicitud de Pedido
+Gestión de Sucursal:Gestión de Sucursal
+Gestión de Traspaso:Gestión de Traspaso
+Gestión de Usuario:Gestión de Usuario
+Gestión de Ventas:Gestión de Ventas
+Guardar:Guardar
+Habilitado:Habilitado
+Habilitar:Habilitar
+Historial de Movimientos:Historial de Movimientos
+Historial de Ventas:Historial de Ventas
+Hora:Hora
+ID Number:DNI
+ID Orden:ID Orden
+ID Solicitud:ID Solicitud
+IdCliente:IdCliente
+IdClienteNavigation:IdClienteNavigation
+IdEstadoOc:IdEstadoOc
+IdEstadoOcNavigation:IdEstadoOcNavigation
+IdEstadoStock:IdEstadoStock
+IdEstadoStockNavigation:IdEstadoStockNavigation
+IdEstadoStp:IdEstadoStp
+IdEstadoStpNavigation:IdEstadoStpNavigation
+IdOrdenDeCompra:IdOrdenDeCompra
+IdOrdenDeCompraDetalle:IdOrdenDeCompraDetalle
+IdOrdenDeCompraNavigation:IdOrdenDeCompraNavigation
+IdOrdenDePedido:IdOrdenDePedido
+IdOrdenDePedidoDetalle:IdOrdenDePedidoDetalle
+IdOrdenDePedidoNavigation:IdOrdenDePedidoNavigation
+IdOrdenDePedidoOrigen:IdOrdenDePedidoOrigen
 IdProducto:IdProducto
-Producto:Producto
+IdProductoNavigation:IdProductoNavigation
+IdProveedor:IdProveedor
+IdProveedorNavigation:IdProveedorNavigation
+IdSolicitudDePedido:IdSolicitudDePedido
+IdSolicitudDePedidoDetalle:IdSolicitudDePedidoDetalle
+IdSolicitudDeTraspasoDeProductos:IdSolicitudDeTraspasoDeProductos
+IdSolicitudDeTraspasoDeProductosDetalle:IdSolicitudDeTraspasoDeProductosDetalle
+IdSolicitudDeTraspasoDeProductosNavigation:IdSolicitudDeTraspasoDeProductosNavigation
+IdStockSucursal:IdStockSucursal
+IdSucursal:IdSucursal
+IdSucursalDestino:IdSucursalDestino
+IdSucursalNavigation:IdSucursalNavigation
+IdSucursalOrigen:IdSucursalOrigen
+IdTipoClienteNavigation:IdTipoClienteNavigation
+IdTipoSucursal:IdTipoSucursal
+IdTipoSucursalNavigation:IdTipoSucursalNavigation
+IdUsuario:IdUsuario
+IdVenta:IdVenta
+IdVentaDetalle:IdVentaDetalle
+IdVentaNavigation:IdVentaNavigation
+Impresión Exitosa:Impresión Exitosa
+Información:Información
+Ingrese el CUIT del Proveedor para filtrar:Ingrese el CUIT del Proveedor para filtrar
+Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar:Ingrese el ID del Tipo de Cliente (0=Minorista, 1=Mayorista) a buscar
+Ingrese el nombre (o parte del nombre) del producto a buscar:Ingrese el nombre (o parte del nombre) del producto a buscar
+Ingrese la nueva contraseña:Ingrese la nueva contraseña
+Ingrese los siguientes datos de el Cliente:Ingrese los siguientes datos de el Cliente
+Ingrese los siguientes datos de el Producto:Ingrese los siguientes datos de el Producto
+Ingrese los siguientes datos de el Proveedor:Ingrese los siguientes datos de el Proveedor
+Ingrese los siguientes datos de el Usuario:Ingrese los siguientes datos de el Usuario
+Ingrese los siguientes datos de la Sucursal:Ingrese los siguientes datos de la Sucursal
+Ingrese una cantidad válida mayor a 0.:Ingrese una cantidad válida mayor a 0.
+Ingrese una cantidad válida mayor a cero.:Ingrese una cantidad válida mayor a cero.
+Iniciar Sesión:Iniciar Sesión
+Inventario:Inventario
+La Orden de Compra ha sido exportada a:\n{0}:La Orden de Compra ha sido exportada a:\n{0}
+La tabla se ha actualizado.:La tabla se ha actualizado.
+Limpiar:Limpiar
+Lista actualizada.:Lista actualizada.
+Lista de Precios:Lista de Precios
+Lista de precios:Lista de precios
+Lista de productos actualizada.:Lista de productos actualizada.
+Lista de proveedoes actualizada.:Lista de proveedores actualizada.
+Lista de proveedores actualizada.:Lista de proveedores actualizada.
+Login:Login
+Los cambios del cliente se guardaron correctamente.:Los cambios del cliente se guardaron correctamente.
+Los cambios se guardaron correctamente.:Los cambios se guardaron correctamente.
+Los datos del producto han sido actualizados correctamente.:Los datos del producto han sido actualizados correctamente.
+Los datos del proveedor han sido actualizados correctamente.:Los datos del proveedor han sido actualizados correctamente.
 Marca:Marca
-Peso Neto:Peso Neto
-Unidad:Unidad
-Precio Neto ($):Precio Neto ($)
-Descripcion:Descripción
+Mayorista:Mayorista
+Medio de Pago:Medio de Pago
+Mensaje:Mensaje
+Menú:Menú
+MetodoPago:MetodoPago
+Minorista:Minorista
+Modificar Contraseña:Modificar Contraseña
+Modificar Sucursal:Modificar Sucursal
+MontoDescuento:MontoDescuento
+Movement:Movimiento
+Movimiento:Movimiento
+Name:Nombre
+Net Price ($):Precio Neto ($)
+Net Weight:Peso Neto
+No hay Solicitudes de Traspaso pendientes.:No hay Solicitudes de Traspaso pendientes.
+No se detectaron cantidades positivas para agregar stock.:No se detectaron cantidades positivas para agregar stock.
+No se puede eliminar el producto porque ya posee historial asociado (Ventas, Pedidos, etc.) que no puede ser borrado.\n\nDetalle técnico: {0}:No se puede eliminar el producto porque ya posee historial asociado (Ventas, Pedidos, etc.) que no puede ser borrado.\n\nDetalle técnico: {0}
+No.:N°
+Nombre de Sucursal:Nombre de Sucursal
+Nombre de la Sucursal:Nombre de la Sucursal
+Nombre Producto:Nombre Producto
+Nombre y Dirección son obligatorios.:Nombre y Dirección son obligatorios.
+Nombre, Marca y CUIT del Proveedor son obligatorios.:Nombre, Marca y CUIT del Proveedor son obligatorios.
+Nombre:Nombre
+NombreCliente:NombreCliente
 NombreConPeso:NombreConPeso
+NombreProducto:NombreProducto
+NombreProveedor:Nombre de Proveedor
+NombreSucursalOrigen:NombreSucursalOrigen
+NumeroVenta:NumeroVenta
+Operación Exitosa:Operación Exitosa
+Operación exitosa.:Operación exitosa.
+Operación inválida: La sucursal de origen y la sucursal de destino no pueden ser la misma.:Operación inválida: La sucursal de origen y la sucursal de destino no pueden ser la misma.
+Order ID:ID Orden
+Orden de Compra:Orden de Compra
+Orden de Pedido:Orden de Pedido
+OrdenDeCompraDetalles:OrdenDeCompraDetalles
+Origin / Destination:Origen / Destino
+Origen / Destino:Origen / Destino
+Pendientes:Pendientes
+Permisos Extras / Excepciones:Permisos Extras / Excepciones
+Peso (Kg):Peso (Kg)
+Peso Neto:Peso Neto
+Peso Unit.:Peso Unit.
+PetShop - Bienvenido {0}:PetShop - Bienvenido {0}
+PetShop - Bienvenido Admin:PetShop - Bienvenido Admin
+PetShop - Welcome Admin:PetShop - Bienvenido Admin
+Phone:Teléfono
+Precio Neto ($):Precio Neto ($)
+Precio Neto:Precio Neto
+Precio Unit.:Precio Unit.
+Precio Unitario:Precio Unitario
+Precio:Precio
+PrecioNeto:PrecioNeto
+Product ID:IdProducto
+Product:Producto
+Producto '{0}' agregado correctamente.:Producto '{0}' agregado correctamente.
+Producto '{0}' agregado y vinculado al proveedor {1}.:Producto '{0}' agregado y vinculado al proveedor {1}.
+Producto:Producto
+Productos a Solicitar:Productos a Solicitar
+Proveedor Asociado:Proveedor Asociado
+Proveedor agregado exitosamente.:Proveedor agregado exitosamente.
+Proveedor deshabilitado exitosamente.:Proveedor deshabilitado exitosamente.
+Proveedor y sus productos asociados fueron deshabilitados exitosamente.:Proveedor y sus productos asociados fueron deshabilitados exitosamente.
+Proveedor:Proveedor
+ProveedorProductos:ProveedorProductos
+Provider:Proveedor
+Quantity:Cantidad
+Rechazadas:Rechazadas
+Rechazar:Rechazar
+Referencias:Referencias
+Registrar una nueva Venta:Registrar una nueva Venta
+Request ID:ID Solicitud
+Requested Qty.:Cant. Solicitada
+Restricción de Integridad:Restricción de Integridad
+Resultado:Resultado
+Retirar producto:Retirar producto
+Rol de Usuario:Rol de Usuario
+Sale Type:Tipo de Venta
+Se actualizarán {0} producto(s). ¿Continuar?:Se actualizarán {0} producto(s). ¿Continuar?
+Se encontraron {0} clientes para el ID Tipo {1}.:Se encontraron {0} clientes para el ID Tipo {1}.
+Se encontraron {0} productos asociados a este proveedor.:Se encontraron {0} productos asociados a este proveedor.
+Search:Buscar
+Seleccionar Fecha:Seleccionar Fecha
+Seleccionar Proveedor:Seleccionar Proveedor
+Seleccionar Sucursal:Seleccionar Sucursal
+Seleccione el Idioma Predeterminado:Seleccione el Idioma Predeterminado
+Seleccione la Sucursal donde desea ingresar:Seleccione la Sucursal donde desea ingresar
+Seleccione un Proveedor:Seleccione un Proveedor
+Seleccione un Usuario:Seleccione un Usuario
+Seleccione un producto de la lista haciendo clic sobre él para modificarlo.:Seleccione un producto de la lista haciendo clic sobre él para modificarlo.
+Seleccione un producto de la lista.:Seleccione un producto de la lista.
+Seleccione un producto primero.:Seleccione un producto primero.
+Seleccione un producto.:Seleccione un producto.
+Seleccione un proveedor de la lista desplegable antes de buscar.:Seleccione un proveedor de la lista desplegable antes de buscar.
+Seleccione un proveedor para buscar.:Seleccione un proveedor para buscar.
+Seleccione una Sucursal:Seleccione una Sucursal
+Seleccione una solicitud para aprobar.:Seleccione una solicitud para aprobar.
+Seleccione una solicitud para rechazar.:Seleccione una solicitud para rechazar.
+Seleccione una sucursal de destino.:Seleccione una sucursal de destino.
+Seleccione una venta de la lista para anular.:Seleccione una venta de la lista para anular.
+Siguiente:Siguiente
+Solicitar Orden de Pedido:Solicitar Orden de Pedido
+Solicitar Traspaso de Productos a Sucursal:Solicitar Traspaso de Productos a Sucursal
+Solicitar Traspaso de Productos:Solicitar Traspaso de Productos
+Solicitar el Traspaso de Productos a otra Sucursal:Solicitar el Traspaso de Productos a otra Sucursal
+Solicitud de Pedido creada exitosamente. ID: {0}:Solicitud de Pedido creada exitosamente. ID: {0}
+Solicitud de Pedido dada de baja correctamente.:Solicitud de Pedido dada de baja correctamente.
+Solicitud de Pedido:Solicitud de Pedido
 SolicitudDePedidoDetalles:SolicitudDePedidoDetalles
 SolicitudDeTraspasoDeProductosDetalles:SolicitudDeTraspasoDeProductosDetalles
-StockPorSucursals:StockPorSucursals
-VentaDetalles:VentaDetalles
-Precio Neto:Precio Neto
-CUIT Proveedor:CUIT Proveedor
-Argregar:Agregar
-Descripción:Descripción
-Solicitar Orden de Pedido:Solicitar Orden de Pedido
-Productos a Solicitar:Productos a Solicitar
-Limpiar:Limpiar
-Cantidad:Cantidad
-Nombre Producto:Nombre Producto
-Agregar Stock:Agregar Stock
-Seleccionar Proveedor:Seleccionar Proveedor
-Actualizar Stock:Actualizar Stock
+Solicitudes de Traspaso:Solicitudes de Traspaso
+Status:Estado
 Stock a Añadir:Stock a Añadir
 Stock Actual:Stock Actual
 Stock Deseado:Stock Deseado
-Historial de Movimientos:Historial de Movimientos
-Traspaso de Productos:Traspaso de Productos
-Entrega de Productos:Entrega de Productos
-Ver Stock Disponible:Ver Stock Disponible
 Stock disponible:Stock disponible
-Gestion de Sucursal:Gestión de Sucursal
-Agregar una Sucursal:Agregar una Sucursal
-Teléfono de la Sucursal:Teléfono de la Sucursal
-Ingrese los siguientes datos de la Sucursal:Ingrese los siguientes datos de la Sucursal
-Dirección de la Sucursal:Dirección de la Sucursal
-Venta:Venta
-Deposito-Venta:Depósito-Venta
-Tipo de Sucursal:Tipo de Sucursal
-Nombre de la Sucursal:Nombre de la Sucursal
-Modificar Sucursal:Modificar Sucursal
-IdSucursal:IdSucursal
-Direccion:Dirección
-Nombre de Sucursal:Nombre de Sucursal
-Telefono:Teléfono
-IdTipoSucursal:IdTipoSucursal
-IdTipoSucursalNavigation:IdTipoSucursalNavigation
-Seleccione una Sucursal:Seleccione una Sucursal
-FormGestiónTraspaso:FormGestiónTraspaso
-Detalle de Solicitud:Detalle de Solicitud
-Solicitudes de Traspaso:Solicitudes de Traspaso
-Ver Traspasos:Ver Traspasos
-Aprobar:Aprobar
-Rechazar:Rechazar
-Registrar una nueva Venta:Registrar una nueva Venta
-Ventas:Ventas
-Venta Mayorista:Venta Mayorista
-Descuento:Descuento
-Deshacer:Deshacer
-Cancelar:Cancelar
-Precio:Precio
-Cliente:Cliente
-Aceptar:Aceptar
-Subtotal:Subtotal
-Medio de Pago:Medio de Pago
-Gestión de Cliente:Gestión de Cliente
-Dar de Alta a un Nuevo Cliente:Dar de Alta a un Nuevo Cliente
-Gestionar Cliente:Gestionar Cliente
-IdCliente:IdCliente
-D.N.I.:D.N.I.
-Tipo Cliente:Tipo Cliente
-IdTipoClienteNavigation:IdTipoClienteNavigation
-Tipo de Cliente:Tipo de Cliente
-Minorista:Minorista
-Mayorista:Mayorista
-DNI:DNI
-Gestiona de Ventas:Gestión de Ventas
-Gestionar Ventas:Gestionar Ventas
-Seleccionar Fecha:Seleccionar Fecha
-Eliminar:Eliminar
-Historial de Ventas:Historial de Ventas
-Ver Todas:Ver Todas
-Lista de Precios:Lista de Precios
-Lista de precios:Lista de precios
-Habilitado:Habilitado
-IdUsuario:IdUsuario
-IdSolicitudDePedidoDetalle:IdSolicitudDePedidoDetalle
-IdSolicitudDePedido:IdSolicitudDePedido
-Cant. Solicitada:Cant. Solicitada
-IdOrdenDePedidoDetalle:IdOrdenDePedidoDetalle
-IdOrdenDePedido:IdOrdenDePedido
-Precio Unit.:Precio Unit.
-PrecioNeto:PrecioNeto
-IdOrdenDePedidoNavigation:IdOrdenDePedidoNavigation
-IdOrdenDeCompraDetalle:IdOrdenDeCompraDetalle
-IdOrdenDeCompra:IdOrdenDeCompra
-Precio Unitario:Precio Unitario
-IdOrdenDeCompraNavigation:IdOrdenDeCompraNavigation
-IdEstadoOc:IdEstadoOc
-IdOrdenDePedidoOrigen:IdOrdenDePedidoOrigen
-IdProveedorNavigation:IdProveedorNavigation
-IdEstadoOcNavigation:IdEstadoOcNavigation
-OrdenDeCompraDetalles:OrdenDeCompraDetalles
-Fecha y Hora:Fecha y Hora
-Movimiento:Movimiento
-Origen / Destino:Origen / Destino
-UsuarioResponsable:Usuario Responsable
-Fecha de Ingreso:Fecha de Ingreso
-NombreProveedor:Nombre de Proveedor
-Cant. Agregada:Cant. Agregada
-Peso Unit.:Peso Unit.
-IdStockSucursal:IdStockSucursal
+Stock actualizado.:Stock actualizado.
+Stock to Add:Stock a Añadir
 StockActual:StockActual
 StockDeseado:StockDeseado
-IdEstadoStock:IdEstadoStock
-IdEstadoStockNavigation:IdEstadoStockNavigation
-IdProductoNavigation:IdProductoNavigation
-IdSucursalNavigation:IdSucursalNavigation
-Solicitar el Traspaso de Productos a otra Sucursal:Solicitar el Traspaso de Productos a otra Sucursal
+StockPorSucursals:StockPorSucursals
+Subtotal:Subtotal
+Sucursal creada exitosamente.:Sucursal creada exitosamente.
+Sucursal deshabilitada.:Sucursal deshabilitada.
 Sucursal Destino:Sucursal Destino
 Sucursal Origen:Sucursal Origen
-Solicitar Traspaso de Productos:Solicitar Traspaso de Productos
-IdSolicitudDeTraspasoDeProductosDetalle:IdSolicitudDeTraspasoDeProductosDetalle
-IdSolicitudDeTraspasoDeProductos:IdSolicitudDeTraspasoDeProductos
-IdSolicitudDeTraspasoDeProductosNavigation:IdSolicitudDeTraspasoDeProductosNavigation
-IdVentaDetalle:IdVentaDetalle
-IdVenta:IdVenta
-NombreProducto:NombreProducto
-IdVentaNavigation:IdVentaNavigation
-NumeroVenta:NumeroVenta
-Hora:Hora
-MetodoPago:Método de Pago
-MontoDescuento:MontoDescuento
-NombreCliente:NombreCliente
-EsMayorista:EsMayorista
-IdClienteNavigation:IdClienteNavigation
-Total ($):Total ($)
---- Seleccione una sucursal ---:--- Seleccione una sucursal ---
-¡Los permisos se han guardado exitosamente!:¡Los permisos se han guardado exitosamente!
-Operación Exitosa:Operación Exitosa
-ADMINISTRADOR (Sin Sucursal Fija):ADMINISTRADOR (Sin Sucursal Fija)
+Sucursal:Sucursal
+Sucursales:Sucursales
+Tarjeta de Crédito:Tarjeta de Crédito
+Tarjeta de Débito:Tarjeta de Débito
+Tax ID (CUIT):CUIT
+Telefono:Teléfono
+Teléfono de la Sucursal:Teléfono de la Sucursal
+Teléfono:Teléfono
+Telefóno:Teléfono
+Time:Hora
+Tipo Cliente:Tipo Cliente
+Tipo de Cliente:Tipo de Cliente
+Tipo de Sucursal:Tipo de Sucursal
+Tipo de Venta:Tipo de Venta
+Todas:Todas
+Total:Total
+Transferencia:Transferencia
+Traspaso de Productos a Sucursal:Traspaso de Productos a Sucursal
+Traspaso de Productos:Traspaso de Productos
+Unidad:Unidad
+Unit Price:Precio Unit.
+Unit Weight:Peso Unit.
+Unit:Unidad
 Usuario actualizado con éxito.:Usuario actualizado con éxito.
-Éxito:Éxito
-¿Está seguro que desea APROBAR esta Orden de Pedido y generar la Orden de Compra?:¿Está seguro que desea APROBAR esta Orden de Pedido y generar la Orden de Compra?
-Confirmar Generación de Orden de Compra:Confirmar Generación de Orden de Compra
-¿Está seguro que desea dar de baja (rechazar) la Orden de Pedido seleccionada? Esto CANCELARÁ la solicitud.:¿Está seguro que desea dar de baja (rechazar) la Orden de Pedido seleccionada? Esto CANCELARÁ la solicitud.
-Confirmar Baja:Confirmar Baja
-¿Está seguro que desea APROBAR esta Solicitud y generar la Orden de Pedido?:¿Está seguro que desea APROBAR esta Solicitud y generar la Orden de Pedido?
-Confirmar Aprobación:Confirmar Aprobación
-¿Está seguro que desea dar de baja (rechazar) la Solicitud de Pedido seleccionada?:¿Está seguro que desea dar de baja (rechazar) la Solicitud de Pedido seleccionada?
-¿Rechazar esta orden?:¿Rechazar esta orden?
-Cuidado:Cuidado
-El campo Nombre es obligatorio.:El campo Nombre es obligatorio.
-Error:Error
-Lista de proveedoes actualizada.:Lista de proveedores actualizada.
-Información:Información
-Confirmar Acción:Confirmar Acción
-Nombre, Marca y CUIT del Proveedor son obligatorios.:Nombre, Marca y CUIT del Proveedor son obligatorios.
-Error de Validación:Error de Validación
-Ingrese el CUIT del Proveedor para filtrar:Ingrese el CUIT del Proveedor para filtrar
-Buscar Productos por Proveedor:Buscar Productos por Proveedor
-Lista de productos actualizada.:Lista de productos actualizada.
-Seleccione un producto de la lista.:Seleccione un producto de la lista.
-Agregue al menos un producto.:Agregue al menos un producto.
+Usuario deshabilitado correctamente.:Usuario deshabilitado correctamente.
+Usuario rehabilitado correctamente.:Usuario rehabilitado correctamente.
+Usuario:Usuario
+UsuarioResponsable:Usuario Responsable
 Validación:Validación
---- Mostrar Todos ---:--- Mostrar Todos ---
-¡Stock por debajo del deseado!:¡Stock por debajo del deseado!
-No se detectaron cantidades positivas para agregar stock.:No se detectaron cantidades positivas para agregar stock.
-Advertencia:Advertencia
---- Mostrar Todas las Sucursales ---:--- Mostrar Todas las Sucursales ---
-Nombre y Dirección son obligatorios.:Nombre y Dirección son obligatorios.
-Los cambios se guardaron correctamente.:Los cambios se guardaron correctamente.
-Confirmar:Confirmar
-Seleccione un producto.:Seleccione un producto.
-Aviso:Aviso
-Agregue al menos un producto a la solicitud.:Agregue al menos un producto a la solicitud.
-Ingrese una cantidad válida mayor a cero.:Ingrese una cantidad válida mayor a cero.
-Seleccione una sucursal de destino.:Seleccione una sucursal de destino.
-Operación inválida: La sucursal de origen y la sucursal de destino no pueden ser la misma.:Operación inválida: La sucursal de origen y la sucursal de destino no pueden ser la misma.
-Error de Destino:Error de Destino
-Dirección Destino:Dirección Destino
-¿Está seguro que desea RECHAZAR esta solicitud?:¿Está seguro que desea RECHAZAR esta solicitud?
-Confirmar Rechazo:Confirmar Rechazo
-¿Está seguro que desea APROBAR esta solicitud? Se descontará el stock de su sucursal.:¿Está seguro que desea APROBAR esta solicitud? Se descontará el stock de su sucursal.
-El carrito está vacío. Agregue productos antes de cobrar.:El carrito está vacío. Agregue productos antes de cobrar.
-¿Está seguro que desea cancelar la venta en curso? Se vaciará el carrito.:¿Está seguro que desea cancelar la venta en curso? Se vaciará el carrito.
-Confirmar Cancelación:Confirmar Cancelación
-Seleccione un producto primero.:Seleccione un producto primero.
-Ingrese el nombre (o parte del nombre) del producto a buscar:Ingrese el nombre (o parte del nombre) del producto a buscar
-Buscar Producto:Buscar Producto
-Ingrese el ID del Tipo de Cliente ( 0=Minorista, 1=Mayorista) a buscar:Ingrese el ID del Tipo de Cliente (0=Minorista, 1=Mayorista) a buscar
-Seleccione una venta de la lista para anular.:Seleccione una venta de la lista para anular.
-Lista actualizada.:Lista actualizada.
-PetShop - Bienvenido {0}:PetShop - Bienvenido {0}
-📍 Sucursal: {0} | 🏠 Dir: {1}:📍 Sucursal: {0} | 🏠 Dir: {1}
-El usuario {0} ingresó al sistema.:El usuario {0} ingresó al sistema.
+Venta Mayorista:Venta Mayorista
+Venta anulada correctamente. El stock ha sido devuelto.:Venta anulada correctamente. El stock ha sido devuelto.
+Venta Exitosa:Venta Exitosa
+Venta:Venta
+VentaDetalles:VentaDetalles
+Ventas:Ventas
+Ver Activas:Ver Activas
+Ver Activos:Ver Activos
+Ver Bitácora:Ver Bitácora
+Ver Deshabilitadas:Ver Deshabilitadas
+Ver Deshabilitados:Ver Deshabilitados
+Ver Ordenes de Compra:Ver Ordenes de Compra
+Ver Ordenes de Pedidos:Ver Ordenes de Pedidos
+Ver Solicitudes de Pedidos:Ver Solicitudes de Pedidos
+Ver Stock Disponible:Ver Stock Disponible
+Ver Traspasos:Ver Traspasos
+Ver Todas:Ver Todas
+Ver:Ver
+View Disabled:Ver Deshabilitados
+Éxito:Éxito
+¿Crear solicitud de pedido con {0} producto(s)?:¿Crear solicitud de pedido con {0} producto(s)?
+¿Desea deshabilitar {0}?:¿Desea deshabilitar {0}?
+¿Desea deshabilitar al usuario {0}?:¿Desea deshabilitar al usuario {0}?
+¿Desea deshabilitar la sucursal {0}?:¿Desea deshabilitar la sucursal {0}?
+¿Desea reactivar al usuario {0}?:¿Desea reactivar al usuario {0}?
+¿Desea reactivar esta sucursal?:¿Desea reactivar esta sucursal?
+¿Desea reactivar este cliente?:¿Desea reactivar este cliente?
+¿Desea reactivar este producto y devolverlo al catálogo?:¿Desea reactivar este producto y devolverlo al catálogo?
+¿Desea reactivar este proveedor?:¿Desea reactivar este proveedor?
+¿Eliminar este producto?:¿Eliminar este producto?
+¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de $ {0:N2}?\n\nLos productos regresarán al stock de la sucursal.:¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de $ {0:N2}?\n\nLos productos regresarán al stock de la sucursal.
+¿Está seguro de deshabilitar a {0}?  ATENCIÓN: Esto también deshabilitará automáticamente todos los productos exclusivos de este proveedor del catálogo.:¿Está seguro de deshabilitar a {0}?  ATENCIÓN: Esto también deshabilitará automáticamente todos los productos exclusivos de este proveedor del catálogo.
 ¿Está seguro de deshabilitar a {0}?:¿Está seguro de deshabilitar a {0}?
 ¿Está seguro de deshabilitar el producto {0}?:¿Está seguro de deshabilitar el producto {0}?
-¿Desea deshabilitar {0}?:¿Desea deshabilitar {0}?
-¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de $ {0:N2}?\n\nLos productos regresarán al stock de la sucursal.:¿Está ABSOLUTAMENTE SEGURO de anular esta venta por un total de $ {0:N2}?\n\nLos productos regresarán al stock de la sucursal.
-El usuario {0} cerró sesión manualmente.:El usuario {0} cerró sesión manualmente.
-PetShop - Bienvenido Admin:PetShop - Bienvenido Admin
-📍 Sucursal: Petshop Pancitas Llenas | 🏠 Dir: Villa Adelina, Jorge Washington 4087:📍 Sucursal: Petshop Pancitas Llenas | 🏠 Dir: Villa Adelina, Jorge Washington 4087
-Error al abrir: {0}:Error al abrir: {0}
-Mensaje:Mensaje
-Pendientes:Pendientes
-Aprobadas:Aprobadas
-Rechazadas:Rechazadas
-Todas:Todas
-Peso (Kg):Peso (Kg)
-Efectivo:Efectivo
-Transferencia:Transferencia
-Tarjeta de Débito:Tarjeta de Débito
-Tarjeta de Crédito:Tarjeta de Crédito
-Subtotal: $ {0:N2}:Subtotal: $ {0:N2}
-Descuento: $ {0:N2}:Descuento: $ {0:N2}
-TOTAL: $ {0:N2}:TOTAL: $ {0:N2}
-¡Venta registrada con éxito! Se descontó el stock correctamente. N° de Ticket: {0}:¡Venta registrada con éxito! Se descontó el stock correctamente. N° de Ticket: {0}
-Venta Exitosa:Venta Exitosa
-Cliente agregado exitosamente.:Cliente agregado exitosamente.
-Buscar Cliente:Buscar Cliente
-Se encontraron {0} clientes para el ID Tipo {1}.:Se encontraron {0} clientes para el ID Tipo {1}.
-Búsqueda Exitosa:Búsqueda Exitosa
-El cliente seleccionado no es válido o está incompleto.:El cliente seleccionado no es válido o está incompleto.
-Error al guardar los cambios: {0}:Error al guardar los cambios: {0}
-Cliente deshabilitado exitosamente.:Cliente deshabilitado exitosamente.
-¿Crear solicitud de pedido con {0} producto(s)?:¿Crear solicitud de pedido con {0} producto(s)?
-Solicitud de Pedido creada exitosamente. ID: {0}:Solicitud de Pedido creada exitosamente. ID: {0}
-Solicitud de Pedido dada de baja correctamente.:Solicitud de Pedido dada de baja correctamente.
+¿Está seguro de deshabilitar este producto?:¿Está seguro de deshabilitar este producto?
+¿Está seguro de eliminar el producto {0}? Esta acción borrará sus vínculos con proveedores.:¿Está seguro de eliminar el producto {0}? Esta acción borrará sus vínculos con proveedores.
+¿Está seguro de quitar el producto {0} del catálogo? No podrá utilizarse en nuevas ventas ni pedidos.:¿Está seguro de quitar el producto {0} del catálogo? No podrá utilizarse en nuevas ventas ni pedidos.
+¿Está seguro que desea APROBAR esta Orden de Pedido y generar la Orden de Compra?:¿Está seguro que desea APROBAR esta Orden de Pedido y generar la Orden de Compra?
+¿Está seguro que desea APROBAR esta Solicitud y generar la Orden de Pedido?:¿Está seguro que desea APROBAR esta Solicitud y generar la Orden de Pedido?
+¿Está seguro que desea APROBAR esta solicitud? Se descontará el stock de su sucursal.:¿Está seguro que desea APROBAR esta solicitud? Se descontará el stock de su sucursal.
+¿Está seguro que desea RECHAZAR esta solicitud?:¿Está seguro que desea RECHAZAR esta solicitud?
+¿Está seguro que desea cancelar la venta en curso? Se vaciará el carrito.:¿Está seguro que desea cancelar la venta en curso? Se vaciará el carrito.
+¿Está seguro que desea dar de baja (rechazar) la Orden de Pedido seleccionada? Esto CANCELARÁ la solicitud.:¿Está seguro que desea dar de baja (rechazar) la Orden de Pedido seleccionada? Esto CANCELARÁ la solicitud.
+¿Está seguro que desea dar de baja (rechazar) la Solicitud de Pedido seleccionada?:¿Está seguro que desea dar de baja (rechazar) la Solicitud de Pedido seleccionada?
+¿Finalizar OC #{0}?:¿Finalizar OC #{0}?
+¿Rechazar esta orden?:¿Rechazar esta orden?
+¡Éxito!:¡Éxito!
+¡Los permisos se han guardado exitosamente!:¡Los permisos se han guardado exitosamente!
 ¡Orden de Pedido generada con éxito! ID de la nueva OP: {0}:¡Orden de Pedido generada con éxito! ID de la nueva OP: {0}
 ¡Proceso completado con éxito! Se generaron 1 Orden(es) de Compra para 1 proveedor(es).:¡Proceso completado con éxito! Se generaron 1 Orden(es) de Compra para 1 proveedor(es).
-Generación Exitosa:Generación Exitosa
-¿Finalizar OC #{0}?:¿Finalizar OC #{0}?
-Operación exitosa.:Operación exitosa.
-Proveedor agregado exitosamente.:Proveedor agregado exitosamente.
-Proveedor deshabilitado exitosamente.:Proveedor deshabilitado exitosamente.
-Lista de proveedores actualizada.:Lista de proveedores actualizada.
-Producto '{0}' agregado y vinculado al proveedor {1}.:Producto '{0}' agregado y vinculado al proveedor {1}.
-Error al deshabilitar el producto: {0}:Error al deshabilitar el producto: {0}
-Se actualizarán {0} producto(s). ¿Continuar?:Se actualizarán {0} producto(s). ¿Continuar?
-Confirmar actualización:Confirmar actualización
-Stock actualizado.:Stock actualizado.
-Cambios aplicados: {0}:Cambios aplicados: {0}
-La tabla se ha actualizado.:La tabla se ha actualizado.
-Resultado:Resultado
-Sucursal deshabilitada.:Sucursal deshabilitada.
-Sucursal creada exitosamente.:Sucursal creada exitosamente.
-IdEstadoStp:IdEstadoStp
-IdSucursalOrigen:IdSucursalOrigen
-IdSucursalDestino:IdSucursalDestino
-NombreSucursalOrigen:NombreSucursalOrigen
-IdEstadoStpNavigation:IdEstadoStpNavigation
-¡Éxito!:¡Éxito!
-No hay Solicitudes de Traspaso pendientes.:No hay Solicitudes de Traspaso pendientes.
-Seleccione una solicitud para rechazar.:Seleccione una solicitud para rechazar.
-Seleccione una solicitud para aprobar.:Seleccione una solicitud para aprobar.
-Confirmar Anulación de Venta:Confirmar Anulación de Venta
-Error al anular la venta: {0}:Error al anular la venta: {0}
-La Orden de Compra ha sido exportada a:\n{0}:La Orden de Compra ha sido exportada a:\n{0}
-Impresión Exitosa:Impresión Exitosa
-¿Está seguro de eliminar el producto {0}? Esta acción borrará sus vínculos con proveedores.:¿Está seguro de eliminar el producto {0}? Esta acción borrará sus vínculos con proveedores.
-Error al eliminar el producto: {0}:Error al eliminar el producto: {0}
-Venta anulada correctamente. El stock ha sido devuelto.:Venta anulada correctamente. El stock ha sido devuelto.
-No se puede eliminar el producto porque ya posee historial asociado (Ventas, Pedidos, etc.) que no puede ser borrado.\n\nDetalle técnico: {0}:No se puede eliminar el producto porque ya posee historial asociado (Ventas, Pedidos, etc.) que no puede ser borrado.\n\nDetalle técnico: {0}
-Restricción de Integridad:Restricción de IntegridadError de autenticación:
+¡Stock por debajo del deseado!:¡Stock por debajo del deseado!
+¡Venta registrada con éxito! Se descontó el stock correctamente. N° de Ticket: {0}:¡Venta registrada con éxito! Se descontó el stock correctamente. N° de Ticket: {0}
+📍 Branch: Petshop Pancitas Llenas | 🏠 Addr: Villa Adelina, Jorge Washington 4087:📍 Sucursal: Petshop Pancitas Llenas | 🏠 Dir: Villa Adelina, Jorge Washington 4087
+📍 Sucursal: {0} | 🏠 Dir: {1}:📍 Sucursal: {0} | 🏠 Dir: {1}

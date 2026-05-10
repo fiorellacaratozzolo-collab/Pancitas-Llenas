@@ -188,12 +188,17 @@ namespace FormUI.FormCompra
         private void btnAgregar_Click(object sender, EventArgs e)
         {
             if (!ValidarCampos()) return;
+            if (cmbProveedor.SelectedValue is not Guid idProveedor)
+            {
+                MessageBox.Show("Por favor, seleccione un proveedor válido de la lista.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             var nuevoProducto = CrearDTO();
 
             try
             {
-                _productoService.CrearProductoConProveedor(nuevoProducto, (Guid)cmbProveedor.SelectedValue);
+                _productoService.CrearProductoConProveedor(nuevoProducto, idProveedor);
                 MessageBox.Show("Producto agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosProductos();
             }
@@ -215,13 +220,18 @@ namespace FormUI.FormCompra
             }
 
             if (!ValidarCampos()) return;
+            if (cmbProveedor.SelectedValue is not Guid idProveedor)
+            {
+                MessageBox.Show("Por favor, seleccione un proveedor válido de la lista.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             var productoActualizadoDTO = CrearDTO();
             productoActualizadoDTO.IdProducto = _productoSeleccionadoId.Value;
 
             try
             {
-                _productoService.UpdateProducto(productoActualizadoDTO, (Guid)cmbProveedor.SelectedValue);
+                _productoService.UpdateProducto(productoActualizadoDTO, idProveedor);
                 MessageBox.Show("Los datos del producto han sido actualizados correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosProductos();
             }
