@@ -1,8 +1,3 @@
-using FormUI.FormCompra;
-using FormUI.FormInventario;
-using FormUI.FormSucursal;
-using FormUI.FormVenta;
-
 namespace FormUI
 {
     internal static class Program

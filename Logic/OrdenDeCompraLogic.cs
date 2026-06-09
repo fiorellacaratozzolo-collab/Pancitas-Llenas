@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using DataAccess.Implementations.UnitOfWork;
-using DataAccess.Interfaces;
 using DataAccess.Models;
 using Logic.MappingProfiles;
 using Microsoft.EntityFrameworkCore;
 using ModelsDTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Logic
 {

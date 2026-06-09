@@ -1,6 +1,4 @@
 ﻿using ModelsDTO;
-using System;
-using System.Collections.Generic;
 
 namespace Logic.Facade
 {

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Services.Bll;
-
-namespace Services.Facade.Extensions
+﻿namespace Services.Facade.Extensions
 {
     /// <summary>
     /// Proporciona métodos de extensión para facilitar la traducción de cadenas de texto en toda la aplicación.

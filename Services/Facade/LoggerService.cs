@@ -1,11 +1,6 @@
 ﻿using Services.Bll;
 using Services.Dal.Interfaces;
 using Services.DomainModel.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Facade
 {

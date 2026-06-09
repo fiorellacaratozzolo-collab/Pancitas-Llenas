@@ -1,14 +1,10 @@
 ﻿using Services.Bll.CustomExceptions;
 using Services.Dal.Implementations;
-using Services.Dal.Interfaces;
 using Services.DomainModel.Composite;
-using Services.DomainModel.Logging;
-using Services.Facade;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Services.Bll
 {

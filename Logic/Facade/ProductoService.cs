@@ -1,15 +1,4 @@
-﻿using AutoMapper;
-using DataAccess.Implementations.SqlServer;
-using DataAccess.Implementations.UnitOfWork;
-using DataAccess.Models;
-using Logic;
-using Logic.MappingProfiles;
-using ModelsDTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ModelsDTO;
 
 namespace Logic.Facade
 {

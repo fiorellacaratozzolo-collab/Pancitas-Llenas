@@ -1,8 +1,5 @@
 ﻿using DataAccess.Implementations.SqlServer;
-using DataAccess.Implementations.UnitOfWork;
 using ModelsDTO;
-using System;
-using System.Collections.Generic;
 
 namespace Logic.Facade
 {

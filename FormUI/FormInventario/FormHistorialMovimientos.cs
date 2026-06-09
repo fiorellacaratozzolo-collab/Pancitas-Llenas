@@ -1,14 +1,5 @@
 ﻿using Logic.Facade;
 using Services.Facade;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Services.Facade.Extensions;
 
 namespace FormUI.FormInventario

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Services.Dal.Interfaces
+﻿namespace Services.Dal.Interfaces
 {
     /// <summary>
     /// Define el contrato para los adaptadores encargados de mapear arreglos de datos provenientes de la base de datos a objetos de dominio fuertemente tipados.

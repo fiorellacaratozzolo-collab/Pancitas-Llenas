@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Services.Dal.Tools;
 using Services.DomainModel.Composite;
-using Services.Dal.Implementations;
 using Services.Dal.Interfaces;
 
 namespace Services.Dal.Implementations

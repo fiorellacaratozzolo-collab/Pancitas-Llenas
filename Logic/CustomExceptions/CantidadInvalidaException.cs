@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Logic.CustomExceptions
+﻿namespace Logic.CustomExceptions
 {
     /// <summary>
     /// Excepción lanzada cuando se detecta un valor numérico cero o negativo en operaciones que requieren cantidades estrictamente positivas.
