@@ -67,7 +67,7 @@
             // 
             // btnCerrarSesion
             // 
-            btnCerrarSesion.Location = new Point(1499, 827);
+            btnCerrarSesion.Location = new Point(1581, 940);
             btnCerrarSesion.Name = "btnCerrarSesion";
             btnCerrarSesion.Size = new Size(102, 35);
             btnCerrarSesion.TabIndex = 0;
@@ -82,7 +82,7 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { tsmAdministrador, tsmCompras, tsmInventario, tsmSucursales, tsmVenta });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(1613, 30);
+            menuStrip.Size = new Size(1801, 30);
             menuStrip.TabIndex = 1;
             menuStrip.Tag = "MenuStrip";
             menuStrip.Text = "menuStrip1";
@@ -308,10 +308,11 @@
             // 
             // panelContenedor
             // 
-            panelContenedor.BackColor = SystemColors.ControlLight;
-            panelContenedor.Location = new Point(0, 53);
+            panelContenedor.AutoSize = true;
+            panelContenedor.BackColor = Color.Transparent;
+            panelContenedor.Location = new Point(12, 53);
             panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(1613, 768);
+            panelContenedor.Size = new Size(1777, 881);
             panelContenedor.TabIndex = 2;
             // 
             // lblInfoSucursal
@@ -327,7 +328,7 @@
             // cmbIdioma
             // 
             cmbIdioma.FormattingEnabled = true;
-            cmbIdioma.Location = new Point(12, 842);
+            cmbIdioma.Location = new Point(94, 955);
             cmbIdioma.Name = "cmbIdioma";
             cmbIdioma.Size = new Size(206, 23);
             cmbIdioma.TabIndex = 4;
@@ -336,7 +337,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 824);
+            label1.Location = new Point(94, 937);
             label1.Name = "label1";
             label1.Size = new Size(206, 15);
             label1.TabIndex = 5;
@@ -346,7 +347,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1613, 874);
+            ClientSize = new Size(1801, 984);
             Controls.Add(label1);
             Controls.Add(cmbIdioma);
             Controls.Add(lblInfoSucursal);
@@ -357,6 +358,7 @@
             Name = "FormPrincipal";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Menú";
+            WindowState = FormWindowState.Maximized;
             Load += FormPrincipal_Load;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();

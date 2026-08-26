@@ -2,6 +2,7 @@
 using ModelsDTO;
 using System.Data;
 using Services.Facade.Extensions;
+using System.Configuration;
 
 namespace FormUI.FormCompra
 {
@@ -56,59 +57,60 @@ namespace FormUI.FormCompra
         }
 
         /// <summary>
-        /// Genera un archivo de texto físico en el Escritorio del usuario con el detalle formal de la Orden de Compra aprobada.
+        /// Genera un archivo CSV compatible con Excel en la ruta configurada con el detalle formal de la Orden de Compra.
         /// </summary>
-        private void ImprimirOrdenDeCompraTXT(OrdenDeCompraDTO oc)
+        private void ExportarOrdenDeCompraExcel(OrdenDeCompraDTO oc)
         {
             try
             {
                 var detalles = _ocService.ObtenerDetallesPorOrden(oc.IdOrdenDeCompra);
                 string codigoCorto = oc.IdOrdenDeCompra.ToString().Substring(0, 8).ToUpper();
+                string? rutaBase = ConfigurationManager.AppSettings["RutaOrdenesCompra"];
 
-                string escritorio = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                string nombreArchivo = string.Format("OrdenDeCompra_{0}.txt", codigoCorto);
-                string rutaCompleta = Path.Combine(escritorio, nombreArchivo);
-
-                using (StreamWriter writer = new StreamWriter(rutaCompleta, false))
+                // Fallback de seguridad al Escritorio si no está configurado
+                if (string.IsNullOrWhiteSpace(rutaBase))
                 {
-                    writer.WriteLine("==================================================");
-                    writer.WriteLine("             PANCITAS LLENAS PETSHOP              ");
-                    writer.WriteLine("==================================================");
-                    writer.WriteLine("DOCUMENTO: ORDEN DE COMPRA");
-                    writer.WriteLine(string.Format("NRO DE ORDEN: {0}", codigoCorto));
-                    writer.WriteLine(string.Format("FECHA:        {0}", oc.FechaOc.ToString("dd/MM/yyyy")));
-                    writer.WriteLine(string.Format("PROVEEDOR:    {0}", oc.NombreProveedor));
-                    writer.WriteLine("ESTADO:       APROBADA");
-                    writer.WriteLine("==================================================");
-                    writer.WriteLine("DETALLE DE MERCADERIA SOLICITADA:");
-                    writer.WriteLine("--------------------------------------------------");
+                    rutaBase = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                }
 
-                    writer.WriteLine(string.Format("{0,-25} | {1,-5} | {2,-10} | {3,-10}", "PRODUCTO", "CANT.", "P. UNIT", "SUBTOTAL"));
-                    writer.WriteLine("--------------------------------------------------");
+                // Crea la carpeta si no existe
+                if (!Directory.Exists(rutaBase))
+                {
+                    Directory.CreateDirectory(rutaBase);
+                }
 
+                string nombreArchivo = string.Format("OrdenDeCompra_{0}.csv", codigoCorto);
+                string rutaCompleta = Path.Combine(rutaBase, nombreArchivo);
+
+                // Escribir el archivo CSV
+                using (StreamWriter writer = new StreamWriter(rutaCompleta, false, System.Text.Encoding.UTF8))
+                {
+                    // --- Cabecera de la Orden ---
+                    writer.WriteLine("DOCUMENTO;ORDEN DE COMPRA");
+                    writer.WriteLine(string.Format("NRO DE ORDEN;{0}", codigoCorto));
+                    writer.WriteLine(string.Format("FECHA;{0}", oc.FechaOc.ToString("dd/MM/yyyy")));
+                    writer.WriteLine(string.Format("PROVEEDOR;{0}", oc.NombreProveedor));
+                    writer.WriteLine("ESTADO;APROBADA");
+                    writer.WriteLine(string.Format("TOTAL A ABONAR;{0:N2}", oc.Total));
+                    writer.WriteLine();
+                    writer.WriteLine("PRODUCTO;CANTIDAD;PRECIO UNITARIO;SUBTOTAL");
                     foreach (var det in detalles)
                     {
                         string nombreReal = det.NombreProducto ?? "Sin Nombre";
-                        string nombreProd = nombreReal.Length > 24 ? nombreReal.Substring(0, 24) : nombreReal;
 
-                        writer.WriteLine(string.Format("{0,-25} | {1,-5} | {2,-10:C2} | {3,-10:C2}",
-                            nombreProd,
-                            det.Cantidad,
-                            det.PrecioUnitario,
-                            det.Subtotal));
+                        // Reemplazamos los punto y coma del nombre (si los tuviera) por comas, 
+                        string nombreProd = nombreReal.Replace(";", ",");
+
+                        writer.WriteLine(string.Format("{0};{1};{2:N2};{3:N2}",
+                            nombreProd, det.Cantidad, det.PrecioUnitario, det.Subtotal));
                     }
-
-                    writer.WriteLine("--------------------------------------------------");
-                    writer.WriteLine(string.Format("TOTAL A ABONAR: {0:C2}", oc.Total));
-                    writer.WriteLine("==================================================");
-                    writer.WriteLine("Firma Autorizada: ___________________________");
                 }
 
-                MessageBox.Show(string.Format("La Orden de Compra ha sido exportada a:\n{0}", rutaCompleta).Traducir(), "Impresión Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format("La Orden de Compra ha sido exportada a Excel exitosamente en:\n{0}", rutaCompleta).Traducir(), "Exportación Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Error al generar el documento impreso: {0}", ex.Message).Traducir(), "Error de Impresión".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(string.Format("Error al exportar el documento: {0}", ex.Message).Traducir(), "Error de Exportación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -129,7 +131,7 @@ namespace FormUI.FormCompra
                 try
                 {
                     _ocService.FinalizarOrden(oc.IdOrdenDeCompra);
-                    ImprimirOrdenDeCompraTXT(oc);
+                    ExportarOrdenDeCompraExcel(oc);
 
                     MessageBox.Show("Operación exitosa.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                     btnVer_Click(this, EventArgs.Empty);

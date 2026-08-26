@@ -1,6 +1,10 @@
 ﻿using Logic.Facade;
 using Services.Facade;
 using Services.Facade.Extensions;
+using System.Configuration; 
+using System.IO;            
+using System.Data;
+using System.Linq;
 
 namespace FormUI.FormInventario
 {
@@ -182,6 +186,78 @@ namespace FormUI.FormInventario
             {
                 dgvEntregaProductos.Columns["PesoUnitario"].HeaderText = "Peso Unit.".Traducir();
                 dgvEntregaProductos.Columns["PesoUnitario"].DefaultCellStyle.Format = "N2";
+            }
+        }
+        /// <summary>
+        /// Exporta la grilla de Traspasos a formato Excel.
+        /// </summary>
+        private void btnExportarTraspasos_Click(object sender, EventArgs e)
+        {
+            ExportarDataGridViewAExcel(dgvTraspasoProductos, "Historial_Traspasos");
+        }
+        /// <summary>
+        /// Exporta la grilla de Entregas a formato Excel.
+        /// </summary>
+        private void btnExportarEntrega_Click(object sender, EventArgs e)
+        {
+            ExportarDataGridViewAExcel(dgvEntregaProductos, "Historial_Entregas");
+        }
+        /// <summary>
+        /// Método genérico que exporta el contenido visible de un DataGridView a un archivo CSV compatible con Excel.
+        /// </summary>
+        private void ExportarDataGridViewAExcel(DataGridView dgv, string prefijoNombre)
+        {
+            try
+            {
+                if (dgv.Rows.Count == 0 || dgv.DataSource == null)
+                {
+                    MessageBox.Show("No hay datos en la tabla para exportar.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string? rutaBase = ConfigurationManager.AppSettings["RutaHistorialMovimientos"];
+
+                // Fallback de seguridad al Escritorio si no está en el App.config
+                if (string.IsNullOrWhiteSpace(rutaBase))
+                {
+                    rutaBase = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                }
+
+                //Crea la carpeta si no existe
+                if (!Directory.Exists(rutaBase))
+                {
+                    Directory.CreateDirectory(rutaBase);
+                }
+
+                //Crea el nombre del archivo con Fecha y Hora
+                string fechaStr = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string nombreArchivo = string.Format("{0}_{1}.csv", prefijoNombre, fechaStr);
+                string rutaCompleta = Path.Combine(rutaBase, nombreArchivo);
+                using (StreamWriter sw = new StreamWriter(rutaCompleta, false, System.Text.Encoding.UTF8))
+                {
+                    var headers = dgv.Columns.Cast<DataGridViewColumn>()
+                                     .Where(c => c.Visible)
+                                     .Select(c => c.HeaderText);
+
+                    sw.WriteLine(string.Join(";", headers));
+                    foreach (DataGridViewRow row in dgv.Rows)
+                    {
+                        if (!row.IsNewRow)
+                        {
+                            var cells = row.Cells.Cast<DataGridViewCell>()
+                                           .Where(c => dgv.Columns[c.ColumnIndex].Visible)
+                                           .Select(c => c.Value != null ? c.Value.ToString()?.Replace(";", ",") : ""); // Reemplazamos ';' por ',' en los datos para no romper las columnas
+
+                            sw.WriteLine(string.Join(";", cells));
+                        }
+                    }
+                }
+
+                MessageBox.Show(string.Format("Los datos han sido exportados exitosamente a:\n{0}", rutaCompleta).Traducir(), "Exportación Exitosa".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error al intentar exportar los datos: {0}", ex.Message).Traducir(), "Error de Exportación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

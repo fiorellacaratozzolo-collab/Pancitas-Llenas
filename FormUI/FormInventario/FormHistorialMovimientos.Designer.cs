@@ -29,9 +29,11 @@
         private void InitializeComponent()
         {
             gpEntregaProductos = new GroupBox();
+            btnExportarEntrega = new Button();
             btnVerEntrega = new Button();
             dgvEntregaProductos = new DataGridView();
             gbTraspasoProductos = new GroupBox();
+            btnExportarTraspasos = new Button();
             btnVerTraspasos = new Button();
             dgvTraspasoProductos = new DataGridView();
             gpEntregaProductos.SuspendLayout();
@@ -42,16 +44,27 @@
             // 
             // gpEntregaProductos
             // 
+            gpEntregaProductos.Controls.Add(btnExportarEntrega);
             gpEntregaProductos.Controls.Add(btnVerEntrega);
             gpEntregaProductos.Controls.Add(dgvEntregaProductos);
-            gpEntregaProductos.Location = new Point(25, 12);
+            gpEntregaProductos.Location = new Point(13, 12);
             gpEntregaProductos.Margin = new Padding(4, 3, 4, 3);
             gpEntregaProductos.Name = "gpEntregaProductos";
             gpEntregaProductos.Padding = new Padding(4, 3, 4, 3);
-            gpEntregaProductos.Size = new Size(564, 626);
+            gpEntregaProductos.Size = new Size(592, 626);
             gpEntregaProductos.TabIndex = 0;
             gpEntregaProductos.TabStop = false;
             gpEntregaProductos.Text = "Entrega de Productos";
+            // 
+            // btnExportarEntrega
+            // 
+            btnExportarEntrega.Location = new Point(476, 594);
+            btnExportarEntrega.Name = "btnExportarEntrega";
+            btnExportarEntrega.Size = new Size(108, 23);
+            btnExportarEntrega.TabIndex = 5;
+            btnExportarEntrega.Text = "Exportar";
+            btnExportarEntrega.UseVisualStyleBackColor = true;
+            btnExportarEntrega.Click += btnExportarEntrega_Click;
             // 
             // btnVerEntrega
             // 
@@ -70,11 +83,12 @@
             dgvEntregaProductos.Location = new Point(7, 22);
             dgvEntregaProductos.Margin = new Padding(4, 3, 4, 3);
             dgvEntregaProductos.Name = "dgvEntregaProductos";
-            dgvEntregaProductos.Size = new Size(549, 562);
+            dgvEntregaProductos.Size = new Size(577, 562);
             dgvEntregaProductos.TabIndex = 0;
             // 
             // gbTraspasoProductos
             // 
+            gbTraspasoProductos.Controls.Add(btnExportarTraspasos);
             gbTraspasoProductos.Controls.Add(btnVerTraspasos);
             gbTraspasoProductos.Controls.Add(dgvTraspasoProductos);
             gbTraspasoProductos.Location = new Point(633, 12);
@@ -85,6 +99,16 @@
             gbTraspasoProductos.TabIndex = 1;
             gbTraspasoProductos.TabStop = false;
             gbTraspasoProductos.Text = "Traspaso de Productos";
+            // 
+            // btnExportarTraspasos
+            // 
+            btnExportarTraspasos.Location = new Point(500, 594);
+            btnExportarTraspasos.Name = "btnExportarTraspasos";
+            btnExportarTraspasos.Size = new Size(108, 23);
+            btnExportarTraspasos.TabIndex = 6;
+            btnExportarTraspasos.Text = "Exportar";
+            btnExportarTraspasos.UseVisualStyleBackColor = true;
+            btnExportarTraspasos.Click += btnExportarTraspasos_Click;
             // 
             // btnVerTraspasos
             // 
@@ -133,5 +157,7 @@
         private System.Windows.Forms.DataGridView dgvEntregaProductos;
         private System.Windows.Forms.Button btnVerEntrega;
         private System.Windows.Forms.Button btnVerTraspasos;
+        private Button btnExportarEntrega;
+        private Button btnExportarTraspasos;
     }
 }

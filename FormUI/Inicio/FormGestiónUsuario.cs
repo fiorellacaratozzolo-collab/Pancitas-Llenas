@@ -237,6 +237,13 @@ namespace FormUI.Inicio
                     sucursalSeleccionada = (cmbSucursales.Text.Contains("ADMINISTRADOR")) ? null : idParseado;
                 }
 
+                usuarioBll.ActualizarUsuario(
+                    _idUsuarioSeleccionado.Value,
+                    txtbNombreUsuario.Text.Trim(),
+                    txtbEmail.Text.Trim(),
+                    sucursalSeleccionada
+                );
+
                 MessageBox.Show("Datos del usuario actualizados con éxito.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarGrillaUsuarios();
             }

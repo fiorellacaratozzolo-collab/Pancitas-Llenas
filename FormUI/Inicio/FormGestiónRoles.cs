@@ -10,6 +10,8 @@ namespace FormUI.Inicio
         public FormGestiónRoles()
         {
             InitializeComponent();
+            clbPermisos.FormattingEnabled = true;
+            clbPermisos.Format += ClbPermisos_Format;
         }
 
         /// <summary>
@@ -44,26 +46,48 @@ namespace FormUI.Inicio
         /// </summary>
         private void cmbUsuarios_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbUsuarios.SelectedItem == null || cmbUsuarios.SelectedIndex == -1) return;
+            if (cmbUsuarios.SelectedItem == null || cmbUsuarios.SelectedIndex == -1)
+            {
+                for (int i = 0; i < clbRoles.Items.Count; i++) clbRoles.SetItemChecked(i, false);
+                clbPermisos.DataSource = null;
+                clbPermisos.Items.Clear();
+                return;
+            }
 
             try
             {
                 if (cmbUsuarios.SelectedItem is Services.DomainModel.Composite.Usuario usuarioBasico)
                 {
-                    // Limpiamos la lista de roles antes de cargar los nuevos
                     for (int i = 0; i < clbRoles.Items.Count; i++) clbRoles.SetItemChecked(i, false);
+                    clbPermisos.DataSource = null;
+                    clbPermisos.Items.Clear();
 
                     Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
                     var usuarioCompleto = usuarioBll.GetById(usuarioBasico.IdUsuario);
 
                     if (usuarioCompleto.Privilegios == null) return;
+                    List<Services.DomainModel.Composite.Component> patentesDelRol = new List<Services.DomainModel.Composite.Component>();
 
                     foreach (var permiso in usuarioCompleto.Privilegios)
                     {
                         if (permiso is Services.DomainModel.Composite.Familia familia)
                         {
                             MarcarItemEnLista(clbRoles, familia.Id);
+                            ObtenerPatentesRecursivo(familia, patentesDelRol);
                         }
+                        else if (permiso is Services.DomainModel.Composite.Patente patente)
+                        {
+                            if (!patentesDelRol.Any(p => p.Id == patente.Id))
+                                patentesDelRol.Add(patente);
+                        }
+                    }
+                    clbPermisos.DataSource = patentesDelRol;
+                    clbPermisos.DisplayMember = "Nombre";
+                    clbPermisos.ValueMember = "Id";
+
+                    for (int i = 0; i < clbPermisos.Items.Count; i++)
+                    {
+                        clbPermisos.SetItemChecked(i, true);
                     }
                 }
             }
@@ -119,6 +143,110 @@ namespace FormUI.Inicio
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("Error al guardar los permisos: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Método recursivo para recorrer el árbol del Patrón Composite y extraer todas las patentes dentro de una Familia.
+        /// </summary>
+        private void ObtenerPatentesRecursivo(Services.DomainModel.Composite.Component componente, List<Services.DomainModel.Composite.Component> listaResultado)
+        {
+            if (componente is Services.DomainModel.Composite.Patente)
+            {
+                if (!listaResultado.Any(p => p.Id == componente.Id))
+                    listaResultado.Add(componente);
+            }
+            else if (componente is Services.DomainModel.Composite.Familia familia)
+            {
+                if (familia.Hijos != null)
+                {
+                    foreach (var hijo in familia.Hijos)
+                    {
+                        ObtenerPatentesRecursivo(hijo, listaResultado);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Intercepta la visualización del CheckedListBox para transformar nombres técnicos en textos formales.
+        /// </summary>
+        private void ClbPermisos_Format(object sender, ListControlConvertEventArgs e)
+        {
+            if (e.ListItem is Services.DomainModel.Composite.Component permiso)
+            {
+                string nombreTecnico = permiso.Nombre;
+
+                switch (nombreTecnico)
+                {
+                    case "tsmCompras":
+                        e.Value = "Módulo de Compras";
+                        break;
+                    case "FormGestiónOP":
+                        e.Value = "Gestionar Orden de Pedido";
+                        break;
+                    case "FormGestiónProducto":
+                        e.Value = "Gestionar Productos";
+                        break;
+                    case "FormGestiónOC":
+                        e.Value = "Gestionar Orden de Compra";
+                        break;
+                    case "FormGestiónProveedor":
+                        e.Value = "Gestionar Proveedores";
+                        break;
+                    case "FormGestiónSP":
+                        e.Value = "Gestionar Solicitud de Pedido";
+                        break;
+                    case "FormGestiónCliente":
+                        e.Value = "Gestionar Clientes";
+                        break;
+                    case "FormGestiónSucursal":
+                        e.Value = "Gestionar Sucursales";
+                        break;
+                    case "FormGestiónVenta":
+                        e.Value = "Gestionar Ventas";
+                        break;
+                    case "FormSeleccionSucursal":
+                        e.Value = "Selección de Sucursal";
+                        break;
+                    case "FormGenerarVenta":
+                        e.Value = "Generar una Venta";
+                        break;
+                    case "FormListaPrecios":
+                        e.Value = "Ver Lista de Precios";
+                        break;
+                    case "FormHistorialVentas":
+                        e.Value = "Ver Historial de Ventas";
+                        break;
+                    case "FormSolicitarTraspasoProductoSucursales":
+                        e.Value = "Solicitar un Traspaso de Producto a Sucursal";
+                        break;
+                    case "FormHistorialMovimientos":
+                        e.Value = "Ver Historial de Movimientos";
+                        break;
+                    case "FormVerStockDisponible":
+                        e.Value = "Ver Stock Disponible";
+                        break;
+                    case "FormSolicitarOP":
+                        e.Value = "Solicitar Orden de Pedido";
+                        break;
+                    case "FormAgregarStock":
+                        e.Value = "Agregar Stock";
+                        break;
+                    case "FormTraspasoProcutoSucursal":
+                        e.Value = "Traspaso de Procucto a Sucursal";
+                        break;
+                    case "Anular_Ventas":
+                        e.Value = "Anular una Venta";
+                        break;
+                    default:
+                        // Si se agrega un form nuevo en el futuro y olvidas ponerlo aquí, 
+                        // esto lo limpia de forma genérica quitándole la palabra "Form" o "tsm"
+                        e.Value = nombreTecnico.Replace("FormGestión", "Gestionar ")
+                                               .Replace("Form", "")
+                                               .Replace("tsm", "Módulo ");
+                        break;
+                }
             }
         }
     }

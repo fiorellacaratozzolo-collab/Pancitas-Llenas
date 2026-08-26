@@ -116,7 +116,7 @@ namespace FormUI.FormCompra
         /// </summary>
         private void ConfigurarColumnasDataGridView()
         {
-            dgvProducto.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            dgvProducto.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             if (dgvProducto.DataSource == null) return;
 
             dgvProducto.ReadOnly = true;

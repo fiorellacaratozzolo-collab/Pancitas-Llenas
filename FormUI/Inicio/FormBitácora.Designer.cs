@@ -30,6 +30,7 @@
         {
             btnVer = new Button();
             dgvBitácora = new DataGridView();
+            btnExportarBitacora = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvBitácora).BeginInit();
             SuspendLayout();
             // 
@@ -51,11 +52,22 @@
             dgvBitácora.Size = new Size(927, 492);
             dgvBitácora.TabIndex = 2;
             // 
+            // btnExportarBitacora
+            // 
+            btnExportarBitacora.Location = new Point(846, 17);
+            btnExportarBitacora.Name = "btnExportarBitacora";
+            btnExportarBitacora.Size = new Size(93, 28);
+            btnExportarBitacora.TabIndex = 3;
+            btnExportarBitacora.Text = "Exportar";
+            btnExportarBitacora.UseVisualStyleBackColor = true;
+            btnExportarBitacora.Click += btnExportarBitacora_Click;
+            // 
             // FormBitácora
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(951, 561);
+            Controls.Add(btnExportarBitacora);
             Controls.Add(dgvBitácora);
             Controls.Add(btnVer);
             Name = "FormBitácora";
@@ -69,5 +81,6 @@
 
         private Button btnVer;
         private DataGridView dgvBitácora;
+        private Button btnExportarBitacora;
     }
 }
