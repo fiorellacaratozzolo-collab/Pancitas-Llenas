@@ -21,7 +21,29 @@ namespace FormUI.Inicio
             try
             {
                 Services.Bll.BitácoraBll bitacoraBll = new Services.Bll.BitácoraBll();
-                dgvBitácora.DataSource = bitacoraBll.ListarBitacora();
+
+                // 1. Traemos TODOS los registros de la base de datos
+                var listaCompleta = bitacoraBll.ListarBitacora();
+
+                // 2. Filtramos la lista en memoria (usando LINQ) según lo elegido en el combo
+                int filtroSeleccionado = cmbFiltroFecha.SelectedIndex;
+
+                if (filtroSeleccionado == 1) // Hoy
+                {
+                    listaCompleta = listaCompleta.Where(b => b.Fecha.Date == DateTime.Today).ToList();
+                }
+                else if (filtroSeleccionado == 2) // Últimos 7 días
+                {
+                    listaCompleta = listaCompleta.Where(b => b.Fecha.Date >= DateTime.Today.AddDays(-7)).ToList();
+                }
+                else if (filtroSeleccionado == 3) // Fecha específica
+                {
+                    listaCompleta = listaCompleta.Where(b => b.Fecha.Date == dtpFiltro.Value.Date).ToList();
+                }
+                // Si es 0 ("Todos los registros"), no hacemos nada y dejamos la lista completa.
+
+                // 3. Pasamos la lista (ya filtrada) a la grilla
+                dgvBitácora.DataSource = listaCompleta;
 
                 if (dgvBitácora.Columns.Count > 0)
                 {
@@ -59,10 +81,18 @@ namespace FormUI.Inicio
             }
         }
         /// <summary>
-        /// Evento de carga inicial del formulario que aplica las traducciones al idioma seleccionado por el usuario.
+        /// Evento de carga inicial del formulario que configura los filtros y aplica las traducciones.
         /// </summary>
         private void FormBitácora_Load(object sender, EventArgs e)
         {
+            // Configuramos las opciones del ComboBox
+            cmbFiltroFecha.Items.Add("Todos los registros".Traducir());
+            cmbFiltroFecha.Items.Add("Hoy".Traducir());
+            cmbFiltroFecha.Items.Add("Últimos 7 días".Traducir());
+            cmbFiltroFecha.Items.Add("Fecha específica".Traducir());
+            cmbFiltroFecha.SelectedIndex = 0;
+            dtpFiltro.Visible = false;
+
             TraductorUI.TraducirFormulario(this);
         }
         /// <summary>
@@ -127,6 +157,21 @@ namespace FormUI.Inicio
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("Error al intentar exportar los datos: {0}", ex.Message).Traducir(), "Error de Exportación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        /// <summary>
+        /// Muestra u oculta el DateTimePicker dependiendo de si el usuario elige "Fecha específica".
+        /// </summary>
+        private void cmbFiltroFecha_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Si elige la última opción ("Fecha específica") mostramos el calendario
+            if (cmbFiltroFecha.SelectedIndex == 3)
+            {
+                dtpFiltro.Visible = true;
+            }
+            else
+            {
+                dtpFiltro.Visible = false;
             }
         }
     }

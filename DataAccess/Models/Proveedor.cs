@@ -1,4 +1,7 @@
-﻿namespace DataAccess.Models;
+﻿using System;
+using System.Collections.Generic;
+
+namespace DataAccess.Models;
 
 public partial class Proveedor
 {
@@ -6,7 +9,7 @@ public partial class Proveedor
 
     public string NombreProveedor { get; set; } = null!;
 
-    public int Cuit { get; set; }
+    public string Cuit { get; set; } = null!;
 
     public int? Telefono { get; set; }
 

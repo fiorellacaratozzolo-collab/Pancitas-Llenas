@@ -237,5 +237,10 @@ namespace FormUI.FormCompra
                 MessageBox.Show(string.Format("Error al cargar las solicitudes: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
     }
 }

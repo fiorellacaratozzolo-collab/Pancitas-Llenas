@@ -64,9 +64,9 @@ namespace FormUI.FormCompra
             groupBox1.Controls.Add(dgvOrdenCompra);
             groupBox1.Controls.Add(btnVer);
             groupBox1.Controls.Add(label1);
-            groupBox1.Location = new Point(12, 2);
+            groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(508, 574);
+            groupBox1.Size = new Size(519, 637);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
             groupBox1.Text = "Orden de Compra";
@@ -92,9 +92,9 @@ namespace FormUI.FormCompra
             // 
             // btnBaja
             // 
-            btnBaja.Location = new Point(297, 508);
+            btnBaja.Location = new Point(260, 601);
             btnBaja.Name = "btnBaja";
-            btnBaja.Size = new Size(105, 53);
+            btnBaja.Size = new Size(174, 30);
             btnBaja.TabIndex = 4;
             btnBaja.Text = "Dar de Baja";
             btnBaja.UseVisualStyleBackColor = true;
@@ -102,9 +102,9 @@ namespace FormUI.FormCompra
             // 
             // btnAlta
             // 
-            btnAlta.Location = new Point(91, 508);
+            btnAlta.Location = new Point(80, 600);
             btnAlta.Name = "btnAlta";
-            btnAlta.Size = new Size(126, 53);
+            btnAlta.Size = new Size(174, 31);
             btnAlta.TabIndex = 3;
             btnAlta.Text = "Dar de Alta";
             btnAlta.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@ namespace FormUI.FormCompra
             dgvOrdenCompra.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvOrdenCompra.Location = new Point(14, 93);
             dgvOrdenCompra.Name = "dgvOrdenCompra";
-            dgvOrdenCompra.Size = new Size(494, 409);
+            dgvOrdenCompra.Size = new Size(494, 501);
             dgvOrdenCompra.TabIndex = 2;
             dgvOrdenCompra.SelectionChanged += dgvOrdenCompra_SelectionChanged;
             // 
@@ -132,9 +132,9 @@ namespace FormUI.FormCompra
             // groupBox2
             // 
             groupBox2.Controls.Add(dgvDetalleOC);
-            groupBox2.Location = new Point(555, 22);
+            groupBox2.Location = new Point(554, 12);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(593, 554);
+            groupBox2.Size = new Size(598, 637);
             groupBox2.TabIndex = 6;
             groupBox2.TabStop = false;
             groupBox2.Text = "Detalles de Orden de Compra";
@@ -144,12 +144,12 @@ namespace FormUI.FormCompra
             dgvDetalleOC.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDetalleOC.Location = new Point(6, 36);
             dgvDetalleOC.Name = "dgvDetalleOC";
-            dgvDetalleOC.Size = new Size(581, 505);
+            dgvDetalleOC.Size = new Size(586, 595);
             dgvDetalleOC.TabIndex = 0;
             // 
             // FormGestiónOC
             // 
-            ClientSize = new Size(1160, 586);
+            ClientSize = new Size(1164, 661);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "FormGestiónOC";

@@ -42,7 +42,7 @@
             dgvProductoPrecio.Location = new Point(7, 81);
             dgvProductoPrecio.Margin = new Padding(4, 3, 4, 3);
             dgvProductoPrecio.Name = "dgvProductoPrecio";
-            dgvProductoPrecio.Size = new Size(977, 627);
+            dgvProductoPrecio.Size = new Size(977, 544);
             dgvProductoPrecio.TabIndex = 0;
             // 
             // label1
@@ -62,7 +62,7 @@
             groupBox1.Controls.Add(label1);
             groupBox1.Location = new Point(12, 12);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(991, 721);
+            groupBox1.Size = new Size(991, 637);
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             groupBox1.Text = "Lista de precios:";
@@ -79,7 +79,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1015, 745);
+            ClientSize = new Size(1015, 661);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormListaPrecios";

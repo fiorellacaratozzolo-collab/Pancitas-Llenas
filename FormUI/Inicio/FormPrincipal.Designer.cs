@@ -68,7 +68,7 @@
             // btnCerrarSesion
             // 
             btnCerrarSesion.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            btnCerrarSesion.Location = new Point(1224, 802);
+            btnCerrarSesion.Location = new Point(1226, 801);
             btnCerrarSesion.Name = "btnCerrarSesion";
             btnCerrarSesion.Size = new Size(102, 35);
             btnCerrarSesion.TabIndex = 0;
@@ -83,7 +83,7 @@
             menuStrip.Items.AddRange(new ToolStripItem[] { tsmAdministrador, tsmCompras, tsmInventario, tsmSucursales, tsmVenta });
             menuStrip.Location = new Point(0, 0);
             menuStrip.Name = "menuStrip";
-            menuStrip.Size = new Size(1342, 30);
+            menuStrip.Size = new Size(1344, 30);
             menuStrip.TabIndex = 1;
             menuStrip.Tag = "MenuStrip";
             menuStrip.Text = "menuStrip1";
@@ -313,7 +313,7 @@
             panelContenedor.BackColor = Color.Transparent;
             panelContenedor.Location = new Point(12, 53);
             panelContenedor.Name = "panelContenedor";
-            panelContenedor.Size = new Size(1314, 740);
+            panelContenedor.Size = new Size(1315, 740);
             panelContenedor.TabIndex = 2;
             // 
             // lblInfoSucursal
@@ -321,7 +321,7 @@
             lblInfoSucursal.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblInfoSucursal.AutoSize = true;
             lblInfoSucursal.Font = new Font("Segoe UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblInfoSucursal.Location = new Point(582, 30);
+            lblInfoSucursal.Location = new Point(584, 30);
             lblInfoSucursal.Name = "lblInfoSucursal";
             lblInfoSucursal.Size = new Size(139, 20);
             lblInfoSucursal.TabIndex = 3;
@@ -329,11 +329,11 @@
             // 
             // cmbIdioma
             // 
-            cmbIdioma.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            cmbIdioma.Anchor = AnchorStyles.Left;
             cmbIdioma.FormattingEnabled = true;
-            cmbIdioma.Location = new Point(12, 820);
+            cmbIdioma.Location = new Point(12, 819);
             cmbIdioma.Name = "cmbIdioma";
-            cmbIdioma.Size = new Size(206, 23);
+            cmbIdioma.Size = new Size(208, 23);
             cmbIdioma.TabIndex = 4;
             cmbIdioma.SelectionChangeCommitted += cmbIdioma_SelectionChangeCommitted;
             // 
@@ -341,7 +341,7 @@
             // 
             label1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label1.AutoSize = true;
-            label1.Location = new Point(12, 802);
+            label1.Location = new Point(12, 801);
             label1.Name = "label1";
             label1.Size = new Size(206, 15);
             label1.TabIndex = 5;
@@ -351,7 +351,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1342, 852);
+            ClientSize = new Size(1344, 851);
             Controls.Add(label1);
             Controls.Add(cmbIdioma);
             Controls.Add(lblInfoSucursal);
@@ -359,7 +359,7 @@
             Controls.Add(btnCerrarSesion);
             Controls.Add(menuStrip);
             MainMenuStrip = menuStrip;
-            MinimumSize = new Size(1358, 891);
+            MinimumSize = new Size(1360, 890);
             Name = "FormPrincipal";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Menú";

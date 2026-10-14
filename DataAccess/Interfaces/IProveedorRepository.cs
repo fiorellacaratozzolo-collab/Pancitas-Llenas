@@ -23,7 +23,7 @@ namespace DataAccess.Interfaces
         List<Proveedor> GetAll();
 
         /// <summary>Obtiene un proveedor específico utilizando su número de CUIT.</summary>
-        Proveedor? GetByCuit(int cuit);
+        Proveedor? GetByCuit(string cuit);
 
         /// <summary>Obtiene un proveedor específico utilizando su identificador único.</summary>
         Proveedor? GetById(Guid id);

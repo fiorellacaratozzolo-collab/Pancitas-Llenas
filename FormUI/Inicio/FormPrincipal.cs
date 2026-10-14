@@ -15,6 +15,55 @@ namespace FormUI.Inicio
             InitializeComponent();
         }
         /// <summary>
+        /// Evento de carga inicial que configura el entorno, valida accesos, registra el inicio de sesión en la bitácora y traduce la interfaz principal.
+        /// </summary>
+        private void FormPrincipal_Load(object sender, EventArgs e)
+        {
+            CargarComboIdiomas();
+            var usuario = SessionManager.Current.UsuarioLogueado;
+
+            if (usuario != null)
+            {
+                this.Text = string.Format("PetShop - Bienvenido {0}".Traducir(), usuario.Nombre);
+
+                //Evaluamos los permisos normales por Rol
+                EvaluarPermisosMenu(menuStrip.Items);
+
+                if (SessionManager.Current.IdSucursalActual != null)
+                {
+                    try
+                    {
+                        Logic.SucursalLogic sucursalBll = new Logic.SucursalLogic();
+                        var sucursalActual = sucursalBll.GetById(SessionManager.Current.IdSucursalActual.Value);
+
+                        if (sucursalActual != null)
+                        {
+                            lblInfoSucursal.Text = string.Format("📍 Sucursal: {0} | 🏠 Dir: {1}".Traducir(), sucursalActual.NombreSucursal, sucursalActual.Direccion);
+                            if (sucursalActual.IdTipoSucursal == 2)
+                            {
+                                FormSolicitarTraspasoProductoSucursales.Visible = false;
+                            }
+                        }
+                        else
+                        {
+                            lblInfoSucursal.Text = "📍 Sucursal: No encontrada".Traducir();
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        lblInfoSucursal.Text = "📍 Error al cargar sucursal".Traducir();
+                    }
+                }
+
+                Services.Bll.BitácoraBll bitacora = new Services.Bll.BitácoraBll();
+                bitacora.RegistrarLog(
+                    mensaje: string.Format("El usuario {0} ingresó al sistema.".Traducir(), usuario.Nombre),
+                    criticidad: Services.DomainModel.Logging.Criticidad.Info,
+                    idUsuario: usuario.IdUsuario);
+            }
+            TraductorUI.TraducirFormulario(this);
+        }
+        /// <summary>
         /// Recorre recursivamente los elementos del menú y evalúa los permisos del usuario activo para determinar la visibilidad de cada opción.
         /// </summary>
         private void EvaluarPermisosMenu(ToolStripItemCollection items)
@@ -91,50 +140,7 @@ namespace FormUI.Inicio
                 MessageBox.Show(string.Format("Error al abrir: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        /// <summary>
-        /// Evento de carga inicial que configura el entorno, valida accesos, registra el inicio de sesión en la bitácora y traduce la interfaz principal.
-        /// </summary>
-        private void FormPrincipal_Load(object sender, EventArgs e)
-        {
-            CargarComboIdiomas();
-            var usuario = SessionManager.Current.UsuarioLogueado;
-
-            if (usuario != null)
-            {
-                this.Text = string.Format("PetShop - Bienvenido {0}".Traducir(), usuario.Nombre);
-
-                if (SessionManager.Current.IdSucursalActual != null)
-                {
-                    try
-                    {
-                        Logic.SucursalLogic sucursalBll = new Logic.SucursalLogic();
-                        var sucursalActual = sucursalBll.GetById(SessionManager.Current.IdSucursalActual.Value);
-
-                        if (sucursalActual != null)
-                        {
-                            lblInfoSucursal.Text = string.Format("📍 Sucursal: {0} | 🏠 Dir: {1}".Traducir(), sucursalActual.NombreSucursal, sucursalActual.Direccion);
-                        }
-                        else
-                        {
-                            lblInfoSucursal.Text = "📍 Sucursal: No encontrada".Traducir();
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        lblInfoSucursal.Text = "📍 Error al cargar sucursal".Traducir();
-                    }
-                }
-
-                EvaluarPermisosMenu(menuStrip.Items);
-
-                Services.Bll.BitácoraBll bitacora = new Services.Bll.BitácoraBll();
-                bitacora.RegistrarLog(
-                    mensaje: string.Format("El usuario {0} ingresó al sistema.".Traducir(), usuario.Nombre),
-                    criticidad: Services.DomainModel.Logging.Criticidad.Info,
-                    idUsuario: usuario.IdUsuario);
-            }
-            TraductorUI.TraducirFormulario(this);
-        }
+        
         /// <summary>
         /// Cierra cualquier ventana hija activa y carga un nuevo formulario embebido, asegurando su centrado absoluto dentro del panel contenedor.
         /// </summary>

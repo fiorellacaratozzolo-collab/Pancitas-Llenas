@@ -31,11 +31,11 @@
             cmbUsuarios = new ComboBox();
             label1 = new Label();
             groupBox1 = new GroupBox();
+            label3 = new Label();
+            clbPermisos = new CheckedListBox();
             clbRoles = new CheckedListBox();
             btnGuardarRol = new Button();
             label2 = new Label();
-            clbPermisos = new CheckedListBox();
-            label3 = new Label();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -73,6 +73,23 @@
             groupBox1.TabIndex = 2;
             groupBox1.TabStop = false;
             // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(94, 340);
+            label3.Name = "label3";
+            label3.Size = new Size(117, 15);
+            label3.TabIndex = 18;
+            label3.Text = "Permisos de Usuario:";
+            // 
+            // clbPermisos
+            // 
+            clbPermisos.FormattingEnabled = true;
+            clbPermisos.Location = new Point(18, 358);
+            clbPermisos.Name = "clbPermisos";
+            clbPermisos.Size = new Size(279, 202);
+            clbPermisos.TabIndex = 17;
+            // 
             // clbRoles
             // 
             clbRoles.FormattingEnabled = true;
@@ -100,28 +117,11 @@
             label2.TabIndex = 5;
             label2.Text = "Rol de Usuario:";
             // 
-            // clbPermisos
-            // 
-            clbPermisos.FormattingEnabled = true;
-            clbPermisos.Location = new Point(18, 358);
-            clbPermisos.Name = "clbPermisos";
-            clbPermisos.Size = new Size(279, 202);
-            clbPermisos.TabIndex = 17;
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(94, 340);
-            label3.Name = "label3";
-            label3.Size = new Size(117, 15);
-            label3.TabIndex = 18;
-            label3.Text = "Permisos de Usuario:";
-            // 
             // FormGestiónRoles
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(359, 659);
+            ClientSize = new Size(359, 661);
             Controls.Add(groupBox1);
             Name = "FormGestiónRoles";
             Text = "Gestión de Roles";

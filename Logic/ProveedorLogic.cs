@@ -4,6 +4,7 @@ using DataAccess.Implementations.UnitOfWork;
 using DataAccess.Models;
 using Logic.MappingProfiles;
 using ModelsDTO;
+using Services.Facade;
 
 namespace Logic
 {
@@ -25,7 +26,11 @@ namespace Logic
         /// </summary>
         public Guid CreateProveedor(ProveedorDTO proveedorDTO)
         {
-            var proveedorExistente = _unitOfWork.Proveedores.GetByCuit(proveedorDTO.Cuit);
+            // Encriptamos el CUIT plano que viene de la interfaz
+            string cuitEncriptado = CryptographyService.Encrypt(proveedorDTO.Cuit);
+
+            // Buscamos en la BD usando el CUIT ENCRIPTADO
+            var proveedorExistente = _unitOfWork.Proveedores.GetByCuit(cuitEncriptado);
 
             if (proveedorExistente != null)
             {
@@ -43,12 +48,18 @@ namespace Logic
                 }
                 else
                 {
+                    // Mostramos el CUIT plano en el mensaje de error para que el usuario entienda
                     throw new InvalidOperationException(string.Format("El proveedor con CUIT {0} ya existe y se encuentra activo.", proveedorDTO.Cuit));
                 }
             }
 
+            //Mapeamos el DTO a la entidad
             Proveedor nuevoProveedor = _mapper.Map<Proveedor>(proveedorDTO);
+
+            //Pisamos el CUIT plano con el CUIT ENCRIPTADO antes de guardar en BD
+            nuevoProveedor.Cuit = cuitEncriptado;
             nuevoProveedor.Activo = true;
+
             Guid idProveedor = _unitOfWork.Proveedores.Create(nuevoProveedor);
 
             _unitOfWork.Complete();
@@ -61,6 +72,7 @@ namespace Logic
         public void UpdateProveedor(ProveedorDTO proveedorDTO)
         {
             Proveedor proveedor = _mapper.Map<Proveedor>(proveedorDTO);
+            proveedor.Cuit = CryptographyService.Encrypt(proveedorDTO.Cuit);
             _unitOfWork.Proveedores.Update(proveedor);
             _unitOfWork.Complete();
         }
@@ -103,7 +115,13 @@ namespace Logic
         public List<ProveedorDTO> ObtenerActivos()
         {
             List<Proveedor> proveedores = _unitOfWork.Proveedores.GetAll().Where(p => p.Activo == true).ToList();
-            return _mapper.Map<List<ProveedorDTO>>(proveedores);
+            List<ProveedorDTO> dtos = _mapper.Map<List<ProveedorDTO>>(proveedores);
+            foreach (var dto in dtos)
+            {
+                if (!string.IsNullOrEmpty(dto.Cuit))
+                    dto.Cuit = CryptographyService.Decrypt(dto.Cuit);
+            }
+            return dtos;
         }
 
         /// <summary>
@@ -112,19 +130,29 @@ namespace Logic
         public List<ProveedorDTO> ObtenerDeshabilitados()
         {
             List<Proveedor> proveedores = _unitOfWork.Proveedores.GetAll().Where(p => p.Activo == false).ToList();
-            return _mapper.Map<List<ProveedorDTO>>(proveedores);
+            List<ProveedorDTO> dtos = _mapper.Map<List<ProveedorDTO>>(proveedores);
+            foreach (var dto in dtos)
+            {
+                if (!string.IsNullOrEmpty(dto.Cuit))
+                    dto.Cuit = CryptographyService.Decrypt(dto.Cuit);
+            }
+
+            return dtos;
         }
 
         /// <summary>
         /// Obtiene los proveedores por su CUIT.
         /// </summary>
-        public ProveedorDTO? GetByCuit(int cuit)
+        public ProveedorDTO? GetByCuit(string cuit)
         {
-            Proveedor? proveedor = _unitOfWork.Proveedores.GetByCuit(cuit);
+            string cuitEncriptado = CryptographyService.Encrypt(cuit);
+            Proveedor? proveedor = _unitOfWork.Proveedores.GetByCuit(cuitEncriptado);
             if (proveedor == null) return null;
+            ProveedorDTO dto = _mapper.Map<ProveedorDTO>(proveedor);
+            dto.Cuit = CryptographyService.Decrypt(dto.Cuit);
 
-            return _mapper.Map<ProveedorDTO>(proveedor);
-        }
+            return dto;
+        }       
     }
 }
 

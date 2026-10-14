@@ -149,7 +149,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1113, 544);
+            ClientSize = new Size(1114, 541);
             Controls.Add(groupBox2);
             Controls.Add(groupBox1);
             Name = "FormGestiónTraspaso";

@@ -51,7 +51,6 @@ namespace Services.Facade
         /// Obtiene o establece el identificador único de la sucursal donde el usuario está operando actualmente.
         /// </summary>
         public Guid? IdSucursalActual { get; set; }
-
         /// <summary>
         /// Obtiene o establece el nombre de la sucursal activa.
         /// </summary>

@@ -304,7 +304,9 @@ public partial class PetShopDbContext : DbContext
 
             entity.Property(e => e.IdProveedor).ValueGeneratedNever();
             entity.Property(e => e.Activo).HasDefaultValue(true);
-            entity.Property(e => e.Cuit).HasColumnName("CUIT");
+            entity.Property(e => e.Cuit)
+                .HasMaxLength(255)
+                .HasColumnName("CUIT");
             entity.Property(e => e.Direccion)
                 .HasMaxLength(100)
                 .IsUnicode(false);

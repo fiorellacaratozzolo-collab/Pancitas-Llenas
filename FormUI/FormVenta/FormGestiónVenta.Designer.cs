@@ -64,14 +64,14 @@
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(640, 705);
+            groupBox1.Size = new Size(640, 621);
             groupBox1.TabIndex = 8;
             groupBox1.TabStop = false;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(135, 46);
+            label2.Location = new Point(36, 46);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(104, 15);
@@ -80,7 +80,7 @@
             // 
             // btnEliminar
             // 
-            btnEliminar.Location = new Point(436, 74);
+            btnEliminar.Location = new Point(404, 74);
             btnEliminar.Margin = new Padding(4, 3, 4, 3);
             btnEliminar.Name = "btnEliminar";
             btnEliminar.Size = new Size(88, 27);
@@ -93,16 +93,16 @@
             // dgvVentasRealizadas
             // 
             dgvVentasRealizadas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvVentasRealizadas.Location = new Point(18, 115);
+            dgvVentasRealizadas.Location = new Point(8, 115);
             dgvVentasRealizadas.Margin = new Padding(4, 3, 4, 3);
             dgvVentasRealizadas.Name = "dgvVentasRealizadas";
-            dgvVentasRealizadas.Size = new Size(614, 584);
+            dgvVentasRealizadas.Size = new Size(624, 500);
             dgvVentasRealizadas.TabIndex = 6;
             dgvVentasRealizadas.SelectionChanged += dgvVentasRealizadas_SelectionChanged;
             // 
             // dateTimePickerVenta
             // 
-            dateTimePickerVenta.Location = new Point(138, 74);
+            dateTimePickerVenta.Location = new Point(39, 74);
             dateTimePickerVenta.Margin = new Padding(4, 3, 4, 3);
             dateTimePickerVenta.Name = "dateTimePickerVenta";
             dateTimePickerVenta.Size = new Size(249, 23);
@@ -111,7 +111,7 @@
             // 
             // btnActualizar
             // 
-            btnActualizar.Location = new Point(532, 74);
+            btnActualizar.Location = new Point(500, 74);
             btnActualizar.Margin = new Padding(4, 3, 4, 3);
             btnActualizar.Name = "btnActualizar";
             btnActualizar.Size = new Size(88, 27);
@@ -125,7 +125,7 @@
             groupBox2.Controls.Add(dgvDetallesVenta);
             groupBox2.Location = new Point(660, 12);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(563, 721);
+            groupBox2.Size = new Size(563, 637);
             groupBox2.TabIndex = 11;
             groupBox2.TabStop = false;
             groupBox2.Text = "Detalle";
@@ -135,14 +135,14 @@
             dgvDetallesVenta.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDetallesVenta.Location = new Point(6, 22);
             dgvDetallesVenta.Name = "dgvDetallesVenta";
-            dgvDetallesVenta.Size = new Size(551, 694);
+            dgvDetallesVenta.Size = new Size(551, 609);
             dgvDetallesVenta.TabIndex = 0;
             // 
             // FormGestiónVenta
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1235, 740);
+            ClientSize = new Size(1234, 661);
             Controls.Add(groupBox2);
             Controls.Add(label1);
             Controls.Add(groupBox1);

@@ -74,11 +74,11 @@
             groupBox1.Controls.Add(dgvOrdenDePedido);
             groupBox1.Controls.Add(btnActualizar);
             groupBox1.Controls.Add(label1);
-            groupBox1.Location = new Point(13, 20);
+            groupBox1.Location = new Point(13, 12);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(444, 535);
+            groupBox1.Size = new Size(519, 637);
             groupBox1.TabIndex = 3;
             groupBox1.TabStop = false;
             groupBox1.Text = "Orden de Pedido";
@@ -104,10 +104,10 @@
             // 
             // btnDardeBaja
             // 
-            btnDardeBaja.Location = new Point(310, 477);
+            btnDardeBaja.Location = new Point(277, 603);
             btnDardeBaja.Margin = new Padding(4, 3, 4, 3);
             btnDardeBaja.Name = "btnDardeBaja";
-            btnDardeBaja.Size = new Size(126, 52);
+            btnDardeBaja.Size = new Size(126, 28);
             btnDardeBaja.TabIndex = 5;
             btnDardeBaja.Text = "Dar de Baja";
             btnDardeBaja.UseVisualStyleBackColor = true;
@@ -115,10 +115,10 @@
             // 
             // btnGenerarOC
             // 
-            btnGenerarOC.Location = new Point(8, 477);
+            btnGenerarOC.Location = new Point(92, 603);
             btnGenerarOC.Margin = new Padding(4, 3, 4, 3);
             btnGenerarOC.Name = "btnGenerarOC";
-            btnGenerarOC.Size = new Size(177, 52);
+            btnGenerarOC.Size = new Size(177, 28);
             btnGenerarOC.TabIndex = 4;
             btnGenerarOC.Text = "Generar Orden de Compra";
             btnGenerarOC.UseVisualStyleBackColor = true;
@@ -130,16 +130,16 @@
             dgvOrdenDePedido.Location = new Point(8, 84);
             dgvOrdenDePedido.Margin = new Padding(4, 3, 4, 3);
             dgvOrdenDePedido.Name = "dgvOrdenDePedido";
-            dgvOrdenDePedido.Size = new Size(428, 387);
+            dgvOrdenDePedido.Size = new Size(503, 513);
             dgvOrdenDePedido.TabIndex = 3;
             dgvOrdenDePedido.SelectionChanged += dgvOrdenDePedido_SelectionChanged;
             // 
             // Detalle
             // 
             Detalle.Controls.Add(dgvDetalleOP);
-            Detalle.Location = new Point(476, 13);
+            Detalle.Location = new Point(540, 12);
             Detalle.Name = "Detalle";
-            Detalle.Size = new Size(601, 551);
+            Detalle.Size = new Size(612, 637);
             Detalle.TabIndex = 4;
             Detalle.TabStop = false;
             Detalle.Text = "Detalle";
@@ -149,14 +149,14 @@
             dgvDetalleOP.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvDetalleOP.Location = new Point(6, 22);
             dgvDetalleOP.Name = "dgvDetalleOP";
-            dgvDetalleOP.Size = new Size(589, 520);
+            dgvDetalleOP.Size = new Size(600, 609);
             dgvDetalleOP.TabIndex = 0;
             // 
             // FormGestiónOP
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1089, 567);
+            ClientSize = new Size(1164, 661);
             Controls.Add(Detalle);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);

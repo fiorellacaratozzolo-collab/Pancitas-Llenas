@@ -50,7 +50,7 @@
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(983, 659);
+            groupBox1.Size = new Size(983, 621);
             groupBox1.TabIndex = 5;
             groupBox1.TabStop = false;
             // 
@@ -99,7 +99,7 @@
             dgvHistorialVentas.Location = new Point(18, 80);
             dgvHistorialVentas.Margin = new Padding(4, 3, 4, 3);
             dgvHistorialVentas.Name = "dgvHistorialVentas";
-            dgvHistorialVentas.Size = new Size(957, 568);
+            dgvHistorialVentas.Size = new Size(957, 529);
             dgvHistorialVentas.TabIndex = 6;
             // 
             // label1
@@ -116,7 +116,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1005, 698);
+            ClientSize = new Size(1005, 661);
             Controls.Add(groupBox1);
             Controls.Add(label1);
             Margin = new Padding(4, 3, 4, 3);

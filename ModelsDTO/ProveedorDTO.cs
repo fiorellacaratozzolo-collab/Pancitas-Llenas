@@ -6,7 +6,7 @@
 
         public string NombreProveedor { get; set; } = null!;
 
-        public int Cuit { get; set; }
+        public string? Cuit { get; set; }
 
         public int? Telefono { get; set; }
 

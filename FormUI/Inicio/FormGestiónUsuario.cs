@@ -170,6 +170,17 @@ namespace FormUI.Inicio
                     }
                     sucursalSeleccionada = (cmbSucursales.Text.Contains("ADMINISTRADOR")) ? null : idParseado;
                 }
+
+                usuarioBll.RegistrarUsuario(
+                    txtbNombreUsuario.Text.Trim(),
+                    txtbEmail.Text.Trim(),
+                    txtbContraseña.Text,
+                    sucursalSeleccionada
+                );
+
+                MessageBox.Show("Usuario creado con éxito.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LimpiarControles();
+                CargarGrillaUsuarios();
             }
             catch (Exception ex)
             {

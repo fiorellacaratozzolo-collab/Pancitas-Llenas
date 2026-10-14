@@ -71,7 +71,7 @@
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(592, 693);
+            groupBox1.Size = new Size(592, 651);
             groupBox1.TabIndex = 20;
             groupBox1.TabStop = false;
             groupBox1.Text = "Productos a Solicitar";
@@ -95,7 +95,7 @@
             // 
             // txtbMarca
             // 
-            txtbMarca.Location = new Point(179, 204);
+            txtbMarca.Location = new Point(175, 176);
             txtbMarca.Name = "txtbMarca";
             txtbMarca.ReadOnly = true;
             txtbMarca.Size = new Size(102, 23);
@@ -104,7 +104,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(123, 212);
+            label5.Location = new Point(119, 184);
             label5.Name = "label5";
             label5.Size = new Size(43, 15);
             label5.TabIndex = 21;
@@ -114,7 +114,7 @@
             // 
             cmbProducto.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbProducto.FormattingEnabled = true;
-            cmbProducto.Location = new Point(176, 169);
+            cmbProducto.Location = new Point(172, 141);
             cmbProducto.Name = "cmbProducto";
             cmbProducto.Size = new Size(256, 23);
             cmbProducto.TabIndex = 20;
@@ -124,7 +124,7 @@
             // 
             cmbSucursalOrigen.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbSucursalOrigen.FormattingEnabled = true;
-            cmbSucursalOrigen.Location = new Point(174, 107);
+            cmbSucursalOrigen.Location = new Point(174, 96);
             cmbSucursalOrigen.Margin = new Padding(4, 3, 4, 3);
             cmbSucursalOrigen.Name = "cmbSucursalOrigen";
             cmbSucursalOrigen.Size = new Size(275, 23);
@@ -133,7 +133,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(41, 110);
+            label2.Location = new Point(41, 99);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
             label2.Size = new Size(93, 15);
@@ -142,7 +142,7 @@
             // 
             // txtbPesoNeto
             // 
-            txtbPesoNeto.Location = new Point(179, 236);
+            txtbPesoNeto.Location = new Point(175, 208);
             txtbPesoNeto.Margin = new Padding(4, 3, 4, 3);
             txtbPesoNeto.Name = "txtbPesoNeto";
             txtbPesoNeto.ReadOnly = true;
@@ -152,7 +152,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(102, 244);
+            label1.Location = new Point(98, 216);
             label1.Margin = new Padding(4, 0, 4, 0);
             label1.Name = "label1";
             label1.Size = new Size(64, 15);
@@ -161,10 +161,10 @@
             // 
             // btnSolicitarTraspaso
             // 
-            btnSolicitarTraspaso.Location = new Point(41, 639);
+            btnSolicitarTraspaso.Location = new Point(163, 619);
             btnSolicitarTraspaso.Margin = new Padding(4, 3, 4, 3);
             btnSolicitarTraspaso.Name = "btnSolicitarTraspaso";
-            btnSolicitarTraspaso.Size = new Size(495, 44);
+            btnSolicitarTraspaso.Size = new Size(265, 26);
             btnSolicitarTraspaso.TabIndex = 13;
             btnSolicitarTraspaso.Text = "Solicitar Traspaso de Productos";
             btnSolicitarTraspaso.UseVisualStyleBackColor = true;
@@ -181,16 +181,16 @@
             // dgvProductos
             // 
             dgvProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvProductos.Location = new Point(6, 314);
+            dgvProductos.Location = new Point(8, 289);
             dgvProductos.Margin = new Padding(4, 3, 4, 3);
             dgvProductos.Name = "dgvProductos";
-            dgvProductos.Size = new Size(578, 319);
+            dgvProductos.Size = new Size(578, 324);
             dgvProductos.TabIndex = 10;
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(60, 172);
+            label3.Location = new Point(56, 144);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new Size(106, 15);
@@ -199,7 +199,7 @@
             // 
             // txtbCantidad
             // 
-            txtbCantidad.Location = new Point(179, 271);
+            txtbCantidad.Location = new Point(175, 243);
             txtbCantidad.Margin = new Padding(4, 3, 4, 3);
             txtbCantidad.Name = "txtbCantidad";
             txtbCantidad.Size = new Size(102, 23);
@@ -207,7 +207,7 @@
             // 
             // btnAgregar
             // 
-            btnAgregar.Location = new Point(307, 263);
+            btnAgregar.Location = new Point(303, 235);
             btnAgregar.Margin = new Padding(4, 3, 4, 3);
             btnAgregar.Name = "btnAgregar";
             btnAgregar.Size = new Size(146, 36);
@@ -219,7 +219,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(108, 274);
+            label4.Location = new Point(104, 246);
             label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
             label4.Size = new Size(58, 15);
@@ -230,7 +230,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(614, 706);
+            ClientSize = new Size(614, 661);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormSolicitarTraspasoProductoSucursales";

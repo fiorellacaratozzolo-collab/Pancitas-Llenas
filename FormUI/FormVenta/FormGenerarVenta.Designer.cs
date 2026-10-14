@@ -65,7 +65,7 @@
             // 
             // datetimeVenta
             // 
-            datetimeVenta.Location = new Point(339, 22);
+            datetimeVenta.Location = new Point(483, 49);
             datetimeVenta.Margin = new Padding(4, 3, 4, 3);
             datetimeVenta.Name = "datetimeVenta";
             datetimeVenta.Size = new Size(259, 23);
@@ -74,10 +74,10 @@
             // dgvVentas
             // 
             dgvVentas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvVentas.Location = new Point(8, 346);
+            dgvVentas.Location = new Point(8, 312);
             dgvVentas.Margin = new Padding(4, 3, 4, 3);
             dgvVentas.Name = "dgvVentas";
-            dgvVentas.Size = new Size(604, 246);
+            dgvVentas.Size = new Size(766, 246);
             dgvVentas.TabIndex = 5;
             // 
             // groupBox1
@@ -85,22 +85,18 @@
             groupBox1.Controls.Add(lblTotal);
             groupBox1.Controls.Add(lblDescuento);
             groupBox1.Controls.Add(btnDeshacer);
-            groupBox1.Controls.Add(txtbDescuento);
             groupBox1.Controls.Add(btnCancelar);
             groupBox1.Controls.Add(groupBox2);
             groupBox1.Controls.Add(groupBox3);
-            groupBox1.Controls.Add(cmbPago);
-            groupBox1.Controls.Add(label10);
             groupBox1.Controls.Add(btnAceptar);
             groupBox1.Controls.Add(lblSubtotal);
-            groupBox1.Controls.Add(label5);
             groupBox1.Controls.Add(datetimeVenta);
             groupBox1.Controls.Add(dgvVentas);
             groupBox1.Location = new Point(9, 2);
             groupBox1.Margin = new Padding(4, 3, 4, 3);
             groupBox1.Name = "groupBox1";
             groupBox1.Padding = new Padding(4, 3, 4, 3);
-            groupBox1.Size = new Size(620, 717);
+            groupBox1.Size = new Size(782, 652);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
             groupBox1.Text = "Ventas";
@@ -108,7 +104,7 @@
             // lblTotal
             // 
             lblTotal.AutoSize = true;
-            lblTotal.Location = new Point(16, 657);
+            lblTotal.Location = new Point(10, 618);
             lblTotal.Name = "lblTotal";
             lblTotal.Size = new Size(36, 15);
             lblTotal.TabIndex = 25;
@@ -117,7 +113,7 @@
             // lblDescuento
             // 
             lblDescuento.AutoSize = true;
-            lblDescuento.Location = new Point(16, 632);
+            lblDescuento.Location = new Point(10, 593);
             lblDescuento.Name = "lblDescuento";
             lblDescuento.Size = new Size(66, 15);
             lblDescuento.TabIndex = 24;
@@ -125,10 +121,10 @@
             // 
             // btnDeshacer
             // 
-            btnDeshacer.Location = new Point(401, 598);
+            btnDeshacer.Location = new Point(302, 562);
             btnDeshacer.Margin = new Padding(4, 3, 4, 3);
             btnDeshacer.Name = "btnDeshacer";
-            btnDeshacer.Size = new Size(211, 33);
+            btnDeshacer.Size = new Size(158, 33);
             btnDeshacer.TabIndex = 17;
             btnDeshacer.Text = "Retirar producto";
             btnDeshacer.UseVisualStyleBackColor = true;
@@ -136,7 +132,7 @@
             // 
             // txtbDescuento
             // 
-            txtbDescuento.Location = new Point(453, 255);
+            txtbDescuento.Location = new Point(504, 76);
             txtbDescuento.Margin = new Padding(4, 3, 4, 3);
             txtbDescuento.Name = "txtbDescuento";
             txtbDescuento.Size = new Size(116, 23);
@@ -144,10 +140,10 @@
             // 
             // btnCancelar
             // 
-            btnCancelar.Location = new Point(491, 666);
+            btnCancelar.Location = new Point(660, 564);
             btnCancelar.Margin = new Padding(4, 3, 4, 3);
             btnCancelar.Name = "btnCancelar";
-            btnCancelar.Size = new Size(111, 37);
+            btnCancelar.Size = new Size(115, 31);
             btnCancelar.TabIndex = 20;
             btnCancelar.Text = "Cancelar";
             btnCancelar.UseVisualStyleBackColor = true;
@@ -158,20 +154,24 @@
             groupBox2.Controls.Add(txtbMarca);
             groupBox2.Controls.Add(label2);
             groupBox2.Controls.Add(txtbPesoNeto);
+            groupBox2.Controls.Add(txtbDescuento);
             groupBox2.Controls.Add(label1);
             groupBox2.Controls.Add(cmbProducto);
             groupBox2.Controls.Add(txtbPrecioProd);
             groupBox2.Controls.Add(btnAgregar);
+            groupBox2.Controls.Add(cmbPago);
+            groupBox2.Controls.Add(label10);
             groupBox2.Controls.Add(btnBuscarProd);
             groupBox2.Controls.Add(label9);
             groupBox2.Controls.Add(txtbCantidadProd);
+            groupBox2.Controls.Add(label5);
             groupBox2.Controls.Add(label8);
             groupBox2.Controls.Add(label7);
-            groupBox2.Location = new Point(16, 121);
+            groupBox2.Location = new Point(9, 91);
             groupBox2.Margin = new Padding(4, 3, 4, 3);
             groupBox2.Name = "groupBox2";
             groupBox2.Padding = new Padding(4, 3, 4, 3);
-            groupBox2.Size = new Size(415, 215);
+            groupBox2.Size = new Size(765, 215);
             groupBox2.TabIndex = 8;
             groupBox2.TabStop = false;
             groupBox2.Text = "Producto";
@@ -293,7 +293,7 @@
             // 
             groupBox3.Controls.Add(chkMayorista);
             groupBox3.Controls.Add(cmbCliente);
-            groupBox3.Location = new Point(15, 62);
+            groupBox3.Location = new Point(8, 32);
             groupBox3.Margin = new Padding(4, 3, 4, 3);
             groupBox3.Name = "groupBox3";
             groupBox3.Padding = new Padding(4, 3, 4, 3);
@@ -329,7 +329,7 @@
             // 
             cmbPago.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbPago.FormattingEnabled = true;
-            cmbPago.Location = new Point(450, 308);
+            cmbPago.Location = new Point(501, 129);
             cmbPago.Margin = new Padding(4, 3, 4, 3);
             cmbPago.Name = "cmbPago";
             cmbPago.Size = new Size(119, 23);
@@ -338,7 +338,7 @@
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(450, 237);
+            label10.Location = new Point(501, 58);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
             label10.Size = new Size(66, 15);
@@ -347,10 +347,10 @@
             // 
             // btnAceptar
             // 
-            btnAceptar.Location = new Point(314, 666);
+            btnAceptar.Location = new Point(537, 564);
             btnAceptar.Margin = new Padding(4, 3, 4, 3);
             btnAceptar.Name = "btnAceptar";
-            btnAceptar.Size = new Size(169, 37);
+            btnAceptar.Size = new Size(115, 31);
             btnAceptar.TabIndex = 19;
             btnAceptar.Text = "Aceptar";
             btnAceptar.UseVisualStyleBackColor = true;
@@ -359,7 +359,7 @@
             // lblSubtotal
             // 
             lblSubtotal.AutoSize = true;
-            lblSubtotal.Location = new Point(15, 610);
+            lblSubtotal.Location = new Point(9, 571);
             lblSubtotal.Margin = new Padding(4, 0, 4, 0);
             lblSubtotal.Name = "lblSubtotal";
             lblSubtotal.Size = new Size(54, 15);
@@ -369,7 +369,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(450, 290);
+            label5.Location = new Point(501, 111);
             label5.Margin = new Padding(4, 0, 4, 0);
             label5.Name = "label5";
             label5.Size = new Size(90, 15);
@@ -380,7 +380,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(639, 723);
+            ClientSize = new Size(804, 661);
             Controls.Add(groupBox1);
             Margin = new Padding(4, 3, 4, 3);
             Name = "FormGenerarVenta";

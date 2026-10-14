@@ -76,9 +76,9 @@ namespace DataAccess.Implementations.SqlServer
         }
 
         /// <summary>
-        /// Busca la primera coincidencia de un proveedor en base a su número de CUIT.
+        /// Busca la primera coincidencia de un proveedor en base a su número de CUIT encriptado.
         /// </summary>
-        public Proveedor? GetByCuit(int cuit)
+        public Proveedor? GetByCuit(string cuit)
         {
             return _context.Proveedors.FirstOrDefault(p => p.Cuit == cuit);
         }

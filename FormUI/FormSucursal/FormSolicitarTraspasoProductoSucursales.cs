@@ -198,20 +198,58 @@ namespace FormUI.FormSucursal
         /// </summary>
         private void FormSolicitarTraspasoProductoSucursales_Load_1(object sender, EventArgs e)
         {
+            if (SessionManager.Current.IdSucursalActual == null)
+            {
+                MessageBox.Show("Error: No se detectó una sucursal activa en la sesión.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+                return;
+            }
+
+            string nombreSucursalDestino = "";
+
             try
             {
-                txtbSucursalDestino.Text = SessionManager.Current.NombreSucursalActual;
+                SucursalService sucursalService = new SucursalService();
+
+                var sucursalActual = sucursalService.GetAllSucursales()
+                                     .FirstOrDefault(s => s.IdSucursal == SessionManager.Current.IdSucursalActual.Value);
+
+                if (sucursalActual != null)
+                {
+                    if (sucursalActual.IdTipoSucursal == 2)
+                    {
+                        MessageBox.Show("Regla de negocio: Las sucursales mayoristas no necesitan solicitar traspasos.".Traducir(),
+                                        "Acceso Denegado".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        this.Close();
+                        return;
+                    }
+                    nombreSucursalDestino = sucursalActual.NombreSucursal; 
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error al validar el acceso: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
+                return;
+            }
+
+            try
+            {
+                // Asignamos el nombre que trajimos de la BD y bloqueamos el TextBox
+                txtbSucursalDestino.Text = nombreSucursalDestino;
+                txtbSucursalDestino.Enabled = false;
+
                 dgvProductos.DataSource = _listaProductos;
                 ConfigurarColumnasGrilla();
                 CargarSucursales();
                 CargarProductos();
                 ConfigurarFecha();
-                dtpFecha.Value = DateTime.Today;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format("Error al cargar la pantalla: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
             TraductorUI.TraducirFormulario(this);
         }
         /// <summary>

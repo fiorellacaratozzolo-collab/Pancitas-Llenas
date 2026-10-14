@@ -73,7 +73,7 @@ namespace Logic.Facade
         /// <summary>
         /// Recupera la información de un proveedor mediante su CUIT.
         /// </summary>
-        public ProveedorDTO? GetByCuit(int cuit)
+        public ProveedorDTO? GetByCuit(string cuit)
         {
             return _proveedorLogic.GetByCuit(cuit);
         }

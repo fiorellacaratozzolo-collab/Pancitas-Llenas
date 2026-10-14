@@ -262,12 +262,12 @@ namespace FormUI.FormCompra
             return new ProveedorDTO
             {
                 NombreProveedor = txtbNombreProv.Text.Trim(),
-                Cuit = int.Parse(txtbCuitProv.Text),
+                Cuit = txtbCuitProv.Text.Trim(),
                 Telefono = int.Parse(txtbTelefonoProv.Text),
                 Direccion = txtbDireccionProv.Text.Trim(),
                 Activo = _viendoActivos
             };
-        }
+        }       
     }
 
 }
