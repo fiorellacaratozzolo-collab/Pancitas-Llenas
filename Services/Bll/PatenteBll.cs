@@ -1,7 +1,5 @@
 ﻿using Services.Dal.Implementations;
 using Services.DomainModel.Composite;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Services.Bll
 {

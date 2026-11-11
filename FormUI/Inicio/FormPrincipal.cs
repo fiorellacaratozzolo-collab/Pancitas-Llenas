@@ -140,7 +140,7 @@ namespace FormUI.Inicio
                 MessageBox.Show(string.Format("Error al abrir: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        
+
         /// <summary>
         /// Cierra cualquier ventana hija activa y carga un nuevo formulario embebido, asegurando su centrado absoluto dentro del panel contenedor.
         /// </summary>
@@ -245,6 +245,32 @@ namespace FormUI.Inicio
                 catch (Exception ex)
                 {
                     MessageBox.Show(string.Format("Error al guardar la preferencia en la base de datos: {0}".Traducir(), ex.Message), "Error de Sistema".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Realiza el Backup de las dos Bases de Datos del Sistema.
+        /// </summary>
+        private void btnBackup_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog fbd = new FolderBrowserDialog())
+            {
+                fbd.Description = "Seleccione la carpeta donde desea guardar las copias de seguridad".Traducir();
+
+                if (fbd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        BackupService backupService = new BackupService();
+                        backupService.GenerarBackups(fbd.SelectedPath);
+
+                        MessageBox.Show("Las copias de seguridad de ambas bases de datos se han generado y guardado con éxito.".Traducir(), "Backup Exitoso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(string.Format("Ocurrió un error al generar el respaldo: {0}".Traducir(), ex.Message), "Error de Respaldo".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
         }

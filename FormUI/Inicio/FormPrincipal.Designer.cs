@@ -62,6 +62,7 @@
             lblInfoSucursal = new Label();
             cmbIdioma = new ComboBox();
             label1 = new Label();
+            btnBackup = new Button();
             menuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -329,7 +330,7 @@
             // 
             // cmbIdioma
             // 
-            cmbIdioma.Anchor = AnchorStyles.Left;
+            cmbIdioma.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             cmbIdioma.FormattingEnabled = true;
             cmbIdioma.Location = new Point(12, 819);
             cmbIdioma.Name = "cmbIdioma";
@@ -347,11 +348,24 @@
             label1.TabIndex = 5;
             label1.Text = "Seleccione el Idioma Predeterminado:";
             // 
+            // btnBackup
+            // 
+            btnBackup.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            btnBackup.Location = new Point(384, 804);
+            btnBackup.Name = "btnBackup";
+            btnBackup.Size = new Size(108, 35);
+            btnBackup.TabIndex = 6;
+            btnBackup.Tag = "Generar_Backup";
+            btnBackup.Text = "Generar Backup";
+            btnBackup.UseVisualStyleBackColor = true;
+            btnBackup.Click += btnBackup_Click;
+            // 
             // FormPrincipal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1344, 851);
+            Controls.Add(btnBackup);
             Controls.Add(label1);
             Controls.Add(cmbIdioma);
             Controls.Add(lblInfoSucursal);
@@ -407,5 +421,6 @@
         private Label lblInfoSucursal;
         private ComboBox cmbIdioma;
         private Label label1;
+        private Button btnBackup;
     }
 }

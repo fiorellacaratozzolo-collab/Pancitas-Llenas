@@ -4,6 +4,7 @@ using Services.Facade;
 using System.ComponentModel;
 using System.Data;
 using Services.Facade.Extensions;
+using Services.Bll.CustomExceptions;
 
 namespace FormUI.FormVenta
 {
@@ -223,39 +224,48 @@ namespace FormUI.FormVenta
         /// </summary>
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            if (cmbProducto.SelectedItem == null)
+            try
             {
-                MessageBox.Show("Seleccione un producto primero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                if (cmbProducto.SelectedItem == null)
+                    throw new ValidacionDatosException("Seleccione un producto primero.");
+
+                ValidadorDatos.ValidarSoloNumeros(txtbCantidadProd.Text, "Cantidad");
+
+                int cantidad = int.Parse(txtbCantidadProd.Text);
+                if (cantidad <= 0)
+                    throw new ValidacionDatosException("Ingrese una cantidad válida mayor a cero.");
+
+                var productoSeleccionado = (ProductoDTO)cmbProducto.SelectedItem;
+                decimal precioSeguro = (decimal)(productoSeleccionado.PrecioNeto ?? 0);
+                decimal pesoSeguro = (decimal)(productoSeleccionado.PesoNeto ?? 0);
+                string unidadSegura = string.IsNullOrWhiteSpace(productoSeleccionado.Unidad) ? "Unidad".Traducir() : productoSeleccionado.Unidad;
+
+                VentaDetalleDTO nuevoDetalle = new VentaDetalleDTO
+                {
+                    IdProducto = productoSeleccionado.IdProducto,
+                    NombreProducto = productoSeleccionado.NombreProducto,
+                    Cantidad = cantidad,
+                    PrecioUnitario = precioSeguro,
+                    Subtotal = cantidad * precioSeguro,
+                    PesoNeto = pesoSeguro,
+                    Unidad = unidadSegura
+                };
+
+                _carrito.Add(nuevoDetalle);
+                cmbProducto.SelectedIndex = -1;
+                txtbCantidadProd.Clear();
+                cmbProducto.Focus();
+                CalcularTotal();
             }
-
-            if (!int.TryParse(txtbCantidadProd.Text, out int cantidad) || cantidad <= 0)
+            catch (ValidacionDatosException ex)
             {
-                MessageBox.Show("Ingrese una cantidad válida mayor a cero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                MessageBox.Show(ex.Message.Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (ex.Message.Contains("Cantidad") || ex.Message.Contains("cero")) txtbCantidadProd.Focus();
             }
-
-            var productoSeleccionado = (ProductoDTO)cmbProducto.SelectedItem;
-            decimal precioSeguro = (decimal)(productoSeleccionado.PrecioNeto ?? 0);
-            decimal pesoSeguro = (decimal)(productoSeleccionado.PesoNeto ?? 0);
-            string unidadSegura = string.IsNullOrWhiteSpace(productoSeleccionado.Unidad) ? "Unidad".Traducir() : productoSeleccionado.Unidad;
-
-            VentaDetalleDTO nuevoDetalle = new VentaDetalleDTO
+            catch (Exception ex)
             {
-                IdProducto = productoSeleccionado.IdProducto,
-                NombreProducto = productoSeleccionado.NombreProducto,
-                Cantidad = cantidad,
-                PrecioUnitario = precioSeguro,
-                Subtotal = cantidad * precioSeguro,
-                PesoNeto = pesoSeguro,
-                Unidad = unidadSegura
-            };
-
-            _carrito.Add(nuevoDetalle);
-            cmbProducto.SelectedIndex = -1;
-            txtbCantidadProd.Clear();
-            cmbProducto.Focus();
-            CalcularTotal();
+                MessageBox.Show(string.Format("Error al agregar al carrito: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         /// <summary>
         /// Elimina el producto seleccionado actualmente en la grilla del carrito y recalcula los totales de la venta.
@@ -299,34 +309,20 @@ namespace FormUI.FormVenta
         /// </summary>
         private void btnAceptar_Click(object sender, EventArgs e)
         {
-            if (_carrito.Count == 0)
-            {
-                MessageBox.Show("El carrito está vacío. Agregue productos antes de cobrar.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (cmbCliente.SelectedIndex == -1 || cmbCliente.SelectedValue == null)
-            {
-                MessageBox.Show("Por favor, seleccione un Cliente válido de la lista antes de registrar la venta.".Traducir(), "Cliente Faltante".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbCliente.Focus();
-                return;
-            }
-
-            if (cmbPago.SelectedItem == null)
-            {
-                MessageBox.Show("Por favor, seleccione un método de pago.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbPago.Focus();
-                return;
-            }
-
-            if (!SessionManager.Current.IdSucursalActual.HasValue)
-            {
-                MessageBox.Show("No hay una sucursal seleccionada en la sesión actual para registrar la venta.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             try
             {
+                if (_carrito.Count == 0)
+                    throw new ValidacionDatosException("El carrito está vacío. Agregue productos antes de cobrar.");
+
+                if (cmbCliente.SelectedIndex == -1 || cmbCliente.SelectedValue == null)
+                    throw new ValidacionDatosException("Por favor, seleccione un Cliente válido de la lista antes de registrar la venta.");
+
+                if (cmbPago.SelectedItem == null)
+                    throw new ValidacionDatosException("Por favor, seleccione un método de pago.");
+
+                if (!SessionManager.Current.IdSucursalActual.HasValue)
+                    throw new ValidacionDatosException("No hay una sucursal seleccionada en la sesión actual para registrar la venta.");
+
                 decimal subtotal = _carrito.Sum(item => item.Subtotal);
                 decimal descuento = chkMayorista.Checked ? subtotal * 0.35m : 0;
                 Guid idSucursalActual = SessionManager.Current.IdSucursalActual.Value;
@@ -356,6 +352,13 @@ namespace FormUI.FormVenta
                     MessageBoxIcon.Information);
 
                 LimpiarPantalla();
+            }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Aviso de Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+  
+                if (ex.Message.Contains("Cliente")) cmbCliente.Focus();
+                else if (ex.Message.Contains("pago")) cmbPago.Focus();
             }
             catch (Exception ex)
             {

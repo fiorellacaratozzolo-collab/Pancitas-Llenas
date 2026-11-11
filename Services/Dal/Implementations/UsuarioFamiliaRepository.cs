@@ -1,9 +1,7 @@
 ﻿using Services.Dal.Tools;
 using Services.DomainModel.Composite;
-using System;
-using System.Collections.Generic;
+using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Data.SqlClient;
 using Services.Dal.Interfaces;
 
 namespace Services.Dal.Implementations

@@ -1,6 +1,8 @@
 ﻿using Logic.Facade;
 using ModelsDTO;
 using System.Data;
+using Services.Facade;
+using Services.Bll.CustomExceptions;
 using Services.Facade.Extensions;
 
 namespace FormUI.FormCompra
@@ -178,24 +180,33 @@ namespace FormUI.FormCompra
         /// </summary>
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            if (!ValidarCampos()) return;
-            if (cmbProveedor.SelectedValue is not Guid idProveedor)
-            {
-                MessageBox.Show("Por favor, seleccione un proveedor válido de la lista.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var nuevoProducto = CrearDTO();
-
             try
             {
+                if (string.IsNullOrWhiteSpace(txtbNombreProd.Text))
+                    throw new ValidacionDatosException("El Nombre del Producto es obligatorio.");
+
+                ValidadorDatos.ValidarSoloLetras(txtbMarca.Text, "Marca");
+
+                if (!decimal.TryParse(txtbPesoNeto.Text, out _) || !decimal.TryParse(txtbPrecioNeto.Text, out _))
+                    throw new ValidacionDatosException("Peso Neto y Precio Neto deben ser valores numéricos válidos.");
+
+                if (cmbProveedor.SelectedValue == null || !(cmbProveedor.SelectedValue is Guid idProveedor))
+                    throw new ValidacionDatosException("Debe seleccionar un proveedor válido de la lista.");
+
+                var nuevoProducto = CrearDTO();
+
                 _productoService.CrearProductoConProveedor(nuevoProducto, idProveedor);
+
                 MessageBox.Show("Producto agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosProductos();
             }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Error de Formato".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message.Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message.Traducir(), "Error del Sistema".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -210,21 +221,30 @@ namespace FormUI.FormCompra
                 return;
             }
 
-            if (!ValidarCampos()) return;
-            if (cmbProveedor.SelectedValue is not Guid idProveedor)
-            {
-                MessageBox.Show("Por favor, seleccione un proveedor válido de la lista.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var productoActualizadoDTO = CrearDTO();
-            productoActualizadoDTO.IdProducto = _productoSeleccionadoId.Value;
-
             try
             {
+                if (string.IsNullOrWhiteSpace(txtbNombreProd.Text))
+                    throw new ValidacionDatosException("El Nombre del Producto es obligatorio.");
+
+                ValidadorDatos.ValidarSoloLetras(txtbMarca.Text, "Marca");
+
+                if (!decimal.TryParse(txtbPesoNeto.Text, out _) || !decimal.TryParse(txtbPrecioNeto.Text, out _))
+                    throw new ValidacionDatosException("Peso Neto y Precio Neto deben ser valores numéricos válidos.");
+
+                if (cmbProveedor.SelectedValue == null || !(cmbProveedor.SelectedValue is Guid idProveedor))
+                    throw new ValidacionDatosException("Debe seleccionar un proveedor válido de la lista.");
+
+                var productoActualizadoDTO = CrearDTO();
+                productoActualizadoDTO.IdProducto = _productoSeleccionadoId.Value;
+
                 _productoService.UpdateProducto(productoActualizadoDTO, idProveedor);
+
                 MessageBox.Show("Los datos del producto han sido actualizados correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosProductos();
+            }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Error de Formato".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -342,30 +362,7 @@ namespace FormUI.FormCompra
 
             CargarDatosProductos();
         }
-
-        /// <summary>
-        /// Valida que los campos requeridos y formatos numéricos sean correctos.
-        /// </summary>
-        private bool ValidarCampos()
-        {
-            if (string.IsNullOrWhiteSpace(txtbNombreProd.Text) || string.IsNullOrWhiteSpace(txtbMarca.Text))
-            {
-                MessageBox.Show("Nombre y Marca son obligatorios.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            if (!decimal.TryParse(txtbPesoNeto.Text, out _) || !decimal.TryParse(txtbPrecioNeto.Text, out _))
-            {
-                MessageBox.Show("Peso Neto y Precio Neto deben ser numéricos válidos.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            if (cmbProveedor.SelectedValue == null)
-            {
-                MessageBox.Show("Debe seleccionar un proveedor de la lista.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            return true;
-        }
-
+        
         /// <summary>
         /// Genera un objeto ProductoDTO con los valores actuales del formulario.
         /// </summary>

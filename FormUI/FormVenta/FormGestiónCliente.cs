@@ -1,6 +1,8 @@
 ﻿using Logic.Facade;
 using ModelsDTO;
 using System.Data;
+using Services.Facade;
+using Services.Bll.CustomExceptions;
 using Services.Facade.Extensions;
 
 namespace FormUI.FormVenta
@@ -103,16 +105,24 @@ namespace FormUI.FormVenta
         /// </summary>
         private void btnAgregarCliente_Click(object sender, EventArgs e)
         {
-            if (!ValidarCampos()) return;
-
-            var nuevoCliente = CrearDTO();
-
             try
             {
+                ValidadorDatos.ValidarSoloLetras(txtbNombreCliente.Text, "Nombre");
+                ValidadorDatos.ValidarSoloNumeros(txtbDNI.Text, "DNI");
+
+                if (!rbtnMayorista.Checked && !rbtnMinorista.Checked)
+                    throw new ValidacionDatosException("Debe seleccionar un Tipo de Cliente (Mayorista o Minorista).");
+
+                var nuevoCliente = CrearDTO();
+
                 _clienteService.CreateCliente(nuevoCliente);
 
                 MessageBox.Show("Cliente agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosClientes();
+            }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Datos Inválidos".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -131,17 +141,25 @@ namespace FormUI.FormVenta
                 return;
             }
 
-            if (!ValidarCampos()) return;
-
-            var clienteEditado = CrearDTO();
-            clienteEditado.IdCliente = _clienteSeleccionadoId.Value;
-
             try
             {
+                ValidadorDatos.ValidarSoloLetras(txtbNombreCliente.Text, "Nombre");
+                ValidadorDatos.ValidarSoloNumeros(txtbDNI.Text, "DNI");
+
+                if (!rbtnMayorista.Checked && !rbtnMinorista.Checked)
+                    throw new ValidacionDatosException("Debe seleccionar un Tipo de Cliente (Mayorista o Minorista).");
+
+                var clienteEditado = CrearDTO();
+                clienteEditado.IdCliente = _clienteSeleccionadoId.Value;
+
                 _clienteService.UpdateCliente(clienteEditado);
 
                 MessageBox.Show("Los cambios del cliente se guardaron correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosClientes();
+            }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Datos Inválidos".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -307,33 +325,7 @@ namespace FormUI.FormVenta
 
             txtbNombreCliente.Focus();
         }
-
-        /// <summary>
-        /// Valida que los datos ingresados en el formulario sean correctos.
-        /// </summary>
-        private bool ValidarCampos()
-        {
-            if (string.IsNullOrWhiteSpace(txtbNombreCliente.Text))
-            {
-                MessageBox.Show("El campo Nombre es obligatorio.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            if (!int.TryParse(txtbDNI.Text, out _))
-            {
-                MessageBox.Show("El DNI debe ser un número válido.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            if (!rbtnMayorista.Checked && !rbtnMinorista.Checked)
-            {
-                MessageBox.Show("Debe seleccionar un Tipo de Cliente (Mayorista o Minorista).".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            return true;
-        }
-
+  
         /// <summary>
         /// Crea un ClienteDTO leyendo los controles del formulario.
         /// </summary>

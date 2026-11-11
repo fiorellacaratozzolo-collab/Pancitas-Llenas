@@ -1,5 +1,7 @@
-﻿using System.Data;
+﻿using Services.Bll.CustomExceptions;
+using Services.Facade;
 using Services.Facade.Extensions;
+using System.Data;
 
 namespace FormUI.Inicio
 {
@@ -149,24 +151,24 @@ namespace FormUI.Inicio
         /// </summary>
         private void btnAgregarUsuario_Click(object sender, EventArgs e)
         {
-            if (!ValidarCamposBasicos() || string.IsNullOrWhiteSpace(txtbContraseña.Text))
-            {
-                MessageBox.Show("Nombre, Email y Contraseña son obligatorios para un nuevo usuario.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             try
             {
-                Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
+                ValidadorDatos.ValidarSoloLetras(txtbNombreUsuario.Text, "Nombre");
+                ValidadorDatos.ValidarEmail(txtbEmail.Text);
 
+                if (string.IsNullOrWhiteSpace(txtbContraseña.Text))
+                {
+                    throw new ValidacionDatosException("La contraseña es obligatoria para un nuevo usuario.");
+                }
+
+                Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
                 Guid? sucursalSeleccionada = null;
 
                 if (cmbSucursales.SelectedValue != null && Guid.TryParse(cmbSucursales.SelectedValue.ToString(), out Guid idParseado))
                 {
                     if (idParseado == Guid.Empty)
                     {
-                        MessageBox.Show("Debe seleccionar una sucursal o el rol de Administrador.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                        throw new ValidacionDatosException("Debe seleccionar una sucursal o el rol de Administrador.");
                     }
                     sucursalSeleccionada = (cmbSucursales.Text.Contains("ADMINISTRADOR")) ? null : idParseado;
                 }
@@ -182,9 +184,13 @@ namespace FormUI.Inicio
                 LimpiarControles();
                 CargarGrillaUsuarios();
             }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Error en los datos".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message.Traducir(), "Atención".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message.Traducir(), "Atención".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -224,16 +230,12 @@ namespace FormUI.Inicio
         {
             if (_idUsuarioSeleccionado == null || _idUsuarioSeleccionado == Guid.Empty) return;
 
-            if (!ValidarCamposBasicos())
-            {
-                MessageBox.Show("Nombre y Email son obligatorios.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             try
             {
-                Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
+                ValidadorDatos.ValidarSoloLetras(txtbNombreUsuario.Text, "Nombre");
+                ValidadorDatos.ValidarEmail(txtbEmail.Text);
 
+                Services.Bll.UsuarioBll usuarioBll = new Services.Bll.UsuarioBll();
                 Guid? sucursalSeleccionada = null;
                 string valorCombo = cmbSucursales.SelectedValue?.ToString() ?? "";
 
@@ -241,8 +243,7 @@ namespace FormUI.Inicio
                 {
                     if (idParseado == Guid.Empty)
                     {
-                        MessageBox.Show("Debe seleccionar una sucursal o el rol de Administrador.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
+                        throw new ValidacionDatosException("Debe seleccionar una sucursal o el rol de Administrador.");
                     }
 
                     sucursalSeleccionada = (cmbSucursales.Text.Contains("ADMINISTRADOR")) ? null : idParseado;
@@ -258,9 +259,13 @@ namespace FormUI.Inicio
                 MessageBox.Show("Datos del usuario actualizados con éxito.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarGrillaUsuarios();
             }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Error en los datos".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message.Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message.Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         /// <summary>
@@ -456,16 +461,6 @@ namespace FormUI.Inicio
 
             txtbNombreUsuario.Focus();
         }
-
-        /// <summary>
-        /// Valida los campos de texto.
-        /// </summary>
-        private bool ValidarCamposBasicos()
-        {
-            return !string.IsNullOrWhiteSpace(txtbNombreUsuario.Text) &&
-                   !string.IsNullOrWhiteSpace(txtbEmail.Text);
-        }
-
         /// <summary>
         /// Clase modelo auxiliar (DTO visual) utilizada para representar y formatear los datos de un usuario dentro de la grilla.
         /// </summary>

@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Services.Dal.Interfaces;
+﻿using Services.Dal.Interfaces;
 using Services.DomainModel.Logging;
 
 namespace Services.Dal.Implementations

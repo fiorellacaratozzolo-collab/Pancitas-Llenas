@@ -1,6 +1,8 @@
 ﻿using Logic.Facade;
 using ModelsDTO;
 using Services.Facade.Extensions;
+using Services.Facade;
+using Services.Bll.CustomExceptions;
 
 namespace FormUI.FormInventario
 {
@@ -130,36 +132,46 @@ namespace FormUI.FormInventario
         /// </summary>
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            if (cmbProducto.SelectedItem == null)
+            try
             {
-                MostrarError("Seleccione un producto de la lista.".Traducir());
-                cmbProducto.Focus();
-                return;
+                if (cmbProducto.SelectedItem == null)
+                    throw new ValidacionDatosException("Seleccione un producto de la lista.");
+
+                ValidadorDatos.ValidarSoloNumeros(txtbCantidad.Text, "Cantidad");
+
+                int cantidadValue = int.Parse(txtbCantidad.Text);
+                if (cantidadValue <= 0)
+                    throw new ValidacionDatosException("La cantidad debe ser mayor a 0.");
+
+                var productoElegido = (ProductoDTO)cmbProducto.SelectedItem;
+                var detalle = new SolicitudDePedidoDetalleDTO
+                {
+                    IdProducto = productoElegido.IdProducto,
+                    Cantidad = cantidadValue,
+                    PesoNeto = productoElegido.PesoNeto ?? 0m,
+                    Unidad = productoElegido.Unidad ?? "kg",
+                    NombreProducto = productoElegido.NombreProducto,
+                    Marca = productoElegido.Marca
+                };
+
+                _detalles.Add(detalle);
+                cmbProducto.SelectedIndex = -1;
+                txtbCantidad.Clear();
+
+                ActualizarDGV();
             }
-
-            if (!int.TryParse(txtbCantidad.Text, out int cantidadValue) || cantidadValue <= 0)
+            catch (ValidacionDatosException ex)
             {
-                MostrarError("Ingrese una cantidad válida mayor a 0.".Traducir());
-                txtbCantidad.Focus();
-                return;
+                MessageBox.Show(ex.Message.Traducir(), "Atención".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (ex.Message.Contains("Cantidad") || ex.Message.Contains("mayor a 0"))
+                    txtbCantidad.Focus();
+                else
+                    cmbProducto.Focus();
             }
-
-            var productoElegido = (ProductoDTO)cmbProducto.SelectedItem;
-            var detalle = new SolicitudDePedidoDetalleDTO
+            catch (Exception ex)
             {
-                IdProducto = productoElegido.IdProducto,
-                Cantidad = cantidadValue,
-                PesoNeto = productoElegido.PesoNeto ?? 0m,
-                Unidad = productoElegido.Unidad ?? "kg",
-                NombreProducto = productoElegido.NombreProducto,
-                Marca = productoElegido.Marca
-            };
-
-            _detalles.Add(detalle);
-            cmbProducto.SelectedIndex = -1;
-            txtbCantidad.Clear();
-
-            ActualizarDGV();
+                MostrarError(ex.Message);
+            }
         }
 
         /// <summary>
@@ -167,22 +179,19 @@ namespace FormUI.FormInventario
         /// </summary>
         private void btnGuadar_Click(object sender, EventArgs e)
         {
-            if (_detalles.Count == 0)
-            {
-                MessageBox.Show("Agregue al menos un producto.".Traducir(), "Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var confirm = MessageBox.Show(
-                string.Format("¿Crear solicitud de pedido con {0} producto(s)?".Traducir(), _detalles.Count),
-                "Confirmar".Traducir(),
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question);
-
-            if (confirm != DialogResult.Yes) return;
-
             try
             {
+                if (_detalles.Count == 0)
+                    throw new ValidacionDatosException("Agregue al menos un producto a la solicitud antes de guardar.");
+
+                var confirm = MessageBox.Show(
+                    string.Format("¿Crear solicitud de pedido con {0} producto(s)?".Traducir(), _detalles.Count),
+                    "Confirmar".Traducir(),
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+
+                if (confirm != DialogResult.Yes) return;
+
                 Guid nuevaSolicitudId = Guid.NewGuid();
 
                 foreach (var detalle in _detalles)
@@ -199,7 +208,7 @@ namespace FormUI.FormInventario
                 {
                     IdSolicitudDePedido = nuevaSolicitudId,
                     FechaSp = DateTime.Today,
-                    IdEstadoSp = 1,
+                    IdEstadoSp = 1, // Estado inicial (Ej: Pendiente)
                     SolicitudDePedidoDetalles = _detalles
                 };
 
@@ -216,9 +225,13 @@ namespace FormUI.FormInventario
                 ActualizarDGV();
                 LimpiarCampos();
             }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Validación".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(string.Format("Error al guardar: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MostrarError(string.Format("Error al guardar: {0}".Traducir(), ex.Message));
             }
         }
 

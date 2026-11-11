@@ -92,68 +92,68 @@ namespace FormUI.FormSucursal
         /// </summary>
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            if (cmbProducto.SelectedItem == null)
+            try
             {
-                MessageBox.Show("Seleccione un producto.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                if (cmbProducto.SelectedItem == null)
+                    throw new ValidacionDatosException("Seleccione un producto.");
 
-            if (!int.TryParse(txtbCantidad.Text, out int cantidad) || cantidad <= 0)
-            {
-                MessageBox.Show("Ingrese una cantidad válida mayor a cero.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                ValidadorDatos.ValidarSoloNumeros(txtbCantidad.Text, "Cantidad");
 
-            var productoElegido = (ProductoDTO)cmbProducto.SelectedItem;
+                int cantidad = int.Parse(txtbCantidad.Text);
+                if (cantidad <= 0)
+                    throw new ValidacionDatosException("Ingrese una cantidad válida mayor a cero.");
 
-            var itemExistente = _listaProductos.FirstOrDefault(p => p.IdProducto == productoElegido.IdProducto);
-            if (itemExistente != null)
-            {
-                itemExistente.Cantidad += cantidad;
-                dgvProductos.Refresh();
-            }
-            else
-            {
-                _listaProductos.Add(new SolicitudDeTraspasoDeProductosDetalleDTO
+                var productoElegido = (ProductoDTO)cmbProducto.SelectedItem;
+
+                var itemExistente = _listaProductos.FirstOrDefault(p => p.IdProducto == productoElegido.IdProducto);
+                if (itemExistente != null)
                 {
-                    IdProducto = productoElegido.IdProducto,
-                    NombreProducto = productoElegido.NombreProducto,
-                    PesoNeto = (decimal)(productoElegido.PesoNeto ?? 0),
-                    Marca = productoElegido.Marca,
-                    Cantidad = cantidad,
-                    Unidad = "KG"
-                });
+                    itemExistente.Cantidad += cantidad;
+                    dgvProductos.Refresh();
+                }
+                else
+                {
+                    _listaProductos.Add(new SolicitudDeTraspasoDeProductosDetalleDTO
+                    {
+                        IdProducto = productoElegido.IdProducto,
+                        NombreProducto = productoElegido.NombreProducto,
+                        PesoNeto = (decimal)(productoElegido.PesoNeto ?? 0),
+                        Marca = productoElegido.Marca,
+                        Cantidad = cantidad,
+                        Unidad = "KG"
+                    });
+                }
+
+                cmbProducto.SelectedIndex = -1;
+                txtbCantidad.Clear();
+                txtbPesoNeto.Clear();
+                txtbMarca.Clear();
             }
-            cmbProducto.SelectedIndex = -1;
-            txtbCantidad.Clear();
-            txtbPesoNeto.Clear();
-            txtbMarca.Clear();
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error al agregar producto: {0}".Traducir(), ex.Message), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
         /// <summary>
         /// Verifica los datos de origen y destino, ensambla la solicitud de traspaso completa y la envía a la base de datos.
         /// </summary>
         private void btnSolicitarTraspaso_Click(object sender, EventArgs e)
         {
-            if (_listaProductos.Count == 0)
-            {
-                MessageBox.Show("Agregue al menos un producto a la solicitud.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (cmbSucursalOrigen.SelectedItem == null)
-            {
-                MessageBox.Show("Seleccione una sucursal de destino.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (!SessionManager.Current.IdSucursalActual.HasValue)
-            {
-                MessageBox.Show("No hay una sucursal seleccionada en la sesión actual.".Traducir(), "Advertencia".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
             try
             {
+                if (_listaProductos.Count == 0)
+                    throw new ValidacionDatosException("Agregue al menos un producto a la solicitud.");
+
+                if (cmbSucursalOrigen.SelectedItem == null)
+                    throw new ValidacionDatosException("Seleccione una sucursal de destino.");
+
+                if (!SessionManager.Current.IdSucursalActual.HasValue)
+                    throw new ValidacionDatosException("No hay una sucursal seleccionada en la sesión actual.");
+
                 Guid idSucursalOrigen = (Guid)(cmbSucursalOrigen.SelectedValue ?? Guid.Empty);
                 Guid idSucursalDestino = SessionManager.Current.IdSucursalActual.Value;
 
@@ -173,6 +173,10 @@ namespace FormUI.FormSucursal
                 _listaProductos.Clear();
                 cmbSucursalOrigen.SelectedIndex = -1;
                 dtpFecha.Value = DateTime.Today;
+            }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (SesionExpiradaException ex)
             {

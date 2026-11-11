@@ -2,6 +2,8 @@
 using ModelsDTO;
 using System.Data;
 using Services.Facade.Extensions;
+using Services.Facade;
+using Services.Bll.CustomExceptions;
 
 namespace FormUI.FormSucursal
 {
@@ -136,16 +138,30 @@ namespace FormUI.FormSucursal
         /// </summary>
         private void btnAltaSucursal_Click(object sender, EventArgs e)
         {
-            if (!ValidarCampos()) return;
-
-            var nuevaSucursal = CrearDTO();
-
             try
             {
+                if (string.IsNullOrWhiteSpace(txtbNombreSucursal.Text))
+                    throw new ValidacionDatosException("El nombre de la sucursal es obligatorio.");
+
+                if (string.IsNullOrWhiteSpace(txtbDireccionSucursal.Text))
+                    throw new ValidacionDatosException("La dirección es obligatoria.");
+
+                ValidadorDatos.ValidarSoloNumeros(txtbTelefonoSucursal.Text, "Teléfono");
+
+                if (!rbtnVenta.Checked && !rbtnDepositoVenta.Checked)
+                    throw new ValidacionDatosException("Debe seleccionar un Tipo de Sucursal (Venta o Depósito-Venta).");
+
+                var nuevaSucursal = CrearDTO();
+
                 _sucursalService.CreateSucursal(nuevaSucursal);
+
                 MessageBox.Show("Sucursal creada exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosSucursales();
                 CargarDireccionesEnComboBox();
+            }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Datos Inválidos".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -241,17 +257,31 @@ namespace FormUI.FormSucursal
                 return;
             }
 
-            if (!ValidarCampos()) return;
-
-            var sucursalEditada = CrearDTO();
-            sucursalEditada.IdSucursal = _sucursalSeleccionadaId.Value;
-
             try
             {
+                if (string.IsNullOrWhiteSpace(txtbNombreSucursal.Text))
+                    throw new ValidacionDatosException("El nombre de la sucursal es obligatorio.");
+
+                if (string.IsNullOrWhiteSpace(txtbDireccionSucursal.Text))
+                    throw new ValidacionDatosException("La dirección es obligatoria.");
+
+                ValidadorDatos.ValidarSoloNumeros(txtbTelefonoSucursal.Text, "Teléfono");
+
+                if (!rbtnVenta.Checked && !rbtnDepositoVenta.Checked)
+                    throw new ValidacionDatosException("Debe seleccionar un Tipo de Sucursal (Venta o Depósito-Venta).");
+
+                var sucursalEditada = CrearDTO();
+                sucursalEditada.IdSucursal = _sucursalSeleccionadaId.Value;
+
                 _sucursalService.UpdateSucursal(sucursalEditada);
+
                 MessageBox.Show("Sucursal actualizada correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosSucursales();
                 CargarDireccionesEnComboBox();
+            }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Datos Inválidos".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -343,32 +373,6 @@ namespace FormUI.FormSucursal
         private void btnLimpiar_Click(object sender, EventArgs e)
         {
             LimpiarControles();
-        }
-
-        /// <summary>
-        /// Valida que los datos ingresados en el formulario sean correctos.
-        /// </summary>
-        private bool ValidarCampos()
-        {
-            if (string.IsNullOrWhiteSpace(txtbNombreSucursal.Text) || string.IsNullOrWhiteSpace(txtbDireccionSucursal.Text))
-            {
-                MessageBox.Show("Nombre y Dirección son obligatorios.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            if (!int.TryParse(txtbTelefonoSucursal.Text, out _))
-            {
-                MessageBox.Show("Teléfono debe ser un número válido.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            if (!rbtnVenta.Checked && !rbtnDepositoVenta.Checked)
-            {
-                MessageBox.Show("Debe seleccionar un Tipo de Sucursal (Venta o Depósito-Venta).".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            return true;
         }
 
         /// <summary>

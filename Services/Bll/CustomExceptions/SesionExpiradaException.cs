@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Services.Bll.CustomExceptions
 {
     /// <summary>

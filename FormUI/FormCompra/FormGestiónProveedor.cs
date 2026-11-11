@@ -1,6 +1,8 @@
 ﻿using Logic.Facade;
 using ModelsDTO;
 using Services.Facade.Extensions;
+using Services.Facade;
+using Services.Bll.CustomExceptions;
 
 namespace FormUI.FormCompra
 {
@@ -92,15 +94,25 @@ namespace FormUI.FormCompra
         /// </summary>
         private void btnAgregar_Click(object sender, EventArgs e)
         {
-            if (!ValidarCampos()) return;
-
-            var nuevoProveedor = CrearDTO();
-
             try
             {
+                ValidadorDatos.ValidarSoloLetras(txtbNombreProv.Text, "Nombre");
+                ValidadorDatos.ValidarSoloNumeros(txtbCuitProv.Text, "CUIT");
+                ValidadorDatos.ValidarSoloNumeros(txtbTelefonoProv.Text, "Teléfono");
+
+                if (string.IsNullOrWhiteSpace(txtbDireccionProv.Text))
+                    throw new ValidacionDatosException("La Dirección es obligatoria.");
+
+                var nuevoProveedor = CrearDTO();
+
                 _proveedorService.CreateProveedor(nuevoProveedor);
+
                 MessageBox.Show("Proveedor agregado exitosamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosProveedores();
+            }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Error de Formato".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -112,17 +124,32 @@ namespace FormUI.FormCompra
         /// </summary>
         private void btnActualizar_Click(object sender, EventArgs e)
         {
-            if (_proveedorSeleccionadoId == null || !ValidarCampos()) return;
-
-            var provActualizado = CrearDTO();
-            provActualizado.IdProveedor = _proveedorSeleccionadoId.Value;
+            if (_proveedorSeleccionadoId == null)
+            {
+                MessageBox.Show("Seleccione un proveedor de la lista haciendo clic sobre él.".Traducir(), "Aviso".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             try
             {
-                // NOTA: Asegurate de tener UpdateProveedor en tu Service/Logic
+                ValidadorDatos.ValidarSoloLetras(txtbNombreProv.Text, "Nombre");
+                ValidadorDatos.ValidarSoloNumeros(txtbCuitProv.Text, "CUIT");
+                ValidadorDatos.ValidarSoloNumeros(txtbTelefonoProv.Text, "Teléfono");
+
+                if (string.IsNullOrWhiteSpace(txtbDireccionProv.Text))
+                    throw new ValidacionDatosException("La Dirección es obligatoria.");
+
+                var provActualizado = CrearDTO();
+                provActualizado.IdProveedor = _proveedorSeleccionadoId.Value;
+
                 _proveedorService.UpdateProveedor(provActualizado);
+
                 MessageBox.Show("Los datos del proveedor han sido actualizados correctamente.".Traducir(), "Éxito".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarDatosProveedores();
+            }
+            catch (ValidacionDatosException ex)
+            {
+                MessageBox.Show(ex.Message.Traducir(), "Error de Formato".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
@@ -234,26 +261,7 @@ namespace FormUI.FormCompra
 
             txtbNombreProv.Focus();
         }
-
-        /// <summary>
-        /// Valida que los campos requeridos y formatos numéricos sean correctos.
-        /// </summary>
-        private bool ValidarCampos()
-        {
-            if (string.IsNullOrWhiteSpace(txtbNombreProv.Text))
-            {
-                MessageBox.Show("El campo Nombre es obligatorio.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-
-            if (!int.TryParse(txtbCuitProv.Text, out _) || !int.TryParse(txtbTelefonoProv.Text, out _))
-            {
-                MessageBox.Show("CUIT y Teléfono deben ser números válidos.".Traducir(), "Error".Traducir(), MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-            return true;
-        }
-
+     
         /// <summary>
         /// Genera un objeto ProveedorDTO con los valores actuales del formulario.
         /// </summary>
@@ -269,6 +277,4 @@ namespace FormUI.FormCompra
             };
         }       
     }
-
 }
-
